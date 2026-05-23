@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plantepotte</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #242736;
+      --border: #2e3347;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --green: #4ade80;
+      --green-dim: #166534;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --blue: #60a5fa;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* LOGIN */
+    #login-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .login-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .login-card h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .login-card p {
+      color: var(--muted);
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+    }
+
+    .field { margin-bottom: 1.25rem; }
+
+    .field label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: var(--muted);
+    }
+
+    .field input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .field input:focus { border-color: var(--green); }
+
+    .btn-primary {
+      width: 100%;
+      padding: 0.85rem;
+      background: var(--green);
+      color: #000;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .error-msg {
+      color: var(--red);
+      font-size: 0.85rem;
+      margin-top: 0.75rem;
+      text-align: center;
+    }
+
+    /* APP */
+    #app { display: none; }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header h1 { font-size: 1.25rem; font-weight: 700; }
+    header span { font-size: 0.8rem; color: var(--muted); }
+
+    .logout-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.8rem;
+      padding: 0.4rem 0.9rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .logout-btn:hover { color: var(--text); border-color: var(--text); }
+
+    main {
+      padding: 1.5rem;
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* POTTE CARD */
+    .potte-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .potte-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .potte-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .potte-header h2 { font-size: 1.1rem; font-weight: 600; }
+    .potte-header .last-seen { font-size: 0.75rem; color: var(--muted); margin-left: auto; }
+
+    .potte-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
+
+    /* SENSOR ROW */
+    .sensor-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+    }
+
+    .sensor-box {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+    }
+
+    .sensor-box .label { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.4rem; }
+    .sensor-box .value { font-size: 1.4rem; font-weight: 700; }
+    .sensor-box .unit { font-size: 0.75rem; color: var(--muted); }
+
+    /* WATER DOTS */
+    .water-row { display: flex; gap: 0.75rem; align-items: center; }
+    .water-label { font-size: 0.8rem; color: var(--muted); min-width: 80px; }
+
+    .water-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--border);
+      border: 2px solid var(--border);
+      transition: background 0.3s;
+    }
+
+    .water-dot.active { background: var(--blue); border-color: var(--blue); }
+    .water-dot.warn { background: var(--yellow); border-color: var(--yellow); }
+    .water-dot.alert { background: var(--red); border-color: var(--red); }
+
+    /* SOIL BARS */
+    .soil-section { display: flex; flex-direction: column; gap: 0.5rem; }
+    .soil-label { font-size: 0.8rem; color: var(--muted); }
+
+    .soil-bar-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.75rem;
+    }
+
+    .soil-bar-row span:first-child { min-width: 50px; color: var(--muted); }
+
+    .soil-bar {
+      flex: 1;
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .soil-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: var(--green);
+      transition: width 0.4s ease;
+    }
+
+    .soil-fill.dry { background: var(--red); }
+    .soil-fill.ok { background: var(--green); }
+    .soil-fill.wet { background: var(--blue); }
+
+    /* CONTROLS */
+    .controls-section { display: flex; flex-direction: column; gap: 1rem; }
+    .controls-section h3 { font-size: 0.85rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* PLANT PROFILES */
+    .profiles-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.5rem;
+    }
+
+    .profile-btn {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 0.4rem;
+      cursor: pointer;
+      text-align: center;
+      transition: border-color 0.15s, background 0.15s;
+      color: var(--text);
+    }
+
+    .profile-btn:hover { border-color: var(--green); }
+    .profile-btn.active { border-color: var(--green); background: var(--green-dim); }
+    .profile-btn .emoji { font-size: 1.4rem; display: block; margin-bottom: 0.2rem; }
+    .profile-btn .name { font-size: 0.65rem; color: var(--muted); }
+
+    /* SLIDER */
+    .slider-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .slider-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .slider-top span { font-size: 0.85rem; }
+    .slider-val { font-size: 1rem; font-weight: 700; color: var(--green); }
+
+    input[type="range"] {
+      width: 100%;
+      height: 6px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: var(--border);
+      border-radius: 3px;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--green);
+      cursor: pointer;
+    }
+
+    /* TIMER */
+    .timer-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .timer-field label { display: block; font-size: 0.75rem; color: var(--muted); margin-bottom: 0.35rem; }
+
+    .timer-field input[type="time"] {
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .timer-field input[type="time"]:focus { border-color: var(--green); }
+
+    .save-btn {
+      background: var(--green);
+      color: #000;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.7rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      align-self: flex-start;
+      transition: opacity 0.15s;
+    }
+
+    .save-btn:hover { opacity: 0.85; }
+    .save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .save-status { font-size: 0.8rem; color: var(--green); display: none; margin-top: 0.25rem; }
+    .save-status.error { color: var(--red); }
+
+    /* RESPONSIVE */
+    @media (max-width: 520px) {
+      .profiles-grid { grid-template-columns: repeat(5, 1fr); }
+      .sensor-row { grid-template-columns: repeat(2, 1fr); }
+      .potte-body { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-card">
+    <h1>🌱 Plantepotte</h1>
+    <p>Logg inn for å styre vekstlysene</p>
+    <div class="field">
+      <label>E-post</label>
+      <input type="email" id="email" autocomplete="email" placeholder="din@epost.no">
+    </div>
+    <div class="field">
+      <label>Passord</label>
+      <input type="password" id="password" autocomplete="current-password">
+    </div>
+    <button class="btn-primary" id="login-btn">Logg inn</button>
+    <div class="error-msg" id="login-error"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <header>
+    <h1>🌱 Plantepotte</h1>
+    <button class="logout-btn" id="logout-btn">Logg ut</button>
+  </header>
+  <main>
+    <!-- POTTE 1 -->
+    <div class="potte-card" id="card-potte1">
+      <div class="potte-header">
+        <div class="potte-dot"></div>
+        <h2>Potte 1</h2>
+        <span class="last-seen" id="lastseen-potte1">—</span>
+      </div>
+      <div class="potte-body">
+
+        <!-- Sensordata -->
+        <div class="sensor-row">
+          <div class="sensor-box">
+            <div class="label">Temperatur</div>
+            <div class="value" id="temp-potte1">—</div>
+            <div class="unit">°C</div>
+          </div>
+          <div class="sensor-box">
+            <div class="label">Luftfuktighet</div>
+            <div class="value" id="hum-potte1">—</div>
+            <div class="unit">%</div>
+          </div>
+          <div class="sensor-box">
+            <div class="label">Vannstand</div>
+            <div class="value" style="display:flex;gap:6px;align-items:center;">
+              <div class="water-dot" id="water-mid-potte1" title="Midtre nivå"></div>
+              <div class="water-dot" id="water-low-potte1" title="Lavt nivå"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Jordfuktighet -->
+        <div class="soil-section">
+          <div class="soil-label">Jordfuktighet</div>
+          <div class="soil-bar-row">
+            <span>Sensor 1</span>
+            <div class="soil-bar"><div class="soil-fill ok" id="soil1-potte1" style="width:0%"></div></div>
+            <span id="soil1-val-potte1">—</span>
+          </div>
+          <div class="soil-bar-row">
+            <span>Sensor 2</span>
+            <div class="soil-bar"><div class="soil-fill ok" id="soil2-potte1" style="width:0%"></div></div>
+            <span id="soil2-val-potte1">—</span>
+          </div>
+          <div class="soil-bar-row">
+            <span>Sensor 3</span>
+            <div class="soil-bar"><div class="soil-fill ok" id="soil3-potte1" style="width:0%"></div></div>
+            <span id="soil3-val-potte1">—</span>
+          </div>
+        </div>
+
+        <!-- Kontroller -->
+        <div class="controls-section">
+          <h3>Vekstlys</h3>
+
+          <div id="profiles-potte1" class="profiles-grid"></div>
+
+          <div class="slider-row">
+            <div class="slider-top">
+              <span>Intensitet</span>
+              <span class="slider-val"><span id="intensity-val-potte1">70</span>%</span>
+            </div>
+            <input type="range" min="0" max="100" value="70" id="intensity-potte1">
+          </div>
+
+          <div class="timer-row">
+            <div class="timer-field">
+              <label>Lys på</label>
+              <input type="time" id="timer-on-potte1" value="07:00">
+            </div>
+            <div class="timer-field">
+              <label>Lys av</label>
+              <input type="time" id="timer-off-potte1" value="23:00">
+            </div>
+          </div>
+
+          <button class="save-btn" id="save-potte1">Lagre</button>
+          <div class="save-status" id="save-status-potte1">Lagret!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- POTTE 2 -->
+    <div class="potte-card" id="card-potte2">
+      <div class="potte-header">
+        <div class="potte-dot"></div>
+        <h2>Potte 2</h2>
+        <span class="last-seen" id="lastseen-potte2">—</span>
+      </div>
+      <div class="potte-body">
+        <div class="controls-section">
+          <h3>Vekstlys</h3>
+
+          <div id="profiles-potte2" class="profiles-grid"></div>
+
+          <div class="slider-row">
+            <div class="slider-top">
+              <span>Intensitet</span>
+              <span class="slider-val"><span id="intensity-val-potte2">70</span>%</span>
+            </div>
+            <input type="range" min="0" max="100" value="70" id="intensity-potte2">
+          </div>
+
+          <div class="timer-row">
+            <div class="timer-field">
+              <label>Lys på</label>
+              <input type="time" id="timer-on-potte2" value="07:00">
+            </div>
+            <div class="timer-field">
+              <label>Lys av</label>
+              <input type="time" id="timer-off-potte2" value="23:00">
+            </div>
+          </div>
+
+          <button class="save-btn" id="save-potte2">Lagre</button>
+          <div class="save-status" id="save-status-potte2">Lagret!</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://ebjbxfwtwrahuokydvtj.supabase.co';
+  const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImViamJ4Znd0d3JhaHVva3lkdnRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyNDgxOTksImV4cCI6MjA4ODgyNDE5OX0.25yREg6vMLUPNoebopUX-TeMWlwKjtssRQLGa2BEQC0';
+
+  const { createClient } = supabase;
+  const db = createClient(SUPABASE_URL, ANON_KEY);
+
+  let profiles = [];
+
+  // ---- AUTH ----
+  document.getElementById('login-btn').addEventListener('click', async () => {
+    const email = document.getElementById('email').value.trim();
+    const pw = document.getElementById('password').value;
+    const btn = document.getElementById('login-btn');
+    const err = document.getElementById('login-error');
+
+    btn.disabled = true;
+    btn.textContent = 'Logger inn…';
+    err.textContent = '';
+
+    const { error } = await db.auth.signInWithPassword({ email, password: pw });
+
+    if (error) {
+      err.textContent = error.message;
+      btn.disabled = false;
+      btn.textContent = 'Logg inn';
+    }
+  });
+
+  document.getElementById('logout-btn').addEventListener('click', async () => {
+    await db.auth.signOut();
+  });
+
+  db.auth.onAuthStateChange((event, session) => {
+    if (session) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      init();
+    } else {
+      document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('app').style.display = 'none';
+    }
+  });
+
+  // ---- INIT ----
+  async function init() {
+    await loadProfiles();
+    await loadPotte('potte1');
+    await loadPotte('potte2');
+    await loadSensorData('potte1');
+    setInterval(() => {
+      loadPotte('potte1');
+      loadPotte('potte2');
+      loadSensorData('potte1');
+    }, 10000);
+  }
+
+  async function loadProfiles() {
+    const { data } = await db.from('planteprofiler').select('*').order('navn');
+    if (data) {
+      profiles = data;
+      renderProfiles('potte1');
+      renderProfiles('potte2');
+    }
+  }
+
+  function renderProfiles(potteId) {
+    const container = document.getElementById(`profiles-${potteId}`);
+    container.innerHTML = profiles.map(p => `
+      <button class="profile-btn" data-potte="${potteId}" data-id="${p.id}"
+        data-intensitet="${p.intensitet}" data-timer="${p.timer_timer}">
+        <span class="emoji">${p.emoji}</span>
+        <span class="name">${p.navn}</span>
+      </button>
+    `).join('');
+
+    container.querySelectorAll('.profile-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        container.querySelectorAll('.profile-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const intensitet = parseInt(btn.dataset.intensitet);
+        const timer = parseInt(btn.dataset.timer);
+        document.getElementById(`intensity-${potteId}`).value = intensitet;
+        document.getElementById(`intensity-val-${potteId}`).textContent = intensitet;
+        const onHour = 7;
+        const offHour = Math.min(onHour + timer, 23);
+        document.getElementById(`timer-on-${potteId}`).value = `0${onHour}:00`.slice(-5);
+        document.getElementById(`timer-off-${potteId}`).value = `${offHour < 10 ? '0' : ''}${offHour}:00`;
+      });
+    });
+  }
+
+  async function loadPotte(potteId) {
+    const { data } = await db
+      .from('potte_commands')
+      .select('*')
+      .eq('potte_id', potteId)
+      .order('updated_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (!data) return;
+
+    document.getElementById(`intensity-${potteId}`).value = data.intensitet;
+    document.getElementById(`intensity-val-${potteId}`).textContent = data.intensitet;
+    document.getElementById(`timer-on-${potteId}`).value = data.timer_on;
+    document.getElementById(`timer-off-${potteId}`).value = data.timer_off;
+
+    if (data.updated_at) {
+      const d = new Date(data.updated_at);
+      document.getElementById(`lastseen-${potteId}`).textContent =
+        'Oppdatert ' + d.toLocaleTimeString('no', { hour: '2-digit', minute: '2-digit' });
+    }
+  }
+
+  async function loadSensorData(potteId) {
+    const { data } = await db
+      .from('potte_sensor_data')
+      .select('*')
+      .eq('potte_id', potteId)
+      .order('registrert_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (!data) return;
+
+    if (data.temperatur !== null)
+      document.getElementById(`temp-${potteId}`).textContent = data.temperatur.toFixed(1);
+    if (data.luftfuktighet !== null)
+      document.getElementById(`hum-${potteId}`).textContent = data.luftfuktighet.toFixed(0);
+
+    // Water level dots: mid=true/false, low=true/false
+    const midDot = document.getElementById(`water-mid-${potteId}`);
+    const lowDot = document.getElementById(`water-low-${potteId}`);
+    if (midDot && lowDot) {
+      midDot.className = 'water-dot ' + (data.vann_mid ? 'active' : 'alert');
+      lowDot.className = 'water-dot ' + (data.vann_lav ? 'active' : (data.vann_mid ? '' : 'alert'));
+    }
+
+    // Soil moisture: raw ADC 0-4095, lower = wetter for capacitive sensor
+    // Map: 4095=bone dry (0%), 1500=very wet (100%)
+    function soilPct(raw) {
+      if (raw === null || raw === undefined) return null;
+      const pct = Math.max(0, Math.min(100, Math.round((4095 - raw) / 2595 * 100)));
+      return pct;
+    }
+
+    function soilClass(pct) {
+      if (pct === null) return 'ok';
+      if (pct < 30) return 'dry';
+      if (pct > 80) return 'wet';
+      return 'ok';
+    }
+
+    [[1, data.jord1], [2, data.jord2], [3, data.jord3]].forEach(([n, raw]) => {
+      const pct = soilPct(raw);
+      const fill = document.getElementById(`soil${n}-${potteId}`);
+      const val = document.getElementById(`soil${n}-val-${potteId}`);
+      if (fill && pct !== null) {
+        fill.style.width = pct + '%';
+        fill.className = 'soil-fill ' + soilClass(pct);
+      }
+      if (val) val.textContent = pct !== null ? pct + '%' : '—';
+    });
+  }
+
+  // ---- SLIDER ----
+  ['potte1', 'potte2'].forEach(potteId => {
+    const slider = document.getElementById(`intensity-${potteId}`);
+    slider.addEventListener('input', () => {
+      document.getElementById(`intensity-val-${potteId}`).textContent = slider.value;
+    });
+  });
+
+  // ---- SAVE ----
+  async function savePotte(potteId) {
+    const btn = document.getElementById(`save-${potteId}`);
+    const status = document.getElementById(`save-status-${potteId}`);
+    btn.disabled = true;
+
+    const intensitet = parseInt(document.getElementById(`intensity-${potteId}`).value);
+    const timer_on = document.getElementById(`timer-on-${potteId}`).value;
+    const timer_off = document.getElementById(`timer-off-${potteId}`).value;
+
+    const { error } = await db
+      .from('potte_commands')
+      .upsert({ potte_id: potteId, intensitet, timer_on, timer_off, updated_at: new Date().toISOString() },
+              { onConflict: 'potte_id' });
+
+    btn.disabled = false;
+    status.style.display = 'block';
+
+    if (error) {
+      status.textContent = 'Feil: ' + error.message;
+      status.classList.add('error');
+    } else {
+      status.textContent = 'Lagret!';
+      status.classList.remove('error');
+    }
+
+    setTimeout(() => { status.style.display = 'none'; }, 3000);
+  }
+
+  document.getElementById('save-potte1').addEventListener('click', () => savePotte('potte1'));
+  document.getElementById('save-potte2').addEventListener('click', () => savePotte('potte2'));
+</script>
+</body>
+</html>
