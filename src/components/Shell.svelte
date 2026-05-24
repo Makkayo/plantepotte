@@ -1,0 +1,24 @@
+<script lang="ts">
+  import Header from './Header.svelte';
+  import PotteOversikt from './PotteOversikt.svelte';
+  import PotteDetalj from './PotteDetalj.svelte';
+  import PlanteKatalog from './PlanteKatalog.svelte';
+
+  type View = { name: 'oversikt' } | { name: 'potte'; potteId: string } | { name: 'katalog' };
+
+  let { view, onNavigate }: { view: View; onNavigate: (v: View) => void } = $props();
+</script>
+
+<div class="min-h-screen flex flex-col">
+  <Header active={view.name} {onNavigate} />
+
+  <main class="flex-1 px-4 sm:px-6 py-6 sm:py-8 mx-auto w-full max-w-5xl">
+    {#if view.name === 'oversikt'}
+      <PotteOversikt {onNavigate} />
+    {:else if view.name === 'potte'}
+      <PotteDetalj potteId={view.potteId} {onNavigate} />
+    {:else if view.name === 'katalog'}
+      <PlanteKatalog {onNavigate} />
+    {/if}
+  </main>
+</div>
