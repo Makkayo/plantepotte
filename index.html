@@ -581,9 +581,10 @@
         document.getElementById(`intensity-${potteId}`).value = intensitet;
         document.getElementById(`intensity-val-${potteId}`).textContent = intensitet;
         const onHour = 7;
-        const offHour = Math.min(onHour + timer, 23);
-        document.getElementById(`timer-on-${potteId}`).value = `0${onHour}:00`.slice(-5);
-        document.getElementById(`timer-off-${potteId}`).value = `${offHour < 10 ? '0' : ''}${offHour}:00`;
+        const offHour = (onHour + timer) % 24;
+        const pad = h => (h < 10 ? '0' : '') + h + ':00';
+        document.getElementById(`timer-on-${potteId}`).value = pad(onHour);
+        document.getElementById(`timer-off-${potteId}`).value = pad(offHour);
       });
     });
   }
@@ -627,12 +628,23 @@
     if (data.luftfuktighet !== null)
       document.getElementById(`hum-${potteId}`).textContent = data.luftfuktighet.toFixed(0);
 
-    // Water level dots: mid=true/false, low=true/false
+    // Vannstand:
+    //  Begge true  = full       → mid blå, lav blå
+    //  Kun lav     = halvt fullt → mid gul (warn), lav blå
+    //  Begge false = tomt       → mid rød, lav rød
     const midDot = document.getElementById(`water-mid-${potteId}`);
     const lowDot = document.getElementById(`water-low-${potteId}`);
     if (midDot && lowDot) {
-      midDot.className = 'water-dot ' + (data.vann_mid ? 'active' : 'alert');
-      lowDot.className = 'water-dot ' + (data.vann_lav ? 'active' : (data.vann_mid ? '' : 'alert'));
+      if (data.vann_mid) {
+        midDot.className = 'water-dot active';
+        lowDot.className = 'water-dot active';
+      } else if (data.vann_lav) {
+        midDot.className = 'water-dot warn';
+        lowDot.className = 'water-dot active';
+      } else {
+        midDot.className = 'water-dot alert';
+        lowDot.className = 'water-dot alert';
+      }
     }
 
     // Soil moisture: raw ADC 0-4095, lower = wetter for capacitive sensor

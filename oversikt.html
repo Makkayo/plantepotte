@@ -1,0 +1,1866 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plantepotte — Prosjektoversikt</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #242736;
+      --surface3: #2e3347;
+      --border: #2e3347;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --dim: #475569;
+      --green: #4ade80;
+      --green-dim: #166534;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --blue: #60a5fa;
+      --purple: #a78bfa;
+
+      /* Wire farger (matcher SVG) */
+      --w-12v: #f87171;
+      --w-5v: #4ade80;
+      --w-33v: #60a5fa;
+      --w-sig: #c4b5fd;
+      --w-i2c: #f472b6;
+      --w-gnd: #94a3b8;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.65;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      background: linear-gradient(135deg, #0f2017 0%, #0f1117 60%);
+      border-bottom: 1px solid var(--border);
+      padding: 2.5rem 2rem 2rem;
+      text-align: center;
+    }
+    .hero .emoji { font-size: 3rem; display: block; margin-bottom: 0.5rem; }
+    .hero h1 { font-size: 2rem; font-weight: 800; margin-bottom: 0.4rem; }
+    .hero p { color: var(--muted); font-size: 0.95rem; max-width: 620px; margin: 0 auto; }
+
+    /* ─── SNAPSHOT (alltid synlig over fanene) ─── */
+    .snapshot {
+      max-width: 1200px; margin: -1.5rem auto 0; padding: 0 1.5rem;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem; position: relative; z-index: 5;
+    }
+    .snap-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1rem 1.2rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    }
+    .snap-label {
+      font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.45rem;
+    }
+    .snap-value { font-size: 1.25rem; font-weight: 800; line-height: 1.2; margin-bottom: 0.2rem; }
+    .snap-sub { font-size: 0.76rem; color: var(--muted); }
+    .progress-bar { background: var(--surface2); border-radius: 99px; height: 8px; margin-top: 0.5rem; overflow: hidden; }
+    .progress-fill { background: linear-gradient(90deg, var(--green), #22c55e); height: 100%; border-radius: 99px; }
+
+    /* ─── TAB NAV ─── */
+    .tabs-wrap {
+      position: sticky; top: 0; z-index: 20;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+    .tabs {
+      max-width: 1200px; margin: 0 auto; padding: 0 1rem;
+      display: flex; gap: 0; overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      background: none; border: none;
+      color: var(--muted); font-size: 0.9rem; font-weight: 600;
+      padding: 1rem 1.25rem; white-space: nowrap;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+      font-family: inherit;
+      display: inline-flex; align-items: center; gap: 0.45rem;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--green); border-bottom-color: var(--green); }
+    .tab-btn .tab-icon { font-size: 1rem; }
+    .tab-btn.external { color: var(--blue); }
+    .tab-btn.external:hover { color: var(--blue); border-bottom-color: var(--blue); }
+
+    /* ─── LAYOUT ─── */
+    main { max-width: 1200px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+    .pane { display: none; flex-direction: column; gap: 3rem; }
+    .pane.active { display: flex; }
+
+    section { display: flex; flex-direction: column; gap: 1.25rem; }
+    .section-title {
+      display: flex; align-items: center; gap: 0.75rem;
+      font-size: 1.4rem; font-weight: 800;
+      padding-bottom: 0.7rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-title .icon { font-size: 1.5rem; }
+    .section-intro { color: var(--muted); font-size: 0.95rem; max-width: 780px; }
+
+    /* ─── PILLS / DOTS ─── */
+    .pill {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.76rem; font-weight: 600;
+      padding: 0.2rem 0.65rem; border-radius: 99px;
+    }
+    .pill-green { background: #14532d; color: var(--green); }
+    .pill-yellow { background: #451a03; color: var(--yellow); }
+    .pill-red { background: #450a0a; color: var(--red); }
+    .pill-grey { background: var(--surface2); color: var(--muted); }
+
+    /* ─── INFRA / KOMPONENT CARDS ─── */
+    .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+    .infra-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.2rem 1.4rem;
+    }
+    .infra-card .ic-icon { font-size: 1.7rem; margin-bottom: 0.4rem; }
+    .infra-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .infra-card p { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.55rem; }
+    .infra-card a { color: var(--blue); font-size: 0.82rem; word-break: break-all; }
+
+    .comp-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .comp-group-title {
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--muted);
+      padding: 0.5rem 0 0.25rem;
+    }
+    .comp-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 0.95rem 1.2rem;
+      display: flex; align-items: flex-start; gap: 1rem;
+    }
+    .comp-icon { font-size: 1.7rem; flex-shrink: 0; width: 2.4rem; text-align: center; }
+    .comp-body { flex: 1; }
+    .comp-body h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.15rem; }
+    .comp-body .what { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.35rem; }
+    .comp-body .spec { font-size: 0.78rem; color: var(--dim); font-style: italic; }
+    .comp-status { flex-shrink: 0; }
+
+    /* ─── BEGYNNER-KONSEPTER ─── */
+    .glossary {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 0.8rem;
+    }
+    .gloss-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1rem 1.1rem;
+    }
+    .gloss-card h4 {
+      display: flex; align-items: center; gap: 0.45rem;
+      font-size: 0.92rem; font-weight: 700; margin-bottom: 0.35rem;
+      color: var(--text);
+    }
+    .gloss-card h4 .gi { font-size: 1.05rem; }
+    .gloss-card p { font-size: 0.83rem; color: var(--muted); line-height: 1.55; }
+    .gloss-card .ex {
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--blue);
+      background: #0a1a2a;
+      padding: 0.4rem 0.6rem;
+      border-radius: 6px;
+      border-left: 2px solid var(--blue);
+    }
+
+    /* ─── LEGEND (interaktiv) ─── */
+    .legend {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      padding: 0.85rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .legend-item {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.78rem; font-weight: 600;
+      padding: 0.3rem 0.7rem;
+      border-radius: 99px;
+      background: var(--surface2);
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s, opacity 0.15s;
+      border: 1px solid transparent;
+    }
+    .legend-item:hover { background: var(--surface3); }
+    .legend-item.muted { opacity: 0.3; }
+    .legend-item.locked { border-color: var(--green); }
+    .legend-swatch { width: 18px; height: 4px; border-radius: 2px; }
+    .legend-12v { background: var(--w-12v); }
+    .legend-5v { background: var(--w-5v); }
+    .legend-33v { background: var(--w-33v); }
+    .legend-sig { background: var(--w-sig); }
+    .legend-i2c { background: var(--w-i2c); }
+    .legend-gnd { background: var(--w-gnd); }
+
+    .legend-hint {
+      font-size: 0.78rem; color: var(--muted); margin-left: auto;
+      align-self: center;
+    }
+
+    /* ─── DIAGRAM WRAPPER ─── */
+    .diagram-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1rem;
+      overflow-x: auto;
+      position: relative;
+    }
+    .diagram-wrap svg {
+      width: 100%; min-width: 900px;
+      height: auto; display: block;
+    }
+
+    .comp-svg { cursor: pointer; }
+    .comp-svg rect { transition: filter 0.15s, stroke-width 0.15s; }
+    .comp-svg:hover rect { filter: brightness(1.25); stroke-width: 2.5; }
+    .comp-svg text { pointer-events: none; }
+    .comp-svg .name { font-weight: 700; font-size: 13px; fill: var(--text); }
+    .comp-svg .sub { font-size: 10.5px; fill: var(--muted); }
+    .comp-svg .pin { font-size: 9.5px; fill: var(--text); font-family: 'Courier New', monospace; }
+
+    .wire {
+      stroke-width: 2.5; fill: none;
+      stroke-linecap: round; stroke-linejoin: round;
+      transition: opacity 0.2s, stroke-width 0.2s;
+    }
+    .wire.w-12v { stroke: var(--w-12v); }
+    .wire.w-5v  { stroke: var(--w-5v); }
+    .wire.w-33v { stroke: var(--w-33v); }
+    .wire.w-sig { stroke: var(--w-sig); }
+    .wire.w-i2c { stroke: var(--w-i2c); }
+    .wire.w-gnd { stroke: var(--w-gnd); stroke-dasharray: 6 3; }
+    .wire.dim { opacity: 0.1; }
+
+    .wire-label {
+      font-size: 10px; font-family: 'Courier New', monospace;
+      fill: var(--muted); pointer-events: none;
+    }
+
+    /* Komponent-fyll */
+    .fill-esp { fill: #1e1b4b; stroke: var(--purple); }
+    .fill-power { fill: #1c0a0a; stroke: var(--w-12v); }
+    .fill-buck { fill: #14532d; stroke: var(--w-5v); }
+    .fill-mosfet { fill: #2e1065; stroke: var(--purple); }
+    .fill-led { fill: #3b0e0e; stroke: #fda4af; }
+    .fill-sensor { fill: #0f2a3f; stroke: var(--w-33v); }
+    .fill-water { fill: #0c2840; stroke: var(--w-5v); }
+    .fill-display { fill: #2a0d3a; stroke: var(--w-i2c); }
+    .fill-encoder { fill: #1e2540; stroke: var(--blue); }
+    .fill-gnd { fill: #1c1c1c; stroke: var(--w-gnd); }
+
+    /* Tooltip på diagram */
+    .svg-tooltip {
+      position: absolute;
+      background: var(--surface3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.7rem 0.85rem;
+      font-size: 0.82rem;
+      color: var(--text);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s;
+      max-width: 260px;
+      z-index: 10;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    }
+    .svg-tooltip.visible { opacity: 1; }
+    .svg-tooltip strong { color: var(--green); display: block; margin-bottom: 0.25rem; font-size: 0.88rem; }
+    .svg-tooltip .stt-sub { color: var(--muted); font-size: 0.75rem; }
+
+    /* ─── STEP TABLE (koblingsliste med steg) ─── */
+    .conn-table tr.step-header td {
+      background: var(--surface3);
+      font-weight: 700; color: var(--text);
+      font-size: 0.78rem; letter-spacing: 0.05em;
+      text-transform: uppercase; padding: 0.55rem 1rem;
+      border-top: 2px solid var(--border);
+    }
+    .step-badge {
+      text-align: center; font-size: 0.85rem;
+      font-weight: 800; color: var(--green);
+    }
+    .warn-row td { background: #1a1308 !important; }
+    .warn-row td code { background: #2a1f00; }
+
+    /* ─── CONNECTION TABLE ─── */
+    .conn-table {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+    }
+    .conn-table table { width: 100%; border-collapse: collapse; }
+    .conn-table th {
+      background: var(--surface2); padding: 0.7rem 1rem;
+      text-align: left; font-size: 0.72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--muted); border-bottom: 1px solid var(--border);
+    }
+    .conn-table td {
+      padding: 0.65rem 1rem; font-size: 0.86rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .conn-table tr:last-child td { border-bottom: none; }
+    .conn-table tr:hover td { background: rgba(74, 222, 128, 0.04); }
+    .conn-table code {
+      background: var(--surface2); color: var(--blue);
+      padding: 0.1rem 0.4rem; border-radius: 4px;
+      font-size: 0.82em; font-family: 'Courier New', monospace;
+    }
+    .voltage-pill {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      font-size: 0.72rem; font-weight: 700;
+      padding: 0.15rem 0.55rem;
+      border-radius: 99px; font-family: 'Courier New', monospace;
+    }
+    .v-12v { background: #3b0e0e; color: #fca5a5; }
+    .v-5v { background: #14532d; color: #86efac; }
+    .v-33v { background: #1e3a5f; color: #93c5fd; }
+    .v-sig { background: #2e1065; color: #c4b5fd; }
+    .v-i2c { background: #3b0d2f; color: #f9a8d4; }
+    .v-gnd { background: #1c1c1c; color: #94a3b8; }
+
+    /* ─── STRØMTRE ─── */
+    .power-tree {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 1.5rem;
+      overflow-x: auto;
+    }
+    .tree-row {
+      display: flex; align-items: center;
+      gap: 0.6rem; margin-bottom: 0.55rem; flex-wrap: wrap;
+    }
+    .tree-node {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.5rem 0.85rem; border-radius: 8px;
+      font-size: 0.82rem; font-weight: 600;
+      border: 1px solid var(--border); background: var(--surface2);
+    }
+    .tree-arrow { color: var(--dim); font-size: 1.1rem; }
+    .tree-indent-1 { padding-left: 1.8rem; }
+    .tree-indent-2 { padding-left: 3.6rem; }
+    .tree-indent-3 { padding-left: 5.4rem; }
+
+    /* ─── ESP32 PINOUT ─── */
+    .pinout-wrap {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 1.5rem;
+      overflow-x: auto;
+    }
+    .pinout-wrap svg { display: block; margin: 0 auto; max-width: 100%; }
+
+    /* ─── BYGGESTEG ─── */
+    .steps { display: flex; flex-direction: column; gap: 0.85rem; }
+    .step {
+      display: grid; grid-template-columns: 50px 1fr; gap: 1.1rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.1rem 1.3rem;
+    }
+    .step-num {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: #14532d; color: var(--green);
+      font-weight: 800; font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid var(--green);
+    }
+    .step-body h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .step-body p { color: var(--muted); font-size: 0.88rem; margin-bottom: 0.55rem; }
+    .step-wires { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+    .wire-chip {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.76rem; font-weight: 600;
+      padding: 0.22rem 0.55rem; border-radius: 6px;
+      background: var(--surface2); border: 1px solid var(--border);
+    }
+    .wire-chip::before {
+      content: ''; width: 12px; height: 3px; border-radius: 2px;
+    }
+    .wire-chip.c-12v::before { background: var(--w-12v); }
+    .wire-chip.c-5v::before  { background: var(--w-5v); }
+    .wire-chip.c-33v::before { background: var(--w-33v); }
+    .wire-chip.c-sig::before { background: var(--w-sig); }
+    .wire-chip.c-i2c::before { background: var(--w-i2c); }
+    .wire-chip.c-gnd::before { background: var(--w-gnd); }
+    .check-tip {
+      margin-top: 0.55rem; font-size: 0.8rem; color: var(--yellow);
+      background: #1a1308; border: 1px solid #451a03;
+      padding: 0.45rem 0.7rem; border-radius: 6px;
+    }
+    .ok-tip {
+      margin-top: 0.55rem; font-size: 0.8rem; color: var(--green);
+      background: #0a1a0f; border: 1px solid #14532d;
+      padding: 0.45rem 0.7rem; border-radius: 6px;
+    }
+
+    /* ─── CHECKLIST ─── */
+    .checklist { display: flex; flex-direction: column; gap: 0.55rem; }
+    .check {
+      display: flex; align-items: flex-start; gap: 0.95rem;
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 0.9rem 1.15rem; background: var(--surface);
+    }
+    .check.done { border-color: #14532d; background: #0a1a0f; }
+    .check.waiting { border-color: #451a03; background: #180b00; }
+    .check-box {
+      width: 24px; height: 24px; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; flex-shrink: 0; margin-top: 1px;
+    }
+    .check.done .check-box { background: #14532d; color: var(--green); }
+    .check.waiting .check-box { background: #451a03; color: var(--yellow); }
+    .check.todo .check-box { background: var(--surface2); border: 2px solid var(--border); }
+    .check-content h4 { font-size: 0.92rem; font-weight: 700; margin-bottom: 0.18rem; }
+    .check-content p { font-size: 0.82rem; color: var(--muted); }
+    .check-content .tip {
+      display: inline-block; margin-top: 0.35rem;
+      background: #1e3a5f; color: var(--blue);
+      font-size: 0.76rem; padding: 0.18rem 0.55rem; border-radius: 4px;
+    }
+
+    /* ─── PHASES ─── */
+    .phase-list { display: flex; flex-direction: column; position: relative; }
+    .phase-list::before {
+      content: ''; position: absolute; left: 19px; top: 22px; bottom: 22px;
+      width: 2px; background: var(--border);
+    }
+    .phase-item {
+      display: flex; gap: 1.1rem; padding: 1.1rem 0; position: relative;
+    }
+    .phase-circle {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.95rem; flex-shrink: 0;
+      background: var(--surface2); border: 2px solid var(--border);
+      color: var(--muted); z-index: 1;
+    }
+    .phase-item.current .phase-circle { background: #14532d; border-color: var(--green); color: var(--green); }
+    .phase-item.future .phase-circle { background: var(--surface); border-color: var(--border); color: var(--border); }
+    .phase-body { padding-top: 0.4rem; }
+    .phase-body h4 { font-size: 1rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .phase-body p { font-size: 0.85rem; color: var(--muted); }
+    .phase-body .phase-tag { margin-left: 0.5rem; }
+
+    /* ─── WARNINGS ─── */
+    .warn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+    .warn-box {
+      border-radius: 10px; padding: 1.15rem;
+      display: flex; flex-direction: column; gap: 0.4rem;
+    }
+    .warn-box.danger { background: #1c0a0a; border: 1px solid #7f1d1d; }
+    .warn-box.info   { background: #0a1020; border: 1px solid #1d4ed8; }
+    .warn-box.tip    { background: #0f1c0f; border: 1px solid #14532d; }
+    .warn-icon { font-size: 1.4rem; }
+    .warn-box h4 { font-size: 0.9rem; font-weight: 700; }
+    .warn-box.danger h4 { color: var(--red); }
+    .warn-box.info h4 { color: var(--blue); }
+    .warn-box.tip h4 { color: var(--green); }
+    .warn-box p { font-size: 0.82rem; color: var(--muted); }
+
+    code {
+      background: var(--surface2); color: var(--blue);
+      padding: 0.1rem 0.35rem; border-radius: 4px;
+      font-size: 0.85em; font-family: 'Courier New', monospace;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 700px) {
+      .hero h1 { font-size: 1.55rem; }
+      .section-title { font-size: 1.2rem; }
+      .step { grid-template-columns: 1fr; gap: 0.5rem; }
+      .step-num { margin-bottom: 0.25rem; }
+      .tab-btn { padding: 0.85rem 0.85rem; font-size: 0.82rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════ HERO ════════════════ -->
+<div class="hero">
+  <span class="emoji">🌱</span>
+  <h1>Plantepotte — Prosjektoversikt</h1>
+  <p>Alt på ett sted: hva som er klart, hva du venter på, hvordan det kobles, og veien videre. Klikk en fane.</p>
+</div>
+
+<!-- ════════════════ SNAPSHOT ════════════════ -->
+<div class="snapshot">
+  <div class="snap-card">
+    <div class="snap-label">📊 Framdrift</div>
+    <div class="snap-value">Fase 1 av 5</div>
+    <div class="snap-sub">Backend ferdig — hardware venter</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
+  </div>
+  <div class="snap-card">
+    <div class="snap-label">💰 Brukt så langt</div>
+    <div class="snap-value">~€90</div>
+    <div class="snap-sub">AliExpress sendt · lokalkjøp gjenstår</div>
+  </div>
+  <div class="snap-card">
+    <div class="snap-label">📦 Hardware ankommer</div>
+    <div class="snap-value">~2. juni</div>
+    <div class="snap-sub">AliExpress-pakke med alle deler</div>
+  </div>
+  <div class="snap-card">
+    <div class="snap-label">➡️ Gjør denne uka</div>
+    <div class="snap-value" style="font-size:1rem;">Installer Thonny + kjøp multimeter</div>
+    <div class="snap-sub">Klargjør PC og verktøy</div>
+  </div>
+</div>
+
+<!-- ════════════════ TABS ════════════════ -->
+<div class="tabs-wrap">
+  <div class="tabs" role="tablist">
+    <button class="tab-btn active" data-tab="status"><span class="tab-icon">🟢</span> Status</button>
+    <button class="tab-btn" data-tab="komponenter"><span class="tab-icon">📦</span> Komponenter</button>
+    <button class="tab-btn" data-tab="kobling"><span class="tab-icon">🔌</span> Kobling</button>
+    <button class="tab-btn" data-tab="bygg"><span class="tab-icon">🧱</span> Bygg</button>
+    <button class="tab-btn" data-tab="plan"><span class="tab-icon">🗺️</span> Plan</button>
+    <button class="tab-btn" data-tab="advarsler"><span class="tab-icon">⚠️</span> Advarsler</button>
+    <a class="tab-btn external" href="3d-design.html"><span class="tab-icon">📐</span> 3D-design ↗</a>
+  </div>
+</div>
+
+<main>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- TAB: STATUS                                  -->
+<!-- ════════════════════════════════════════════ -->
+<div class="pane active" data-pane="status">
+
+  <section>
+    <div class="section-title"><span class="icon">🟢</span> Hva er klart nå</div>
+    <p class="section-intro">Disse tingene er allerede satt opp og fungerer — du trenger ikke gjøre noe med dem.</p>
+
+    <div class="infra-grid">
+      <div class="infra-card">
+        <div class="ic-icon">📱</div>
+        <h3>Web-appen</h3>
+        <p>Her styrer du lysene og ser sensordata fra telefon eller PC. Krever innlogging.</p>
+        <span class="pill pill-green">● Live</span><br><br>
+        <a href="https://plantepotte.pages.dev/" target="_blank">plantepotte.pages.dev →</a>
+      </div>
+      <div class="infra-card">
+        <div class="ic-icon">🗄️</div>
+        <h3>Database (Supabase)</h3>
+        <p>Lagrer innstillinger og sensordata. ESP32-en snakker med denne. Deles med Matplanlegger.</p>
+        <span class="pill pill-green">● Klar</span>
+      </div>
+      <div class="infra-card">
+        <div class="ic-icon">🔐</div>
+        <h3>Innlogging</h3>
+        <p>Du logger inn med <strong>markusnerland@gmail.com</strong>. Ingen andre kan styre pottene dine.</p>
+        <span class="pill pill-green">● Aktivert</span>
+      </div>
+      <div class="infra-card">
+        <div class="ic-icon">💾</div>
+        <h3>Koden (GitHub)</h3>
+        <p>All kode ligger på GitHub. Push til <code>main</code> → appen oppdateres automatisk.</p>
+        <span class="pill pill-green">● Koblet</span><br><br>
+        <a href="https://github.com/Makkayo/plantepotte" target="_blank">github.com/Makkayo/plantepotte →</a>
+      </div>
+      <div class="infra-card">
+        <div class="ic-icon">🍽️</div>
+        <h3>Matplanlegger</h3>
+        <p>Bruker samme database som plantepotte. Fungerer som vanlig.</p>
+        <span class="pill pill-yellow">● Fungerer</span><br><br>
+        <a href="https://matplanlegger.pages.dev/" target="_blank">matplanlegger.pages.dev →</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+
+<!-- ════════════════════════════════════════════ -->
+<!-- TAB: KOMPONENTER                             -->
+<!-- ════════════════════════════════════════════ -->
+<div class="pane" data-pane="komponenter">
+
+  <section>
+    <div class="section-title"><span class="icon">📦</span> Alle deler</div>
+    <p class="section-intro"><strong>16 deler bestilt fra AliExpress</strong>, <strong>4 lokalkjøp</strong>, og <strong>3 ting du har fra før</strong>.</p>
+
+    <div class="comp-group">
+      <div class="comp-group-title">📬 Bestilt fra AliExpress — ankommer ~2. juni</div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🧠</div>
+        <div class="comp-body">
+          <h4>ESP32 — "hjernen" i potten</h4>
+          <div class="what">En liten datamaskin som kobler seg til WiFi og snakker med appen. Leser sensorer og styrer lyset. Programmeres via Thonny.</div>
+          <div class="spec">WROOM-32D, 30-pin, Type-C · ×2 stk (én per potte)</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">💡</div>
+        <div class="comp-body">
+          <h4>Phyto LED-strip — vekstlyset</h4>
+          <div class="what">Røde og blå LEDs spesielt laget for planter. Rød = fotosyntese og blomstring, blå = bladvekst. 4:1 rød:blå er standard for innendørs vekstlys.</div>
+          <div class="spec">12V, 5050 SMD, 4 rød : 1 blå, IP65 (vanntett), 5m</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🔌</div>
+        <div class="comp-body">
+          <h4>MOSFET (LR7843) — lysbryter</h4>
+          <div class="what">Elektronisk bryter. ESP32 sender et lavt signal, MOSFET slår på/av høyspenningen til LED-stripen. Tåler logic-level signal fra ESP32.</div>
+          <div class="spec">LR7843, PCB-modul, logic-level · ×4 stk</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">⚡</div>
+        <div class="comp-body">
+          <h4>12V strømadapter</h4>
+          <div class="what">Hoved-strømkilden. Driver både LED på 12V og ESP32 via buck converter på 5V.</div>
+          <div class="spec">AC 110–240V → 12V DC, 3A, EU-plugg</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🔻</div>
+        <div class="comp-body">
+          <h4>Buck converter — spenningsreduserer</h4>
+          <div class="what">Tar 12V inn, gir 5V ut. ESP32 trenger 5V. Stilles inn med potmeter + multimeter FØR ESP32 kobles til.</div>
+          <div class="spec">DC-DC 5V/5A step-down, barrel jack inn + skruklemmer ut</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">💧</div>
+        <div class="comp-body">
+          <h4>XKC-Y25 — vannstandssensor (×4)</h4>
+          <div class="what">Limes på utsiden av IKEA-tanken. Ingen hull eller kontakt med vann — kjenser gjennom plast. 2 per potte gir tre nivåer: fullt, halvt, tomt.</div>
+          <div class="spec">Kapasitiv, non-contact, NPN-utgang, 5–12V · ×4 stk</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🌡️</div>
+        <div class="comp-body">
+          <h4>DHT22 — temperatur og luftfuktighet</h4>
+          <div class="what">Måler rommet rundt potten. Data vises i appen.</div>
+          <div class="spec">AM2302, digital sensor, 3.3V</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🌱</div>
+        <div class="comp-body">
+          <h4>Jordfuktsensor (×3)</h4>
+          <div class="what">Stikkes ned i jorda. Kapasitiv = ruster ikke. Én per planteseksjon.</div>
+          <div class="spec">Kapasitiv v2.0, korrosjonsbestandig, ADC, 3.3V</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🖥️</div>
+        <div class="comp-body">
+          <h4>OLED-skjerm</h4>
+          <div class="what">Liten skjerm (ca. 2×2cm) på selve potten. Viser temperatur, jordfukt og vannstand uten å åpne appen.</div>
+          <div class="spec">SSD1306, 0.96", I2C, 128×64 piksler, 3.3V</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🎛️</div>
+        <div class="comp-body">
+          <h4>KY-040 — dreieknapp</h4>
+          <div class="what">Knapp du kan dreie og trykke på. Til å justere lysstyrken fysisk på potten uten å bruke telefonen.</div>
+          <div class="spec">360° rotary encoder med knapp, 3 stk · 3.3V — KOBLE 3.3V, IKKE 5V</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🔗</div>
+        <div class="comp-body">
+          <h4>Breadboard + jumper-kabler</h4>
+          <div class="what">Breadboard = prøveplate uten lodding. Jumper-kabler kobler komponenter sammen.</div>
+          <div class="spec">MB-102 830 hull + 65 kabler · ×2 sett</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🔌</div>
+        <div class="comp-body">
+          <h4>DC barrel jack</h4>
+          <div class="what">Der strømadapteren plugges inn. Skruklemmer = ingen lodding.</div>
+          <div class="spec">5.5×2.1mm pigtail-par, 10 par</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🪢</div>
+        <div class="comp-body">
+          <h4>Vekemateriale — bomullssnor</h4>
+          <div class="what">Suger vann fra tanken opp i jorda — sub-irrigasjon uten pumpe.</div>
+          <div class="spec">Bomullssnor 3mm, 10m</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🔌</div>
+        <div class="comp-body">
+          <h4>LED clip connector</h4>
+          <div class="what">Klemme som kobler ledninger til LED-stripen uten lodding.</div>
+          <div class="spec">8mm 2-pin solderless clip, 5 stk</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🔗</div>
+        <div class="comp-body">
+          <h4>KF301 terminalblokk</h4>
+          <div class="what">Skrueklemmer for permanent montering på perfboard.</div>
+          <div class="spec">KF301 2-pin sort, 5mm pitch, 10 stk</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">📼</div>
+        <div class="comp-body">
+          <h4>Elektrisk tape — værbestandig</h4>
+          <div class="what">Isolerer skjøter. Værbestandig tåler fukt — bra i et plantemiljø.</div>
+          <div class="spec">Vinyl, 20 ft (~6m)</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+    </div>
+
+    <div class="comp-group">
+      <div class="comp-group-title">🛒 Kjøp lokalt — FØR hardware ankommer</div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🔬</div>
+        <div class="comp-body">
+          <h4>Multimeter — spenningsmåler</h4>
+          <div class="what">Stiller inn buck converter til 5.0V. MÅ gjøres før ESP32 kobles til.</div>
+          <div class="spec" style="margin-top:0.4rem;">
+            👉 <a href="https://www.jula.no/catalog/el-artikler-og-belysning/el-installasjon/testinstrument/multimetere/multimeter-006281/" target="_blank">Uni-Trend UT131D — 199 kr (anbefalt)</a><br>
+            eller: <a href="https://www.jula.no/catalog/el-artikler-og-belysning/el-installasjon/testinstrument/multimetere/multimeter-009877/" target="_blank">Anslut DT832 — 119 kr</a>
+          </div>
+        </div>
+        <div class="comp-status"><span class="pill pill-red">Mangler</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🪛</div>
+        <div class="comp-body">
+          <h4>Liten flat skrutrekker</h4>
+          <div class="what">Til skruklemmene på barrel jack og buck converter (~2 mm flat).</div>
+          <div class="spec" style="margin-top:0.4rem;">
+            Hvis du mangler: <a href="https://www.jula.no/catalog/verktoy-og-maskiner/handverktoy/skrutrekkere/skrutrekkersett/sett-med-presisjonsskrutrekkere-031942/" target="_blank">Meec Tools presisjonssett — 29,90 kr</a>
+          </div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Sjekk</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">📎</div>
+        <div class="comp-body">
+          <h4>Dobbeltsidig tape</h4>
+          <div class="what">Til å feste XKC-Y25 på utsiden av IKEA-tanken. Sterk 3M-tape, ikke postkasse-tape.</div>
+          <div class="spec" style="margin-top:0.4rem;">
+            👉 <a href="https://www.jula.no/catalog/hjem-og-husholdning/kontor/kontormateriell/kontortilbehor/dobbeltsidig-selvklebende-tape-032926/" target="_blank">Scotch dobbeltsidig 6,3m × 13mm — 59,90 kr</a>
+          </div>
+        </div>
+        <div class="comp-status"><span class="pill pill-red">Mangler</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🔌</div>
+        <div class="comp-body">
+          <h4>USB-C datakabel</h4>
+          <div class="what">For å koble ESP32 til PC via Thonny. Test: koble telefon — ser PC den?</div>
+          <div class="spec" style="margin-top:0.4rem;">
+            <a href="https://www.jula.no/catalog/hjem-og-husholdning/hjemmeelektronikk/tilbehor-for-nettbrett-og-mobiler/annet-mobiltilbehor/ladekabel-usb-c-024576/" target="_blank">Anslut USB-C fra 79,90 kr — kjøp kun om du må</a><br>
+            <span style="color:var(--yellow);font-size:0.78rem;">⚠ Sjekk at den støtter dataoverføring, ikke kun lading</span>
+          </div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Sjekk</span></div>
+      </div>
+    </div>
+
+    <div class="comp-group">
+      <div class="comp-group-title">✅ Har allerede</div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🪣</div>
+        <div class="comp-body">
+          <h4>IKEA 365+ 5.2L — vannreservoar</h4>
+          <div class="what">Holder vannet. Veken henger ned i den. XKC-Y25 limes på utsiden.</div>
+          <div class="spec">~340 × 210 × 100 mm · ×2 stk</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-green">Klar</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🖨️</div>
+        <div class="comp-body">
+          <h4>Bambu Lab P2S + PETG</h4>
+          <div class="what">3D-printeren som lager innkapslingen. PETG tåler fukt bedre enn PLA.</div>
+          <div class="spec">Byggeflate 256×256×256mm</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-green">Klar</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">💻</div>
+        <div class="comp-body">
+          <h4>Thonny IDE</h4>
+          <div class="what">Programvaren du skriver Python-kode i og laster opp til ESP32. Last ned på thonny.org.</div>
+          <div class="spec">Installer FØR hardware ankommer · <a href="https://thonny.org" target="_blank">thonny.org →</a></div>
+        </div>
+        <div class="comp-status"><span class="pill pill-red">Ikke installert</span></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+
+<!-- ════════════════════════════════════════════ -->
+<!-- TAB: KOBLING                                 -->
+<!-- ════════════════════════════════════════════ -->
+<div class="pane" data-pane="kobling">
+
+  <!-- ── A: Begynnerkonsepter ── -->
+  <section>
+    <div class="section-title"><span class="icon">📖</span> Først: noen begreper du må kunne</div>
+    <p class="section-intro">Hvis dette er nytt, les disse kortene før du fortsetter. Hver av dem dukker opp i diagrammene under.</p>
+
+    <div class="glossary">
+      <div class="gloss-card">
+        <h4><span class="gi">🔋</span> Spenning vs. signal</h4>
+        <p><strong>Spenning (strøm)</strong> driver komponenter — som å gi en motor bensin. <strong>Signal</strong> forteller dem hva de skal gjøre — som en sjåfør. ESP32 sender små signaler som styrer mye større strømmer.</p>
+        <div class="ex">Eks: ESP32 sender et signal på 3.3V til MOSFET, som slipper gjennom 12V til LED.</div>
+      </div>
+
+      <div class="gloss-card">
+        <h4><span class="gi">⏚</span> GND (ground / minus)</h4>
+        <p>Alt elektrisk må ha en vei tilbake til strømkilden. Det er <strong>GND</strong>. ALLE komponenter må dele samme GND — én lang skinne på breadboardet. Uten dette fungerer ingenting.</p>
+        <div class="ex">Hver eneste komponent får en GND-ledning til samme rad.</div>
+      </div>
+
+      <div class="gloss-card">
+        <h4><span class="gi">📍</span> GPIO (pinner på ESP32)</h4>
+        <p>Hver pinne har et nummer (GPIO 26, GPIO 4, osv). Du forteller koden hvilken pinne du har koblet en sensor til, så vet ESP32 hvor den skal lese eller skrive.</p>
+        <div class="ex">GPIO 26 styrer MOSFET. GPIO 4 leser DHT22. GPIO 21/22 er for I2C.</div>
+      </div>
+
+      <div class="gloss-card">
+        <h4><span class="gi">⚡</span> PWM (Pulse-Width Modulation)</h4>
+        <p>ESP32 kan ikke gi "halv strøm", men den kan blinke veldig fort — 1000 ganger i sekundet. Hvis lyset er på 30% av tiden, ser det dimmet ut for øyet. Det er PWM.</p>
+        <div class="ex">Slider på 70% i app-en → ESP32 sender PWM 70% → LED lyser 70%.</div>
+      </div>
+
+      <div class="gloss-card">
+        <h4><span class="gi">🔻</span> Buck converter</h4>
+        <p>Tar høyere spenning inn og gir lavere ut. Vår tar 12V og lager 5V. Du stiller den med et potmeter og en multimeter til den viser nøyaktig 5.0V.</p>
+        <div class="ex">Uten dette: 12V på ESP32 = ødelagt brett.</div>
+      </div>
+
+      <div class="gloss-card">
+        <h4><span class="gi">🔌</span> MOSFET</h4>
+        <p>Elektronisk bryter. Et lite signal på "SIG"-pinnen får MOSFET til å slippe gjennom stor strøm mellom VIN og OUT. Vår type (LR7843) trenger bare 3.3V signal — perfekt for ESP32.</p>
+        <div class="ex">ESP32 GPIO 26 → MOSFET SIG → LED slås av/på/dimmes.</div>
+      </div>
+
+      <div class="gloss-card">
+        <h4><span class="gi">📡</span> I2C (to-tråds buss)</h4>
+        <p>En måte å snakke med flere chip-er på over kun to ledninger: SDA (data) og SCL (klokke). OLED-skjermen vår bruker dette.</p>
+        <div class="ex">GPIO 21 = SDA, GPIO 22 = SCL (standard på ESP32).</div>
+      </div>
+
+      <div class="gloss-card">
+        <h4><span class="gi">📊</span> ADC (analog-til-digital)</h4>
+        <p>Noen sensorer (som jordfukt) gir en analog spenning som forteller hvor våt jorda er. ESP32 leser denne som et tall mellom 0 og 4095. <strong>Lavt tall = vått, høyt tall = tørt.</strong></p>
+        <div class="ex">GPIO 34, 35, 32 er ADC-pinner og brukes til de tre jordfuktsensorene.</div>
+      </div>
+
+      <div class="gloss-card">
+        <h4><span class="gi">🧰</span> Breadboard</h4>
+        <p>Prøveplate med hull. Hullene henger sammen i rader (5 horisontalt + lange skinner langs sidene). Sett komponenter ned, kobl med jumper-kabler — ingen lodding.</p>
+        <div class="ex">Bruk én skinne som 12V, én som 5V, én som 3.3V, én som GND.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── B: Systemdiagram ── -->
+  <section>
+    <div class="section-title"><span class="icon">🗺️</span> Hele systemet i ett blikk</div>
+    <p class="section-intro">Hvert fargede område er en komponent. Hvert farget segment er en ledning. Klikk en kabeltype i fargenøkkelen for å fremheve kun den typen, eller hold pekeren over en boks for mer info om komponenten.</p>
+
+    <div class="legend" id="legend">
+      <span class="legend-item" data-wire="w-12v">
+        <span class="legend-swatch legend-12v"></span> 12V (rød)
+      </span>
+      <span class="legend-item" data-wire="w-5v">
+        <span class="legend-swatch legend-5v"></span> 5V (grønn)
+      </span>
+      <span class="legend-item" data-wire="w-33v">
+        <span class="legend-swatch legend-33v"></span> 3.3V (blå)
+      </span>
+      <span class="legend-item" data-wire="w-sig">
+        <span class="legend-swatch legend-sig"></span> Signal (lilla)
+      </span>
+      <span class="legend-item" data-wire="w-i2c">
+        <span class="legend-swatch legend-i2c"></span> I2C (rosa)
+      </span>
+      <span class="legend-item" data-wire="w-gnd">
+        <span class="legend-swatch legend-gnd"></span> GND (grå)
+      </span>
+      <span class="legend-hint">↑ klikk for å vise kun én farge</span>
+    </div>
+
+    <div class="diagram-wrap" id="diagram-wrap">
+      <div class="svg-tooltip" id="svg-tooltip"></div>
+      <svg viewBox="0 0 1200 820" xmlns="http://www.w3.org/2000/svg" id="sys-svg">
+        <defs>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1a1d27" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+        <rect width="1200" height="820" fill="url(#grid)"/>
+
+        <text x="160" y="40" fill="#475569" font-size="11" font-weight="700" letter-spacing="2">STRØMKILDE</text>
+        <text x="600" y="40" fill="#475569" font-size="11" font-weight="700" letter-spacing="2">HJERNEN</text>
+        <text x="1010" y="40" fill="#475569" font-size="11" font-weight="700" letter-spacing="2">SENSORER</text>
+        <text x="160" y="495" fill="#475569" font-size="11" font-weight="700" letter-spacing="2">12V LASTKRETS</text>
+        <text x="600" y="775" fill="#475569" font-size="11" font-weight="700" letter-spacing="2">FELLES GND — bindelimet</text>
+
+        <!-- KOMPONENTER -->
+        <g class="comp-svg" transform="translate(60, 70)"
+           data-name="12V strømadapter"
+           data-info="Tar 230V fra vegguttak og lager 12V DC. Hoved-strømkilden til hele systemet.">
+          <rect width="180" height="70" rx="8" class="fill-power"/>
+          <text x="14" y="25" class="name">⚡ 12V adapter</text>
+          <text x="14" y="44" class="sub">AC 230V → 12V 3A</text>
+          <text x="14" y="60" class="sub">EU-plugg → barrel jack</text>
+        </g>
+
+        <g class="comp-svg" transform="translate(60, 170)"
+           data-name="DC barrel jack"
+           data-info="Lite plug-uttak hvor strømadapteren kobles inn. Har skruklemmer på baksiden så du slipper å lodde.">
+          <rect width="180" height="55" rx="8" class="fill-power"/>
+          <text x="14" y="25" class="name">🔌 DC barrel jack</text>
+          <text x="14" y="44" class="sub">Skruklemmer (+/−)</text>
+        </g>
+
+        <g class="comp-svg" transform="translate(60, 260)"
+           data-name="Buck converter"
+           data-info="Tar 12V inn, gir 5V ut. Et lite potmeter må justeres med multimeter. MÅ stilles til 5.0V FØR ESP32 kobles til — over 5V ødelegger ESP32.">
+          <rect width="180" height="80" rx="8" class="fill-buck"/>
+          <text x="14" y="25" class="name">🔻 Buck converter</text>
+          <text x="14" y="44" class="sub">12V → 5V justerbar</text>
+          <text x="14" y="62" class="sub" fill="#fbbf24">⚠ Still 5.0V FØR</text>
+          <text x="14" y="76" class="sub" fill="#fbbf24">ESP32 kobles til</text>
+        </g>
+
+        <g class="comp-svg" transform="translate(60, 520)"
+           data-name="LR7843 MOSFET"
+           data-info="Elektronisk bryter. ESP32 GPIO26 sender PWM-signal på 1kHz til SIG-pinnen. MOSFET slipper gjennom 12V til LED-stripen i pulser. Logic-level betyr at 3.3V signal er nok.">
+          <rect width="180" height="80" rx="8" class="fill-mosfet"/>
+          <text x="14" y="25" class="name">🔌 LR7843 MOSFET</text>
+          <text x="14" y="44" class="sub">Logic-level switch</text>
+          <text x="14" y="62" class="pin">VIN · GND · SIG · OUT</text>
+          <text x="14" y="76" class="sub">PWM 1 kHz fra GPIO26</text>
+        </g>
+
+        <g class="comp-svg" transform="translate(60, 640)"
+           data-name="Phyto LED-strip"
+           data-info="5 meter med 12V LED-er, 4 røde for 1 blå. Trekker mye strøm, derfor må MOSFET stå mellom — ESP32 kan ikke drive dette direkte.">
+          <rect width="180" height="70" rx="8" class="fill-led"/>
+          <text x="14" y="25" class="name">💡 Phyto LED-strip</text>
+          <text x="14" y="44" class="sub">12V, 4 rød : 1 blå</text>
+          <text x="14" y="60" class="sub">5m, 5050 SMD, IP65</text>
+        </g>
+
+        <g class="comp-svg" transform="translate(500, 200)"
+           data-name="ESP32 WROOM-32D"
+           data-info="Hjernen. Kjører MicroPython, kobler seg til WiFi, snakker med Supabase. Drives på 5V via VIN, har egen LDO som lager 3.3V til alle de små sensorene.">
+          <rect width="220" height="380" rx="10" class="fill-esp"/>
+          <text x="110" y="32" class="name" text-anchor="middle" font-size="15">🧠 ESP32 30-pin</text>
+          <text x="110" y="50" class="sub" text-anchor="middle">WROOM-32D · MicroPython</text>
+
+          <line x1="0" y1="80" x2="220" y2="80" stroke="#2e3347"/>
+          <text x="14" y="100" class="pin">VIN</text>
+          <text x="14" y="120" class="pin">3.3V</text>
+          <text x="14" y="140" class="pin">GND</text>
+          <text x="14" y="170" class="pin">GPIO26 ← PWM</text>
+          <text x="14" y="190" class="pin">GPIO19 ← vann-lav</text>
+          <text x="14" y="210" class="pin">GPIO23 ← vann-mid</text>
+          <text x="14" y="230" class="pin">GPIO4  ← DHT22</text>
+          <text x="14" y="250" class="pin">GPIO34 ← jord1</text>
+          <text x="14" y="270" class="pin">GPIO35 ← jord2</text>
+          <text x="14" y="290" class="pin">GPIO32 ← jord3</text>
+
+          <text x="206" y="100" class="pin" text-anchor="end">USB-C</text>
+          <text x="206" y="170" class="pin" text-anchor="end">SDA → GPIO21</text>
+          <text x="206" y="190" class="pin" text-anchor="end">SCL → GPIO22</text>
+          <text x="206" y="220" class="pin" text-anchor="end">CLK → GPIO16</text>
+          <text x="206" y="240" class="pin" text-anchor="end">DT  → GPIO17</text>
+          <text x="206" y="260" class="pin" text-anchor="end">SW  → GPIO18</text>
+
+          <text x="110" y="355" class="sub" text-anchor="middle" fill="#60a5fa">📶 WiFi 2.4GHz → Supabase</text>
+        </g>
+
+        <g class="comp-svg" transform="translate(500, 615)"
+           data-name="Supabase + web-app"
+           data-info="Skyen. ESP32 leser kommandoer (lysstyrke, timer) hvert 5. sek og poster sensordata hvert minutt. Web-appen viser alt og lar deg endre innstillinger.">
+          <rect width="220" height="55" rx="10" fill="#0c1a2a" stroke="#60a5fa" stroke-dasharray="4 3"/>
+          <text x="110" y="25" class="name" text-anchor="middle">☁ Supabase + Web-app</text>
+          <text x="110" y="44" class="sub" text-anchor="middle">plantepotte.pages.dev</text>
+        </g>
+
+        <g class="comp-svg" transform="translate(890, 70)"
+           data-name="OLED-skjerm SSD1306"
+           data-info="Liten 0.96 tommers skjerm. Snakker via I2C (kun 2 ledninger: SDA og SCL). Adresse 0x3C. Driver på 3.3V.">
+          <rect width="200" height="70" rx="8" class="fill-display"/>
+          <text x="14" y="25" class="name">🖥️ OLED 0.96"</text>
+          <text x="14" y="44" class="sub">SSD1306 · I2C @ 0x3C</text>
+          <text x="14" y="60" class="pin">VCC · GND · SDA · SCL</text>
+        </g>
+
+        <g class="comp-svg" transform="translate(890, 165)"
+           data-name="DHT22 temperatur/fukt"
+           data-info="Måler romtemperatur og luftfuktighet. Bruker en spesiell 1-tråds protokoll som MicroPython kan lese rett ut av boksen.">
+          <rect width="200" height="65" rx="8" class="fill-sensor"/>
+          <text x="14" y="25" class="name">🌡️ DHT22</text>
+          <text x="14" y="44" class="sub">Temp + luftfuktighet</text>
+          <text x="14" y="58" class="pin">VCC · DATA · GND</text>
+        </g>
+
+        <g class="comp-svg" transform="translate(890, 255)"
+           data-name="KY-040 dreieknapp"
+           data-info="Rotary encoder med trykk-knapp. CLK og DT teller dreining (oppløsning ca 20 trinn per omdreining). SW er knappen. ⚠ KUN 3.3V på VCC — 5V vil ødelegge ESP32-pinnene.">
+          <rect width="200" height="70" rx="8" class="fill-encoder"/>
+          <text x="14" y="25" class="name">🎛️ KY-040 dreieknapp</text>
+          <text x="14" y="44" class="sub" fill="#fbbf24">⚠ Kun 3.3V — ALDRI 5V</text>
+          <text x="14" y="60" class="pin">+ · GND · CLK · DT · SW</text>
+        </g>
+
+        <g class="comp-svg" transform="translate(890, 350)"
+           data-name="Jordfuktsensor ×3"
+           data-info="Kapasitiv sensor — ruster ikke. Stikkes ned i jorda. Gir analog spenning som ESP32 leser via ADC. Lavere tall = mer vått.">
+          <rect width="200" height="70" rx="8" class="fill-sensor"/>
+          <text x="14" y="25" class="name">🌱 Jordfukt ×3</text>
+          <text x="14" y="44" class="sub">Kapasitiv v2.0 · analog</text>
+          <text x="14" y="60" class="pin">VCC · GND · AOUT</text>
+        </g>
+
+        <g class="comp-svg" transform="translate(890, 445)"
+           data-name="XKC-Y25 vannsensor (lav)"
+           data-info="Limes på utsiden av IKEA-tanken med dobbeltsidig tape. Føler vann gjennom plastveggen. NPN open-collector — bruker intern pull-up. Output trekker LAV når vann er detektert.">
+          <rect width="200" height="70" rx="8" class="fill-water"/>
+          <text x="14" y="25" class="name">💧 XKC-Y25 (lav)</text>
+          <text x="14" y="44" class="sub">Non-contact vannsensor</text>
+          <text x="14" y="60" class="pin">VCC=5V · OUT (NPN)</text>
+        </g>
+
+        <g class="comp-svg" transform="translate(890, 535)"
+           data-name="XKC-Y25 vannsensor (mid)"
+           data-info="Samme sensor som over, men plassert høyere på tanken. Sammen gir de tre nivåer: full (begge true), halv (kun lav), tom (begge false).">
+          <rect width="200" height="70" rx="8" class="fill-water"/>
+          <text x="14" y="25" class="name">💧 XKC-Y25 (mid)</text>
+          <text x="14" y="44" class="sub">Limt på utsiden av tank</text>
+          <text x="14" y="60" class="pin">VCC=5V · OUT (NPN)</text>
+        </g>
+
+        <g class="comp-svg" transform="translate(60, 720)"
+           data-name="Felles GND-skinne"
+           data-info="EN lang rad på breadboardet. ALLE komponenter må ha en kabel hit. Uten felles GND kan ingen signaler forstås mellom komponentene.">
+          <rect width="1090" height="40" rx="6" class="fill-gnd"/>
+          <text x="545" y="26" class="name" text-anchor="middle" fill="#94a3b8">⏚ Felles GND-skinne — ALLE komponenter må kobles hit</text>
+        </g>
+
+        <!-- WIRES -->
+        <path class="wire w-12v" d="M 150 140 L 150 170"/>
+        <text x="155" y="159" class="wire-label">12V</text>
+        <path class="wire w-12v" d="M 150 225 L 150 260"/>
+        <path class="wire w-12v" d="M 220 200 L 280 200 L 280 540 L 240 540"/>
+        <text x="285" y="370" class="wire-label">12V → MOSFET VIN</text>
+
+        <path class="wire w-5v" d="M 240 300 L 380 300 L 380 230 L 500 230"/>
+        <text x="385" y="222" class="wire-label">5V → VIN</text>
+        <path class="wire w-5v" d="M 240 310 L 340 310 L 340 470 L 890 470"/>
+        <text x="700" y="463" class="wire-label">5V → XKC VCC</text>
+        <path class="wire w-5v" d="M 240 320 L 320 320 L 320 560 L 890 560"/>
+
+        <path class="wire w-sig" d="M 500 370 L 460 370 L 460 560 L 240 560"/>
+        <text x="265" y="552" class="wire-label">GPIO26 PWM</text>
+
+        <path class="wire w-12v" d="M 150 600 L 150 640"/>
+        <text x="156" y="625" class="wire-label">OUT</text>
+
+        <path class="wire w-33v" d="M 720 320 L 800 320 L 800 95 L 890 95"/>
+        <text x="805" y="200" class="wire-label">3.3V</text>
+        <path class="wire w-33v" d="M 720 320 L 800 320 L 800 185 L 890 185"/>
+        <path class="wire w-33v" d="M 720 320 L 805 320 L 805 280 L 890 280"/>
+        <path class="wire w-33v" d="M 720 320 L 810 320 L 810 375 L 890 375"/>
+
+        <path class="wire w-i2c" d="M 720 370 L 830 370 L 830 110 L 890 110"/>
+        <text x="836" y="240" class="wire-label">SDA/SCL</text>
+        <path class="wire w-i2c" d="M 720 390 L 840 390 L 840 125 L 890 125"/>
+
+        <path class="wire w-sig" d="M 720 430 L 850 430 L 850 200 L 890 200"/>
+        <text x="855" y="290" class="wire-label">DATA</text>
+
+        <path class="wire w-sig" d="M 720 420 L 860 420 L 860 295 L 890 295"/>
+        <path class="wire w-sig" d="M 720 440 L 865 440 L 865 305 L 890 305"/>
+        <path class="wire w-sig" d="M 720 460 L 870 460 L 870 315 L 890 315"/>
+
+        <path class="wire w-sig" d="M 720 450 L 875 450 L 875 385 L 890 385"/>
+        <text x="780" y="442" class="wire-label">ADC 34/35/32</text>
+        <path class="wire w-sig" d="M 720 470 L 880 470 L 880 395 L 890 395"/>
+        <path class="wire w-sig" d="M 720 490 L 885 490 L 885 405 L 890 405"/>
+
+        <path class="wire w-sig" d="M 890 480 L 770 480 L 770 390 L 720 390"/>
+        <text x="775" y="497" class="wire-label">GPIO19 ← lav</text>
+        <path class="wire w-sig" d="M 890 570 L 760 570 L 760 410 L 720 410"/>
+        <text x="765" y="588" class="wire-label">GPIO23 ← mid</text>
+
+        <!-- GND -->
+        <path class="wire w-gnd" d="M 150 225 L 150 720"/>
+        <path class="wire w-gnd" d="M 150 340 L 150 720"/>
+        <path class="wire w-gnd" d="M 150 600 L 150 720"/>
+        <path class="wire w-gnd" d="M 150 710 L 150 720"/>
+        <path class="wire w-gnd" d="M 610 580 L 610 720"/>
+        <path class="wire w-gnd" d="M 990 140 L 990 720"/>
+        <path class="wire w-gnd" d="M 990 230 L 990 720"/>
+        <path class="wire w-gnd" d="M 990 325 L 990 720"/>
+        <path class="wire w-gnd" d="M 990 420 L 990 720"/>
+        <path class="wire w-gnd" d="M 990 515 L 990 720"/>
+        <path class="wire w-gnd" d="M 990 605 L 990 720"/>
+        <text x="180" y="745" class="wire-label" fill="#94a3b8">← alle GND samles her</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ── C: ESP32 pinout ── -->
+  <section>
+    <div class="section-title"><span class="icon">📍</span> ESP32 — slik bruker du pinnene</div>
+    <p class="section-intro">ESP32-brettet har 30 pinner. Du bruker bare 14 (12 GPIO + 3.3V + GND). Grå = ledig. Rød = strapping-pinner som styrer oppstart — ikke koble noe til dem.</p>
+
+    <div class="pinout-wrap">
+      <svg viewBox="0 0 720 660" xmlns="http://www.w3.org/2000/svg">
+        <rect x="290" y="0" width="140" height="35" rx="6" fill="#475569"/>
+        <text x="360" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#0f1117">USB-C</text>
+        <rect x="240" y="40" width="240" height="610" rx="10" fill="#1e1b4b" stroke="#a78bfa" stroke-width="2"/>
+        <text x="360" y="350" text-anchor="middle" font-size="22" font-weight="800" fill="#a78bfa" opacity="0.4">ESP32</text>
+        <text x="360" y="380" text-anchor="middle" font-size="11" fill="#a78bfa" opacity="0.4">WROOM-32D</text>
+
+        <g font-family="Courier New" font-size="11" font-weight="700">
+        <!-- VENSTRE -->
+        <rect x="240" y="55"  width="40" height="22" fill="#2e3347"/><text x="278" y="71" text-anchor="end" fill="#94a3b8">EN</text>
+        <rect x="240" y="80"  width="40" height="22" fill="#2e3347"/><text x="278" y="96" text-anchor="end" fill="#94a3b8">VP</text>
+        <rect x="240" y="105" width="40" height="22" fill="#2e3347"/><text x="278" y="121" text-anchor="end" fill="#94a3b8">VN</text>
+
+        <rect x="240" y="130" width="40" height="22" fill="#0f2a3f" stroke="#60a5fa"/><text x="278" y="146" text-anchor="end" fill="#60a5fa">34</text>
+        <line x1="240" y1="141" x2="40" y2="141" stroke="#60a5fa" stroke-width="1.5"/>
+        <text x="35" y="138" text-anchor="end" font-size="10" fill="#e2e8f0">Jordfukt #1 (ADC)</text>
+        <text x="35" y="151" text-anchor="end" font-size="9" fill="#94a3b8">input-only</text>
+
+        <rect x="240" y="155" width="40" height="22" fill="#0f2a3f" stroke="#60a5fa"/><text x="278" y="171" text-anchor="end" fill="#60a5fa">35</text>
+        <line x1="240" y1="166" x2="40" y2="166" stroke="#60a5fa" stroke-width="1.5"/>
+        <text x="35" y="163" text-anchor="end" font-size="10" fill="#e2e8f0">Jordfukt #2 (ADC)</text>
+        <text x="35" y="176" text-anchor="end" font-size="9" fill="#94a3b8">input-only</text>
+
+        <rect x="240" y="180" width="40" height="22" fill="#0f2a3f" stroke="#60a5fa"/><text x="278" y="196" text-anchor="end" fill="#60a5fa">32</text>
+        <line x1="240" y1="191" x2="40" y2="191" stroke="#60a5fa" stroke-width="1.5"/>
+        <text x="35" y="195" text-anchor="end" font-size="10" fill="#e2e8f0">Jordfukt #3 (ADC)</text>
+
+        <rect x="240" y="205" width="40" height="22" fill="#2e3347"/><text x="278" y="221" text-anchor="end" fill="#94a3b8">33</text>
+        <rect x="240" y="230" width="40" height="22" fill="#2e3347"/><text x="278" y="246" text-anchor="end" fill="#94a3b8">25</text>
+
+        <rect x="240" y="255" width="40" height="22" fill="#2e1065" stroke="#c4b5fd"/><text x="278" y="271" text-anchor="end" fill="#c4b5fd">26</text>
+        <line x1="240" y1="266" x2="40" y2="266" stroke="#c4b5fd" stroke-width="1.5"/>
+        <text x="35" y="263" text-anchor="end" font-size="10" fill="#e2e8f0">MOSFET SIG</text>
+        <text x="35" y="276" text-anchor="end" font-size="9" fill="#94a3b8">PWM 1kHz → LED</text>
+
+        <rect x="240" y="280" width="40" height="22" fill="#2e3347"/><text x="278" y="296" text-anchor="end" fill="#94a3b8">27</text>
+        <rect x="240" y="305" width="40" height="22" fill="#2e3347"/><text x="278" y="321" text-anchor="end" fill="#94a3b8">14</text>
+        <rect x="240" y="330" width="40" height="22" fill="#3b0e0e" stroke="#f87171"/><text x="278" y="346" text-anchor="end" fill="#f87171">12</text>
+        <text x="35" y="346" text-anchor="end" font-size="9" fill="#f87171">⚠ strapping — ikke bruk</text>
+        <rect x="240" y="355" width="40" height="22" fill="#2e3347"/><text x="278" y="371" text-anchor="end" fill="#94a3b8">13</text>
+        <rect x="240" y="380" width="40" height="22" fill="#1c1c1c" stroke="#94a3b8"/><text x="278" y="396" text-anchor="end" fill="#94a3b8">GND</text>
+        <line x1="240" y1="391" x2="40" y2="391" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <text x="35" y="395" text-anchor="end" font-size="10" fill="#e2e8f0">Felles GND-skinne</text>
+        <rect x="240" y="405" width="40" height="22" fill="#14532d" stroke="#4ade80"/><text x="278" y="421" text-anchor="end" fill="#4ade80">VIN</text>
+        <line x1="240" y1="416" x2="40" y2="416" stroke="#4ade80" stroke-width="1.5"/>
+        <text x="35" y="413" text-anchor="end" font-size="10" fill="#e2e8f0">5V fra buck converter</text>
+        <text x="35" y="426" text-anchor="end" font-size="9" fill="#94a3b8">⚠ må være eksakt 5V</text>
+
+        <!-- HØYRE -->
+        <rect x="440" y="55" width="40" height="22" fill="#1e3a5f" stroke="#60a5fa"/><text x="442" y="71" fill="#60a5fa">3V3</text>
+        <line x1="480" y1="66" x2="680" y2="66" stroke="#60a5fa" stroke-width="1.5"/>
+        <text x="685" y="63" font-size="10" fill="#e2e8f0">3.3V til alle sensorer:</text>
+        <text x="685" y="76" font-size="9" fill="#94a3b8">OLED · DHT22 · jordfukt · KY-040</text>
+
+        <rect x="440" y="80" width="40" height="22" fill="#1c1c1c" stroke="#94a3b8"/><text x="442" y="96" fill="#94a3b8">GND</text>
+        <rect x="440" y="105" width="40" height="22" fill="#3b0e0e" stroke="#f87171"/><text x="442" y="121" fill="#f87171">15</text>
+        <text x="685" y="121" font-size="9" fill="#f87171">⚠ strapping</text>
+        <rect x="440" y="130" width="40" height="22" fill="#3b0e0e" stroke="#f87171"/><text x="442" y="146" fill="#f87171">2</text>
+        <text x="685" y="146" font-size="9" fill="#f87171">⚠ strapping + boot-LED</text>
+        <rect x="440" y="155" width="40" height="22" fill="#3b0e0e" stroke="#f87171"/><text x="442" y="171" fill="#f87171">0</text>
+        <text x="685" y="171" font-size="9" fill="#f87171">⚠ boot-knapp</text>
+
+        <rect x="440" y="180" width="40" height="22" fill="#2e1065" stroke="#c4b5fd"/><text x="442" y="196" fill="#c4b5fd">4</text>
+        <line x1="480" y1="191" x2="680" y2="191" stroke="#c4b5fd" stroke-width="1.5"/>
+        <text x="685" y="188" font-size="10" fill="#e2e8f0">DHT22 DATA</text>
+        <text x="685" y="201" font-size="9" fill="#94a3b8">temp + luftfuktighet</text>
+
+        <rect x="440" y="205" width="40" height="22" fill="#1e2540" stroke="#60a5fa"/><text x="442" y="221" fill="#60a5fa">16</text>
+        <line x1="480" y1="216" x2="680" y2="216" stroke="#60a5fa" stroke-width="1.5"/>
+        <text x="685" y="220" font-size="10" fill="#e2e8f0">KY-040 CLK</text>
+
+        <rect x="440" y="230" width="40" height="22" fill="#1e2540" stroke="#60a5fa"/><text x="442" y="246" fill="#60a5fa">17</text>
+        <line x1="480" y1="241" x2="680" y2="241" stroke="#60a5fa" stroke-width="1.5"/>
+        <text x="685" y="245" font-size="10" fill="#e2e8f0">KY-040 DT</text>
+
+        <rect x="440" y="255" width="40" height="22" fill="#2e3347"/><text x="442" y="271" fill="#94a3b8">5</text>
+
+        <rect x="440" y="280" width="40" height="22" fill="#1e2540" stroke="#60a5fa"/><text x="442" y="296" fill="#60a5fa">18</text>
+        <line x1="480" y1="291" x2="680" y2="291" stroke="#60a5fa" stroke-width="1.5"/>
+        <text x="685" y="295" font-size="10" fill="#e2e8f0">KY-040 SW (knapp)</text>
+
+        <rect x="440" y="305" width="40" height="22" fill="#0c2840" stroke="#4ade80"/><text x="442" y="321" fill="#4ade80">19</text>
+        <line x1="480" y1="316" x2="680" y2="316" stroke="#4ade80" stroke-width="1.5"/>
+        <text x="685" y="320" font-size="10" fill="#e2e8f0">XKC-Y25 lav (vann)</text>
+
+        <rect x="440" y="330" width="40" height="22" fill="#3b0d2f" stroke="#f472b6"/><text x="442" y="346" fill="#f472b6">21</text>
+        <line x1="480" y1="341" x2="680" y2="341" stroke="#f472b6" stroke-width="1.5"/>
+        <text x="685" y="345" font-size="10" fill="#e2e8f0">OLED SDA (I2C-data)</text>
+
+        <rect x="440" y="355" width="40" height="22" fill="#2e3347"/><text x="442" y="371" fill="#94a3b8">RX0</text>
+        <text x="685" y="371" font-size="9" fill="#94a3b8">USB serial</text>
+        <rect x="440" y="380" width="40" height="22" fill="#2e3347"/><text x="442" y="396" fill="#94a3b8">TX0</text>
+        <text x="685" y="396" font-size="9" fill="#94a3b8">USB serial</text>
+
+        <rect x="440" y="405" width="40" height="22" fill="#3b0d2f" stroke="#f472b6"/><text x="442" y="421" fill="#f472b6">22</text>
+        <line x1="480" y1="416" x2="680" y2="416" stroke="#f472b6" stroke-width="1.5"/>
+        <text x="685" y="420" font-size="10" fill="#e2e8f0">OLED SCL (I2C-klokke)</text>
+
+        <rect x="440" y="430" width="40" height="22" fill="#0c2840" stroke="#4ade80"/><text x="442" y="446" fill="#4ade80">23</text>
+        <line x1="480" y1="441" x2="680" y2="441" stroke="#4ade80" stroke-width="1.5"/>
+        <text x="685" y="445" font-size="10" fill="#e2e8f0">XKC-Y25 mid (vann)</text>
+        </g>
+
+        <g transform="translate(40, 540)">
+          <text x="0" y="0" font-size="11" font-weight="700" fill="#94a3b8" letter-spacing="1">FORKLARING</text>
+          <rect x="0" y="10" width="14" height="14" fill="#0f2a3f" stroke="#60a5fa"/>
+          <text x="22" y="22" font-size="10" fill="#e2e8f0">Brukt — sensor (3.3V)</text>
+          <rect x="170" y="10" width="14" height="14" fill="#2e1065" stroke="#c4b5fd"/>
+          <text x="192" y="22" font-size="10" fill="#e2e8f0">Brukt — signal/PWM</text>
+          <rect x="340" y="10" width="14" height="14" fill="#0c2840" stroke="#4ade80"/>
+          <text x="362" y="22" font-size="10" fill="#e2e8f0">Brukt — vannsensor</text>
+          <rect x="510" y="10" width="14" height="14" fill="#3b0d2f" stroke="#f472b6"/>
+          <text x="532" y="22" font-size="10" fill="#e2e8f0">Brukt — I2C</text>
+          <rect x="0" y="35" width="14" height="14" fill="#3b0e0e" stroke="#f87171"/>
+          <text x="22" y="47" font-size="10" fill="#e2e8f0">Strapping — ikke bruk</text>
+          <rect x="170" y="35" width="14" height="14" fill="#2e3347"/>
+          <text x="192" y="47" font-size="10" fill="#94a3b8">Ledig — kan brukes senere</text>
+          <rect x="340" y="35" width="14" height="14" fill="#14532d" stroke="#4ade80"/>
+          <text x="362" y="47" font-size="10" fill="#e2e8f0">Strøm in (VIN/3V3)</text>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ── D: Strømtre ── -->
+  <section>
+    <div class="section-title"><span class="icon">⚡</span> Strømtreet — fra vegg til chip</div>
+    <p class="section-intro">All strøm starter på 230V veggadapteren. Den splittes i to: 12V til LED-stripen, og 5V (via buck converter) til ESP32 og vannsensorene. ESP32 produserer selv 3.3V til alle de små sensorene.</p>
+
+    <div class="power-tree">
+      <div class="tree-row">
+        <span class="tree-node" style="background:#3b0e0e; color:#fca5a5; border-color:#7f1d1d;">🔌 230V AC vegguttak</span>
+        <span class="tree-arrow">→</span>
+        <span class="tree-node" style="background:#3b0e0e; color:#fca5a5; border-color:#7f1d1d;">⚡ Adapter</span>
+        <span class="tree-arrow">→</span>
+        <span class="tree-node" style="background:#3b0e0e; color:#fca5a5; border-color:#7f1d1d;">12V DC 3A</span>
+      </div>
+      <div class="tree-row tree-indent-1">
+        <span style="color:var(--dim);">├──</span>
+        <span class="tree-node" style="background:#3b0e0e; color:#fca5a5; border-color:#7f1d1d;">12V → MOSFET VIN</span>
+        <span class="tree-arrow">→</span>
+        <span class="tree-node" style="background:#2e1065; color:#c4b5fd; border-color:#5b21b6;">PWM-styrt</span>
+        <span class="tree-arrow">→</span>
+        <span class="tree-node" style="background:#3b0e0e; color:#fca5a5; border-color:#7f1d1d;">💡 LED-strip</span>
+      </div>
+      <div class="tree-row tree-indent-1">
+        <span style="color:var(--dim);">└──</span>
+        <span class="tree-node" style="background:#3b0e0e; color:#fca5a5; border-color:#7f1d1d;">12V → Buck converter</span>
+        <span class="tree-arrow">→</span>
+        <span class="tree-node" style="background:#14532d; color:#86efac; border-color:#15803d;">5V justerbar</span>
+      </div>
+      <div class="tree-row tree-indent-2">
+        <span style="color:var(--dim);">├──</span>
+        <span class="tree-node" style="background:#14532d; color:#86efac; border-color:#15803d;">5V → ESP32 VIN</span>
+        <span class="tree-arrow">→</span>
+        <span class="tree-node" style="background:#1e1b4b; color:#a78bfa; border-color:#5b21b6;">ESP32 LDO intern</span>
+        <span class="tree-arrow">→</span>
+        <span class="tree-node" style="background:#1e3a5f; color:#93c5fd; border-color:#1d4ed8;">3.3V</span>
+      </div>
+      <div class="tree-row tree-indent-3">
+        <span style="color:var(--dim);">├──</span>
+        <span class="tree-node" style="background:#1e3a5f; color:#93c5fd; border-color:#1d4ed8;">3.3V → OLED</span>
+      </div>
+      <div class="tree-row tree-indent-3">
+        <span style="color:var(--dim);">├──</span>
+        <span class="tree-node" style="background:#1e3a5f; color:#93c5fd; border-color:#1d4ed8;">3.3V → DHT22</span>
+      </div>
+      <div class="tree-row tree-indent-3">
+        <span style="color:var(--dim);">├──</span>
+        <span class="tree-node" style="background:#1e3a5f; color:#93c5fd; border-color:#1d4ed8;">3.3V → Jordfukt ×3</span>
+      </div>
+      <div class="tree-row tree-indent-3">
+        <span style="color:var(--dim);">└──</span>
+        <span class="tree-node" style="background:#1e3a5f; color:#93c5fd; border-color:#1d4ed8;">3.3V → KY-040 (⚠ aldri 5V!)</span>
+      </div>
+      <div class="tree-row tree-indent-2">
+        <span style="color:var(--dim);">└──</span>
+        <span class="tree-node" style="background:#14532d; color:#86efac; border-color:#15803d;">5V → XKC-Y25 ×2</span>
+        <span style="color:var(--muted); font-size:0.78rem;">(må ha 5V — fungerer ikke på 3.3V)</span>
+      </div>
+      <div style="margin-top:1.2rem; padding-top:1.2rem; border-top:1px solid var(--border); color:var(--muted); font-size:0.85rem;">
+        <strong style="color:var(--text);">⏚ GND-skinne:</strong> Alt som har strøm må også ha GND tilbake til samme punkt. Adapter, buck, MOSFET, ESP32 og hver eneste sensor — alle GND-kabler inn på <strong>én felles rad</strong> på breadboardet.
+      </div>
+    </div>
+  </section>
+
+  <!-- ── E: Komplett koblingsliste ── -->
+  <section>
+    <div class="section-title"><span class="icon">📋</span> Koblingsliste — i riktig rekkefølge</div>
+    <p class="section-intro">Alle ledninger gruppert etter byggesteg. Følg rekkefølgen nøyaktig — test hvert steg før du går videre.</p>
+
+    <!-- Konfidensnotat -->
+    <div style="background:#0a1218; border:1px solid #1d4ed8; border-radius:10px; padding:1rem 1.25rem; font-size:0.88rem; display:flex; gap:0.9rem; align-items:flex-start;">
+      <span style="font-size:1.4rem; flex-shrink:0;">🎯</span>
+      <div>
+        <strong style="color:var(--blue); display:block; margin-bottom:0.3rem;">Konfidens: ~90–95%</strong>
+        <p style="color:var(--muted); margin-bottom:0.45rem;">GPIO-tildelinger, spenningsnivåer (12V / 5V / 3.3V) og I2C/ADC-protokoller er verifisert mot ESP32 WROOM-32D datasheets. Én ting verifiseres når hardware ankommer:</p>
+        <p style="color:var(--yellow); font-size:0.82rem;">⚠ <strong style="color:var(--yellow);">MOSFET-modul pinout:</strong> Billige AliExpress-moduler kan ha VIN/OUT-pinner merket ulikt fra batch til batch. Logikken er riktig (GPIO26 → SIG, 12V → LED via MOSFET). Men sjekk medfølgende skjema på modulen og bruk multimeter på OUT-pinnen for å bekrefte rett spenning før du kobler til LED-stripen.</p>
+      </div>
+    </div>
+
+    <div class="conn-table">
+      <table>
+        <thead><tr>
+          <th style="width:6%;">Steg</th>
+          <th style="width:26%;">Fra</th>
+          <th style="width:26%;">Til</th>
+          <th style="width:13%;">Type</th>
+          <th>Funksjon</th>
+        </tr></thead>
+        <tbody>
+
+          <!-- STEG 0 -->
+          <tr class="step-header"><td colspan="5">⚡ Steg 0 — Sett opp spenning (ingen ESP32 koblet til)</td></tr>
+          <tr><td class="step-badge">0</td><td>12V adapter <code>+</code></td><td>Barrel jack <code>+</code></td><td><span class="voltage-pill v-12v">12V</span></td><td>Adapter inn i kretsen</td></tr>
+          <tr><td class="step-badge">0</td><td>12V adapter <code>−</code></td><td>Barrel jack <code>−</code></td><td><span class="voltage-pill v-gnd">GND</span></td><td>Retur til adapter</td></tr>
+          <tr><td class="step-badge">0</td><td>Barrel jack <code>+</code></td><td>Buck converter <code>IN+</code></td><td><span class="voltage-pill v-12v">12V</span></td><td>Mat inn til 5V-konverter</td></tr>
+          <tr><td class="step-badge">0</td><td>Barrel jack <code>−</code></td><td>GND-skinne</td><td><span class="voltage-pill v-gnd">GND</span></td><td>Felles minus fra adapter</td></tr>
+          <tr><td class="step-badge">0</td><td>Buck converter <code>OUT−</code></td><td>GND-skinne</td><td><span class="voltage-pill v-gnd">GND</span></td><td>Felles minus fra 5V</td></tr>
+          <tr class="warn-row"><td class="step-badge" style="color:var(--yellow);">⚠</td><td colspan="4" style="color:var(--yellow); font-size:0.83rem;">Mål buck converter <code>OUT+</code> med multimeter — skru på potmeteret til du ser nøyaktig 5.0V</td></tr>
+
+          <!-- STEG 2 -->
+          <tr class="step-header"><td colspan="5">💡 Steg 2 — LED-strip og MOSFET (ESP32 på USB-C)</td></tr>
+          <tr><td class="step-badge">2</td><td>Barrel jack <code>+</code></td><td>MOSFET <code>VIN</code></td><td><span class="voltage-pill v-12v">12V</span></td><td>12V inn til MOSFET</td></tr>
+          <tr><td class="step-badge">2</td><td>MOSFET <code>GND</code></td><td>GND-skinne</td><td><span class="voltage-pill v-gnd">GND</span></td><td>Referanse for signal</td></tr>
+          <tr><td class="step-badge">2</td><td>ESP32 <code>GPIO26</code></td><td>MOSFET <code>SIG</code></td><td><span class="voltage-pill v-sig">PWM</span></td><td>1 kHz dimming-signal fra ESP32</td></tr>
+          <tr><td class="step-badge">2</td><td>MOSFET <code>OUT</code></td><td>LED-strip <code>+</code></td><td><span class="voltage-pill v-12v">12V</span></td><td>Byttet 12V ut til LED via clip</td></tr>
+          <tr><td class="step-badge">2</td><td>LED-strip <code>−</code></td><td>GND-skinne</td><td><span class="voltage-pill v-gnd">GND</span></td><td>Retur for LED-krets</td></tr>
+          <tr class="warn-row"><td class="step-badge" style="color:var(--green);">✓</td><td colspan="4" style="color:var(--green); font-size:0.83rem;">Test: kjør <code>led.duty(512)</code> i Thonny — LED-stripen skal lyse svakt. Styr lysstyrke fra web-appen.</td></tr>
+
+          <!-- STEG 3 -->
+          <tr class="step-header"><td colspan="5">🔋 Steg 3 — Bytt til buck-strøm (koble fra USB-C)</td></tr>
+          <tr><td class="step-badge">3</td><td>Buck converter <code>OUT+</code></td><td>ESP32 <code>VIN</code></td><td><span class="voltage-pill v-5v">5V</span></td><td>Fast strøm til ESP32</td></tr>
+          <tr><td class="step-badge">3</td><td>ESP32 <code>GND</code></td><td>GND-skinne</td><td><span class="voltage-pill v-gnd">GND</span></td><td>ESP32 til felles minus</td></tr>
+          <tr class="warn-row"><td class="step-badge" style="color:var(--yellow);">⚠</td><td colspan="4" style="color:var(--yellow); font-size:0.83rem;">Ha ALDRI USB-C og VIN-kobling inne samtidig under normal drift. Koble alltid fra VIN-kabelen FØR du programmerer via USB-C.</td></tr>
+
+          <!-- STEG 4 -->
+          <tr class="step-header"><td colspan="5">🖥️ Steg 4 — OLED-skjerm (I2C)</td></tr>
+          <tr><td class="step-badge">4</td><td>ESP32 <code>3V3</code></td><td>OLED <code>VCC</code></td><td><span class="voltage-pill v-33v">3.3V</span></td><td>Skjerm-strøm</td></tr>
+          <tr><td class="step-badge">4</td><td>ESP32 <code>GPIO21</code></td><td>OLED <code>SDA</code></td><td><span class="voltage-pill v-i2c">I2C</span></td><td>I2C data (standardpinne)</td></tr>
+          <tr><td class="step-badge">4</td><td>ESP32 <code>GPIO22</code></td><td>OLED <code>SCL</code></td><td><span class="voltage-pill v-i2c">I2C</span></td><td>I2C klokke (standardpinne)</td></tr>
+          <tr><td class="step-badge">4</td><td>OLED <code>GND</code></td><td>GND-skinne</td><td><span class="voltage-pill v-gnd">GND</span></td><td>Skjerm-minus</td></tr>
+          <tr class="warn-row"><td class="step-badge" style="color:var(--green);">✓</td><td colspan="4" style="color:var(--green); font-size:0.83rem;">Test: kjør <code>i2c.scan()</code> — skal returnere <code>[60]</code> (adresse 0x3C). Fungerer det ikke: sjekk SDA/SCL ikke er byttet om.</td></tr>
+
+          <!-- STEG 5 -->
+          <tr class="step-header"><td colspan="5">🌱 Steg 5 — DHT22 og jordfuktsensorer</td></tr>
+          <tr><td class="step-badge">5</td><td>ESP32 <code>3V3</code></td><td>DHT22 <code>VCC</code></td><td><span class="voltage-pill v-33v">3.3V</span></td><td>Sensor-strøm</td></tr>
+          <tr><td class="step-badge">5</td><td>ESP32 <code>GPIO4</code></td><td>DHT22 <code>DATA</code></td><td><span class="voltage-pill v-sig">Signal</span></td><td>Temp og luftfuktighet</td></tr>
+          <tr><td class="step-badge">5</td><td>DHT22 <code>GND</code></td><td>GND-skinne</td><td><span class="voltage-pill v-gnd">GND</span></td><td>Sensor-minus</td></tr>
+          <tr><td class="step-badge">5</td><td>ESP32 <code>3V3</code></td><td>Jordfukt ×3 <code>VCC</code></td><td><span class="voltage-pill v-33v">3.3V</span></td><td>Sensor-strøm (alle tre)</td></tr>
+          <tr><td class="step-badge">5</td><td>ESP32 <code>GPIO34</code></td><td>Jordfukt #1 <code>AOUT</code></td><td><span class="voltage-pill v-sig">ADC</span></td><td>Analog jordfukt — planteseksjon 1</td></tr>
+          <tr><td class="step-badge">5</td><td>ESP32 <code>GPIO35</code></td><td>Jordfukt #2 <code>AOUT</code></td><td><span class="voltage-pill v-sig">ADC</span></td><td>Analog jordfukt — planteseksjon 2</td></tr>
+          <tr><td class="step-badge">5</td><td>ESP32 <code>GPIO32</code></td><td>Jordfukt #3 <code>AOUT</code></td><td><span class="voltage-pill v-sig">ADC</span></td><td>Analog jordfukt — planteseksjon 3</td></tr>
+          <tr><td class="step-badge">5</td><td>Jordfukt ×3 <code>GND</code></td><td>GND-skinne</td><td><span class="voltage-pill v-gnd">GND</span></td><td>Sensor-minus (alle tre)</td></tr>
+          <tr class="warn-row"><td class="step-badge" style="color:var(--green);">✓</td><td colspan="4" style="color:var(--green); font-size:0.83rem;">Jordfukt-test: les <code>soil1.read()</code> — tørt jord gir ca. 3000–4000, fuktig jord gir 1000–2000. Notér verdiene for kalibrering.</td></tr>
+
+          <!-- STEG 6 -->
+          <tr class="step-header"><td colspan="5">💧 Steg 6 — XKC-Y25 vannsensorer (5V — lim på utsiden av tank)</td></tr>
+          <tr><td class="step-badge">6</td><td>Buck converter <code>OUT+</code></td><td>XKC-Y25 #1 <code>VCC</code></td><td><span class="voltage-pill v-5v">5V</span></td><td>Vannsensor lav (krever 5V, ikke 3.3V)</td></tr>
+          <tr><td class="step-badge">6</td><td>Buck converter <code>OUT+</code></td><td>XKC-Y25 #2 <code>VCC</code></td><td><span class="voltage-pill v-5v">5V</span></td><td>Vannsensor mid (krever 5V)</td></tr>
+          <tr><td class="step-badge">6</td><td>XKC-Y25 #1 <code>OUT</code></td><td>ESP32 <code>GPIO19</code></td><td><span class="voltage-pill v-sig">Signal</span></td><td>Vannstand lav — NPN: 0 = vann detektert</td></tr>
+          <tr><td class="step-badge">6</td><td>XKC-Y25 #2 <code>OUT</code></td><td>ESP32 <code>GPIO23</code></td><td><span class="voltage-pill v-sig">Signal</span></td><td>Vannstand mid — NPN: 0 = vann detektert</td></tr>
+          <tr><td class="step-badge">6</td><td>XKC-Y25 ×2 <code>GND</code></td><td>GND-skinne</td><td><span class="voltage-pill v-gnd">GND</span></td><td>Sensor-minus</td></tr>
+
+          <!-- STEG 7 -->
+          <tr class="step-header"><td colspan="5">🎛️ Steg 7 — KY-040 dreieknapp (⚠ kun 3.3V)</td></tr>
+          <tr><td class="step-badge">7</td><td>ESP32 <code>3V3</code></td><td>KY-040 <code>+</code></td><td><span class="voltage-pill v-33v">3.3V</span></td><td>⚠ Aldri 5V — ødelegger ESP32-GPIO</td></tr>
+          <tr><td class="step-badge">7</td><td>ESP32 <code>GPIO16</code></td><td>KY-040 <code>CLK</code></td><td><span class="voltage-pill v-sig">Signal</span></td><td>Encoder klokke</td></tr>
+          <tr><td class="step-badge">7</td><td>ESP32 <code>GPIO17</code></td><td>KY-040 <code>DT</code></td><td><span class="voltage-pill v-sig">Signal</span></td><td>Encoder retning</td></tr>
+          <tr><td class="step-badge">7</td><td>ESP32 <code>GPIO18</code></td><td>KY-040 <code>SW</code></td><td><span class="voltage-pill v-sig">Signal</span></td><td>Encoder-knapp (trykk)</td></tr>
+          <tr><td class="step-badge">7</td><td>KY-040 <code>GND</code></td><td>GND-skinne</td><td><span class="voltage-pill v-gnd">GND</span></td><td>Encoder-minus</td></tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div style="background:#0a1a0f; border:1px solid #14532d; border-radius:10px; padding:1rem 1.25rem; color:var(--text); font-size:0.88rem;">
+      <strong style="color:var(--green);">Breadboard-tips:</strong> Bruk én lengderad som <strong>12V</strong>, én som <strong>5V</strong>, én som <strong>3.3V</strong> og én som <strong>GND</strong>. Alle komponenter kobles til disse skinnene. Det gjør oppkoblingen luftig og lett å feilsøke — du ser med én gang hvilken rail som mangler en kabel.
+    </div>
+  </section>
+
+</div>
+
+
+<!-- ════════════════════════════════════════════ -->
+<!-- TAB: BYGG                                    -->
+<!-- ════════════════════════════════════════════ -->
+<div class="pane" data-pane="bygg">
+
+  <section>
+    <div class="section-title"><span class="icon">🧱</span> Bygg én bit av gangen</div>
+    <p class="section-intro">Test hvert trinn FØR du går videre. Hvis noe slutter å virke, vet du da hvilken kobling som var problemet.</p>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">0</div>
+        <div class="step-body">
+          <h3>Klargjør spenning — IKKE koble til ESP32 ennå</h3>
+          <p>12V-adapter → barrel jack → buck converter. ESP32 og alt annet UTE. Slå på, mål utgangen av buck converter med multimeter, skru på potmeteret til displayet viser nøyaktig 5.0V.</p>
+          <div class="step-wires">
+            <span class="wire-chip c-12v">12V adapter → barrel jack</span>
+            <span class="wire-chip c-12v">barrel jack → buck IN</span>
+            <span class="wire-chip c-5v">buck OUT → multimeter</span>
+          </div>
+          <div class="check-tip">⚠ Over 5V på ESP32 VIN = ødelagt brett. Ikke koble videre før multimeteret viser 5.0V.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>ESP32 alene — første "hei verden"</h3>
+          <p>Koble ESP32 til PC via USB-C. Åpne Thonny, flash MicroPython. Last opp <code>boot.py</code> med WiFi-konfigurasjon.</p>
+          <div class="step-wires">
+            <span class="wire-chip c-5v">USB-C → ESP32</span>
+          </div>
+          <div class="ok-tip">✓ Test: Thonny-konsoll viser IP-adresse fra boot.py.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>LED-strip + MOSFET — kjernefunksjonen</h3>
+          <p>Med ESP32 strømløs: koble 12V til MOSFET VIN, LED-strip til MOSFET OUT, GPIO26 til MOSFET SIG, og felles GND. Sett deretter inn USB-C i ESP32 og kjør <code>main.py</code>. Test fra web-appen at lyset dimmes.</p>
+          <div class="step-wires">
+            <span class="wire-chip c-12v">barrel jack → MOSFET VIN</span>
+            <span class="wire-chip c-12v">MOSFET OUT → LED +</span>
+            <span class="wire-chip c-sig">ESP32 GPIO26 → MOSFET SIG</span>
+            <span class="wire-chip c-gnd">felles GND</span>
+          </div>
+          <div class="check-tip">⚠ MOSFET SIG må aldri stå løs — koble den til GPIO26 selv om du ikke kjører kode ennå.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Bytt USB-strøm med buck converter</h3>
+          <p>Når LED-trinnet fungerer, koble buck converter OUT (5V) til ESP32 VIN. Trekk ut USB-C — alt skal fortsatt virke.</p>
+          <div class="step-wires">
+            <span class="wire-chip c-5v">buck OUT → ESP32 VIN</span>
+            <span class="wire-chip c-gnd">buck GND → felles GND</span>
+          </div>
+          <div class="check-tip">⚠ Aldri ha både USB-C og buck-VIN koblet samtidig under normal bruk. Når du programmerer: koble fra VIN først.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>OLED-skjerm (I2C)</h3>
+          <p>VCC til 3.3V, GND felles, SDA→GPIO21, SCL→GPIO22. Kjør <code>i2c.scan()</code> i Thonny — skal returnere <code>[60]</code> (0x3C).</p>
+          <div class="step-wires">
+            <span class="wire-chip c-33v">ESP32 3V3 → OLED VCC</span>
+            <span class="wire-chip c-i2c">GPIO21 → SDA</span>
+            <span class="wire-chip c-i2c">GPIO22 → SCL</span>
+            <span class="wire-chip c-gnd">felles GND</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h3>DHT22 og jordfuktsensorer</h3>
+          <p>DHT22 til GPIO4. Jordfukt #1-3 til GPIO34/35/32. Alle får 3.3V VCC og felles GND.</p>
+          <div class="step-wires">
+            <span class="wire-chip c-33v">3V3 → alle VCC</span>
+            <span class="wire-chip c-sig">DHT22 DATA → GPIO4</span>
+            <span class="wire-chip c-sig">Jord → GPIO34/35/32</span>
+            <span class="wire-chip c-gnd">felles GND</span>
+          </div>
+          <div class="ok-tip">💡 Kalibrer jordfukt: les rå ADC i tørr jord (notér tall) og i et glass vann (notér tall). Bruk verdiene i appens kalibrering.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <h3>XKC-Y25 vannsensorer (5V)</h3>
+          <p>Disse er den ENESTE sensoren som trenger 5V. VCC til buck OUT (5V), OUT-pinnen til GPIO19 (lav) og GPIO23 (mid). Lim sensorene på utsiden av IKEA-tanken med dobbeltsidig tape.</p>
+          <div class="step-wires">
+            <span class="wire-chip c-5v">buck OUT → XKC VCC ×2</span>
+            <span class="wire-chip c-sig">XKC #1 OUT → GPIO19</span>
+            <span class="wire-chip c-sig">XKC #2 OUT → GPIO23</span>
+            <span class="wire-chip c-gnd">felles GND</span>
+          </div>
+          <div class="ok-tip">💡 OUT er NPN open-collector — bruk <code>Pin(19, Pin.IN, Pin.PULL_UP)</code> i koden. Verdi <code>0</code> = vann detektert, <code>1</code> = tørt.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">7</div>
+        <div class="step-body">
+          <h3>KY-040 dreieknapp</h3>
+          <p>Siste komponent. VCC til 3.3V (ikke 5V!), GND felles, CLK→GPIO16, DT→GPIO17, SW→GPIO18.</p>
+          <div class="step-wires">
+            <span class="wire-chip c-33v">3V3 → KY-040 +</span>
+            <span class="wire-chip c-sig">CLK → GPIO16</span>
+            <span class="wire-chip c-sig">DT → GPIO17</span>
+            <span class="wire-chip c-sig">SW → GPIO18</span>
+            <span class="wire-chip c-gnd">felles GND</span>
+          </div>
+          <div class="check-tip">⚠ Sjekk VCC med multimeter FØR du kobler til ESP32. Skal stå på 3.3V, ikke 5V.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title"><span class="icon">✅</span> Hele veien — pre-flight sjekkliste</div>
+    <p class="section-intro">Klart, venter eller gjenstår. I rekkefølge.</p>
+
+    <div class="checklist">
+      <div class="check done">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <h4>Database, tabeller og UNIQUE-constraint i Supabase</h4>
+          <p>potte_commands, potte_sensor_data og planteprofiler er klare. UNIQUE på potte_id er satt — "Lagre" i appen fungerer.</p>
+        </div>
+      </div>
+      <div class="check done">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <h4>Innlogging aktivert</h4>
+          <p>markusnerland@gmail.com er satt opp. Ingen andre kan logge inn.</p>
+        </div>
+      </div>
+      <div class="check done">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <h4>Web-appen er live på plantepotte.pages.dev</h4>
+          <p>Login, dashboard for begge potter, planteprofiler, intensitet, tidsplan og sensor-visning er klar.</p>
+        </div>
+      </div>
+      <div class="check done">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <h4>GitHub koblet til Cloudflare Pages</h4>
+          <p>Push til <code>main</code> → appen oppdateres automatisk.</p>
+        </div>
+      </div>
+      <div class="check waiting">
+        <div class="check-box">→</div>
+        <div class="check-content">
+          <h4>Installer Thonny IDE på PC</h4>
+          <p>Last ned gratis på thonny.org.</p>
+          <span class="tip">Gjøres nå, FØR hardware ankommer</span>
+        </div>
+      </div>
+      <div class="check waiting">
+        <div class="check-box">→</div>
+        <div class="check-content">
+          <h4>Kjøp multimeter, skrutrekker, tape, USB-C datakabel</h4>
+          <p>Multimeter er kritisk — brukes til å stille buck converter.</p>
+          <span class="tip">Lokalt hos Jula / Clas Ohlson</span>
+        </div>
+      </div>
+      <div class="check todo">
+        <div class="check-box"></div>
+        <div class="check-content">
+          <h4>Hardware ankommer ~2. juni</h4>
+          <p>AliExpress-pakke med ESP32, MOSFET, LED-strip, sensorer.</p>
+        </div>
+      </div>
+      <div class="check todo">
+        <div class="check-box"></div>
+        <div class="check-content">
+          <h4>Følg "Bygg én bit av gangen" over (trinn 0-7)</h4>
+          <p>Start med å stille buck converter til 5.0V før du gjør noe annet.</p>
+        </div>
+      </div>
+      <div class="check todo">
+        <div class="check-box"></div>
+        <div class="check-content">
+          <h4>Legg til sensordata-posting i main.py</h4>
+          <p>Eksempelkode med riktig format (rå ADC, ikke prosent) ligger i <code>docs/2026-05-23-plantepotte-design.md</code>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+
+<!-- ════════════════════════════════════════════ -->
+<!-- TAB: PLAN                                    -->
+<!-- ════════════════════════════════════════════ -->
+<div class="pane" data-pane="plan">
+
+  <section>
+    <div class="section-title"><span class="icon">🗺️</span> Faser fremover</div>
+    <p class="section-intro">Infrastrukturen er klar. Bygg <strong>Potte 1 ferdig først</strong>, så Potte 2 etterpå — du lærer av Potte 1 og kan justere før du gjentar.</p>
+
+    <div class="phase-list">
+      <div class="phase-item current">
+        <div class="phase-circle">1</div>
+        <div class="phase-body">
+          <h4>Fase 1 — Breadboard-prototype <span class="pill pill-yellow phase-tag">Venter på hardware</span></h4>
+          <p>LED-strip på/av og dimming via app + WiFi + Supabase. Backend klar. Koble opp på breadboard når hardware kommer.</p>
+        </div>
+      </div>
+      <div class="phase-item">
+        <div class="phase-circle">2</div>
+        <div class="phase-body">
+          <h4>Fase 2 — Alle sensorer aktive</h4>
+          <p>DHT22, jordfukt ×3, XKC-Y25 ×2, OLED-display og dreieknapp. All sensordata i appen.</p>
+        </div>
+      </div>
+      <div class="phase-item">
+        <div class="phase-circle">3</div>
+        <div class="phase-body">
+          <h4>Fase 3 — Varsler og historikk</h4>
+          <p>Push-varsel når vannet er nesten tomt. Historikk for temperatur og jordfukt.</p>
+        </div>
+      </div>
+      <div class="phase-item">
+        <div class="phase-circle">4</div>
+        <div class="phase-body">
+          <h4>Fase 4 — 3D-printet innkapsling</h4>
+          <p>Designe og printe en fin kappe rundt IKEA-tanken, søyler med kabler inni, toppanel med LED-strip, elektronikkboks. <a href="3d-design.html" style="color:var(--green);">📐 Se full designplan →</a></p>
+        </div>
+      </div>
+      <div class="phase-item future">
+        <div class="phase-circle">5</div>
+        <div class="phase-body">
+          <h4>Fase 5 — Potte 2 + automatisk vanning</h4>
+          <p>Bygg Potte 2 med full sensor-suite. Vurder pumpe for automatisk etterfylling.</p>
+        </div>
+      </div>
+      <div class="phase-item future">
+        <div class="phase-circle">∞</div>
+        <div class="phase-body">
+          <h4>Fremtid — Slå sammen med Matplanlegger</h4>
+          <p>Begge bruker allerede samme database. Slå sammen til én app med én innlogging — mat og planter på samme sted.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+
+<!-- ════════════════════════════════════════════ -->
+<!-- TAB: ADVARSLER                               -->
+<!-- ════════════════════════════════════════════ -->
+<div class="pane" data-pane="advarsler">
+
+  <section>
+    <div class="section-title"><span class="icon">⚠️</span> Viktig å huske</div>
+
+    <div class="warn-grid">
+      <div class="warn-box danger">
+        <div class="warn-icon">⚡</div>
+        <h4>Still buck converter til 5V FØR tilkobling</h4>
+        <p>Mål spenningen med multimeter og drei potmeteret til du ser 5.0V. For høy spenning ødelegger ESP32.</p>
+      </div>
+      <div class="warn-box danger">
+        <div class="warn-icon">🎛️</div>
+        <h4>KY-040 dreieknapp — bruk 3.3V, ikke 5V</h4>
+        <p>Tåler bare 3.3V på VCC. 5V sender 5V tilbake på signal-pinnene og ødelegger ESP32-GPIO.</p>
+      </div>
+      <div class="warn-box danger">
+        <div class="warn-icon">🔌</div>
+        <h4>MOSFET SIG — aldri la den henge løs</h4>
+        <p>Koble alltid SIG-pinnen til en GPIO. Flytende pinne gjør MOSFET halvåpen og overoppheter den.</p>
+      </div>
+      <div class="warn-box danger">
+        <div class="warn-icon">🔗</div>
+        <h4>Felles GND er ikke valgfritt</h4>
+        <p>Alle komponenter MÅ dele samme minus/GND. Uten dette fungerer ikke signaler mellom ESP32 og resten.</p>
+      </div>
+      <div class="warn-box info">
+        <div class="warn-icon">💻</div>
+        <h4>Koble fra VIN under programmering</h4>
+        <p>Når ESP32 er koblet til PC via USB-C: ta av VIN-kabelen. To strømkilder samtidig kan skape problemer.</p>
+      </div>
+      <div class="warn-box info">
+        <div class="warn-icon">🕐</div>
+        <h4>ESP32-tid er UTC — bruk TZ_OFFSET</h4>
+        <p>ESP32 henter UTC-tid fra internett. Norge = +1 (vinter) eller +2 (sommer). Konstanten <code>TZ_OFFSET_HOURS</code> i config.py må endres to ganger i året.</p>
+      </div>
+      <div class="warn-box info">
+        <div class="warn-icon">📶</div>
+        <h4>ESP32 støtter kun 2.4GHz WiFi</h4>
+        <p>5GHz-nett vil ikke bli funnet. Sjekk router-innstillinger om du er usikker.</p>
+      </div>
+      <div class="warn-box info">
+        <div class="warn-icon">📊</div>
+        <h4>Send rå ADC-verdier til Supabase</h4>
+        <p>ESP32 skal sende rå tall (0–4095) for jordfukt, ikke prosent. Web-appen kalibrerer per sensor. Hvis ESP32 konverterer først, blir kalibrering umulig uten å flashe på nytt.</p>
+      </div>
+      <div class="warn-box tip">
+        <div class="warn-icon">🔑</div>
+        <h4>Aldri del service_role-nøkkelen</h4>
+        <p>Anon-nøkkelen (eyJ...) er trygg å ha i koden. Service_role-nøkkelen gir full DB-tilgang — aldri i kode, aldri del.</p>
+      </div>
+      <div class="warn-box tip">
+        <div class="warn-icon">🚫</div>
+        <h4>Ikke rør MørkeZ i Supabase</h4>
+        <p>Supabase-prosjektet "MørkeZ" (<code>udabzkunvagqavllcffw</code>) er et eget prosjekt. Plantepotte og Matplanlegger bruker "Matplanlegger/Plantepotte" (<code>ebjbxfwtwrahuokydvtj</code>).</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+</main>
+
+<footer style="text-align:center; padding:2.5rem; color:var(--muted); font-size:0.82rem; border-top:1px solid var(--border); margin-top:2rem;">
+  Plantepotte · Markus · Oppdatert mai 2026
+</footer>
+
+<script>
+  // ═══════════ TABS ═══════════
+  const tabs = document.querySelectorAll('.tab-btn[data-tab]');
+  const panes = document.querySelectorAll('.pane');
+
+  function activateTab(name) {
+    tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+    panes.forEach(p => p.classList.toggle('active', p.dataset.pane === name));
+    history.replaceState(null, '', '#' + name);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => activateTab(tab.dataset.tab));
+  });
+
+  // Initial tab fra hash
+  const initialHash = location.hash.replace('#', '');
+  if (initialHash && document.querySelector(`[data-pane="${initialHash}"]`)) {
+    activateTab(initialHash);
+  }
+
+  // ═══════════ LEGEND FILTER ═══════════
+  const legendItems = document.querySelectorAll('.legend-item');
+  const wires = document.querySelectorAll('#sys-svg .wire');
+  let activeFilter = null;
+
+  legendItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const wireClass = item.dataset.wire;
+      if (activeFilter === wireClass) {
+        wires.forEach(w => w.classList.remove('dim'));
+        legendItems.forEach(li => { li.classList.remove('muted'); li.classList.remove('locked'); });
+        activeFilter = null;
+      } else {
+        wires.forEach(w => w.classList.toggle('dim', !w.classList.contains(wireClass)));
+        legendItems.forEach(li => {
+          const match = li.dataset.wire === wireClass;
+          li.classList.toggle('muted', !match);
+          li.classList.toggle('locked', match);
+        });
+        activeFilter = wireClass;
+      }
+    });
+  });
+
+  // ═══════════ SVG TOOLTIPS ═══════════
+  const tooltip = document.getElementById('svg-tooltip');
+  const wrap = document.getElementById('diagram-wrap');
+  document.querySelectorAll('.comp-svg').forEach(c => {
+    c.addEventListener('mouseenter', e => {
+      const name = c.dataset.name;
+      const info = c.dataset.info;
+      if (!name) return;
+      tooltip.innerHTML = `<strong>${name}</strong><span class="stt-sub">${info || ''}</span>`;
+      tooltip.classList.add('visible');
+    });
+    c.addEventListener('mousemove', e => {
+      const rect = wrap.getBoundingClientRect();
+      const x = e.clientX - rect.left + 14;
+      const y = e.clientY - rect.top + 14;
+      // Hold tooltip inside wrap
+      const maxX = wrap.clientWidth - tooltip.offsetWidth - 10;
+      tooltip.style.left = Math.min(x, maxX) + 'px';
+      tooltip.style.top  = y + 'px';
+    });
+    c.addEventListener('mouseleave', () => {
+      tooltip.classList.remove('visible');
+    });
+  });
+</script>
+
+</body>
+</html>
