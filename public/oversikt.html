@@ -1903,9 +1903,9 @@
         <!-- 5V fra buck converter til ESP32 VIN og sensorer -->
         <path class="wire w-5v" d="M 240 408 L 390 408 L 390 300 L 500 300"/>
         <text x="395" y="295" class="wire-label">5V → VIN</text>
-        <path class="wire w-5v" d="M 240 418 L 350 418 L 350 480 L 890 480"/>
-        <text x="700" y="473" class="wire-label">5V → XKC VCC</text>
-        <path class="wire w-5v" d="M 240 428 L 330 428 L 330 570 L 890 570"/>
+        <path class="wire w-5v" d="M 240 418 L 350 418 L 350 460 L 890 460"/>
+        <text x="580" y="453" class="wire-label">5V → XKC VCC</text>
+        <path class="wire w-5v" d="M 240 428 L 330 428 L 330 550 L 890 550"/>
 
         <!-- GPIO26 PWM → MOSFET SIG -->
         <path class="wire w-sig" d="M 500 370 L 460 370 L 460 560 L 240 560"/>
@@ -1915,12 +1915,19 @@
         <path class="wire w-12v" d="M 150 600 L 150 640"/>
         <text x="156" y="625" class="wire-label">12V OUT</text>
 
-        <!-- 3.3V fra ESP32 til sensorer -->
-        <path class="wire w-33v" d="M 720 320 L 800 320 L 800 95 L 890 95"/>
-        <text x="805" y="200" class="wire-label">3.3V</text>
-        <path class="wire w-33v" d="M 720 320 L 800 320 L 800 185 L 890 185"/>
-        <path class="wire w-33v" d="M 720 320 L 805 320 L 805 280 L 890 280"/>
-        <path class="wire w-33v" d="M 720 320 L 810 320 L 810 375 L 890 375"/>
+        <!-- 3.3V buss: ESP32 → vertikal buss → korte taps til sensorer -->
+        <path class="wire w-33v" d="M 720 320 L 815 320"/>
+        <path class="wire w-33v" d="M 815 90 L 815 400"/>
+        <path class="wire w-33v" d="M 815 95 L 890 95"/>
+        <path class="wire w-33v" d="M 815 185 L 890 185"/>
+        <path class="wire w-33v" d="M 815 280 L 890 280"/>
+        <path class="wire w-33v" d="M 815 375 L 890 375"/>
+        <circle cx="815" cy="320" r="3.5" fill="#60a5fa"/>
+        <circle cx="815" cy="95"  r="3.5" fill="#60a5fa"/>
+        <circle cx="815" cy="185" r="3.5" fill="#60a5fa"/>
+        <circle cx="815" cy="280" r="3.5" fill="#60a5fa"/>
+        <circle cx="815" cy="375" r="3.5" fill="#60a5fa"/>
+        <text class="wire-label" x="820" y="140" fill="#60a5fa">3.3V buss</text>
 
         <!-- I2C fra ESP32 til OLED (SDA = GPIO21, SCL = GPIO22) -->
         <path class="wire w-i2c" d="M 720 370 L 830 370 L 830 110 L 890 110"/>
@@ -1948,18 +1955,23 @@
         <path class="wire w-sig" d="M 890 570 L 760 570 L 760 410 L 720 410"/>
         <text x="765" y="588" class="wire-label">GPIO23 ← mid</text>
 
-        <!-- GND — alle komponenter kobles til felles GND-skinne -->
+        <!-- GND buss — én linje per kolonne med junction-prikker der komponent kobles til -->
+        <!-- Venstre kolonne (strømkjede) -->
         <path class="wire w-gnd" d="M 150 342 L 150 720"/>
-        <path class="wire w-gnd" d="M 150 448 L 150 720"/>
-        <path class="wire w-gnd" d="M 150 600 L 150 720"/>
-        <path class="wire w-gnd" d="M 150 710 L 150 720"/>
+        <circle cx="150" cy="448" r="3.5" fill="#94a3b8"/>
+        <circle cx="150" cy="600" r="3.5" fill="#94a3b8"/>
+        <circle cx="150" cy="720" r="3.5" fill="#94a3b8"/>
+        <!-- ESP32 GND -->
         <path class="wire w-gnd" d="M 610 580 L 610 720"/>
+        <circle cx="610" cy="580" r="3.5" fill="#94a3b8"/>
+        <!-- Høyre kolonne (sensorer) — én buss, prikker viser tilkoblinger -->
         <path class="wire w-gnd" d="M 990 140 L 990 720"/>
-        <path class="wire w-gnd" d="M 990 230 L 990 720"/>
-        <path class="wire w-gnd" d="M 990 325 L 990 720"/>
-        <path class="wire w-gnd" d="M 990 420 L 990 720"/>
-        <path class="wire w-gnd" d="M 990 515 L 990 720"/>
-        <path class="wire w-gnd" d="M 990 605 L 990 720"/>
+        <circle cx="990" cy="140" r="3.5" fill="#94a3b8"/>
+        <circle cx="990" cy="230" r="3.5" fill="#94a3b8"/>
+        <circle cx="990" cy="325" r="3.5" fill="#94a3b8"/>
+        <circle cx="990" cy="420" r="3.5" fill="#94a3b8"/>
+        <circle cx="990" cy="515" r="3.5" fill="#94a3b8"/>
+        <circle cx="990" cy="605" r="3.5" fill="#94a3b8"/>
         <text x="180" y="745" class="wire-label" fill="#94a3b8">← alle GND samles her</text>
       </svg>
     </div>
