@@ -1799,19 +1799,19 @@
           <text x="14" y="120" class="pin">3.3V</text>
           <text x="14" y="140" class="pin">GND</text>
           <text x="14" y="170" class="pin">GPIO26 ← PWM</text>
-          <text x="14" y="190" class="pin">GPIO19 ← vann-lav</text>
-          <text x="14" y="210" class="pin">GPIO23 ← vann-mid</text>
-          <text x="14" y="230" class="pin">GPIO4  ← DHT22</text>
-          <text x="14" y="250" class="pin">GPIO34 ← jord1</text>
-          <text x="14" y="270" class="pin">GPIO35 ← jord2</text>
-          <text x="14" y="290" class="pin">GPIO32 ← jord3</text>
 
           <text x="206" y="100" class="pin" text-anchor="end">USB-C</text>
-          <text x="206" y="170" class="pin" text-anchor="end">SDA → GPIO21</text>
-          <text x="206" y="190" class="pin" text-anchor="end">SCL → GPIO22</text>
-          <text x="206" y="220" class="pin" text-anchor="end">CLK → GPIO16</text>
-          <text x="206" y="240" class="pin" text-anchor="end">DT  → GPIO17</text>
-          <text x="206" y="260" class="pin" text-anchor="end">SW  → GPIO18</text>
+          <text x="206" y="130" class="pin" text-anchor="end">SDA → GPIO21</text>
+          <text x="206" y="145" class="pin" text-anchor="end">SCL → GPIO22</text>
+          <text x="206" y="170" class="pin" text-anchor="end">GPIO4  ← DHT22</text>
+          <text x="206" y="190" class="pin" text-anchor="end">CLK → GPIO16</text>
+          <text x="206" y="205" class="pin" text-anchor="end">DT  → GPIO17</text>
+          <text x="206" y="220" class="pin" text-anchor="end">SW  → GPIO18</text>
+          <text x="206" y="240" class="pin" text-anchor="end">GPIO34 ← jord1</text>
+          <text x="206" y="255" class="pin" text-anchor="end">GPIO35 ← jord2</text>
+          <text x="206" y="270" class="pin" text-anchor="end">GPIO32 ← jord3</text>
+          <text x="206" y="290" class="pin" text-anchor="end">GPIO19 ← vann-lav</text>
+          <text x="206" y="305" class="pin" text-anchor="end">GPIO23 ← vann-mid</text>
 
           <text x="110" y="355" class="sub" text-anchor="middle" fill="#60a5fa">📶 WiFi 2.4GHz → Supabase</text>
         </g>
@@ -1887,97 +1887,112 @@
 
         <!-- ─── WIRES ─── -->
 
-        <!-- Strømkjede nedover venstre kolonne (12V) -->
+        <!-- ─ 12V strømkjede (rød) ─ -->
         <path class="wire w-12v" d="M 150 115 L 150 142"/>
         <text x="155" y="130" class="wire-label">12V</text>
         <path class="wire w-12v" d="M 150 192 L 150 218"/>
         <path class="wire w-12v" d="M 150 268 L 150 294"/>
-        <!-- 12V fra barrel jack pigtail til buck converter (høyre side) -->
+
+        <!-- 12V: barrel jack → buck converter (liten bue høyre for å unngå GND-buss) -->
         <path class="wire w-12v" d="M 240 342 L 258 342 L 258 368 L 240 368"/>
         <text x="262" y="360" class="wire-label">12V → Buck IN</text>
 
-        <!-- 12V fra barrel jack pigtail til MOSFET VIN -->
+        <!-- 12V: barrel jack → MOSFET VIN (lang bue til høyre) -->
         <path class="wire w-12v" d="M 240 318 L 290 318 L 290 538 L 240 538"/>
         <text x="295" y="435" class="wire-label">12V → MOSFET VIN</text>
+
         <!-- Junction-prikker: 12V deler seg fra barrel jack høyre kant -->
         <circle cx="240" cy="318" r="4" fill="#f87171"/>
         <circle cx="240" cy="342" r="4" fill="#f87171"/>
 
-        <!-- 5V fra buck converter til ESP32 VIN -->
+        <!-- 12V: MOSFET OUT → LED-strip (bue til høyre, unngår GND-buss) -->
+        <path class="wire w-12v" d="M 240 575 L 285 575 L 285 660 L 240 660"/>
+        <text x="290" y="625" class="wire-label">12V OUT</text>
+
+        <!-- ─ 5V (grønn) ─ -->
+        <!-- Buck → ESP32 VIN -->
         <path class="wire w-5v" d="M 240 408 L 390 408 L 390 300 L 500 300"/>
         <text x="395" y="295" class="wire-label">5V → VIN</text>
 
-        <!-- 5V til XKC-sensorer: rutes UNDER ESP32-boksen (y=563/582), unngår overlap -->
-        <path class="wire w-5v" d="M 240 418 L 490 418 L 490 563 L 897 563 L 897 460"/>
-        <path class="wire w-5v" d="M 240 428 L 485 428 L 485 582 L 901 582 L 901 550"/>
-        <text x="560" y="557" class="wire-label">5V → XKC VCC</text>
+        <!-- Buck → XKC VCC: rutes UNDER ESP32-boksen (y>580) -->
+        <path class="wire w-5v" d="M 240 418 L 490 418 L 490 592 L 897 592 L 897 460"/>
+        <path class="wire w-5v" d="M 240 428 L 485 428 L 485 602 L 901 602 L 901 550"/>
+        <text x="540" y="587" class="wire-label">5V → XKC VCC</text>
 
-        <!-- GPIO26 PWM → MOSFET SIG -->
-        <path class="wire w-sig" d="M 500 370 L 460 370 L 460 560 L 240 560"/>
-        <text x="265" y="552" class="wire-label">GPIO26 PWM</text>
+        <!-- ─ GPIO26 PWM → MOSFET SIG (lilla) ─ -->
+        <!-- Rutes langs ESP32 venstre kant (x=496) — unngår 5V-ledningene -->
+        <path class="wire w-sig" d="M 500 370 L 496 370 L 496 555 L 240 555"/>
+        <text x="265" y="548" class="wire-label">GPIO26 PWM</text>
 
-        <!-- MOSFET OUT → LED-strip -->
-        <path class="wire w-12v" d="M 150 600 L 150 640"/>
-        <text x="156" y="625" class="wire-label">12V OUT</text>
-
-        <!-- 3.3V buss: ESP32 → vertikal buss → korte taps til sensorer -->
+        <!-- ─ 3.3V buss (blå) ─ -->
+        <!-- Fra ESP32 3.3V-pin til vertikal buss -->
         <path class="wire w-33v" d="M 720 320 L 815 320"/>
-        <path class="wire w-33v" d="M 815 90 L 815 400"/>
-        <path class="wire w-33v" d="M 815 95 L 890 95"/>
-        <path class="wire w-33v" d="M 815 185 L 890 185"/>
-        <path class="wire w-33v" d="M 815 280 L 890 280"/>
-        <path class="wire w-33v" d="M 815 375 L 890 375"/>
+        <!-- Vertikal buss x=815, fra OLED-nivå til jordfukt-nivå -->
+        <path class="wire w-33v" d="M 815 88 L 815 365"/>
+        <!-- Korte taps til sensorenes VCC-inngang -->
+        <path class="wire w-33v" d="M 815 88  L 890 88"/>
+        <path class="wire w-33v" d="M 815 180 L 890 180"/>
+        <path class="wire w-33v" d="M 815 270 L 890 270"/>
+        <path class="wire w-33v" d="M 815 365 L 890 365"/>
+        <!-- Junction-prikker -->
         <circle cx="815" cy="320" r="3.5" fill="#60a5fa"/>
-        <circle cx="815" cy="95"  r="3.5" fill="#60a5fa"/>
-        <circle cx="815" cy="185" r="3.5" fill="#60a5fa"/>
-        <circle cx="815" cy="280" r="3.5" fill="#60a5fa"/>
-        <circle cx="815" cy="375" r="3.5" fill="#60a5fa"/>
-        <text class="wire-label" x="820" y="140" fill="#60a5fa">3.3V buss</text>
+        <circle cx="815" cy="88"  r="3.5" fill="#60a5fa"/>
+        <circle cx="815" cy="180" r="3.5" fill="#60a5fa"/>
+        <circle cx="815" cy="270" r="3.5" fill="#60a5fa"/>
+        <circle cx="815" cy="365" r="3.5" fill="#60a5fa"/>
+        <text class="wire-label" x="820" y="148" fill="#60a5fa">3.3V buss</text>
 
-        <!-- I2C fra ESP32 til OLED (SDA = GPIO21, SCL = GPIO22) -->
-        <path class="wire w-i2c" d="M 720 370 L 830 370 L 830 110 L 890 110"/>
-        <text x="836" y="240" class="wire-label">SDA/SCL</text>
-        <path class="wire w-i2c" d="M 720 390 L 840 390 L 840 125 L 890 125"/>
+        <!-- ─ I2C til OLED (rosa) ─ -->
+        <!-- NB: krysser 3.3V-taps uten junction-prikk = ikke koblet (forskjellig farge) -->
+        <path class="wire w-i2c" d="M 720 330 L 830 330 L 830 110 L 890 110"/>
+        <path class="wire w-i2c" d="M 720 345 L 840 345 L 840 125 L 890 125"/>
+        <text x="844" y="220" class="wire-label">SDA/SCL</text>
 
-        <!-- DHT22 DATA fra GPIO4 -->
-        <path class="wire w-sig" d="M 720 430 L 850 430 L 850 200 L 890 200"/>
-        <text x="855" y="310" class="wire-label">DATA</text>
+        <!-- ─ Signaler (lilla) ─ -->
+        <!-- GPIO4 → DHT22 DATA -->
+        <path class="wire w-sig" d="M 720 370 L 850 370 L 850 200 L 890 200"/>
+        <text x="854" y="285" class="wire-label">DATA</text>
 
-        <!-- KY-040 CLK/DT/SW fra GPIO16/17/18 -->
-        <path class="wire w-sig" d="M 720 420 L 860 420 L 860 280 L 890 280"/>
-        <path class="wire w-sig" d="M 720 440 L 865 440 L 865 295 L 890 295"/>
-        <path class="wire w-sig" d="M 720 460 L 870 460 L 870 310 L 890 310"/>
+        <!-- GPIO16/17/18 → KY-040 CLK/DT/SW -->
+        <path class="wire w-sig" d="M 720 390 L 860 390 L 860 283 L 890 283"/>
+        <path class="wire w-sig" d="M 720 405 L 865 405 L 865 295 L 890 295"/>
+        <path class="wire w-sig" d="M 720 420 L 870 420 L 870 307 L 890 307"/>
+        <text x="724" y="412" class="wire-label">CLK/DT/SW</text>
 
-        <!-- Jordfukt ADC fra GPIO34/35/32 -->
-        <path class="wire w-sig" d="M 720 450 L 875 450 L 875 375 L 890 375"/>
-        <text x="780" y="442" class="wire-label">ADC 34/35/32</text>
-        <path class="wire w-sig" d="M 720 470 L 880 470 L 880 390 L 890 390"/>
-        <path class="wire w-sig" d="M 720 490 L 885 490 L 885 405 L 890 405"/>
+        <!-- GPIO34/35/32 → Jordfukt ADC -->
+        <path class="wire w-sig" d="M 720 440 L 875 440 L 875 378 L 890 378"/>
+        <path class="wire w-sig" d="M 720 455 L 880 455 L 880 390 L 890 390"/>
+        <path class="wire w-sig" d="M 720 470 L 885 470 L 885 402 L 890 402"/>
+        <text x="724" y="450" class="wire-label">ADC 34/35/32</text>
 
-        <!-- XKC-Y25 OUT (NPN) til GPIO19/23 -->
-        <path class="wire w-sig" d="M 890 480 L 770 480 L 770 390 L 720 390"/>
-        <text x="775" y="497" class="wire-label">GPIO19 ← lav</text>
-        <path class="wire w-sig" d="M 890 570 L 760 570 L 760 410 L 720 410"/>
-        <text x="765" y="588" class="wire-label">GPIO23 ← mid</text>
+        <!-- XKC OUT (NPN) → GPIO19/23 (signalet går FRA sensor TIL ESP32) -->
+        <path class="wire w-sig" d="M 890 480 L 770 480 L 770 490 L 720 490"/>
+        <text x="724" y="478" class="wire-label">GPIO19 ← lav</text>
+        <path class="wire w-sig" d="M 890 570 L 760 570 L 760 505 L 720 505"/>
+        <text x="724" y="516" class="wire-label">GPIO23 ← mid</text>
 
-        <!-- GND buss — én linje per kolonne med junction-prikker der komponent kobles til -->
-        <!-- Venstre kolonne (strømkjede) -->
+        <!-- ─ GND-buss (grå stiplet) ─ -->
+        <!-- Venstre kolonne (strømkjede + MOSFET + LED) -->
         <path class="wire w-gnd" d="M 150 342 L 150 720"/>
-        <circle cx="150" cy="448" r="3.5" fill="#94a3b8"/>
-        <circle cx="150" cy="600" r="3.5" fill="#94a3b8"/>
-        <circle cx="150" cy="720" r="3.5" fill="#94a3b8"/>
-        <!-- ESP32 GND -->
+        <circle cx="150" cy="342" r="3.5" fill="#b0bec5"/>
+        <circle cx="150" cy="448" r="3.5" fill="#b0bec5"/>
+        <circle cx="150" cy="600" r="3.5" fill="#b0bec5"/>
+        <circle cx="150" cy="710" r="3.5" fill="#b0bec5"/>
+        <circle cx="150" cy="720" r="3.5" fill="#b0bec5"/>
+        <!-- ESP32 GND (ned fra bunn av boks) -->
         <path class="wire w-gnd" d="M 610 580 L 610 720"/>
-        <circle cx="610" cy="580" r="3.5" fill="#94a3b8"/>
-        <!-- Høyre kolonne (sensorer) — én buss, prikker viser tilkoblinger -->
+        <circle cx="610" cy="580" r="3.5" fill="#b0bec5"/>
+        <circle cx="610" cy="720" r="3.5" fill="#b0bec5"/>
+        <!-- Høyre sensor-kolonne — én buss med prikke per tilkobling -->
         <path class="wire w-gnd" d="M 990 140 L 990 720"/>
-        <circle cx="990" cy="140" r="3.5" fill="#94a3b8"/>
-        <circle cx="990" cy="230" r="3.5" fill="#94a3b8"/>
-        <circle cx="990" cy="325" r="3.5" fill="#94a3b8"/>
-        <circle cx="990" cy="420" r="3.5" fill="#94a3b8"/>
-        <circle cx="990" cy="515" r="3.5" fill="#94a3b8"/>
-        <circle cx="990" cy="605" r="3.5" fill="#94a3b8"/>
-        <text x="180" y="745" class="wire-label" fill="#94a3b8">← alle GND samles her</text>
+        <circle cx="990" cy="140" r="3.5" fill="#b0bec5"/>
+        <circle cx="990" cy="230" r="3.5" fill="#b0bec5"/>
+        <circle cx="990" cy="325" r="3.5" fill="#b0bec5"/>
+        <circle cx="990" cy="420" r="3.5" fill="#b0bec5"/>
+        <circle cx="990" cy="515" r="3.5" fill="#b0bec5"/>
+        <circle cx="990" cy="605" r="3.5" fill="#b0bec5"/>
+        <circle cx="990" cy="720" r="3.5" fill="#b0bec5"/>
+        <text x="180" y="745" class="wire-label" fill="#b0bec5">← alle GND samles her</text>
       </svg>
     </div>
   </section>
