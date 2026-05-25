@@ -1903,12 +1903,14 @@
         <circle cx="240" cy="318" r="4" fill="#f87171"/>
         <circle cx="240" cy="342" r="4" fill="#f87171"/>
 
-        <!-- 5V fra buck converter til ESP32 VIN og sensorer -->
+        <!-- 5V fra buck converter til ESP32 VIN -->
         <path class="wire w-5v" d="M 240 408 L 390 408 L 390 300 L 500 300"/>
         <text x="395" y="295" class="wire-label">5V → VIN</text>
-        <path class="wire w-5v" d="M 240 418 L 350 418 L 350 460 L 890 460"/>
-        <text x="355" y="453" class="wire-label">5V → XKC VCC</text>
-        <path class="wire w-5v" d="M 240 428 L 330 428 L 330 550 L 890 550"/>
+
+        <!-- 5V til XKC-sensorer: rutes UNDER ESP32-boksen (y=563/582), unngår overlap -->
+        <path class="wire w-5v" d="M 240 418 L 490 418 L 490 563 L 897 563 L 897 460"/>
+        <path class="wire w-5v" d="M 240 428 L 485 428 L 485 582 L 901 582 L 901 550"/>
+        <text x="560" y="557" class="wire-label">5V → XKC VCC</text>
 
         <!-- GPIO26 PWM → MOSFET SIG -->
         <path class="wire w-sig" d="M 500 370 L 460 370 L 460 560 L 240 560"/>
