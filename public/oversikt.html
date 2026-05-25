@@ -146,11 +146,41 @@
       display: flex; align-items: flex-start; gap: 1rem;
     }
     .comp-icon { font-size: 1.7rem; flex-shrink: 0; width: 2.4rem; text-align: center; }
+    .comp-pic {
+      width: 96px; height: 68px;
+      flex-shrink: 0;
+      background: #0f1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 4px;
+    }
     .comp-body { flex: 1; }
     .comp-body h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.15rem; }
     .comp-body .what { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.35rem; }
     .comp-body .spec { font-size: 0.78rem; color: var(--dim); font-style: italic; }
     .comp-status { flex-shrink: 0; }
+
+    /* ─── BYGG-FANE: trinn-bilder ─── */
+    .step-pics {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      margin: 0.7rem 0 0.6rem;
+    }
+    .step-pic {
+      display: flex; flex-direction: column; align-items: center;
+      background: #0f1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.5rem 0.6rem 0.4rem;
+      min-width: 92px;
+    }
+    .step-pic svg {
+      width: 80px; height: 56px; display: block;
+    }
+    .step-pic .lbl {
+      font-size: 0.7rem; color: var(--muted);
+      margin-top: 0.3rem; text-align: center;
+      max-width: 92px; line-height: 1.2;
+    }
 
     /* ─── BEGYNNER-KONSEPTER ─── */
     .glossary {
@@ -490,6 +520,574 @@
 </head>
 <body>
 
+<!-- ════════════════ SVG SYMBOL-BIBLIOTEK ════════════════ -->
+<!-- Skjult — brukes via <use href="#sym-XX"/> i komponent-kortene og byggetrinnene -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+
+    <!-- ESP32 30-pin WROOM-32D -->
+    <symbol id="sym-esp32" viewBox="0 0 100 70">
+      <rect x="20" y="6" width="60" height="60" rx="2" fill="#1e1b4b" stroke="#a78bfa" stroke-width="0.6"/>
+      <rect x="42" y="2" width="16" height="6" rx="1.5" fill="#94a3b8"/>
+      <text x="50" y="6.5" text-anchor="middle" font-size="2.4" fill="#0f1117" font-weight="700">USB-C</text>
+      <rect x="28" y="14" width="44" height="26" fill="#cbd5e1" stroke="#475569" stroke-width="0.4"/>
+      <text x="50" y="25" text-anchor="middle" font-size="4.5" fill="#0f1117" font-weight="800">ESP32</text>
+      <text x="50" y="31" text-anchor="middle" font-size="3" fill="#475569">WROOM-32D</text>
+      <polyline points="34,36 36,34 38,36 40,34 42,36 44,34 46,36" fill="none" stroke="#475569" stroke-width="0.6"/>
+      <g fill="#fbbf24">
+        <rect x="20" y="13" width="2" height="2"/><rect x="20" y="17" width="2" height="2"/>
+        <rect x="20" y="21" width="2" height="2"/><rect x="20" y="25" width="2" height="2"/>
+        <rect x="20" y="29" width="2" height="2"/><rect x="20" y="33" width="2" height="2"/>
+        <rect x="20" y="37" width="2" height="2"/><rect x="20" y="41" width="2" height="2"/>
+        <rect x="20" y="45" width="2" height="2"/><rect x="20" y="49" width="2" height="2"/>
+        <rect x="20" y="53" width="2" height="2"/><rect x="20" y="57" width="2" height="2"/>
+        <rect x="20" y="61" width="2" height="2"/><rect x="20" y="65" width="2" height="2"/>
+        <rect x="78" y="13" width="2" height="2"/><rect x="78" y="17" width="2" height="2"/>
+        <rect x="78" y="21" width="2" height="2"/><rect x="78" y="25" width="2" height="2"/>
+        <rect x="78" y="29" width="2" height="2"/><rect x="78" y="33" width="2" height="2"/>
+        <rect x="78" y="37" width="2" height="2"/><rect x="78" y="41" width="2" height="2"/>
+        <rect x="78" y="45" width="2" height="2"/><rect x="78" y="49" width="2" height="2"/>
+        <rect x="78" y="53" width="2" height="2"/><rect x="78" y="57" width="2" height="2"/>
+        <rect x="78" y="61" width="2" height="2"/><rect x="78" y="65" width="2" height="2"/>
+      </g>
+      <circle cx="50" cy="55" r="2" fill="#475569"/>
+      <text x="50" y="56.5" text-anchor="middle" font-size="2.4" fill="#0f1117">EN</text>
+    </symbol>
+
+    <!-- LR7843 MOSFET module -->
+    <symbol id="sym-mosfet" viewBox="0 0 100 70">
+      <rect x="14" y="14" width="72" height="42" rx="2" fill="#14532d" stroke="#4ade80" stroke-width="0.6"/>
+      <!-- Skruklemme venstre (VIN/GND) -->
+      <rect x="10" y="20" width="14" height="30" fill="#2563eb" stroke="#1e40af" stroke-width="0.4"/>
+      <circle cx="14" cy="28" r="1.4" fill="#fbbf24"/><circle cx="14" cy="42" r="1.4" fill="#fbbf24"/>
+      <!-- Skruklemme høyre (OUT) -->
+      <rect x="76" y="20" width="14" height="30" fill="#2563eb" stroke="#1e40af" stroke-width="0.4"/>
+      <circle cx="86" cy="28" r="1.4" fill="#fbbf24"/><circle cx="86" cy="42" r="1.4" fill="#fbbf24"/>
+      <!-- Sort MOSFET-chip TO-252 -->
+      <rect x="44" y="32" width="14" height="14" fill="#1a1a1a" stroke="#0a0a0a"/>
+      <rect x="44" y="32" width="14" height="3" fill="#94a3b8"/>
+      <text x="51" y="42" text-anchor="middle" font-size="2.5" fill="#94a3b8">LR7843</text>
+      <!-- Sig-pinner -->
+      <g fill="#fbbf24">
+        <rect x="38" y="58" width="2" height="6"/><rect x="44" y="58" width="2" height="6"/>
+        <rect x="50" y="58" width="2" height="6"/><rect x="56" y="58" width="2" height="6"/>
+      </g>
+      <text x="50" y="20" text-anchor="middle" font-size="3.5" fill="#bbf7d0" font-weight="700">MOSFET</text>
+    </symbol>
+
+    <!-- Phyto LED-strip -->
+    <symbol id="sym-led-strip" viewBox="0 0 100 70">
+      <rect x="6" y="28" width="88" height="14" rx="1" fill="#3b0e0e" stroke="#fda4af" stroke-width="0.4"/>
+      <!-- LED-er: 4 røde + 1 blå mønster -->
+      <g>
+        <circle cx="12" cy="35" r="2" fill="#ef4444"/>
+        <circle cx="20" cy="35" r="2" fill="#ef4444"/>
+        <circle cx="28" cy="35" r="2" fill="#ef4444"/>
+        <circle cx="36" cy="35" r="2" fill="#ef4444"/>
+        <circle cx="44" cy="35" r="2" fill="#3b82f6"/>
+        <circle cx="52" cy="35" r="2" fill="#ef4444"/>
+        <circle cx="60" cy="35" r="2" fill="#ef4444"/>
+        <circle cx="68" cy="35" r="2" fill="#ef4444"/>
+        <circle cx="76" cy="35" r="2" fill="#ef4444"/>
+        <circle cx="84" cy="35" r="2" fill="#3b82f6"/>
+      </g>
+      <!-- Skjær-markeringer -->
+      <line x1="40" y1="28" x2="40" y2="42" stroke="#fda4af" stroke-width="0.2" stroke-dasharray="1,1"/>
+      <line x1="80" y1="28" x2="80" y2="42" stroke="#fda4af" stroke-width="0.2" stroke-dasharray="1,1"/>
+      <text x="50" y="55" text-anchor="middle" font-size="3.5" fill="#fda4af">12V Phyto · 4R:1B · 5m</text>
+    </symbol>
+
+    <!-- 12V strømadapter -->
+    <symbol id="sym-adapter" viewBox="0 0 100 70">
+      <!-- Vegg-pluggdel -->
+      <rect x="10" y="20" width="22" height="30" rx="3" fill="#1f2937" stroke="#475569" stroke-width="0.5"/>
+      <rect x="14" y="14" width="3" height="8" fill="#94a3b8"/>
+      <rect x="25" y="14" width="3" height="8" fill="#94a3b8"/>
+      <!-- Kabel -->
+      <path d="M 32 35 Q 50 35 60 35" stroke="#1a1a1a" stroke-width="2.5" fill="none"/>
+      <!-- Adapter-boks -->
+      <rect x="60" y="24" width="32" height="22" rx="2" fill="#1a1a1a" stroke="#475569" stroke-width="0.5"/>
+      <text x="76" y="34" text-anchor="middle" font-size="3.5" fill="#94a3b8" font-weight="700">12V 3A</text>
+      <text x="76" y="40" text-anchor="middle" font-size="2.5" fill="#64748b">AC→DC</text>
+      <!-- DC-plugg -->
+      <rect x="92" y="33" width="6" height="4" fill="#94a3b8"/>
+    </symbol>
+
+    <!-- DC barrel jack med skruklemmer -->
+    <symbol id="sym-barrel" viewBox="0 0 100 70">
+      <!-- Jack-kropp -->
+      <rect x="20" y="22" width="38" height="26" rx="3" fill="#1a1a1a" stroke="#94a3b8" stroke-width="0.5"/>
+      <circle cx="28" cy="35" r="6" fill="#0a0a0a" stroke="#94a3b8" stroke-width="0.4"/>
+      <circle cx="28" cy="35" r="1.5" fill="#94a3b8"/>
+      <!-- Skruer -->
+      <rect x="44" y="26" width="10" height="8" fill="#2e3347" stroke="#94a3b8" stroke-width="0.4"/>
+      <rect x="44" y="36" width="10" height="8" fill="#2e3347" stroke="#94a3b8" stroke-width="0.4"/>
+      <circle cx="49" cy="30" r="1.5" fill="#fbbf24"/>
+      <circle cx="49" cy="40" r="1.5" fill="#fbbf24"/>
+      <!-- Ledninger ut -->
+      <line x1="54" y1="30" x2="74" y2="30" stroke="#ef4444" stroke-width="2"/>
+      <text x="78" y="32" font-size="3" fill="#ef4444">+</text>
+      <line x1="54" y1="40" x2="74" y2="40" stroke="#0f1117" stroke-width="2"/>
+      <line x1="54" y1="40" x2="74" y2="40" stroke="#475569" stroke-width="0.5" stroke-dasharray="1,1"/>
+      <text x="78" y="42" font-size="3" fill="#94a3b8">−</text>
+    </symbol>
+
+    <!-- MB-102 breadboard -->
+    <symbol id="sym-breadboard" viewBox="0 0 100 70">
+      <rect x="6" y="10" width="88" height="50" rx="2" fill="#f1f5f9" stroke="#475569" stroke-width="0.5"/>
+      <!-- Power rails (rød + blå linjer) -->
+      <line x1="10" y1="14" x2="90" y2="14" stroke="#ef4444" stroke-width="0.4"/>
+      <line x1="10" y1="18" x2="90" y2="18" stroke="#3b82f6" stroke-width="0.4"/>
+      <line x1="10" y1="52" x2="90" y2="52" stroke="#ef4444" stroke-width="0.4"/>
+      <line x1="10" y1="56" x2="90" y2="56" stroke="#3b82f6" stroke-width="0.4"/>
+      <!-- Senterspalte -->
+      <rect x="10" y="33" width="80" height="4" fill="#e2e8f0"/>
+      <!-- Hull-mønster (skjematisk) -->
+      <g fill="#475569">
+        <circle cx="14" cy="16" r="0.5"/><circle cx="20" cy="16" r="0.5"/><circle cx="26" cy="16" r="0.5"/>
+        <circle cx="32" cy="16" r="0.5"/><circle cx="38" cy="16" r="0.5"/><circle cx="44" cy="16" r="0.5"/>
+        <circle cx="50" cy="16" r="0.5"/><circle cx="56" cy="16" r="0.5"/><circle cx="62" cy="16" r="0.5"/>
+        <circle cx="68" cy="16" r="0.5"/><circle cx="74" cy="16" r="0.5"/><circle cx="80" cy="16" r="0.5"/>
+        <circle cx="86" cy="16" r="0.5"/>
+        <circle cx="14" cy="24" r="0.5"/><circle cx="20" cy="24" r="0.5"/><circle cx="26" cy="24" r="0.5"/>
+        <circle cx="32" cy="24" r="0.5"/><circle cx="38" cy="24" r="0.5"/><circle cx="44" cy="24" r="0.5"/>
+        <circle cx="50" cy="24" r="0.5"/><circle cx="56" cy="24" r="0.5"/><circle cx="62" cy="24" r="0.5"/>
+        <circle cx="68" cy="24" r="0.5"/><circle cx="74" cy="24" r="0.5"/><circle cx="80" cy="24" r="0.5"/>
+        <circle cx="86" cy="24" r="0.5"/>
+        <circle cx="14" cy="46" r="0.5"/><circle cx="20" cy="46" r="0.5"/><circle cx="26" cy="46" r="0.5"/>
+        <circle cx="32" cy="46" r="0.5"/><circle cx="38" cy="46" r="0.5"/><circle cx="44" cy="46" r="0.5"/>
+        <circle cx="50" cy="46" r="0.5"/><circle cx="56" cy="46" r="0.5"/><circle cx="62" cy="46" r="0.5"/>
+        <circle cx="68" cy="46" r="0.5"/><circle cx="74" cy="46" r="0.5"/><circle cx="80" cy="46" r="0.5"/>
+        <circle cx="86" cy="46" r="0.5"/>
+      </g>
+      <text x="50" y="68" text-anchor="middle" font-size="3" fill="#475569">MB-102 · 830 hull</text>
+    </symbol>
+
+    <!-- Buck converter -->
+    <symbol id="sym-buck" viewBox="0 0 100 70">
+      <rect x="14" y="14" width="72" height="42" rx="2" fill="#14532d" stroke="#4ade80" stroke-width="0.6"/>
+      <!-- DC barrel inn-port -->
+      <rect x="10" y="26" width="8" height="18" rx="1" fill="#0a0a0a" stroke="#94a3b8" stroke-width="0.3"/>
+      <circle cx="14" cy="35" r="2.5" fill="#1a1a1a"/>
+      <!-- Skruklemmer ut -->
+      <rect x="76" y="22" width="14" height="26" fill="#2563eb" stroke="#1e40af" stroke-width="0.4"/>
+      <circle cx="86" cy="28" r="1.4" fill="#fbbf24"/><circle cx="86" cy="42" r="1.4" fill="#fbbf24"/>
+      <!-- Blå potmeter (justering) -->
+      <rect x="44" y="20" width="14" height="14" rx="1" fill="#1e3a8a" stroke="#60a5fa" stroke-width="0.4"/>
+      <circle cx="51" cy="27" r="3" fill="#fbbf24"/>
+      <rect x="50.5" y="25.5" width="1" height="3" fill="#0f1117"/>
+      <text x="51" y="40" text-anchor="middle" font-size="2.5" fill="#bbf7d0">JUSTER</text>
+      <!-- Induktor (kobberring) -->
+      <circle cx="32" cy="42" r="5" fill="#7c2d12" stroke="#fbbf24" stroke-width="0.6"/>
+      <circle cx="32" cy="42" r="2" fill="#1c1917"/>
+      <!-- Chip -->
+      <rect x="60" y="42" width="10" height="8" fill="#1a1a1a"/>
+      <text x="50" y="55" text-anchor="middle" font-size="3" fill="#bbf7d0" font-weight="700">12V → 5V</text>
+    </symbol>
+
+    <!-- SSD1306 OLED 0.96" -->
+    <symbol id="sym-oled" viewBox="0 0 100 70">
+      <rect x="18" y="10" width="64" height="50" rx="2" fill="#1a1a1a" stroke="#f472b6" stroke-width="0.5"/>
+      <!-- Glødende display -->
+      <rect x="24" y="20" width="52" height="26" fill="#0a1a3a" stroke="#3b82f6" stroke-width="0.3"/>
+      <text x="50" y="32" text-anchor="middle" font-size="4.5" fill="#60a5fa" font-weight="700">23.4°C</text>
+      <text x="50" y="40" text-anchor="middle" font-size="3" fill="#60a5fa">FUKT 62%</text>
+      <!-- I2C-pinrad -->
+      <g fill="#fbbf24">
+        <rect x="32" y="52" width="2" height="6"/><rect x="40" y="52" width="2" height="6"/>
+        <rect x="48" y="52" width="2" height="6"/><rect x="56" y="52" width="2" height="6"/>
+      </g>
+      <text x="36" y="64" text-anchor="middle" font-size="2.2" fill="#94a3b8">GND VCC SCL SDA</text>
+    </symbol>
+
+    <!-- DHT22 / AM2302 -->
+    <symbol id="sym-dht22" viewBox="0 0 100 70">
+      <rect x="28" y="8" width="44" height="48" rx="2" fill="#f8fafc" stroke="#475569" stroke-width="0.5"/>
+      <!-- Ventilasjonsspalter -->
+      <g stroke="#475569" stroke-width="0.6">
+        <line x1="32" y1="16" x2="68" y2="16"/>
+        <line x1="32" y1="20" x2="68" y2="20"/>
+        <line x1="32" y1="24" x2="68" y2="24"/>
+        <line x1="32" y1="28" x2="68" y2="28"/>
+        <line x1="32" y1="32" x2="68" y2="32"/>
+        <line x1="32" y1="36" x2="68" y2="36"/>
+        <line x1="32" y1="40" x2="68" y2="40"/>
+        <line x1="32" y1="44" x2="68" y2="44"/>
+        <line x1="32" y1="48" x2="68" y2="48"/>
+      </g>
+      <text x="50" y="56" text-anchor="middle" font-size="4" fill="#0f1117" font-weight="700">DHT22</text>
+      <!-- Pinner -->
+      <g fill="#fbbf24">
+        <rect x="36" y="56" width="2" height="8"/>
+        <rect x="48" y="56" width="2" height="8"/>
+        <rect x="60" y="56" width="2" height="8"/>
+      </g>
+    </symbol>
+
+    <!-- Jordfuktsensor (kapasitiv v2.0) -->
+    <symbol id="sym-soil" viewBox="0 0 100 70">
+      <!-- Topp-del med chip -->
+      <rect x="10" y="20" width="32" height="30" rx="1" fill="#14532d" stroke="#4ade80" stroke-width="0.4"/>
+      <rect x="16" y="26" width="14" height="10" fill="#1a1a1a"/>
+      <text x="23" y="33" text-anchor="middle" font-size="2.2" fill="#94a3b8">555</text>
+      <!-- Pinrad -->
+      <g fill="#fbbf24">
+        <rect x="36" y="26" width="2" height="2"/>
+        <rect x="36" y="32" width="2" height="2"/>
+        <rect x="36" y="38" width="2" height="2"/>
+      </g>
+      <text x="40" y="29" font-size="2.2" fill="#94a3b8">AOUT</text>
+      <text x="40" y="35" font-size="2.2" fill="#94a3b8">VCC</text>
+      <text x="40" y="41" font-size="2.2" fill="#94a3b8">GND</text>
+      <!-- Stikk-prong -->
+      <rect x="20" y="50" width="12" height="18" fill="#14532d" stroke="#4ade80" stroke-width="0.4"/>
+      <text x="26" y="62" text-anchor="middle" font-size="3" fill="#bbf7d0">JORD</text>
+    </symbol>
+
+    <!-- XKC-Y25 vannivåsensor -->
+    <symbol id="sym-xkc" viewBox="0 0 100 70">
+      <!-- Sylindrisk sensor-hode -->
+      <ellipse cx="30" cy="35" rx="14" ry="16" fill="#1a1a1a" stroke="#4ade80" stroke-width="0.5"/>
+      <circle cx="30" cy="35" r="9" fill="#0a0a0a" stroke="#475569" stroke-width="0.3"/>
+      <text x="30" y="37" text-anchor="middle" font-size="3" fill="#4ade80">XKC</text>
+      <!-- Kabel -->
+      <path d="M 44 35 Q 60 35 70 35" stroke="#94a3b8" stroke-width="1.5" fill="none"/>
+      <!-- 3 ledning-ender -->
+      <line x1="70" y1="35" x2="92" y2="25" stroke="#ef4444" stroke-width="1.2"/>
+      <line x1="70" y1="35" x2="92" y2="35" stroke="#fbbf24" stroke-width="1.2"/>
+      <line x1="70" y1="35" x2="92" y2="45" stroke="#0f1117" stroke-width="1.5"/>
+      <line x1="70" y1="35" x2="92" y2="45" stroke="#475569" stroke-width="0.5" stroke-dasharray="1,1"/>
+      <text x="94" y="26" font-size="2.5" fill="#ef4444">5V</text>
+      <text x="94" y="36" font-size="2.5" fill="#fbbf24">OUT</text>
+      <text x="94" y="46" font-size="2.5" fill="#94a3b8">GND</text>
+      <text x="30" y="62" text-anchor="middle" font-size="3" fill="#4ade80">NON-CONTACT</text>
+    </symbol>
+
+    <!-- KY-040 rotary encoder -->
+    <symbol id="sym-ky040" viewBox="0 0 100 70">
+      <rect x="14" y="20" width="72" height="34" rx="1.5" fill="#1e2540" stroke="#60a5fa" stroke-width="0.5"/>
+      <!-- Rotary-kropp (sølv sylinder) -->
+      <circle cx="36" cy="36" r="11" fill="#94a3b8" stroke="#475569" stroke-width="0.5"/>
+      <rect x="32" y="33" width="8" height="6" fill="#475569"/>
+      <!-- Aksel -->
+      <circle cx="36" cy="36" r="3" fill="#1a1a1a"/>
+      <line x1="36" y1="33" x2="36" y2="39" stroke="#fbbf24" stroke-width="0.6"/>
+      <!-- Pinrad (5 pins) -->
+      <g fill="#fbbf24">
+        <rect x="56" y="32" width="2" height="2"/>
+        <rect x="62" y="32" width="2" height="2"/>
+        <rect x="68" y="32" width="2" height="2"/>
+        <rect x="74" y="32" width="2" height="2"/>
+        <rect x="80" y="32" width="2" height="2"/>
+      </g>
+      <text x="68" y="42" text-anchor="middle" font-size="2.2" fill="#94a3b8">+ GND CLK DT SW</text>
+      <text x="50" y="64" text-anchor="middle" font-size="3" fill="#fbbf24" font-weight="700">⚠ KUN 3.3V</text>
+    </symbol>
+
+    <!-- Wago 221 lever connector (inline) -->
+    <symbol id="sym-wago" viewBox="0 0 100 70">
+      <!-- Hovedkropp (oransje/transparent) -->
+      <rect x="20" y="22" width="60" height="26" rx="3" fill="#fb923c" stroke="#c2410c" stroke-width="0.5" opacity="0.9"/>
+      <!-- Synlig metall-klemme inni -->
+      <rect x="28" y="30" width="44" height="10" fill="#94a3b8" opacity="0.5"/>
+      <!-- Hendel-spaker (oransje, lukket posisjon) -->
+      <rect x="32" y="15" width="10" height="14" rx="1.5" fill="#ea580c" stroke="#7c2d12" stroke-width="0.4"/>
+      <rect x="58" y="15" width="10" height="14" rx="1.5" fill="#ea580c" stroke="#7c2d12" stroke-width="0.4"/>
+      <!-- Ledninger ut -->
+      <line x1="20" y1="35" x2="6" y2="35" stroke="#ef4444" stroke-width="2"/>
+      <line x1="80" y1="35" x2="94" y2="35" stroke="#ef4444" stroke-width="2"/>
+      <text x="50" y="60" text-anchor="middle" font-size="3" fill="#fb923c" font-weight="700">WAGO 221</text>
+    </symbol>
+
+    <!-- DC inline switch (vippebryter) -->
+    <symbol id="sym-switch" viewBox="0 0 100 70">
+      <!-- Sylindrisk kropp -->
+      <rect x="14" y="28" width="72" height="14" rx="3" fill="#1a1a1a" stroke="#475569" stroke-width="0.5"/>
+      <!-- DC-plugger -->
+      <rect x="6" y="32" width="8" height="6" fill="#1a1a1a"/>
+      <circle cx="10" cy="35" r="1.5" fill="#475569"/>
+      <rect x="86" y="32" width="8" height="6" fill="#1a1a1a"/>
+      <circle cx="90" cy="35" r="1.5" fill="#475569"/>
+      <!-- Vippebryter (rød) -->
+      <rect x="42" y="20" width="16" height="10" rx="1.5" fill="#ef4444" stroke="#7f1d1d" stroke-width="0.5"/>
+      <text x="50" y="27" text-anchor="middle" font-size="3.5" fill="#fff" font-weight="700">ON</text>
+      <text x="50" y="56" text-anchor="middle" font-size="3" fill="#94a3b8">5.5×2.1mm inline</text>
+    </symbol>
+
+    <!-- Sikringholder + sikring -->
+    <symbol id="sym-fuse" viewBox="0 0 100 70">
+      <!-- Holder -->
+      <rect x="20" y="28" width="60" height="14" rx="3" fill="#1a1a1a" stroke="#475569" stroke-width="0.4"/>
+      <!-- Glass-sikring inni (synlig) -->
+      <rect x="30" y="32" width="40" height="6" rx="0.5" fill="#e2e8f0" stroke="#475569" stroke-width="0.3" opacity="0.7"/>
+      <rect x="30" y="32" width="4" height="6" fill="#94a3b8"/>
+      <rect x="66" y="32" width="4" height="6" fill="#94a3b8"/>
+      <!-- Filament -->
+      <path d="M 34 35 Q 40 33 46 35 Q 52 37 58 35 Q 62 33 66 35" stroke="#fbbf24" stroke-width="0.4" fill="none"/>
+      <!-- Ledninger -->
+      <line x1="6" y1="35" x2="20" y2="35" stroke="#ef4444" stroke-width="2"/>
+      <line x1="80" y1="35" x2="94" y2="35" stroke="#ef4444" stroke-width="2"/>
+      <text x="50" y="55" text-anchor="middle" font-size="3" fill="#fbbf24" font-weight="700">3A SLOW-BLOW</text>
+    </symbol>
+
+    <!-- Wire stripper -->
+    <symbol id="sym-stripper" viewBox="0 0 100 70">
+      <!-- Håndtak (rødt) -->
+      <path d="M 14 36 L 14 52 Q 14 60 22 60 L 36 60 Q 44 60 44 52 L 44 40" fill="#ef4444" stroke="#7f1d1d" stroke-width="0.5"/>
+      <path d="M 14 34 L 14 18 Q 14 10 22 10 L 36 10 Q 44 10 44 18 L 44 30" fill="#ef4444" stroke="#7f1d1d" stroke-width="0.5"/>
+      <!-- Kjever -->
+      <rect x="44" y="28" width="36" height="6" fill="#94a3b8" stroke="#475569" stroke-width="0.4"/>
+      <rect x="44" y="36" width="36" height="6" fill="#94a3b8" stroke="#475569" stroke-width="0.4"/>
+      <!-- Tenner -->
+      <g fill="#475569">
+        <rect x="46" y="32" width="2" height="2"/><rect x="50" y="32" width="2" height="2"/>
+        <rect x="54" y="32" width="2" height="2"/><rect x="58" y="32" width="2" height="2"/>
+        <rect x="62" y="32" width="2" height="2"/><rect x="66" y="32" width="2" height="2"/>
+      </g>
+      <!-- Pivot -->
+      <circle cx="44" cy="35" r="2.5" fill="#1a1a1a"/>
+      <text x="50" y="20" font-size="3" fill="#fb923c" font-weight="700">STRIP · CUT · CRIMP</text>
+    </symbol>
+
+    <!-- Heat shrink (fargede ringer) -->
+    <symbol id="sym-heatshrink" viewBox="0 0 100 70">
+      <g stroke-width="0.3" stroke="#0f1117">
+        <rect x="14" y="20" width="14" height="30" rx="0" fill="#ef4444"/>
+        <rect x="30" y="20" width="14" height="30" rx="0" fill="#1a1a1a"/>
+        <rect x="46" y="20" width="14" height="30" rx="0" fill="#fbbf24"/>
+        <rect x="62" y="20" width="14" height="30" rx="0" fill="#3b82f6"/>
+        <rect x="78" y="20" width="14" height="30" rx="0" fill="#22c55e"/>
+      </g>
+      <!-- Hull i midten -->
+      <g fill="#0f1117">
+        <circle cx="21" cy="35" r="3"/><circle cx="37" cy="35" r="3"/>
+        <circle cx="53" cy="35" r="3"/><circle cx="69" cy="35" r="3"/>
+        <circle cx="85" cy="35" r="3"/>
+      </g>
+      <text x="50" y="60" text-anchor="middle" font-size="3" fill="#94a3b8">580 stk · 6 farger</text>
+    </symbol>
+
+    <!-- LED clip connector -->
+    <symbol id="sym-ledclip" viewBox="0 0 100 70">
+      <!-- Transparent klips-hus -->
+      <rect x="20" y="22" width="60" height="26" rx="3" fill="#e2e8f0" stroke="#475569" stroke-width="0.5" opacity="0.7"/>
+      <!-- Lokk på toppen -->
+      <rect x="20" y="20" width="60" height="6" rx="2" fill="#cbd5e1" stroke="#475569" stroke-width="0.4"/>
+      <!-- Pin-piggene synlig inni -->
+      <rect x="34" y="30" width="2" height="14" fill="#fbbf24"/>
+      <rect x="64" y="30" width="2" height="14" fill="#fbbf24"/>
+      <!-- LED-strip ende inn -->
+      <rect x="6" y="32" width="18" height="6" fill="#3b0e0e" stroke="#fda4af" stroke-width="0.3"/>
+      <!-- Ledninger ut -->
+      <line x1="80" y1="32" x2="94" y2="32" stroke="#ef4444" stroke-width="1.5"/>
+      <line x1="80" y1="38" x2="94" y2="38" stroke="#0f1117" stroke-width="2"/>
+      <line x1="80" y1="38" x2="94" y2="38" stroke="#475569" stroke-width="0.5" stroke-dasharray="1,1"/>
+      <text x="50" y="58" text-anchor="middle" font-size="3" fill="#94a3b8">SOLDERLESS · 8mm</text>
+    </symbol>
+
+    <!-- Silikonledning (rød + svart spole) -->
+    <symbol id="sym-wire-silicone" viewBox="0 0 100 70">
+      <!-- Rød spole -->
+      <ellipse cx="30" cy="35" rx="18" ry="14" fill="none" stroke="#ef4444" stroke-width="2"/>
+      <ellipse cx="30" cy="35" rx="14" ry="10" fill="none" stroke="#ef4444" stroke-width="2"/>
+      <ellipse cx="30" cy="35" rx="10" ry="6" fill="none" stroke="#ef4444" stroke-width="2"/>
+      <circle cx="30" cy="35" r="3" fill="#0f1117"/>
+      <!-- Svart spole -->
+      <ellipse cx="72" cy="35" rx="18" ry="14" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+      <ellipse cx="72" cy="35" rx="14" ry="10" fill="none" stroke="#475569" stroke-width="2"/>
+      <ellipse cx="72" cy="35" rx="10" ry="6" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+      <circle cx="72" cy="35" r="3" fill="#0f1117"/>
+      <text x="50" y="62" text-anchor="middle" font-size="3" fill="#94a3b8">22 AWG · 5m + 5m</text>
+    </symbol>
+
+    <!-- Dupont jumper-kabler -->
+    <symbol id="sym-dupont" viewBox="0 0 100 70">
+      <!-- Båndkabel-stripes -->
+      <g stroke-width="3" fill="none" stroke-linecap="round">
+        <line x1="10" y1="14" x2="90" y2="14" stroke="#ef4444"/>
+        <line x1="10" y1="20" x2="90" y2="20" stroke="#fb923c"/>
+        <line x1="10" y1="26" x2="90" y2="26" stroke="#fbbf24"/>
+        <line x1="10" y1="32" x2="90" y2="32" stroke="#22c55e"/>
+        <line x1="10" y1="38" x2="90" y2="38" stroke="#3b82f6"/>
+        <line x1="10" y1="44" x2="90" y2="44" stroke="#a78bfa"/>
+        <line x1="10" y1="50" x2="90" y2="50" stroke="#f472b6"/>
+        <line x1="10" y1="56" x2="90" y2="56" stroke="#94a3b8"/>
+      </g>
+      <!-- Pin-koblinger i endene -->
+      <rect x="4" y="10" width="6" height="50" fill="#0f1117" stroke="#475569" stroke-width="0.3"/>
+      <rect x="90" y="10" width="6" height="50" fill="#0f1117" stroke="#475569" stroke-width="0.3"/>
+      <text x="50" y="68" text-anchor="middle" font-size="2.8" fill="#94a3b8">30cm · M-M / M-F / F-F</text>
+    </symbol>
+
+    <!-- IKEA 365+ tank -->
+    <symbol id="sym-ikea-tank" viewBox="0 0 100 70">
+      <!-- Tank-kropp -->
+      <rect x="14" y="18" width="72" height="40" rx="2" fill="none" stroke="#94a3b8" stroke-width="0.8"/>
+      <!-- Vannet -->
+      <rect x="16" y="32" width="68" height="24" fill="#3b82f6" opacity="0.35"/>
+      <!-- Vann-nivå-bølge -->
+      <path d="M 14 32 Q 25 30 36 32 T 58 32 T 80 32 L 86 32" fill="none" stroke="#60a5fa" stroke-width="0.8"/>
+      <!-- Lokk -->
+      <rect x="12" y="12" width="76" height="8" rx="1" fill="#475569" stroke="#94a3b8" stroke-width="0.4"/>
+      <text x="50" y="48" text-anchor="middle" font-size="4" fill="#bfdbfe" font-weight="700">5.2L</text>
+      <text x="50" y="66" text-anchor="middle" font-size="3" fill="#94a3b8">IKEA 365+</text>
+    </symbol>
+
+    <!-- Multimeter -->
+    <symbol id="sym-multimeter" viewBox="0 0 100 70">
+      <rect x="16" y="6" width="68" height="60" rx="3" fill="#fb923c" stroke="#7c2d12" stroke-width="0.5"/>
+      <!-- Display -->
+      <rect x="22" y="12" width="56" height="16" fill="#1a1a1a"/>
+      <text x="50" y="24" text-anchor="middle" font-size="6" fill="#22c55e" font-family="Courier New" font-weight="700">5.00V</text>
+      <!-- Dial -->
+      <circle cx="50" cy="44" r="14" fill="#1a1a1a" stroke="#7c2d12" stroke-width="0.5"/>
+      <circle cx="50" cy="44" r="2" fill="#fbbf24"/>
+      <line x1="50" y1="44" x2="50" y2="34" stroke="#fbbf24" stroke-width="1.2"/>
+      <g fill="#fff" font-size="2">
+        <text x="50" y="33" text-anchor="middle">V</text>
+        <text x="62" y="46" text-anchor="middle">A</text>
+        <text x="50" y="58" text-anchor="middle">Ω</text>
+        <text x="38" y="46" text-anchor="middle">∼</text>
+      </g>
+      <!-- Probe-porter -->
+      <circle cx="32" cy="62" r="1.5" fill="#1a1a1a"/>
+      <circle cx="68" cy="62" r="1.5" fill="#1a1a1a"/>
+    </symbol>
+
+
+    <!-- Bomullssnor / wick -->
+    <symbol id="sym-wick" viewBox="0 0 100 70">
+      <ellipse cx="50" cy="30" rx="28" ry="20" fill="none" stroke="#d4a373" stroke-width="2.5"/>
+      <ellipse cx="50" cy="30" rx="20" ry="14" fill="none" stroke="#d4a373" stroke-width="2"/>
+      <ellipse cx="50" cy="30" rx="12" ry="8" fill="none" stroke="#d4a373" stroke-width="1.5"/>
+      <circle cx="50" cy="30" r="4" fill="#0f1117"/>
+      <text x="50" y="62" text-anchor="middle" font-size="3" fill="#d4a373" font-weight="700">BOMULLSSNOR 3mm</text>
+    </symbol>
+
+    <!-- KF301 terminalblokk -->
+    <symbol id="sym-terminal" viewBox="0 0 100 70">
+      <rect x="22" y="18" width="56" height="32" rx="2" fill="#1e40af" stroke="#3b82f6" stroke-width="0.8"/>
+      <circle cx="38" cy="20" r="4" fill="#94a3b8" stroke="#1e40af" stroke-width="0.5"/>
+      <circle cx="62" cy="20" r="4" fill="#94a3b8" stroke="#1e40af" stroke-width="0.5"/>
+      <line x1="36" y1="20" x2="40" y2="20" stroke="#475569" stroke-width="1.5"/>
+      <line x1="38" y1="18" x2="38" y2="22" stroke="#475569" stroke-width="1.5"/>
+      <line x1="60" y1="20" x2="64" y2="20" stroke="#475569" stroke-width="1.5"/>
+      <line x1="62" y1="18" x2="62" y2="22" stroke="#475569" stroke-width="1.5"/>
+      <circle cx="24" cy="34" r="3.5" fill="#0f1117"/>
+      <circle cx="76" cy="34" r="3.5" fill="#0f1117"/>
+      <line x1="6" y1="34" x2="20.5" y2="34" stroke="#ef4444" stroke-width="2"/>
+      <line x1="79.5" y1="34" x2="94" y2="34" stroke="#94a3b8" stroke-width="2"/>
+      <text x="50" y="63" text-anchor="middle" font-size="3" fill="#94a3b8">KF301 5mm pitch</text>
+    </symbol>
+
+    <!-- Elektrisk tape (rull) -->
+    <symbol id="sym-tape" viewBox="0 0 100 70">
+      <circle cx="50" cy="33" r="24" fill="#1a1a1a" stroke="#475569" stroke-width="1"/>
+      <circle cx="50" cy="33" r="10" fill="#0f1117" stroke="#475569" stroke-width="0.5"/>
+      <circle cx="50" cy="33" r="22" fill="none" stroke="#2a2a2a" stroke-width="0.5"/>
+      <circle cx="50" cy="33" r="17" fill="none" stroke="#2a2a2a" stroke-width="0.5"/>
+      <text x="50" y="36" text-anchor="middle" font-size="4" fill="#64748b" font-weight="700">TAPE</text>
+      <text x="50" y="63" text-anchor="middle" font-size="3" fill="#94a3b8">elektrisk · vinyl</text>
+    </symbol>
+
+    <!-- 3M dobbeltsidig tape -->
+    <symbol id="sym-doubletape" viewBox="0 0 100 70">
+      <circle cx="50" cy="33" r="24" fill="#e2e8f0" stroke="#94a3b8" stroke-width="0.5"/>
+      <circle cx="50" cy="33" r="10" fill="#0f1117" stroke="#94a3b8" stroke-width="0.5"/>
+      <circle cx="50" cy="33" r="22" fill="none" stroke="#ef4444" stroke-width="1.5"/>
+      <text x="50" y="36" text-anchor="middle" font-size="8" fill="#ef4444" font-weight="900">3M</text>
+      <text x="50" y="63" text-anchor="middle" font-size="3" fill="#94a3b8">dobbeltsidig tape</text>
+    </symbol>
+
+    <!-- Kabel-organizer klips -->
+    <symbol id="sym-cableclip" viewBox="0 0 100 70">
+      <rect x="14" y="40" width="14" height="8" rx="1" fill="#1a1a1a" stroke="#475569" stroke-width="0.5"/>
+      <path d="M 16 40 Q 21 28 26 40" fill="#475569" stroke="#475569" stroke-width="0.5"/>
+      <circle cx="21" cy="37" r="3.5" fill="none" stroke="#94a3b8" stroke-width="1.2"/>
+      <rect x="43" y="40" width="14" height="8" rx="1" fill="#1a1a1a" stroke="#475569" stroke-width="0.5"/>
+      <path d="M 45 40 Q 50 28 55 40" fill="#475569" stroke="#475569" stroke-width="0.5"/>
+      <circle cx="50" cy="37" r="3.5" fill="none" stroke="#94a3b8" stroke-width="1.2"/>
+      <rect x="72" y="40" width="14" height="8" rx="1" fill="#1a1a1a" stroke="#475569" stroke-width="0.5"/>
+      <path d="M 74 40 Q 79 28 84 40" fill="#475569" stroke="#475569" stroke-width="0.5"/>
+      <circle cx="79" cy="37" r="3.5" fill="none" stroke="#94a3b8" stroke-width="1.2"/>
+      <text x="50" y="63" text-anchor="middle" font-size="3" fill="#94a3b8">30 stk · adhesive</text>
+    </symbol>
+
+    <!-- Flat skrutrekker -->
+    <symbol id="sym-flatscrew" viewBox="0 0 100 70">
+      <path d="M 8 27 L 8 43 Q 8 48 14 48 L 44 48 Q 50 48 50 43 L 50 27 Q 50 22 44 22 L 14 22 Q 8 22 8 27 Z" fill="#fbbf24" stroke="#d97706" stroke-width="0.5"/>
+      <rect x="20" y="30" width="20" height="10" rx="1" fill="#d97706" opacity="0.4"/>
+      <rect x="50" y="33" width="38" height="4" fill="#94a3b8" stroke="#475569" stroke-width="0.3"/>
+      <path d="M 88 30 L 96 35 L 88 40 Z" fill="#94a3b8" stroke="#475569" stroke-width="0.3"/>
+      <text x="50" y="63" text-anchor="middle" font-size="3" fill="#94a3b8">flat ~2mm</text>
+    </symbol>
+
+    <!-- USB-C datakabel -->
+    <symbol id="sym-usbc" viewBox="0 0 100 70">
+      <path d="M 14 35 Q 30 35 38 35" fill="none" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
+      <path d="M 62 35 Q 70 35 86 35" fill="none" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
+      <rect x="30" y="27" width="16" height="16" rx="5" fill="#94a3b8" stroke="#475569" stroke-width="0.5"/>
+      <rect x="33" y="30" width="10" height="10" rx="4" fill="#1a1a1a"/>
+      <rect x="54" y="27" width="16" height="16" rx="5" fill="#94a3b8" stroke="#475569" stroke-width="0.5"/>
+      <rect x="57" y="30" width="10" height="10" rx="4" fill="#1a1a1a"/>
+      <text x="50" y="58" text-anchor="middle" font-size="3" fill="#94a3b8">USB-C · data + lading</text>
+      <text x="50" y="64" text-anchor="middle" font-size="2.5" fill="#60a5fa">ESP32 ↔ PC</text>
+    </symbol>
+
+    <!-- 3D-printer (Bambu Lab P2S) -->
+    <symbol id="sym-printer3d" viewBox="0 0 100 70">
+      <rect x="8" y="6" width="84" height="58" rx="2" fill="none" stroke="#3b82f6" stroke-width="1"/>
+      <rect x="14" y="46" width="72" height="6" fill="#2563eb" opacity="0.5"/>
+      <rect x="36" y="18" width="28" height="14" rx="1" fill="#60a5fa" stroke="#3b82f6" stroke-width="0.5"/>
+      <line x1="50" y1="32" x2="50" y2="40" stroke="#60a5fa" stroke-width="2"/>
+      <rect x="41" y="43" width="18" height="3" fill="#22c55e" opacity="0.8"/>
+      <rect x="42" y="40" width="16" height="3" fill="#22c55e" opacity="0.7"/>
+      <rect x="43" y="37" width="14" height="3" fill="#22c55e" opacity="0.6"/>
+      <circle cx="78" cy="20" r="8" fill="none" stroke="#f472b6" stroke-width="1.5"/>
+      <circle cx="78" cy="20" r="3" fill="#0f1117"/>
+      <text x="45" y="67" text-anchor="middle" font-size="2.8" fill="#94a3b8">Bambu P2S · PETG</text>
+    </symbol>
+
+    <!-- Thonny IDE / laptop med kode -->
+    <symbol id="sym-thonny" viewBox="0 0 100 70">
+      <rect x="10" y="4" width="80" height="52" rx="3" fill="#1a1a1a" stroke="#475569" stroke-width="0.8"/>
+      <rect x="14" y="8" width="72" height="42" fill="#0d1117"/>
+      <text x="18" y="20" font-size="4" fill="#22c55e" font-family="Courier New">import network</text>
+      <text x="18" y="27" font-size="4" fill="#60a5fa" font-family="Courier New">sta.connect(ssid)</text>
+      <text x="18" y="34" font-size="4" fill="#f8f8f2" font-family="Courier New">  time.sleep(0.5)</text>
+      <text x="18" y="41" font-size="4" fill="#fbbf24" font-family="Courier New">print("WiFi OK")</text>
+      <rect x="14" y="58" width="72" height="8" rx="2" fill="#242730" stroke="#475569" stroke-width="0.4"/>
+      <text x="50" y="64" text-anchor="middle" font-size="3" fill="#94a3b8">Thonny IDE · MicroPython</text>
+    </symbol>
+
+    <!-- M4 messinginnsats (heat-set insert) -->
+    <symbol id="sym-screw" viewBox="0 0 100 70">
+      <rect x="32" y="10" width="36" height="48" fill="#ca8a04" stroke="#92400e" stroke-width="0.5"/>
+      <g stroke="#b45309" stroke-width="0.8">
+        <line x1="32" y1="16" x2="68" y2="16"/><line x1="32" y1="22" x2="68" y2="22"/>
+        <line x1="32" y1="28" x2="68" y2="28"/><line x1="32" y1="34" x2="68" y2="34"/>
+        <line x1="32" y1="40" x2="68" y2="40"/><line x1="32" y1="46" x2="68" y2="46"/>
+        <line x1="32" y1="52" x2="68" y2="52"/>
+      </g>
+      <rect x="40" y="12" width="20" height="44" fill="#92400e" opacity="0.5"/>
+      <text x="50" y="36" text-anchor="middle" font-size="5" fill="#fbbf24" font-weight="700">M4</text>
+      <text x="50" y="66" text-anchor="middle" font-size="3" fill="#94a3b8">heat-set insert</text>
+    </symbol>
+
+    <!-- Heat insert tool (loddebolt-lignende) -->
+    <symbol id="sym-heattool" viewBox="0 0 100 70">
+      <path d="M 6 25 L 6 45 Q 6 52 12 52 L 40 52 Q 46 52 46 45 L 46 25 Q 46 18 40 18 L 12 18 Q 6 18 6 25 Z" fill="#1a1a1a" stroke="#475569" stroke-width="0.5"/>
+      <circle cx="18" cy="35" r="3.5" fill="#ef4444" opacity="0.85"/>
+      <rect x="46" y="33" width="34" height="4" fill="#94a3b8" stroke="#475569" stroke-width="0.3"/>
+      <path d="M 80 29 L 94 35 L 80 41 Z" fill="#fb923c" stroke="#d97706" stroke-width="0.3"/>
+      <path d="M 92 27 Q 97 31 93 36" fill="none" stroke="#fbbf24" stroke-width="0.9" opacity="0.7"/>
+      <path d="M 95 24 Q 100 31 95 38" fill="none" stroke="#fbbf24" stroke-width="0.6" opacity="0.4"/>
+      <text x="46" y="64" text-anchor="middle" font-size="3" fill="#94a3b8">heat insert tool</text>
+    </symbol>
+
+  </defs>
+</svg>
+
 <!-- ════════════════ HERO ════════════════ -->
 <div class="hero">
   <span class="emoji">🌱</span>
@@ -502,36 +1100,35 @@
   <div class="snap-card">
     <div class="snap-label">📊 Framdrift</div>
     <div class="snap-value">Fase 1 av 5</div>
-    <div class="snap-sub">Backend ferdig — hardware venter</div>
+    <div class="snap-sub">Backend ferdig — venter på hardware</div>
     <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
   </div>
   <div class="snap-card">
     <div class="snap-label">💰 Brukt så langt</div>
-    <div class="snap-value">~€90</div>
-    <div class="snap-sub">AliExpress sendt · lokalkjøp gjenstår</div>
+    <div class="snap-value">~€127</div>
+    <div class="snap-sub">€90 hovedkomponenter + €37 tilbehør</div>
   </div>
   <div class="snap-card">
     <div class="snap-label">📦 Hardware ankommer</div>
     <div class="snap-value">~2. juni</div>
-    <div class="snap-sub">AliExpress-pakke med alle deler</div>
+    <div class="snap-sub">AliExpress — alt bestilt</div>
   </div>
   <div class="snap-card">
-    <div class="snap-label">➡️ Gjør denne uka</div>
+    <div class="snap-label">➡️ Gjør nå</div>
     <div class="snap-value" style="font-size:1rem;">Installer Thonny + kjøp multimeter</div>
-    <div class="snap-sub">Klargjør PC og verktøy</div>
+    <div class="snap-sub">Klart før hardware kommer</div>
   </div>
 </div>
 
 <!-- ════════════════ TABS ════════════════ -->
 <div class="tabs-wrap">
   <div class="tabs" role="tablist">
-    <button class="tab-btn active" data-tab="status"><span class="tab-icon">🟢</span> Status</button>
+    <button class="tab-btn active" data-tab="bygg"><span class="tab-icon">🧱</span> Bygg</button>
     <button class="tab-btn" data-tab="komponenter"><span class="tab-icon">📦</span> Komponenter</button>
     <button class="tab-btn" data-tab="kobling"><span class="tab-icon">🔌</span> Kobling</button>
-    <button class="tab-btn" data-tab="bygg"><span class="tab-icon">🧱</span> Bygg</button>
-    <button class="tab-btn" data-tab="plan"><span class="tab-icon">🗺️</span> Plan</button>
     <button class="tab-btn" data-tab="advarsler"><span class="tab-icon">⚠️</span> Advarsler</button>
-    <a class="tab-btn external" href="3d-design.html"><span class="tab-icon">📐</span> 3D-design ↗</a>
+    <button class="tab-btn" data-tab="status"><span class="tab-icon">🟢</span> Status</button>
+    <button class="tab-btn" data-tab="plan"><span class="tab-icon">🗺️</span> Plan</button>
   </div>
 </div>
 
@@ -540,7 +1137,7 @@
 <!-- ════════════════════════════════════════════ -->
 <!-- TAB: STATUS                                  -->
 <!-- ════════════════════════════════════════════ -->
-<div class="pane active" data-pane="status">
+<div class="pane" data-pane="status">
 
   <section>
     <div class="section-title"><span class="icon">🟢</span> Hva er klart nå</div>
@@ -611,7 +1208,7 @@
       <div class="comp-group-title">📬 Bestilling 1 — Hovedkomponenter fra AliExpress (~€90, ankommer ~2. juni)</div>
 
       <div class="comp-card">
-        <div class="comp-icon">🧠</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-esp32"/></svg>
         <div class="comp-body">
           <h4>ESP32 — "hjernen" i potten</h4>
           <div class="what">En liten datamaskin som kobler seg til WiFi og snakker med appen. Leser sensorer og styrer lyset. Programmeres via Thonny.</div>
@@ -621,7 +1218,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">💡</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-led-strip"/></svg>
         <div class="comp-body">
           <h4>Phyto LED-strip — vekstlyset</h4>
           <div class="what">Røde og blå LEDs spesielt laget for planter. Rød = fotosyntese og blomstring, blå = bladvekst. 4:1 rød:blå er standard for innendørs vekstlys.</div>
@@ -631,7 +1228,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">🔌</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-mosfet"/></svg>
         <div class="comp-body">
           <h4>MOSFET (LR7843) — lysbryter</h4>
           <div class="what">Elektronisk bryter. ESP32 sender et lavt signal, MOSFET slår på/av høyspenningen til LED-stripen. Tåler logic-level signal fra ESP32.</div>
@@ -641,7 +1238,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">⚡</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-adapter"/></svg>
         <div class="comp-body">
           <h4>12V strømadapter</h4>
           <div class="what">Hoved-strømkilden. Driver både LED på 12V og ESP32 via buck converter på 5V.</div>
@@ -651,7 +1248,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">🔻</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-buck"/></svg>
         <div class="comp-body">
           <h4>Buck converter — spenningsreduserer</h4>
           <div class="what">Tar 12V inn, gir 5V ut. ESP32 trenger 5V. Stilles inn med potmeter + multimeter FØR ESP32 kobles til.</div>
@@ -661,7 +1258,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">💧</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-xkc"/></svg>
         <div class="comp-body">
           <h4>XKC-Y25 — vannstandssensor (×4)</h4>
           <div class="what">Limes på utsiden av IKEA-tanken. Ingen hull eller kontakt med vann — kjenser gjennom plast. 2 per potte gir tre nivåer: fullt, halvt, tomt.</div>
@@ -671,7 +1268,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">🌡️</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-dht22"/></svg>
         <div class="comp-body">
           <h4>DHT22 — temperatur og luftfuktighet</h4>
           <div class="what">Måler rommet rundt potten. Data vises i appen.</div>
@@ -681,7 +1278,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">🌱</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-soil"/></svg>
         <div class="comp-body">
           <h4>Jordfuktsensor (×3)</h4>
           <div class="what">Stikkes ned i jorda. Kapasitiv = ruster ikke. Én per planteseksjon.</div>
@@ -691,7 +1288,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">🖥️</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-oled"/></svg>
         <div class="comp-body">
           <h4>OLED-skjerm</h4>
           <div class="what">Liten skjerm (ca. 2×2cm) på selve potten. Viser temperatur, jordfukt og vannstand uten å åpne appen.</div>
@@ -701,7 +1298,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">🎛️</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-ky040"/></svg>
         <div class="comp-body">
           <h4>KY-040 — dreieknapp</h4>
           <div class="what">Knapp du kan dreie og trykke på. Til å justere lysstyrken fysisk på potten uten å bruke telefonen.</div>
@@ -711,7 +1308,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">🔗</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-breadboard"/></svg>
         <div class="comp-body">
           <h4>Breadboard + jumper-kabler</h4>
           <div class="what">Breadboard = prøveplate uten lodding. Jumper-kabler kobler komponenter sammen.</div>
@@ -721,7 +1318,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">🔌</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-barrel"/></svg>
         <div class="comp-body">
           <h4>DC barrel jack</h4>
           <div class="what">Der strømadapteren plugges inn. Skruklemmer = ingen lodding.</div>
@@ -731,7 +1328,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">🪢</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-wick"/></svg>
         <div class="comp-body">
           <h4>Vekemateriale — bomullssnor</h4>
           <div class="what">Suger vann fra tanken opp i jorda — sub-irrigasjon uten pumpe.</div>
@@ -741,7 +1338,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">🔌</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-ledclip"/></svg>
         <div class="comp-body">
           <h4>LED clip connector</h4>
           <div class="what">Klemme som kobler ledninger til LED-stripen uten lodding.</div>
@@ -751,7 +1348,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">🔗</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-terminal"/></svg>
         <div class="comp-body">
           <h4>KF301 terminalblokk</h4>
           <div class="what">Skrueklemmer for permanent montering på perfboard.</div>
@@ -761,7 +1358,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">📼</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-tape"/></svg>
         <div class="comp-body">
           <h4>Elektrisk tape — værbestandig</h4>
           <div class="what">Isolerer skjøter. Værbestandig tåler fukt — bra i et plantemiljø.</div>
@@ -775,7 +1372,7 @@
       <div class="comp-group-title">📦 Bestilling 2 — Tilbehør fra AliExpress (€37,18 fri frakt, bestilt mai 2026)</div>
 
       <div class="comp-card">
-        <div class="comp-icon">🧵</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-wire-silicone"/></svg>
         <div class="comp-body">
           <h4>Silikonledning 22 AWG — rød + svart</h4>
           <div class="what">Fleksibel høy-temp ledning for LED-kabel gjennom stolper og 12V-strekk. Rød = +, svart = − konvensjon for å unngå polaritets-feil.</div>
@@ -785,7 +1382,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">🔗</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-dupont"/></svg>
         <div class="comp-body">
           <h4>Dupont 30cm — Male-to-Male (40 stk)</h4>
           <div class="what">Lengre jumper-kabler for sensor-strekk fra base til tank-topp. Supplement til 20cm fra ESP32-sett.</div>
@@ -795,7 +1392,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">🔗</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-dupont"/></svg>
         <div class="comp-body">
           <h4>Dupont 30cm — Male-to-Female (40 stk)</h4>
           <div class="what">For sensor → ESP32-pinne direkte (sensor har hunn, ESP32 har hann).</div>
@@ -805,7 +1402,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">🔗</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-dupont"/></svg>
         <div class="comp-body">
           <h4>Dupont 30cm — Female-to-Female (40 stk)</h4>
           <div class="what">For sensor-til-sensor og forlengelse av eksisterende M-F kabler.</div>
@@ -815,7 +1412,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">⚙️</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-wago"/></svg>
         <div class="comp-body">
           <h4>Lever-cable connectors (Wago 221-klone) — 50 stk</h4>
           <div class="what">Inline 1-til-1 skjøting med hendel. Brukes der kabler må kunne kobles fra/forlenges (bunn av stolpa, tank-uttak, 12V adapter). Krever bar, strippet ledningsende.</div>
@@ -825,7 +1422,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">🛠️</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-stripper"/></svg>
         <div class="comp-body">
           <h4>Multifunksjon wire stripper "Pro"</h4>
           <div class="what">3-i-1: stripper isolasjon (auto-justering 10-24 AWG), kutter ledninger, krymper terminaler. Essensielt for Wago-bruk og generell kabel-jobb.</div>
@@ -835,7 +1432,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">🌈</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-heatshrink"/></svg>
         <div class="comp-body">
           <h4>Heat shrink tubing kit — 580 stk</h4>
           <div class="what">Isolerer skjøter, lager strain relief, og marker ledninger med farger (rød=+, blå=GND, gul=signal). Krymp med heat insert tool eller lighter.</div>
@@ -845,7 +1442,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">🔘</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-switch"/></svg>
         <div class="comp-body">
           <h4>DC inline switch 5.5×2.1mm (×2) — MJJC Inline 304</h4>
           <div class="what">Vippebryter som klikker inn mellom 12V-adapter og DC-jack. Slå av hele systemet uten å trekke ut støpsel — gjør Wago-jobben tryggere. 2 stk: én i bruk, én reserve.</div>
@@ -855,7 +1452,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">🔥</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-fuse"/></svg>
         <div class="comp-body">
           <h4>Sikringholder 5×20mm (10 stk)</h4>
           <div class="what">Inline-holder for glass-/keramikk-sikringer. Plasseres mellom 12V-adapter og resten av systemet. Beskytter mot kortslutning som ellers kunne smelte ledninger.</div>
@@ -865,7 +1462,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">⚡</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-fuse"/></svg>
         <div class="comp-body">
           <h4>Slow-blow sikringer 3A (10 stk)</h4>
           <div class="what">Beskyttelsessikring for 12V-kretsen. Slow-blow (T-type) tolererer kort strømsuget når buck converteren først lades opp. 3A gir 50% margin over normal forbruk (~2A).</div>
@@ -875,7 +1472,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">📎</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-doubletape"/></svg>
         <div class="comp-body">
           <h4>3M dobbeltsidig tape</h4>
           <div class="what">Akryl-basert dobbeltsidig tape for permanent festing av sensor-klips på IKEA-tank og elektronikk-komponenter i base. Erstatter behovet for å kjøpe Scotch-tape på Jula.</div>
@@ -885,7 +1482,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">📌</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-cableclip"/></svg>
         <div class="comp-body">
           <h4>Kabel-organizer klips (30 stk)</h4>
           <div class="what">Adhesive-mount klips for å holde kabler på plass i base og under tak. Dobbeltsidig tape på baksiden — bare klistre opp og snap kabel inn. Erstatter behovet for å printe egne klips.</div>
@@ -899,7 +1496,7 @@
       <div class="comp-group-title">🛒 Kjøp lokalt — FØR hardware ankommer</div>
 
       <div class="comp-card">
-        <div class="comp-icon">🔬</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-multimeter"/></svg>
         <div class="comp-body">
           <h4>Multimeter — spenningsmåler</h4>
           <div class="what">Stiller inn buck converter til 5.0V. MÅ gjøres før ESP32 kobles til.</div>
@@ -912,7 +1509,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">🪛</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-flatscrew"/></svg>
         <div class="comp-body">
           <h4>Liten flat skrutrekker</h4>
           <div class="what">Til skruklemmene på barrel jack og buck converter (~2 mm flat).</div>
@@ -924,7 +1521,7 @@
       </div>
 
       <div class="comp-card" style="opacity:0.55;">
-        <div class="comp-icon">📎</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-doubletape"/></svg>
         <div class="comp-body">
           <h4><s>Dobbeltsidig tape</s></h4>
           <div class="what">Kjøpt på AliExpress i bestilling 2 (3M akryl-tape) — ingen Jula-tur nødvendig.</div>
@@ -936,7 +1533,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">🔌</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-usbc"/></svg>
         <div class="comp-body">
           <h4>USB-C datakabel</h4>
           <div class="what">For å koble ESP32 til PC via Thonny. Test: koble telefon — ser PC den?</div>
@@ -953,7 +1550,7 @@
       <div class="comp-group-title">✅ Har allerede</div>
 
       <div class="comp-card">
-        <div class="comp-icon">🪣</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-ikea-tank"/></svg>
         <div class="comp-body">
           <h4>IKEA 365+ 5.2L — vannreservoar</h4>
           <div class="what">Holder vannet. Veken henger ned i den. XKC-Y25 limes på utsiden.</div>
@@ -963,7 +1560,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">🖨️</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-printer3d"/></svg>
         <div class="comp-body">
           <h4>Bambu Lab P2S + PETG</h4>
           <div class="what">3D-printeren som lager innkapslingen. PETG tåler fukt bedre enn PLA.</div>
@@ -973,7 +1570,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">💻</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-thonny"/></svg>
         <div class="comp-body">
           <h4>Thonny IDE</h4>
           <div class="what">Programvaren du skriver Python-kode i og laster opp til ESP32. Last ned på thonny.org.</div>
@@ -983,7 +1580,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">🔩</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-screw"/></svg>
         <div class="comp-body">
           <h4>M4 messinginnsatser + skruer</h4>
           <div class="what">Heat-set innsatser smeltes inn i 3D-printet PETG slik at du kan skru M4-skruer i. Brukes for sammenstilling av base, tak, klips, og elektronikk-skuff.</div>
@@ -993,7 +1590,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">🔥</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-heattool"/></svg>
         <div class="comp-body">
           <h4>Heat insert tool</h4>
           <div class="what">Smelter M4 messinginnsatser inn i 3D-print. Kan også brukes til heat shrink-strømper (hold tipp 2-5 mm fra strømpen, roter arbeidet).</div>
@@ -1003,7 +1600,7 @@
       </div>
 
       <div class="comp-card">
-        <div class="comp-icon">🔗</div>
+        <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-dupont"/></svg>
         <div class="comp-body">
           <h4>Standard Dupont 20cm (130 stk)</h4>
           <div class="what">Korte jumper-kabler fra ESP32-sett. For breadboard-koblinger og korte sensor-strekk. Supplerer 30cm-versjonene fra bestilling 2.</div>
@@ -1628,73 +2225,133 @@
 <!-- ════════════════════════════════════════════ -->
 <!-- TAB: BYGG                                    -->
 <!-- ════════════════════════════════════════════ -->
-<div class="pane" data-pane="bygg">
+<div class="pane active" data-pane="bygg">
 
+  <!-- ── INTRO + pakke-sjekkliste ── -->
   <section>
-    <div class="section-title"><span class="icon">🧱</span> Bygg én bit av gangen</div>
-    <p class="section-intro">Test hvert trinn FØR du går videre. Hvis noe slutter å virke, vet du da hvilken kobling som var problemet.</p>
+    <div class="section-title"><span class="icon">🧱</span> Slik bygger du Potte 1</div>
+    <p class="section-intro">Følg trinnene i rekkefølge. Test hvert trinn FØR du går videre — da vet du alltid hvilken kobling som er problemet. Hver trinn viser <strong>hvilke deler du bruker</strong>.</p>
+
+    <div style="background:#0a1a0f; border:1px solid #14532d; border-radius:10px; padding:1rem 1.25rem; font-size:0.88rem;">
+      <strong style="color:var(--green); display:block; margin-bottom:0.4rem;">📦 Når pakken kommer (~2. juni):</strong>
+      <ol style="margin-left:1.2rem; color:var(--muted); line-height:1.7;">
+        <li>Pakk ut alt på et bord. Gå til <strong>Komponenter-fanen</strong> og sammenlign mot bildene — sjekk at alt er der.</li>
+        <li>Installer <a href="https://thonny.org" target="_blank" style="color:var(--green);">Thonny IDE</a> på PC-en og kjøp multimeter (om du ikke alt har gjort det).</li>
+        <li>Følg trinnene under én etter én. Det er bare 8 trinn. Lyset må fungere i trinn 2 før du går videre.</li>
+      </ol>
+    </div>
 
     <div class="steps">
 
+      <!-- ─── TRINN 0 ─── -->
       <div class="step">
         <div class="step-num">0</div>
         <div class="step-body">
-          <h3>Klargjør spenning — IKKE koble til ESP32 ennå</h3>
-          <p>12V-adapter → barrel jack → buck converter. ESP32 og alt annet UTE. Slå på, mål utgangen av buck converter med multimeter, skru på potmeteret til displayet viser nøyaktig 5.0V.</p>
+          <h3>Klargjør 12V-strømkretsen — IKKE koble til ESP32 ennå</h3>
+          <p>Bygg hele "strømstigen": <strong>adapter → vippebryter → sikring → barrel jack → buck converter</strong>. Slå på, mål utgangen av buck converter med multimeter, skru på det blå potmeteret til displayet viser nøyaktig <strong>5.0V</strong>. Slå av igjen.</p>
+
+          <div class="step-pics">
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-adapter"/></svg><span class="lbl">12V adapter</span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-switch"/></svg><span class="lbl">Inline switch<br><em style="font-size:0.66rem;">tilbehør</em></span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-fuse"/></svg><span class="lbl">3A sikring<br><em style="font-size:0.66rem;">tilbehør</em></span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-barrel"/></svg><span class="lbl">DC barrel jack</span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-buck"/></svg><span class="lbl">Buck converter</span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-multimeter"/></svg><span class="lbl">Multimeter</span></div>
+          </div>
+
           <div class="step-wires">
-            <span class="wire-chip c-12v">12V adapter → barrel jack</span>
+            <span class="wire-chip c-12v">adapter → switch → sikring → barrel jack</span>
             <span class="wire-chip c-12v">barrel jack → buck IN</span>
             <span class="wire-chip c-5v">buck OUT → multimeter</span>
           </div>
-          <div class="check-tip">⚠ Over 5V på ESP32 VIN = ødelagt brett. Ikke koble videre før multimeteret viser 5.0V.</div>
+
+          <div class="check-tip">⚠ <strong>Over 5V på ESP32 VIN = ødelagt brett.</strong> Aldri gå videre før multimeteret viser 5.0V.</div>
+          <div style="background:#0a1a2a; border-left:3px solid var(--blue); padding:0.55rem 0.8rem; margin-top:0.6rem; border-radius:0 6px 6px 0; font-size:0.82rem; color:var(--muted);">
+            💡 <strong style="color:var(--blue);">Hvorfor switch og sikring?</strong> Switch lar deg slå av strømmen før du endrer kobling — du slipper å trekke ut støpsel hver gang. Sikringen blåser hvis noe kortslutter, så ledninger ikke smelter.
+          </div>
         </div>
       </div>
 
+      <!-- ─── TRINN 1 ─── -->
       <div class="step">
         <div class="step-num">1</div>
         <div class="step-body">
           <h3>ESP32 alene — første "hei verden"</h3>
-          <p>Koble ESP32 til PC via USB-C. Åpne Thonny, flash MicroPython. Last opp <code>boot.py</code> med WiFi-konfigurasjon.</p>
+          <p>Koble ESP32 til PC via USB-C-kabel (sjekk at den støtter data, ikke kun lading). Åpne Thonny, flash MicroPython én gang, last deretter opp <code>boot.py</code> med WiFi-navn og passord.</p>
+
+          <div class="step-pics">
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-esp32"/></svg><span class="lbl">ESP32</span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-breadboard"/></svg><span class="lbl">Breadboard</span></div>
+          </div>
+
           <div class="step-wires">
             <span class="wire-chip c-5v">USB-C → ESP32</span>
           </div>
-          <div class="ok-tip">✓ Test: Thonny-konsoll viser IP-adresse fra boot.py.</div>
+          <div class="ok-tip">✓ <strong>Test:</strong> Thonny-konsollen viser en IP-adresse fra boot.py. Sett ESP32 inn i breadboardet — straddle midtspalten.</div>
         </div>
       </div>
 
+      <!-- ─── TRINN 2 ─── -->
       <div class="step">
         <div class="step-num">2</div>
         <div class="step-body">
           <h3>LED-strip + MOSFET — kjernefunksjonen</h3>
-          <p>Med ESP32 strømløs: koble 12V til MOSFET VIN, LED-strip til MOSFET OUT, GPIO26 til MOSFET SIG, og felles GND. Sett deretter inn USB-C i ESP32 og kjør <code>main.py</code>. Test fra web-appen at lyset dimmes.</p>
+          <p>Trekk ut alt strøm. Plasser MOSFET ved siden av ESP32 på breadboardet. Koble <strong>12V fra barrel jack</strong> til MOSFET VIN, og <strong>GPIO26 fra ESP32</strong> til MOSFET SIG. Bruk LED clip connector på LED-stripen (ingen lodding). Sett USB-C tilbake i ESP32 og kjør <code>main.py</code> — test fra web-appen at lyset dimmes.</p>
+
+          <div class="step-pics">
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-mosfet"/></svg><span class="lbl">MOSFET</span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-led-strip"/></svg><span class="lbl">LED-strip</span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-ledclip"/></svg><span class="lbl">LED clip</span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-wire-silicone"/></svg><span class="lbl">Silikonledning<br><em style="font-size:0.66rem;">22 AWG rød+svart</em></span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-wago"/></svg><span class="lbl">Wago 221<br><em style="font-size:0.66rem;">tilbehør</em></span></div>
+          </div>
+
           <div class="step-wires">
             <span class="wire-chip c-12v">barrel jack → MOSFET VIN</span>
-            <span class="wire-chip c-12v">MOSFET OUT → LED +</span>
+            <span class="wire-chip c-12v">MOSFET OUT → LED + (via clip)</span>
             <span class="wire-chip c-sig">ESP32 GPIO26 → MOSFET SIG</span>
             <span class="wire-chip c-gnd">felles GND</span>
           </div>
-          <div class="check-tip">⚠ MOSFET SIG må aldri stå løs — koble den til GPIO26 selv om du ikke kjører kode ennå.</div>
+
+          <div class="check-tip">⚠ MOSFET SIG må aldri stå løs — koble den til GPIO26 selv om du ikke kjører kode ennå. Flytende SIG-pinne får MOSFET til å bli halv-åpen og overoppheter.</div>
+
+          <div style="background:#0a1a2a; border-left:3px solid var(--blue); padding:0.55rem 0.8rem; margin-top:0.6rem; border-radius:0 6px 6px 0; font-size:0.82rem; color:var(--muted);">
+            💡 <strong style="color:var(--blue);">Når dette skal inn i 3D-utskriften:</strong> LED-stripen sitter under taket. Silikonledning går gjennom stolpene ned til MOSFET i basen. Bruk <strong>Wago 221-kontakter</strong> i bunn og topp av stolpa — da kan du koble fra hele topp-konstruksjonen for vedlikehold. Strip 10mm bar ledning, sett i Wago, vipp ned hendelen.
+          </div>
         </div>
       </div>
 
+      <!-- ─── TRINN 3 ─── -->
       <div class="step">
         <div class="step-num">3</div>
         <div class="step-body">
           <h3>Bytt USB-strøm med buck converter</h3>
-          <p>Når LED-trinnet fungerer, koble buck converter OUT (5V) til ESP32 VIN. Trekk ut USB-C — alt skal fortsatt virke.</p>
+          <p>Når LED-trinnet fungerer: koble buck converter OUT (5V) til ESP32 VIN-pinnen. Trekk ut USB-C — alt skal fortsatt virke fra 12V-adapteren.</p>
+
+          <div class="step-pics">
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-buck"/></svg><span class="lbl">Buck (5V ut)</span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-esp32"/></svg><span class="lbl">ESP32 VIN</span></div>
+          </div>
+
           <div class="step-wires">
             <span class="wire-chip c-5v">buck OUT → ESP32 VIN</span>
             <span class="wire-chip c-gnd">buck GND → felles GND</span>
           </div>
-          <div class="check-tip">⚠ Aldri ha både USB-C og buck-VIN koblet samtidig under normal bruk. Når du programmerer: koble fra VIN først.</div>
+          <div class="check-tip">⚠ Aldri ha både USB-C og buck-VIN koblet samtidig under normal bruk. Når du programmerer: <strong>koble fra VIN først</strong>, sett deretter inn USB-C.</div>
         </div>
       </div>
 
+      <!-- ─── TRINN 4 ─── -->
       <div class="step">
         <div class="step-num">4</div>
         <div class="step-body">
           <h3>OLED-skjerm (I2C)</h3>
-          <p>VCC til 3.3V, GND felles, SDA→GPIO21, SCL→GPIO22. Kjør <code>i2c.scan()</code> i Thonny — skal returnere <code>[60]</code> (0x3C).</p>
+          <p>Bare 4 ledninger: VCC til 3.3V, GND til felles, SDA til GPIO21, SCL til GPIO22. Kjør <code>i2c.scan()</code> i Thonny — skal returnere <code>[60]</code> (= 0x3C).</p>
+
+          <div class="step-pics">
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-oled"/></svg><span class="lbl">OLED 0.96"</span></div>
+          </div>
+
           <div class="step-wires">
             <span class="wire-chip c-33v">ESP32 3V3 → OLED VCC</span>
             <span class="wire-chip c-i2c">GPIO21 → SDA</span>
@@ -1704,41 +2361,64 @@
         </div>
       </div>
 
+      <!-- ─── TRINN 5 ─── -->
       <div class="step">
         <div class="step-num">5</div>
         <div class="step-body">
-          <h3>DHT22 og jordfuktsensorer</h3>
-          <p>DHT22 til GPIO4. Jordfukt #1-3 til GPIO34/35/32. Alle får 3.3V VCC og felles GND.</p>
+          <h3>DHT22 og jordfuktsensorer (×3)</h3>
+          <p>Alle får 3.3V VCC og felles GND. DHT22 data til GPIO4. Jordfukt #1, #2, #3 til GPIO34, GPIO35, GPIO32 (alle er ADC-pinner).</p>
+
+          <div class="step-pics">
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-dht22"/></svg><span class="lbl">DHT22</span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-soil"/></svg><span class="lbl">Jordfukt #1</span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-soil"/></svg><span class="lbl">Jordfukt #2</span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-soil"/></svg><span class="lbl">Jordfukt #3</span></div>
+          </div>
+
           <div class="step-wires">
             <span class="wire-chip c-33v">3V3 → alle VCC</span>
             <span class="wire-chip c-sig">DHT22 DATA → GPIO4</span>
             <span class="wire-chip c-sig">Jord → GPIO34/35/32</span>
             <span class="wire-chip c-gnd">felles GND</span>
           </div>
-          <div class="ok-tip">💡 Kalibrer jordfukt: les rå ADC i tørr jord (notér tall) og i et glass vann (notér tall). Bruk verdiene i appens kalibrering.</div>
+          <div class="ok-tip">💡 <strong>Kalibrer jordfukt:</strong> les rå ADC i tørr jord (notér tall, typisk 3000–4000) og i et glass vann (typisk 1000–2000). Bruk verdiene i appens kalibrering.</div>
         </div>
       </div>
 
+      <!-- ─── TRINN 6 ─── -->
       <div class="step">
         <div class="step-num">6</div>
         <div class="step-body">
-          <h3>XKC-Y25 vannsensorer (5V)</h3>
-          <p>Disse er den ENESTE sensoren som trenger 5V. VCC til buck OUT (5V), OUT-pinnen til GPIO19 (lav) og GPIO23 (mid). Lim sensorene på utsiden av IKEA-tanken med dobbeltsidig tape.</p>
+          <h3>XKC-Y25 vannsensorer (×2) — krever 5V</h3>
+          <p>Disse er den <strong>eneste</strong> sensoren som trenger 5V (ikke 3.3V). VCC til buck OUT (5V), OUT-pinnen til GPIO19 (lav) og GPIO23 (mid). Fest sensorene på utsiden av IKEA-tanken med 3M-tape — én lav og én ca. halvveis opp.</p>
+
+          <div class="step-pics">
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-xkc"/></svg><span class="lbl">XKC-Y25 (lav)</span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-xkc"/></svg><span class="lbl">XKC-Y25 (mid)</span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-ikea-tank"/></svg><span class="lbl">IKEA-tank<br><em style="font-size:0.66rem;">limes utenpå</em></span></div>
+          </div>
+
           <div class="step-wires">
             <span class="wire-chip c-5v">buck OUT → XKC VCC ×2</span>
             <span class="wire-chip c-sig">XKC #1 OUT → GPIO19</span>
             <span class="wire-chip c-sig">XKC #2 OUT → GPIO23</span>
             <span class="wire-chip c-gnd">felles GND</span>
           </div>
-          <div class="ok-tip">💡 OUT er NPN open-collector — bruk <code>Pin(19, Pin.IN, Pin.PULL_UP)</code> i koden. Verdi <code>0</code> = vann detektert, <code>1</code> = tørt.</div>
+          <div class="ok-tip">💡 OUT er NPN open-collector — bruk <code>Pin(19, Pin.IN, Pin.PULL_UP)</code> i koden. Verdi <code>0</code> = vann detektert, <code>1</code> = tørt. Sensoren krever <strong>direkte kontakt</strong> med tankveggen — ingen luftspalte.</div>
         </div>
       </div>
 
+      <!-- ─── TRINN 7 ─── -->
       <div class="step">
         <div class="step-num">7</div>
         <div class="step-body">
-          <h3>KY-040 dreieknapp</h3>
-          <p>Siste komponent. VCC til 3.3V (ikke 5V!), GND felles, CLK→GPIO16, DT→GPIO17, SW→GPIO18.</p>
+          <h3>KY-040 dreieknapp — kun 3.3V!</h3>
+          <p>Siste komponent. VCC til 3.3V (<strong>aldri 5V</strong>), GND felles, CLK til GPIO16, DT til GPIO17, SW (knapp) til GPIO18.</p>
+
+          <div class="step-pics">
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-ky040"/></svg><span class="lbl">KY-040</span></div>
+          </div>
+
           <div class="step-wires">
             <span class="wire-chip c-33v">3V3 → KY-040 +</span>
             <span class="wire-chip c-sig">CLK → GPIO16</span>
@@ -1746,7 +2426,7 @@
             <span class="wire-chip c-sig">SW → GPIO18</span>
             <span class="wire-chip c-gnd">felles GND</span>
           </div>
-          <div class="check-tip">⚠ Sjekk VCC med multimeter FØR du kobler til ESP32. Skal stå på 3.3V, ikke 5V.</div>
+          <div class="check-tip">⚠ Sjekk VCC med multimeter FØR du kobler til ESP32. Skal stå på <strong>3.3V</strong>, ikke 5V. KY-040 sender 5V-signal tilbake hvis du gir den 5V — det ødelegger ESP32-GPIO.</div>
         </div>
       </div>
     </div>
@@ -1789,30 +2469,38 @@
         <div class="check-box">→</div>
         <div class="check-content">
           <h4>Installer Thonny IDE på PC</h4>
-          <p>Last ned gratis på thonny.org.</p>
+          <p>Last ned gratis på <a href="https://thonny.org" target="_blank" style="color:var(--green);">thonny.org</a>.</p>
           <span class="tip">Gjøres nå, FØR hardware ankommer</span>
         </div>
       </div>
       <div class="check waiting">
         <div class="check-box">→</div>
         <div class="check-content">
-          <h4>Kjøp multimeter, skrutrekker, tape, USB-C datakabel</h4>
-          <p>Multimeter er kritisk — brukes til å stille buck converter.</p>
-          <span class="tip">Lokalt hos Jula / Clas Ohlson</span>
+          <h4>Kjøp multimeter (Jula)</h4>
+          <p>Kritisk verktøy — brukes til å stille buck converter til 5.0V og verifisere spenninger underveis.</p>
+          <span class="tip">~199 kr, lokalkjøp</span>
+        </div>
+      </div>
+      <div class="check waiting">
+        <div class="check-box">→</div>
+        <div class="check-content">
+          <h4>Sjekk om du har en USB-C datakabel</h4>
+          <p>Må støtte data (ikke kun lading). Test: koble en telefon — ser PC den?</p>
+          <span class="tip">Kjøp bare hvis du må</span>
         </div>
       </div>
       <div class="check todo">
         <div class="check-box"></div>
         <div class="check-content">
           <h4>Hardware ankommer ~2. juni</h4>
-          <p>AliExpress-pakke med ESP32, MOSFET, LED-strip, sensorer.</p>
+          <p>To AliExpress-pakker: hovedkomponenter (ESP32, MOSFET, LED-strip, alle sensorer) + tilbehør (Wago, switch, sikring, silikonledning, heat shrink, 3M-tape, wire stripper).</p>
         </div>
       </div>
       <div class="check todo">
         <div class="check-box"></div>
         <div class="check-content">
-          <h4>Følg "Bygg én bit av gangen" over (trinn 0-7)</h4>
-          <p>Start med å stille buck converter til 5.0V før du gjør noe annet.</p>
+          <h4>Følg byggetrinnene over (0–7)</h4>
+          <p>Start med trinn 0: still buck converter til nøyaktig 5.0V før du gjør noe annet.</p>
         </div>
       </div>
       <div class="check todo">
