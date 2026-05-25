@@ -1705,7 +1705,7 @@
       <span class="legend-item" data-wire="w-gnd">
         <span class="legend-swatch legend-gnd"></span> GND (grå)
       </span>
-      <span class="legend-hint">↑ klikk for å vise kun én farge</span>
+      <span class="legend-hint">↑ klikk for å vise kun én farge &nbsp;·&nbsp; Kryss uten ● = ledninger krysser, IKKE koblet</span>
     </div>
 
     <div class="diagram-wrap" id="diagram-wrap">
@@ -1798,15 +1798,15 @@
           <text x="14" y="100" class="pin">VIN</text>
           <text x="14" y="120" class="pin">3.3V</text>
           <text x="14" y="140" class="pin">GND</text>
-          <text x="14" y="170" class="pin">GPIO26 ← PWM</text>
+          <text x="14" y="170" class="pin">GPIO26 → PWM</text>
 
           <text x="206" y="100" class="pin" text-anchor="end">USB-C</text>
-          <text x="206" y="130" class="pin" text-anchor="end">SDA → GPIO21</text>
-          <text x="206" y="145" class="pin" text-anchor="end">SCL → GPIO22</text>
+          <text x="206" y="130" class="pin" text-anchor="end">GPIO21 → SDA</text>
+          <text x="206" y="145" class="pin" text-anchor="end">GPIO22 → SCL</text>
           <text x="206" y="170" class="pin" text-anchor="end">GPIO4  ← DHT22</text>
-          <text x="206" y="190" class="pin" text-anchor="end">CLK → GPIO16</text>
-          <text x="206" y="205" class="pin" text-anchor="end">DT  → GPIO17</text>
-          <text x="206" y="220" class="pin" text-anchor="end">SW  → GPIO18</text>
+          <text x="206" y="190" class="pin" text-anchor="end">GPIO16 ← CLK</text>
+          <text x="206" y="205" class="pin" text-anchor="end">GPIO17 ← DT</text>
+          <text x="206" y="220" class="pin" text-anchor="end">GPIO18 ← SW</text>
           <text x="206" y="240" class="pin" text-anchor="end">GPIO34 ← jord1</text>
           <text x="206" y="255" class="pin" text-anchor="end">GPIO35 ← jord2</text>
           <text x="206" y="270" class="pin" text-anchor="end">GPIO32 ← jord3</text>
@@ -1918,6 +1918,10 @@
         <path class="wire w-5v" d="M 240 418 L 490 418 L 490 592 L 897 592 L 897 460"/>
         <path class="wire w-5v" d="M 240 428 L 485 428 L 485 602 L 901 602 L 901 550"/>
         <text x="540" y="587" class="wire-label">5V → XKC VCC</text>
+        <!-- Junction-prikker: 3 ledninger fra samme 5V-terminal på buck -->
+        <circle cx="240" cy="408" r="4" fill="#4ade80"/>
+        <circle cx="240" cy="418" r="4" fill="#4ade80"/>
+        <circle cx="240" cy="428" r="4" fill="#4ade80"/>
 
         <!-- ─ GPIO26 PWM → MOSFET SIG (lilla) ─ -->
         <!-- Rutes langs ESP32 venstre kant (x=496) — unngår 5V-ledningene -->
