@@ -275,7 +275,7 @@
     .wire.w-33v { stroke: var(--w-33v); }
     .wire.w-sig { stroke: var(--w-sig); }
     .wire.w-i2c { stroke: var(--w-i2c); }
-    .wire.w-gnd { stroke: var(--w-gnd); stroke-dasharray: 6 3; }
+    .wire.w-gnd { stroke: #b0bec5; stroke-width: 3; stroke-dasharray: 8 4; }
     .wire.dim { opacity: 0.1; }
 
     .wire-label {
@@ -1899,12 +1899,15 @@
         <!-- 12V fra barrel jack pigtail til MOSFET VIN -->
         <path class="wire w-12v" d="M 240 318 L 290 318 L 290 538 L 240 538"/>
         <text x="295" y="435" class="wire-label">12V → MOSFET VIN</text>
+        <!-- Junction-prikker: 12V deler seg fra barrel jack høyre kant -->
+        <circle cx="240" cy="318" r="4" fill="#f87171"/>
+        <circle cx="240" cy="342" r="4" fill="#f87171"/>
 
         <!-- 5V fra buck converter til ESP32 VIN og sensorer -->
         <path class="wire w-5v" d="M 240 408 L 390 408 L 390 300 L 500 300"/>
         <text x="395" y="295" class="wire-label">5V → VIN</text>
         <path class="wire w-5v" d="M 240 418 L 350 418 L 350 460 L 890 460"/>
-        <text x="580" y="453" class="wire-label">5V → XKC VCC</text>
+        <text x="355" y="453" class="wire-label">5V → XKC VCC</text>
         <path class="wire w-5v" d="M 240 428 L 330 428 L 330 550 L 890 550"/>
 
         <!-- GPIO26 PWM → MOSFET SIG -->
