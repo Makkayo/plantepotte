@@ -549,34 +549,46 @@
     <div class="infra-grid">
       <div class="infra-card">
         <div class="ic-icon">📱</div>
-        <h3>Web-appen</h3>
-        <p>Her styrer du lysene og ser sensordata fra telefon eller PC. Krever innlogging.</p>
+        <h3>Web-appen v2 (Svelte)</h3>
+        <p>Plantekatalog med 44 planter, kompatibilitetssjekk, og lyskontroll med fakta-baserte advarsler. Bygget med Svelte 5 + TypeScript + Tailwind.</p>
         <span class="pill pill-green">● Live</span><br><br>
         <a href="https://plantepotte.pages.dev/" target="_blank">plantepotte.pages.dev →</a>
       </div>
       <div class="infra-card">
         <div class="ic-icon">🗄️</div>
         <h3>Database (Supabase)</h3>
-        <p>Lagrer innstillinger og sensordata. ESP32-en snakker med denne. Deles med Matplanlegger.</p>
+        <p>6 tabeller: planter, lys_familier, potter, potte_planter, commands, sensor_data. Forberedt for multi-user (owner_id-felt).</p>
         <span class="pill pill-green">● Klar</span>
       </div>
       <div class="infra-card">
         <div class="ic-icon">🔐</div>
         <h3>Innlogging</h3>
-        <p>Du logger inn med <strong>markusnerland@gmail.com</strong>. Ingen andre kan styre pottene dine.</p>
+        <p>Du logger inn med <strong>markusnerland@gmail.com</strong>. Multi-user-arkitektur klar for å aktiveres senere (familie-deling).</p>
         <span class="pill pill-green">● Aktivert</span>
       </div>
       <div class="infra-card">
         <div class="ic-icon">💾</div>
         <h3>Koden (GitHub)</h3>
-        <p>All kode ligger på GitHub. Push til <code>main</code> → appen oppdateres automatisk.</p>
+        <p>All kode ligger på GitHub. Push til <code>main</code> → Cloudflare bygger og publiserer automatisk.</p>
         <span class="pill pill-green">● Koblet</span><br><br>
         <a href="https://github.com/Makkayo/plantepotte" target="_blank">github.com/Makkayo/plantepotte →</a>
       </div>
       <div class="infra-card">
+        <div class="ic-icon">📦</div>
+        <h3>Hardware bestilt</h3>
+        <p><strong>Bestilling 1:</strong> 16 hovedkomponenter (~€90).<br><strong>Bestilling 2:</strong> 10 tilbehør — Wago, silikonledning, sikring, wire stripper (~€39).</p>
+        <span class="pill pill-yellow">● Ankommer ~2. juni</span>
+      </div>
+      <div class="infra-card">
+        <div class="ic-icon">📐</div>
+        <h3>3D-modell (Fusion 360)</h3>
+        <p>Plantekassa.3mf — 18 bodies, 450×535×235mm. Mangler: lokk-på-tank, fyllerør, elektronikk-skuff, klips.</p>
+        <span class="pill pill-yellow">● Pågående</span>
+      </div>
+      <div class="infra-card">
         <div class="ic-icon">🍽️</div>
         <h3>Matplanlegger</h3>
-        <p>Bruker samme database som plantepotte. Fungerer som vanlig.</p>
+        <p>Bruker samme database som plantepotte. Fungerer som vanlig. Sammenslås med plantepotte senere.</p>
         <span class="pill pill-yellow">● Fungerer</span><br><br>
         <a href="https://matplanlegger.pages.dev/" target="_blank">matplanlegger.pages.dev →</a>
       </div>
@@ -593,10 +605,10 @@
 
   <section>
     <div class="section-title"><span class="icon">📦</span> Alle deler</div>
-    <p class="section-intro"><strong>16 deler bestilt fra AliExpress</strong>, <strong>4 lokalkjøp</strong>, og <strong>3 ting du har fra før</strong>.</p>
+    <p class="section-intro"><strong>16 hovedkomponenter</strong> + <strong>10 tilbehør</strong> fra AliExpress, <strong>3 lokalkjøp</strong>, og <strong>6 ting du har fra før</strong>.</p>
 
     <div class="comp-group">
-      <div class="comp-group-title">📬 Bestilt fra AliExpress — ankommer ~2. juni</div>
+      <div class="comp-group-title">📬 Bestilling 1 — Hovedkomponenter fra AliExpress (~€90, ankommer ~2. juni)</div>
 
       <div class="comp-card">
         <div class="comp-icon">🧠</div>
@@ -760,6 +772,110 @@
     </div>
 
     <div class="comp-group">
+      <div class="comp-group-title">📦 Bestilling 2 — Tilbehør fra AliExpress (~€39, bestilt mai 2026)</div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🧵</div>
+        <div class="comp-body">
+          <h4>Silikonledning 22 AWG — rød + svart</h4>
+          <div class="what">Fleksibel høy-temp ledning for LED-kabel gjennom stolper og 12V-strekk. Rød = +, svart = − konvensjon for å unngå polaritets-feil.</div>
+          <div class="spec">22 AWG, 5m rød + 5m svart, silikon-isolasjon (-60 til +200°C)</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🔗</div>
+        <div class="comp-body">
+          <h4>Dupont 30cm — Male-to-Male (40 stk)</h4>
+          <div class="what">Lengre jumper-kabler for sensor-strekk fra base til tank-topp. Supplement til 20cm fra ESP32-sett.</div>
+          <div class="spec">40 ledninger × 30 cm × 22 AWG, M-M, fargesortert</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🔗</div>
+        <div class="comp-body">
+          <h4>Dupont 30cm — Male-to-Female (40 stk)</h4>
+          <div class="what">For sensor → ESP32-pinne direkte (sensor har hunn, ESP32 har hann).</div>
+          <div class="spec">40 ledninger × 30 cm × 22 AWG, M-F, fargesortert</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🔗</div>
+        <div class="comp-body">
+          <h4>Dupont 30cm — Female-to-Female (40 stk)</h4>
+          <div class="what">For sensor-til-sensor og forlengelse av eksisterende M-F kabler.</div>
+          <div class="spec">40 ledninger × 30 cm × 22 AWG, F-F, fargesortert</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">⚙️</div>
+        <div class="comp-body">
+          <h4>Lever-cable connectors (Wago 221-klone) — 50 stk</h4>
+          <div class="what">Inline 1-til-1 skjøting med hendel. Brukes der kabler må kunne kobles fra/forlenges (bunn av stolpa, tank-uttak, 12V adapter). Krever bar, strippet ledningsende.</div>
+          <div class="spec">"1-to-1 Direct Connection", AWG 28-12, 0.2-4 mm², 50 stk</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🛠️</div>
+        <div class="comp-body">
+          <h4>Multifunksjon wire stripper "Pro"</h4>
+          <div class="what">3-i-1: stripper isolasjon (auto-justering 10-24 AWG), kutter ledninger, krymper terminaler. Essensielt for Wago-bruk og generell kabel-jobb.</div>
+          <div class="spec">Strip 24-10 AWG / 0.2-6mm², cut copper/aluminium, crimp insulated + non-insulated</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🌈</div>
+        <div class="comp-body">
+          <h4>Heat shrink tubing kit — 580 stk</h4>
+          <div class="what">Isolerer skjøter, lager strain relief, og marker ledninger med farger (rød=+, blå=GND, gul=signal). Krymp med heat insert tool eller lighter.</div>
+          <div class="spec">11 størrelser (1-10mm), 6 farger, 2:1 krymp-forhold, EVA-material</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🔘</div>
+        <div class="comp-body">
+          <h4>DC inline switch 5.5×2.1mm (×2)</h4>
+          <div class="what">Vippebryter som klikker inn mellom 12V-adapter og DC-jack. Slå av hele systemet uten å trekke ut støpsel — gjør Wago-jobben tryggere. 2 stk: én i bruk, én reserve.</div>
+          <div class="spec">5.5×2.1mm hann-til-hunn, toggle/vippe-bryter, 2 stk</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🔥</div>
+        <div class="comp-body">
+          <h4>Sikringholder 5×20mm (10 stk)</h4>
+          <div class="what">Inline-holder for glass-/keramikk-sikringer. Plasseres mellom 12V-adapter og resten av systemet. Beskytter mot kortslutning som ellers kunne smelte ledninger.</div>
+          <div class="spec">BLX-A, 5×20mm, ledninger på begge sider, sort, 10 stk</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">⚡</div>
+        <div class="comp-body">
+          <h4>Slow-blow sikringer 3A (10 stk)</h4>
+          <div class="what">Beskyttelsessikring for 12V-kretsen. Slow-blow (T-type) tolererer kort strømsuget når buck converteren først lades opp. 3A gir 50% margin over normal forbruk (~2A).</div>
+          <div class="spec">5×20mm, 3A, keramikk, Slow Blow (T-type), 10 stk</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+      </div>
+    </div>
+
+    <div class="comp-group">
       <div class="comp-group-title">🛒 Kjøp lokalt — FØR hardware ankommer</div>
 
       <div class="comp-card">
@@ -844,6 +960,36 @@
           <div class="spec">Installer FØR hardware ankommer · <a href="https://thonny.org" target="_blank">thonny.org →</a></div>
         </div>
         <div class="comp-status"><span class="pill pill-red">Ikke installert</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🔩</div>
+        <div class="comp-body">
+          <h4>M4 messinginnsatser + skruer</h4>
+          <div class="what">Heat-set innsatser smeltes inn i 3D-printet PETG slik at du kan skru M4-skruer i. Brukes for sammenstilling av base, tak, klips, og elektronikk-skuff.</div>
+          <div class="spec">Pre-print hull: 5.7-6.0 mm Ø, dybde 8-10 mm</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-green">Klar</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🔥</div>
+        <div class="comp-body">
+          <h4>Heat insert tool</h4>
+          <div class="what">Smelter M4 messinginnsatser inn i 3D-print. Kan også brukes til heat shrink-strømper (hold tipp 2-5 mm fra strømpen, roter arbeidet).</div>
+          <div class="spec">Erstatter behov for både egen heat gun og loddebolt for dette prosjektet</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-green">Klar</span></div>
+      </div>
+
+      <div class="comp-card">
+        <div class="comp-icon">🔗</div>
+        <div class="comp-body">
+          <h4>Standard Dupont 20cm (130 stk)</h4>
+          <div class="what">Korte jumper-kabler fra ESP32-sett. For breadboard-koblinger og korte sensor-strekk. Supplerer 30cm-versjonene fra bestilling 2.</div>
+          <div class="spec">130 stk i tre varianter: M-M, M-F, F-F, 22 AWG, fargesortert</div>
+        </div>
+        <div class="comp-status"><span class="pill pill-green">Klar</span></div>
       </div>
     </div>
   </section>

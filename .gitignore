@@ -6,3 +6,6 @@ dist
 .svelte-kit
 .env
 .env.local
+
+# 3D-modell rendringer (genereres lokalt, ikke commit)
+3d-modell/render-*.png
