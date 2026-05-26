@@ -6,7 +6,7 @@
     {
       "type": "wokwi-esp32-devkit-v1",
       "id": "esp",
-      "top": 448,
+      "top": 160,
       "left": 310,
       "attrs": {}
     },
