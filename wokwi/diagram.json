@@ -105,6 +105,9 @@
     }
   ],
   "connections": [
+    ["esp:TX0",   "$serialMonitor:RX", "", []],
+    ["$serialMonitor:TX", "esp:RX0",   "", []],
+
     ["esp:3V3",   "oled:VCC",  "#4488ff", []],
     ["esp:3V3",   "dht:VCC",   "#4488ff", []],
     ["esp:3V3",   "enc:+",     "#4488ff", []],
