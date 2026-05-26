@@ -1,12 +1,26 @@
 # Plantepotte — Wokwi-simulator
-# Potte 1, forenklet versjon (ingen WiFi/Supabase)
+# Potte 1, komplett krets (ingen WiFi/Supabase)
+#
+# Komponenter:
+#   ESP32 DevKit v1     — mikrokontroller
+#   SSD1306 OLED        — 128×64 I2C-display (GPIO21/22)
+#   DHT22               — temperatur + luftfuktighet (GPIO4)
+#   KY-040 encoder      — vridbar LED-dimmer (GPIO16/17/18)
+#   Potentiometer ×3    — jordfuktsensorer (GPIO34/35/32)
+#   Trykknapp ×2 (Q/W)  — XKC-Y25 vannstandsensorer (GPIO19/23)
+#   N-MOSFET + LED      — vekstlys: GPIO26 PWM → 100Ω → gate → LED via drain/source
+#   Slide-switch        — strøm til vekstlys-kretsen (5V inn/ut)
+#
+#   IKKE simulert (finnes ikke i Wokwi):
+#     Buck converter, 12V adapter, barrel jack, 3A sikring
 #
 # Slik bruker du simulatoren:
-#   Vri encoder       → endre LED-lysstyrke (5% per klikk)
+#   Vri encoder         → LED-lysstyrke (5% per klikk)
 #   Trykk encoder-knapp → reset lysstyrke til 80%
-#   Trykk Q (tastatur) → XKC lav-sensor (trykk = vann detektert)
-#   Trykk W (tastatur) → XKC mid-sensor
-#   Vri potentiometer  → endre jordfuktighet (venstre = tørr, høyre = våt)
+#   Trykk Q (tastatur)  → XKC lav-sensor (vann detektert)
+#   Trykk W (tastatur)  → XKC mid-sensor
+#   Vri potentiometer   → jordfuktighet (venstre = tørr, høyre = våt)
+#   Slide-switch        → av/på strøm til vekstlys-krets
 
 from machine import Pin, PWM, I2C, ADC
 import dht

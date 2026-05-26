@@ -6,80 +6,109 @@
     {
       "type": "wokwi-esp32-devkit-v1",
       "id": "esp",
-      "top": 200,
-      "left": 306,
+      "top": 110,
+      "left": 280,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-breadboard",
+      "id": "bb",
+      "top": 540,
+      "left": -6,
       "attrs": {}
     },
     {
       "type": "wokwi-ssd1306",
       "id": "oled",
-      "top": 40,
-      "left": 720,
+      "top": 20,
+      "left": 700,
       "attrs": { "i2cAddress": "0x3c" }
     },
     {
       "type": "wokwi-dht22",
       "id": "dht",
-      "top": 220,
-      "left": 736,
+      "top": 190,
+      "left": 700,
       "attrs": { "humidity": "62", "temperature": "21.5" }
     },
     {
       "type": "wokwi-ky-040",
       "id": "enc",
-      "top": 364,
-      "left": 736,
+      "top": 345,
+      "left": 700,
       "attrs": {}
     },
     {
       "type": "wokwi-potentiometer",
       "id": "soil1",
-      "top": 480,
-      "left": 736,
+      "top": 460,
+      "left": 700,
       "attrs": { "value": "0.3" }
     },
     {
       "type": "wokwi-potentiometer",
       "id": "soil2",
-      "top": 576,
-      "left": 736,
+      "top": 556,
+      "left": 700,
       "attrs": { "value": "0.5" }
     },
     {
       "type": "wokwi-potentiometer",
       "id": "soil3",
-      "top": 672,
-      "left": 736,
+      "top": 652,
+      "left": 700,
       "attrs": { "value": "0.7" }
     },
     {
       "type": "wokwi-pushbutton",
       "id": "xkc1",
       "top": 148,
-      "left": 96,
+      "left": 86,
       "attrs": { "color": "blue", "key": "q" }
     },
     {
       "type": "wokwi-pushbutton",
       "id": "xkc2",
-      "top": 272,
-      "left": 96,
+      "top": 268,
+      "left": 86,
       "attrs": { "color": "blue", "key": "w" }
     },
     {
-      "type": "wokwi-resistor",
-      "id": "rled",
-      "top": 614,
-      "left": 224,
-      "rotate": 90,
-      "attrs": { "value": "220" }
+      "type": "wokwi-slide-switch",
+      "id": "sw",
+      "top": 568,
+      "left": 50,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-nmosfet",
+      "id": "mosfet",
+      "top": 604,
+      "left": 210,
+      "attrs": {}
     },
     {
       "type": "wokwi-led",
       "id": "led",
-      "top": 580,
-      "left": 178,
+      "top": 555,
+      "left": 145,
       "attrs": { "color": "red" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rled",
+      "top": 581,
+      "left": 145,
+      "rotate": 90,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rgate",
+      "top": 581,
+      "left": 326,
+      "rotate": 90,
+      "attrs": { "value": "100" }
     }
   ],
   "connections": [
@@ -98,7 +127,7 @@
     ["esp:GND.1", "soil3:GND", "black", []],
     ["esp:GND.1", "xkc1:1.r",  "black", []],
     ["esp:GND.1", "xkc2:1.r",  "black", []],
-    ["esp:GND.2", "led:K",     "black", []],
+    ["esp:GND.2", "mosfet:S",  "black", []],
 
     ["esp:D21",   "oled:SDA",  "#ff66bb", []],
     ["esp:D22",   "oled:SCL",  "#ff66bb", []],
@@ -116,7 +145,12 @@
     ["esp:D19",   "xkc1:1.l",  "#aa77ff", []],
     ["esp:D23",   "xkc2:1.l",  "#aa77ff", []],
 
-    ["esp:D26",   "rled:1",    "#aa77ff", []],
-    ["rled:2",    "led:A",     "#ff4444", []]
+    ["esp:VIN",   "sw:2",      "#ff4444", []],
+    ["sw:1",      "rled:1",    "#ff4444", []],
+    ["rled:2",    "led:A",     "#ff4444", []],
+    ["led:K",     "mosfet:D",  "#ff4444", []],
+
+    ["esp:D26",   "rgate:1",   "#aa77ff", []],
+    ["rgate:2",   "mosfet:G",  "#aa77ff", []]
   ]
 }

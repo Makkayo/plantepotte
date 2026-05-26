@@ -1914,10 +1914,10 @@
         <path class="wire w-5v" d="M 240 408 L 390 408 L 390 300 L 500 300"/>
         <text x="395" y="295" class="wire-label">5V → VIN</text>
 
-        <!-- Buck → XKC VCC: rutes UNDER ESP32-boksen (y>580) -->
-        <path class="wire w-5v" d="M 240 418 L 490 418 L 490 592 L 897 592 L 897 460"/>
-        <path class="wire w-5v" d="M 240 428 L 485 428 L 485 602 L 901 602 L 901 550"/>
-        <text x="540" y="587" class="wire-label">5V → XKC VCC</text>
+        <!-- Buck → XKC VCC: ned forbi ESP32, høyre til x=861/866, opp til riktig y, inn fra VENSTRE side av boks -->
+        <path class="wire w-5v" d="M 240 418 L 490 418 L 490 617 L 861 617 L 861 462 L 890 462"/>
+        <path class="wire w-5v" d="M 240 428 L 485 428 L 485 622 L 866 622 L 866 548 L 890 548"/>
+        <text x="580" y="613" class="wire-label">5V → XKC VCC</text>
         <!-- Junction-prikker: 3 ledninger fra samme 5V-terminal på buck -->
         <circle cx="240" cy="408" r="4" fill="#4ade80"/>
         <circle cx="240" cy="418" r="4" fill="#4ade80"/>
