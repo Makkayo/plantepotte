@@ -93,7 +93,7 @@
       "top": 581,
       "left": 145,
       "rotate": 90,
-      "attrs": { "value": "220" }
+      "attrs": { "value": "68" }
     },
     {
       "type": "wokwi-resistor",
