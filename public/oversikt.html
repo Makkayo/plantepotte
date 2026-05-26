@@ -1835,7 +1835,7 @@
 
         <g class="comp-svg" transform="translate(890, 165)"
            data-name="DHT22 temperatur/fukt"
-           data-info="Måler romtemperatur og luftfuktighet. Bruker en spesiell 1-tråds protokoll som MicroPython kan lese rett ut av boksen.">
+           data-info="Måler romtemperatur og luftfuktighet. Bruker en spesiell 1-tråds protokoll som MicroPython kan lese rett ut av boksen. ⚠ Krever 4,7 kΩ pull-up motstand mellom VCC og DATA — koble motstand fra VCC til DATA-pinnen på breadboardet.">
           <rect width="200" height="65" rx="8" class="fill-sensor"/>
           <text x="14" y="25" class="name">🌡️ DHT22</text>
           <text x="14" y="44" class="sub">Temp + luftfuktighet</text>
@@ -2292,8 +2292,9 @@
           <tr class="warn-row"><td class="step-badge" style="color:var(--green);">✓</td><td colspan="4" style="color:var(--green); font-size:0.83rem;">Test: kjør <code>i2c.scan()</code> — skal returnere <code>[60]</code> (adresse 0x3C). Fungerer det ikke: sjekk SDA/SCL ikke er byttet om.</td></tr>
 
           <!-- STEG 5 -->
-          <tr class="step-header"><td colspan="5">🌱 Steg 5 — DHT22 og jordfuktsensorer</td></tr>
+          <tr class="step-header"><td colspan="5">🌱 Steg 5 — DHT22 (+ 4,7 kΩ pull-up) og jordfuktsensorer</td></tr>
           <tr><td class="step-badge">5</td><td>ESP32 <code>3V3</code></td><td>DHT22 <code>VCC</code></td><td><span class="voltage-pill v-33v">3.3V</span></td><td>Sensor-strøm</td></tr>
+          <tr class="warn-row"><td class="step-badge">5</td><td>DHT22 <code>VCC</code></td><td>DHT22 <code>DATA</code></td><td><span class="voltage-pill v-33v">Pull-up</span></td><td>⚠ <strong>4,7 kΩ motstand</strong> mellom VCC og DATA — nødvendig for pålitelig kommunikasjon. Sett motstanden på breadboard mellom VCC-rad og DATA-ledning.</td></tr>
           <tr><td class="step-badge">5</td><td>ESP32 <code>GPIO4</code></td><td>DHT22 <code>DATA</code></td><td><span class="voltage-pill v-sig">Signal</span></td><td>Temp og luftfuktighet</td></tr>
           <tr><td class="step-badge">5</td><td>DHT22 <code>GND</code></td><td>GND-skinne</td><td><span class="voltage-pill v-gnd">GND</span></td><td>Sensor-minus</td></tr>
           <tr><td class="step-badge">5</td><td>ESP32 <code>3V3</code></td><td>Jordfukt ×3 <code>VCC</code></td><td><span class="voltage-pill v-33v">3.3V</span></td><td>Sensor-strøm (alle tre)</td></tr>
@@ -2489,10 +2490,19 @@
         <div class="step-num">5</div>
         <div class="step-body">
           <h3>DHT22 og jordfuktsensorer (×3)</h3>
-          <p>Alle får 3.3V VCC og felles GND. DHT22 data til GPIO4. Jordfukt #1, #2, #3 til GPIO34, GPIO35, GPIO32 (alle er ADC-pinner).</p>
+          <p>Alle får 3.3V VCC og felles GND. DHT22 data til GPIO4 — <strong>husk 4,7 kΩ pull-up mellom VCC og DATA</strong> (sett motstanden på breadboardet fra VCC-raden til DATA-ledningen). Jordfukt #1, #2, #3 til GPIO34, GPIO35, GPIO32 (alle er ADC-pinner).</p>
 
           <div class="step-pics">
             <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-dht22"/></svg><span class="lbl">DHT22</span></div>
+            <div class="step-pic">
+              <svg viewBox="0 0 80 56" width="80" height="56">
+                <rect x="20" y="10" width="40" height="36" rx="3" fill="#1e40af" stroke="#3b82f6" stroke-width="0.8"/>
+                <text x="40" y="32" text-anchor="middle" font-size="8" fill="#93c5fd" font-weight="700">4,7 kΩ</text>
+                <line x1="4" y1="28" x2="20" y2="28" stroke="#60a5fa" stroke-width="1.5"/>
+                <line x1="60" y1="28" x2="76" y2="28" stroke="#60a5fa" stroke-width="1.5"/>
+              </svg>
+              <span class="lbl">4,7 kΩ<br><em style="font-size:0.66rem;">pull-up VCC→DATA</em></span>
+            </div>
             <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-soil"/></svg><span class="lbl">Jordfukt #1</span></div>
             <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-soil"/></svg><span class="lbl">Jordfukt #2</span></div>
             <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-soil"/></svg><span class="lbl">Jordfukt #3</span></div>
@@ -2500,6 +2510,7 @@
 
           <div class="step-wires">
             <span class="wire-chip c-33v">3V3 → alle VCC</span>
+            <span class="wire-chip c-33v">4,7 kΩ: VCC → DHT22 DATA (pull-up)</span>
             <span class="wire-chip c-sig">DHT22 DATA → GPIO4</span>
             <span class="wire-chip c-sig">Jord → GPIO34/35/32</span>
             <span class="wire-chip c-gnd">felles GND</span>
@@ -2745,6 +2756,11 @@
         <div class="warn-icon">📊</div>
         <h4>Send rå ADC-verdier til Supabase</h4>
         <p>ESP32 skal sende rå tall (0–4095) for jordfukt, ikke prosent. Web-appen kalibrerer per sensor. Hvis ESP32 konverterer først, blir kalibrering umulig uten å flashe på nytt.</p>
+      </div>
+      <div class="warn-box info">
+        <div class="warn-icon">🌡️</div>
+        <h4>DHT22 krever 4,7 kΩ pull-up på DATA-linjen</h4>
+        <p>Uten pull-up motstanden får du ustabile avlesninger eller ingen data i det hele tatt. Koble en 4,7 kΩ motstand mellom DHT22 VCC og DATA på breadboardet. AM2302-modulen kan ha en innebygd, men det er tryggere å legge til en ekstern — de kan sameksistere uten problem.</p>
       </div>
       <div class="warn-box tip">
         <div class="warn-icon">🔑</div>
