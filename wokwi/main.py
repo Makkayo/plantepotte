@@ -20,7 +20,7 @@
 #   Trykk Q (tastatur)  → XKC lav-sensor (vann detektert)
 #   Trykk W (tastatur)  → XKC mid-sensor
 #   Vri potentiometer   → jordfuktighet (venstre = tørr, høyre = våt)
-#   Slide-switch        → av/på strøm til vekstlys-krets
+#   (Slide-switch: ikke koblet ennå — ep:VIN er ugyldig pin i Wokwi)
 
 from machine import Pin, PWM, I2C, ADC
 import dht

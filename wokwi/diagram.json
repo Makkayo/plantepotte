@@ -74,13 +74,6 @@
       "attrs": { "color": "blue", "key": "w" }
     },
     {
-      "type": "wokwi-slide-switch",
-      "id": "sw",
-      "top": 568,
-      "left": 50,
-      "attrs": {}
-    },
-    {
       "type": "wokwi-nmosfet",
       "id": "mosfet",
       "top": 604,
@@ -145,8 +138,7 @@
     ["esp:D19",   "xkc1:1.l",  "#aa77ff", []],
     ["esp:D23",   "xkc2:1.l",  "#aa77ff", []],
 
-    ["esp:VIN",   "sw:2",      "#ff4444", []],
-    ["sw:1",      "rled:1",    "#ff4444", []],
+    ["esp:3V3",   "rled:1",    "#ff4444", []],
     ["rled:2",    "led:A",     "#ff4444", []],
     ["led:K",     "mosfet:D",  "#ff4444", []],
 
