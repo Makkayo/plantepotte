@@ -63,11 +63,23 @@ xkc_lav = Pin(19, Pin.IN, Pin.PULL_UP)   # Q-tast i Wokwi
 xkc_mid = Pin(23, Pin.IN, Pin.PULL_UP)   # W-tast i Wokwi
 
 # ── KY-040 rotary encoder ────────────────────────────────────────
-clk_pin     = Pin(16, Pin.IN)
-dt_pin      = Pin(17, Pin.IN)
+clk_pin     = Pin(16, Pin.IN, Pin.PULL_UP)
+dt_pin      = Pin(17, Pin.IN, Pin.PULL_UP)
 sw_pin      = Pin(18, Pin.IN, Pin.PULL_UP)
-forrige_clk = clk_pin.value()
 sw_trykket  = False
+
+# Interrupt: brikken "vekkes" i samme øyeblikk encoderen vris,
+# uansett hva hovedløkken ellers holder på med. Derfor mister vi
+# aldri en vridning, selv om løkken sover.
+def encoder_dreid(pin):
+    global lysstyrke
+    if dt_pin.value():
+        lysstyrke = min(100, lysstyrke + 5)   # med klokka
+    else:
+        lysstyrke = max(0,   lysstyrke - 5)   # mot klokka
+    led_pwm.duty(int(lysstyrke / 100 * 1023))
+
+clk_pin.irq(trigger=Pin.IRQ_FALLING, handler=encoder_dreid)
 
 # ── Hjelpefunksjoner ─────────────────────────────────────────────
 def vann_status():
@@ -102,15 +114,7 @@ while True:
     except Exception:
         temp, fukt = 0.0, 0.0
 
-    # Encoder — sjekk rotasjon
-    clk_val = clk_pin.value()
-    if clk_val != forrige_clk:
-        if dt_pin.value() != clk_val:
-            lysstyrke = min(100, lysstyrke + 5)   # dreide høyre
-        else:
-            lysstyrke = max(0,   lysstyrke - 5)   # dreide venstre
-        led_pwm.duty(int(lysstyrke / 100 * 1023))
-        forrige_clk = clk_val
+    # Encoder-rotasjon håndteres nå av interrupt (encoder_dreid) — ikke her.
 
     # Encoder — sjekk knapp (reset lysstyrke)
     sw_naa = not sw_pin.value()
