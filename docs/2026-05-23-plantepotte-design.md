@@ -4,6 +4,14 @@
 **Sist oppdatert:** 2026-05-24
 **Status:** Backend og web-app live. Hardware ankommer ~2. juni.
 
+> ⚠️ **Dette er et øyeblikksbilde fra 2026-05-23/24 og er delvis utdatert.** Gjeldende fasit er prosjekt-skillen (`C:\Users\marku\.claude\skills\plantepotte\skill.md`). Viktige endringer etter denne datoen:
+> - **Vannmåling:** XKC-Y25 (beskrevet under) er erstattet av **VL53L0X ToF-laser + 3D-printet flottør** i en berolings-brønn. Datafeltet er nå `vann_avstand_mm` (rå mm), ikke `vann_lav`/`vann_mid`. XKC-Y25 ×4 er reserve.
+> - **Kamera:** ESP32-CAM lagt til på potte 1 → bilder til Supabase Storage → vekst-tidslinje i appen.
+> - **Web-app:** er skrevet om til **Svelte 5 + TypeScript + Vite** (ikke lenger vanilla én-fil `index.html` som beskrevet nederst).
+> - **Auto-justerende lys** (stepper + lead screw) er en utforsket fremtidsidé — se skillen.
+>
+> Kode-, Supabase- og app-endringene for laser + kamera gjøres når hardware ankommer (~2. juni), koordinert så de kan testes.
+
 ---
 
 ## Konsept
