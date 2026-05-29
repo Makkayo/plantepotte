@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<title>Stolpe-design — 3 forslag</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0f1117;
+    color: #e2e8f0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    padding: 2rem;
+    line-height: 1.6;
+  }
+  h1 { font-size: 1.7rem; font-weight: 800; color: #4ade80; margin-bottom: 0.3rem; }
+  .sub { color: #94a3b8; font-size: 0.9rem; margin-bottom: 2.5rem; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .card {
+    background: #1a1d27;
+    border: 1px solid #2e3347;
+    border-radius: 14px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .card-head h2 { font-size: 1.05rem; font-weight: 800; margin-bottom: 0.3rem; }
+  .badge {
+    display: inline-block;
+    font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+    padding: 0.2rem 0.6rem; border-radius: 99px;
+  }
+  .badge-green  { background: #14532d; color: #4ade80; }
+  .badge-blue   { background: #1e3a5f; color: #60a5fa; }
+  .badge-purple { background: #2d1b69; color: #a78bfa; }
+
+  .drawing { background: #0f1117; border-radius: 10px; padding: 0.75rem; }
+  .drawing svg { display: block; width: 100%; height: auto; }
+
+  .desc { font-size: 0.85rem; color: #94a3b8; }
+
+  .verdict {
+    background: #1a1d27;
+    border: 1px solid #2e3347;
+    border-radius: 14px;
+    padding: 1.5rem;
+    border-left: 3px solid #4ade80;
+  }
+  .verdict h2 { font-size: 1rem; font-weight: 800; color: #4ade80; margin-bottom: 0.5rem; }
+  .verdict p { font-size: 0.88rem; color: #cbd5e1; }
+  strong { color: #e2e8f0; }
+</style>
+</head>
+<body>
+
+<h1>Stolpe-design</h1>
+<p class="sub">Ø23mm ytre · Ø10mm hull (wire) · 200mm per segment · PETG</p>
+
+<div class="grid">
+
+  <!-- ───── ALTERNATIV A ───── -->
+  <div class="card">
+    <div class="card-head">
+      <h2>A — Ekstern hylse</h2>
+      <span class="badge badge-green">Enklest · 2 deler</span>
+    </div>
+
+    <div class="drawing">
+      <svg viewBox="0 0 220 460" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#64748b"/>
+          </marker>
+          <marker id="arr2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#64748b"/>
+          </marker>
+        </defs>
+
+        <!-- ─── STOLPE #1 (topp, rett ende) ─── -->
+        <text x="110" y="16" text-anchor="middle" fill="#94a3b8" font-size="11" font-family="monospace">STOLPE #1</text>
+        <!-- Venstre vegg -->
+        <rect x="72" y="22" width="21" height="95" rx="1" fill="#6b7280" stroke="#9ca3af" stroke-width="1.5"/>
+        <!-- Senterhole -->
+        <rect x="93" y="22" width="34" height="95" fill="#0a0c14"/>
+        <!-- Høyre vegg -->
+        <rect x="127" y="22" width="21" height="95" rx="1" fill="#6b7280" stroke="#9ca3af" stroke-width="1.5"/>
+        <!-- Bunn-kant stolpe #1 -->
+        <line x1="72" y1="117" x2="148" y2="117" stroke="#9ca3af" stroke-width="1.5"/>
+
+        <!-- Break-linjer -->
+        <line x1="62" y1="122" x2="158" y2="122" stroke="#475569" stroke-width="1" stroke-dasharray="8 4"/>
+        <line x1="62" y1="128" x2="158" y2="128" stroke="#475569" stroke-width="1" stroke-dasharray="8 4"/>
+        <text x="110" y="136" text-anchor="middle" fill="#475569" font-size="10">— 200mm —</text>
+
+        <!-- ─── HYLSE ─── -->
+        <!-- Hylse bakgrunn (blå ramme, venstre og høyre vegg) -->
+        <rect x="58" y="145" width="14" height="120" rx="2" fill="#1e3a5f" stroke="#3b82f6" stroke-width="2"/>
+        <rect x="148" y="145" width="14" height="120" rx="2" fill="#1e3a5f" stroke="#3b82f6" stroke-width="2"/>
+        <!-- Topp og bunn av hylse -->
+        <rect x="58" y="145" width="104" height="6" rx="2" fill="#1e3a5f" stroke="#3b82f6" stroke-width="2"/>
+        <rect x="58" y="259" width="104" height="6" rx="2" fill="#1e3a5f" stroke="#3b82f6" stroke-width="2"/>
+
+        <!-- Stolpe #1 bunn inne i hylsen (øvre halvdel) -->
+        <rect x="72" y="151" width="21" height="59" fill="#6b7280" stroke="#9ca3af" stroke-width="1"/>
+        <rect x="93" y="151" width="34" height="59" fill="#0a0c14"/>
+        <rect x="127" y="151" width="21" height="59" fill="#6b7280" stroke="#9ca3af" stroke-width="1"/>
+
+        <!-- Skjøt-linje (rød stiplet) -->
+        <line x1="72" y1="210" x2="148" y2="210" stroke="#f87171" stroke-width="1.5" stroke-dasharray="5 3"/>
+
+        <!-- Stolpe #2 topp inne i hylsen (nedre halvdel) -->
+        <rect x="72" y="210" width="21" height="55" fill="#4b5563" stroke="#9ca3af" stroke-width="1"/>
+        <rect x="93" y="210" width="34" height="55" fill="#0a0c14"/>
+        <rect x="127" y="210" width="21" height="55" fill="#4b5563" stroke="#9ca3af" stroke-width="1"/>
+
+        <!-- ─── STOLPE #2 (bunn, rett ende) ─── -->
+        <!-- Topp-kant stolpe #2 -->
+        <line x1="72" y1="265" x2="148" y2="265" stroke="#9ca3af" stroke-width="1.5"/>
+
+        <!-- Break-linjer #2 -->
+        <line x1="62" y1="270" x2="158" y2="270" stroke="#475569" stroke-width="1" stroke-dasharray="8 4"/>
+        <line x1="62" y1="276" x2="158" y2="276" stroke="#475569" stroke-width="1" stroke-dasharray="8 4"/>
+        <text x="110" y="284" text-anchor="middle" fill="#475569" font-size="10">— 200mm —</text>
+
+        <rect x="72" y="288" width="21" height="90" rx="1" fill="#4b5563" stroke="#9ca3af" stroke-width="1.5"/>
+        <rect x="93" y="288" width="34" height="90" fill="#0a0c14"/>
+        <rect x="127" y="288" width="21" height="90" rx="1" fill="#4b5563" stroke="#9ca3af" stroke-width="1.5"/>
+        <text x="110" y="395" text-anchor="middle" fill="#94a3b8" font-size="11" font-family="monospace">STOLPE #2</text>
+
+        <!-- ─── DIMENSJONER ─── -->
+        <!-- Ø23mm bredde -->
+        <line x1="72" y1="18" x2="148" y2="18" stroke="#64748b" stroke-width="1" marker-start="url(#arr2)" marker-end="url(#arr)"/>
+        <text x="110" y="12" text-anchor="middle" fill="#94a3b8" font-size="10" font-family="monospace">Ø23mm</text>
+
+        <!-- Ø10mm hull -->
+        <line x1="93" y1="430" x2="127" y2="430" stroke="#64748b" stroke-width="1" marker-start="url(#arr2)" marker-end="url(#arr)"/>
+        <text x="110" y="445" text-anchor="middle" fill="#94a3b8" font-size="10" font-family="monospace">Ø10mm (wire)</text>
+
+        <!-- Hylse bredde -->
+        <line x1="58" y1="420" x2="162" y2="420" stroke="#3b82f6" stroke-width="1" marker-start="url(#arr2)" marker-end="url(#arr)"/>
+        <text x="110" y="435" text-anchor="middle" fill="#3b82f6" font-size="10" font-family="monospace">Ø31mm</text>
+
+        <!-- Hylse høyde pil -->
+        <line x1="178" y1="151" x2="178" y2="259" stroke="#3b82f6" stroke-width="1" marker-start="url(#arr2)" marker-end="url(#arr)"/>
+        <text x="192" y="210" text-anchor="middle" fill="#3b82f6" font-size="10" font-family="monospace" transform="rotate(90,192,210)">50mm</text>
+
+        <!-- Label: HYLSE -->
+        <text x="34" y="208" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="bold">HYLSE</text>
+        <line x1="48" y1="207" x2="58" y2="207" stroke="#3b82f6" stroke-width="1"/>
+
+        <!-- Skjøt label -->
+        <text x="160" y="208" fill="#f87171" font-size="10">← skjøt</text>
+
+        <!-- Wire-pil gjennom -->
+        <line x1="106" y1="22" x2="114" y2="22" stroke="#f87171" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="106" y1="378" x2="114" y2="378" stroke="#f87171" stroke-width="2.5" stroke-linecap="round"/>
+        <text x="165" y="25" fill="#f87171" font-size="10">wire →</text>
+      </svg>
+    </div>
+
+    <p class="desc">
+      Stolpen er <strong>alltid identisk</strong> — rett butt i begge ender.
+      Hylsen er en <strong>separat kort sylinder</strong> (50mm) som glir over skjøten.
+      Friction-fit holder. Vil du ha mer høyde: print én ny stolpe + én hylse.
+    </p>
+  </div>
+
+  <!-- ───── ALTERNATIV B ───── -->
+  <div class="card">
+    <div class="card-head">
+      <h2>B — Integrert tapp</h2>
+      <span class="badge badge-blue">1 del · selvstablende</span>
+    </div>
+
+    <div class="drawing">
+      <svg viewBox="0 0 220 460" xmlns="http://www.w3.org/2000/svg">
+
+        <!-- ─── STOLPE #1 ─── -->
+        <text x="110" y="16" text-anchor="middle" fill="#94a3b8" font-size="11" font-family="monospace">STOLPE #1</text>
+
+        <!-- Tapp øverst (smalere ende) -->
+        <!-- Tapp Ø17mm → 17/23*76 = 56px → fra x=82 til x=138, hull fra x=93 til x=127 -->
+        <rect x="82" y="22" width="17" height="70" rx="1" fill="#6b7280" stroke="#9ca3af" stroke-width="1.5"/>
+        <rect x="99" y="22" width="22" height="70" fill="#0a0c14"/>
+        <rect x="121" y="22" width="17" height="70" rx="1" fill="#6b7280" stroke="#9ca3af" stroke-width="1.5"/>
+        <!-- Skulder (overgang tapp → main body) -->
+        <rect x="72" y="92" width="10" height="6" rx="1" fill="#6b7280" stroke="#9ca3af" stroke-width="1"/>
+        <rect x="138" y="92" width="10" height="6" rx="1" fill="#6b7280" stroke="#9ca3af" stroke-width="1"/>
+
+        <!-- Main body stolpe #1 -->
+        <rect x="72" y="98" width="21" height="60" rx="1" fill="#6b7280" stroke="#9ca3af" stroke-width="1.5"/>
+        <rect x="93" y="98" width="34" height="60" fill="#0a0c14"/>
+        <rect x="127" y="98" width="21" height="60" rx="1" fill="#6b7280" stroke="#9ca3af" stroke-width="1.5"/>
+
+        <!-- Break-linjer -->
+        <line x1="62" y1="163" x2="158" y2="163" stroke="#475569" stroke-width="1" stroke-dasharray="8 4"/>
+        <line x1="62" y1="169" x2="158" y2="169" stroke="#475569" stroke-width="1" stroke-dasharray="8 4"/>
+
+        <!-- ─── SOCKET i STOLPE #2 (øvre del) ─── -->
+        <!-- Viser at bunn av stolpe #2 har en hul socket der tapp passer inn -->
+        <!-- Socket: ytre vegg er Ø23mm, indre bore er Ø17.4mm (nesten som tapp) -->
+        <!-- Stolpe #2 øvre del med socket -->
+        <rect x="72" y="173" width="10" height="80" rx="1" fill="#4b5563" stroke="#9ca3af" stroke-width="1.5"/>
+        <!-- Socket bore area (indre bore bredere enn vanlig hull) -->
+        <rect x="82" y="173" width="56" height="80" fill="#0a0c14"/>
+        <rect x="138" y="173" width="10" height="80" rx="1" fill="#4b5563" stroke="#9ca3af" stroke-width="1.5"/>
+        <!-- Bunn av socket (blind-hull) -->
+        <rect x="82" y="253" width="56" height="5" fill="#4b5563" stroke="#9ca3af" stroke-width="1"/>
+        <!-- Og under det: main hull gjennom resten av stolpen -->
+        <rect x="93" y="258" width="34" height="4" fill="#0a0c14"/>
+
+        <!-- Tapp stikker ned i socket (ghosted/stiplet) -->
+        <rect x="82" y="173" width="17" height="70" fill="#5a6a7a" stroke="#9ca3af" stroke-width="0.5" stroke-dasharray="4 2" opacity="0.7"/>
+        <rect x="121" y="173" width="17" height="70" fill="#5a6a7a" stroke="#9ca3af" stroke-width="0.5" stroke-dasharray="4 2" opacity="0.7"/>
+        <!-- Wire gjennom tapp og socket -->
+        <rect x="99" y="173" width="22" height="80" fill="#0a0c14"/>
+
+        <!-- Skjøt-linje -->
+        <line x1="72" y1="173" x2="148" y2="173" stroke="#f87171" stroke-width="1.5" stroke-dasharray="5 3"/>
+
+        <!-- Break-linjer #2 -->
+        <line x1="62" y1="263" x2="158" y2="263" stroke="#475569" stroke-width="1" stroke-dasharray="8 4"/>
+        <line x1="62" y1="269" x2="158" y2="269" stroke="#475569" stroke-width="1" stroke-dasharray="8 4"/>
+
+        <!-- Main body stolpe #2 (bunn) -->
+        <rect x="72" y="273" width="21" height="95" rx="1" fill="#4b5563" stroke="#9ca3af" stroke-width="1.5"/>
+        <rect x="93" y="273" width="34" height="95" fill="#0a0c14"/>
+        <rect x="127" y="273" width="21" height="95" rx="1" fill="#4b5563" stroke="#9ca3af" stroke-width="1.5"/>
+        <text x="110" y="385" text-anchor="middle" fill="#94a3b8" font-size="11" font-family="monospace">STOLPE #2</text>
+
+        <!-- ─── DIMENSJONER ─── -->
+        <!-- Tapp Ø17 -->
+        <line x1="82" y1="14" x2="138" y2="14" stroke="#60a5fa" stroke-width="1" marker-start="url(#arr2)" marker-end="url(#arr)"/>
+        <text x="110" y="10" text-anchor="middle" fill="#60a5fa" font-size="10" font-family="monospace">Ø17mm (tapp)</text>
+
+        <!-- Main Ø23 -->
+        <line x1="170" y1="98" x2="170" y2="158" stroke="#64748b" stroke-width="1" marker-start="url(#arr2)" marker-end="url(#arr)"/>
+        <text x="194" y="128" text-anchor="middle" fill="#94a3b8" font-size="10" font-family="monospace" transform="rotate(90,194,128)">Ø23mm</text>
+
+        <!-- Socket dybde -->
+        <line x1="178" y1="173" x2="178" y2="253" stroke="#fbbf24" stroke-width="1" marker-start="url(#arr2)" marker-end="url(#arr)"/>
+        <text x="200" y="213" text-anchor="middle" fill="#fbbf24" font-size="10" font-family="monospace" transform="rotate(90,200,213)">30mm</text>
+        <text x="35" y="213" text-anchor="middle" fill="#fbbf24" font-size="10">socket</text>
+        <line x1="60" y1="213" x2="72" y2="213" stroke="#fbbf24" stroke-width="1"/>
+
+        <!-- Tapp label -->
+        <text x="35" y="57" text-anchor="middle" fill="#60a5fa" font-size="10">tapp</text>
+        <line x1="60" y1="57" x2="82" y2="57" stroke="#60a5fa" stroke-width="1"/>
+
+        <!-- Skjøt label -->
+        <text x="160" y="171" fill="#f87171" font-size="10">← skjøt</text>
+      </svg>
+    </div>
+
+    <p class="desc">
+      Stolpen har <strong>tapp øverst</strong> og <strong>socket nederst</strong> — stables direkte oppå hverandre, ingen ekstra deler.
+      Én og samme del uansett. Men: tappen må gjennom tak-hullet ved montering, og toleransen må stemme nøyaktig.
+    </p>
+  </div>
+
+  <!-- ───── ALTERNATIV C ───── -->
+  <div class="card">
+    <div class="card-head">
+      <h2>C — Hylse + låseskrue</h2>
+      <span class="badge badge-purple">Sikreste · anbefalt</span>
+    </div>
+
+    <div class="drawing">
+      <svg viewBox="0 0 220 460" xmlns="http://www.w3.org/2000/svg">
+
+        <!-- ─── STOLPE #1 ─── -->
+        <text x="110" y="16" text-anchor="middle" fill="#94a3b8" font-size="11" font-family="monospace">STOLPE #1</text>
+        <rect x="72" y="22" width="21" height="95" rx="1" fill="#6b7280" stroke="#9ca3af" stroke-width="1.5"/>
+        <rect x="93" y="22" width="34" height="95" fill="#0a0c14"/>
+        <rect x="127" y="22" width="21" height="95" rx="1" fill="#6b7280" stroke="#9ca3af" stroke-width="1.5"/>
+        <line x1="72" y1="117" x2="148" y2="117" stroke="#9ca3af" stroke-width="1.5"/>
+
+        <!-- Break-linjer -->
+        <line x1="62" y1="122" x2="158" y2="122" stroke="#475569" stroke-width="1" stroke-dasharray="8 4"/>
+        <line x1="62" y1="128" x2="158" y2="128" stroke="#475569" stroke-width="1" stroke-dasharray="8 4"/>
+
+        <!-- ─── HYLSE (lilla) ─── -->
+        <rect x="58" y="138" width="14" height="124" rx="2" fill="#2d1b69" stroke="#8b5cf6" stroke-width="2"/>
+        <rect x="148" y="138" width="14" height="124" rx="2" fill="#2d1b69" stroke="#8b5cf6" stroke-width="2"/>
+        <rect x="58" y="138" width="104" height="7" rx="2" fill="#2d1b69" stroke="#8b5cf6" stroke-width="2"/>
+        <rect x="58" y="255" width="104" height="7" rx="2" fill="#2d1b69" stroke="#8b5cf6" stroke-width="2"/>
+
+        <!-- Stolpe #1 inne i hylse -->
+        <rect x="72" y="145" width="21" height="57" fill="#6b7280" stroke="#9ca3af" stroke-width="1"/>
+        <rect x="93" y="145" width="34" height="57" fill="#0a0c14"/>
+        <rect x="127" y="145" width="21" height="57" fill="#6b7280" stroke="#9ca3af" stroke-width="1"/>
+
+        <!-- Skjøt -->
+        <line x1="72" y1="202" x2="148" y2="202" stroke="#f87171" stroke-width="1.5" stroke-dasharray="5 3"/>
+
+        <!-- Stolpe #2 inne i hylse -->
+        <rect x="72" y="202" width="21" height="55" fill="#4b5563" stroke="#9ca3af" stroke-width="1"/>
+        <rect x="93" y="202" width="34" height="55" fill="#0a0c14"/>
+        <rect x="127" y="202" width="21" height="55" fill="#4b5563" stroke="#9ca3af" stroke-width="1"/>
+
+        <!-- ─── M3 SET-SKRUER ─── -->
+        <!-- Skrue 1: venstre side, midt i øvre halvdel (y≈173) -->
+        <circle cx="58" cy="173" r="5" fill="#0f1117" stroke="#8b5cf6" stroke-width="2"/>
+        <line x1="38" y1="173" x2="53" y2="173" stroke="#a78bfa" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Skrue-spiss som biter inn i stolpe -->
+        <polygon points="63,170 72,173 63,176" fill="#a78bfa"/>
+        <text x="36" y="170" text-anchor="end" fill="#a78bfa" font-size="10" font-family="monospace">M3</text>
+
+        <!-- Skrue 2: høyre side, midt i nedre halvdel (y≈228) -->
+        <circle cx="162" cy="228" r="5" fill="#0f1117" stroke="#8b5cf6" stroke-width="2"/>
+        <line x1="167" y1="228" x2="184" y2="228" stroke="#a78bfa" stroke-width="2.5" stroke-linecap="round"/>
+        <polygon points="157,225 148,228 157,231" fill="#a78bfa"/>
+        <text x="186" y="232" text-anchor="start" fill="#a78bfa" font-size="10" font-family="monospace">M3</text>
+
+        <!-- ─── STOLPE #2 ─── -->
+        <line x1="72" y1="262" x2="148" y2="262" stroke="#9ca3af" stroke-width="1.5"/>
+        <line x1="62" y1="267" x2="158" y2="267" stroke="#475569" stroke-width="1" stroke-dasharray="8 4"/>
+        <line x1="62" y1="273" x2="158" y2="273" stroke="#475569" stroke-width="1" stroke-dasharray="8 4"/>
+
+        <rect x="72" y="277" width="21" height="95" rx="1" fill="#4b5563" stroke="#9ca3af" stroke-width="1.5"/>
+        <rect x="93" y="277" width="34" height="95" fill="#0a0c14"/>
+        <rect x="127" y="277" width="21" height="95" rx="1" fill="#4b5563" stroke="#9ca3af" stroke-width="1.5"/>
+        <text x="110" y="390" text-anchor="middle" fill="#94a3b8" font-size="11" font-family="monospace">STOLPE #2</text>
+
+        <!-- ─── DIMENSJONER ─── -->
+        <line x1="72" y1="14" x2="148" y2="14" stroke="#64748b" stroke-width="1" marker-start="url(#arr2)" marker-end="url(#arr)"/>
+        <text x="110" y="10" text-anchor="middle" fill="#94a3b8" font-size="10" font-family="monospace">Ø23mm</text>
+
+        <line x1="178" y1="145" x2="178" y2="259" stroke="#8b5cf6" stroke-width="1" marker-start="url(#arr2)" marker-end="url(#arr)"/>
+        <text x="195" y="202" text-anchor="middle" fill="#8b5cf6" font-size="10" font-family="monospace" transform="rotate(90,195,202)">50mm</text>
+
+        <text x="24" y="200" text-anchor="middle" fill="#8b5cf6" font-size="11" font-weight="bold">HYLSE</text>
+
+        <!-- Skjøt label -->
+        <text x="160" y="200" fill="#f87171" font-size="10">← skjøt</text>
+
+        <!-- Tip -->
+        <text x="110" y="435" text-anchor="middle" fill="#475569" font-size="10">2 M3-hull i hylsen, ingen i stolpen</text>
+      </svg>
+    </div>
+
+    <p class="desc">
+      Som A, men hylsen har to <strong>M3 set-skruer</strong> (én låser stolpe #1, én låser stolpe #2).
+      Stolpen er fremdeles <strong>helt identisk</strong> — ingen hull i den.
+      Skruene biter mot overflaten. Aldri løsner utilsiktet.
+    </p>
+  </div>
+
+</div>
+
+<!-- Anbefaling -->
+<div class="verdict">
+  <h2>Anbefaling</h2>
+  <p>
+    Start med <strong>Alternativ A</strong> — enklest å designe, null ekstra hardware.
+    Taper litt stability ved høye stolper (3+ segmenter), men for 2 segmenter holder friction-fit fint.
+    Viser det seg ustabilt: redesign kun hylsen til <strong>Alternativ C</strong>
+    — stolpen forblir uendret, du bytter bare hylsen.
+    Totalt: <strong>2 Fusion-deler</strong>, <strong>1 M3-skrue</strong> per skjøt.
+  </p>
+</div>
+
+</body>
+</html>
