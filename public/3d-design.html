@@ -968,8 +968,21 @@
 </main>
 
 <footer style="text-align:center; padding:2.5rem; color:var(--muted); font-size:0.82rem; border-top:1px solid var(--border); margin-top:2rem;">
-  3D-design for plantepotten · Markus · Oppdatert mai 2026 · <a href="oversikt.html" style="color:var(--blue);">← Tilbake til oversikt</a>
+  3D-design for plantepotten · Markus · Oppdatert <span id="sist-oppdatert">mai 2026</span> · <a href="oversikt.html" style="color:var(--blue);">← Tilbake til oversikt</a>
 </footer>
+<script>
+  // Viser når denne siden sist ble endret/deployet (oppdateres automatisk ved push).
+  (function () {
+    var el = document.getElementById('sist-oppdatert');
+    var d = new Date(document.lastModified);
+    if (el && !isNaN(d.getTime())) {
+      el.textContent = d.toLocaleString('nb-NO', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      });
+    }
+  })();
+</script>
 
 </body>
 </html>
