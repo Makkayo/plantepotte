@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Potte, PotteCommand, PotteSensorData, PottePlanteFull } from '../lib/database.types';
-  import { formaterTidssiden, jordfuktProsent, jordfuktKlasse } from '../lib/utils';
+  import { formaterTidssiden, jordfuktProsent, vannNivaProsent, vannKlasse } from '../lib/utils';
 
   let {
     potte,
@@ -33,9 +33,12 @@
 
   const vannStatus = $derived.by(() => {
     if (!sensor) return null;
-    if (sensor.vann_mid) return { tekst: 'Fullt', farge: 'text-sky', dot: 'bg-sky' };
-    if (sensor.vann_lav) return { tekst: 'Halvfullt', farge: 'text-sun', dot: 'bg-sun' };
-    return { tekst: 'Tomt', farge: 'text-rose', dot: 'bg-rose' };
+    const pct = vannNivaProsent(sensor.vann_avstand_mm);
+    if (pct === null) return null;
+    const kl = vannKlasse(pct);
+    const farge = kl === 'lav' ? 'text-rose' : kl === 'full' ? 'text-sky' : 'text-leaf';
+    const dot = kl === 'lav' ? 'bg-rose' : kl === 'full' ? 'bg-sky' : 'bg-leaf';
+    return { tekst: `${pct} %`, farge, dot };
   });
 </script>
 

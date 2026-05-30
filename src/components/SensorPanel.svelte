@@ -1,6 +1,12 @@
 <script lang="ts">
   import type { PotteSensorData } from '../lib/database.types';
-  import { formaterTidssiden, jordfuktProsent, jordfuktKlasse } from '../lib/utils';
+  import {
+    formaterTidssiden,
+    jordfuktProsent,
+    jordfuktKlasse,
+    vannNivaProsent,
+    vannKlasse,
+  } from '../lib/utils';
 
   let { sensor }: { sensor: PotteSensorData | null } = $props();
 
@@ -8,6 +14,9 @@
     if (!sensor) return [null, null, null];
     return [sensor.jord1, sensor.jord2, sensor.jord3].map((r) => jordfuktProsent(r));
   });
+
+  const vannPct = $derived(vannNivaProsent(sensor?.vann_avstand_mm));
+  const vannKl = $derived(vannKlasse(vannPct));
 
   const sistOppdatert = $derived(formaterTidssiden(sensor?.registrert_at));
 </script>
@@ -40,29 +49,30 @@
         </div>
       </div>
 
-      <!-- Vann lav -->
-      <div class="card-raised p-4">
-        <div class="text-xs text-text-muted mb-1">Vann lav</div>
-        <div class="flex items-center gap-2 mt-1">
-          <span
-            class="w-3 h-3 rounded-full {sensor.vann_lav
-              ? 'bg-sky shadow-[0_0_8px_theme(colors.sky)]'
-              : 'bg-rose shadow-[0_0_8px_theme(colors.rose)]'}"
-          ></span>
-          <span class="text-sm font-medium">{sensor.vann_lav ? 'Detektert' : 'Ikke detektert'}</span>
+      <!-- Vannstand (laser → flottør) -->
+      <div class="card-raised p-4 col-span-2">
+        <div class="flex items-baseline justify-between mb-1">
+          <div class="text-xs text-text-muted">Vannstand</div>
+          {#if sensor.vann_avstand_mm !== null}
+            <div class="text-xs text-text-dim tabular-nums">{sensor.vann_avstand_mm} mm</div>
+          {/if}
         </div>
-      </div>
-
-      <!-- Vann mid -->
-      <div class="card-raised p-4">
-        <div class="text-xs text-text-muted mb-1">Vann mid</div>
-        <div class="flex items-center gap-2 mt-1">
-          <span
-            class="w-3 h-3 rounded-full {sensor.vann_mid
-              ? 'bg-sky shadow-[0_0_8px_theme(colors.sky)]'
-              : 'bg-border'}"
-          ></span>
-          <span class="text-sm font-medium">{sensor.vann_mid ? 'Detektert' : 'Ikke detektert'}</span>
+        <div class="flex items-center gap-3">
+          <div class="text-2xl font-bold tabular-nums">
+            {vannPct !== null ? `${vannPct}` : '—'}<span class="text-sm text-text-muted ml-0.5">%</span>
+          </div>
+          <div class="flex-1 h-2 bg-border rounded-full overflow-hidden">
+            {#if vannPct !== null}
+              <div
+                class="h-full rounded-full transition-all duration-500 {vannKl === 'lav'
+                  ? 'bg-rose'
+                  : vannKl === 'full'
+                    ? 'bg-sky'
+                    : 'bg-leaf'}"
+                style="width: {vannPct}%"
+              ></div>
+            {/if}
+          </div>
         </div>
       </div>
     </div>
@@ -97,13 +107,13 @@
     </div>
 
     <!-- Advarsler -->
-    {#if sensor.vann_lav === false}
+    {#if vannKl === 'lav'}
       <div class="mt-4 p-3 rounded-lg bg-rose/10 border border-rose/30 text-rose text-sm">
-        ⚠ Vannreservoaret er tomt — fyll på vann.
+        ⚠ Vannreservoaret er nesten tomt ({vannPct} %) — fyll på vann.
       </div>
-    {:else if sensor.vann_mid === false}
+    {:else if vannPct !== null && vannPct < 40}
       <div class="mt-4 p-3 rounded-lg bg-sun/10 border border-sun/30 text-sun text-sm">
-        Vannreservoaret er halvfullt — vurder å fylle på snart.
+        Vannreservoaret er under halvfullt ({vannPct} %) — vurder å fylle på snart.
       </div>
     {/if}
   {/if}

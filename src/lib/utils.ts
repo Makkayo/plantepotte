@@ -12,6 +12,38 @@ export function jordfuktKlasse(pct: number | null): 'dry' | 'ok' | 'wet' | 'unkn
   return 'ok';
 }
 
+/**
+ * Vannstand fra VL53L0X-laser.
+ *
+ * Laseren peker rett ned mot en flytende flottør i berolings-brønnen.
+ *  - STOR avstand  = flottøren er langt nede = lite vann  (mot 0 %)
+ *  - LITEN avstand = flottøren er nær laseren = mye vann  (mot 100 %)
+ *
+ * `tomMm`/`fullMm` er standard-kalibrering. Senere bør disse lagres per potte
+ * (med en "sett tom" / "sett full"-knapp) — da sender vi inn potte-spesifikke verdier her.
+ */
+export const VANN_TOM_MM = 200; // avstand når reservoaret er tomt (flottør på bunn)
+export const VANN_FULL_MM = 40; // avstand når reservoaret er fullt (flottør på topp)
+
+export function vannNivaProsent(
+  avstandMm: number | null | undefined,
+  tomMm: number = VANN_TOM_MM,
+  fullMm: number = VANN_FULL_MM,
+): number | null {
+  if (avstandMm === null || avstandMm === undefined) return null;
+  const spenn = tomMm - fullMm;
+  if (spenn <= 0) return null; // ugyldig kalibrering
+  const pct = ((tomMm - avstandMm) / spenn) * 100;
+  return Math.max(0, Math.min(100, Math.round(pct)));
+}
+
+export function vannKlasse(pct: number | null): 'lav' | 'ok' | 'full' | 'unknown' {
+  if (pct === null) return 'unknown';
+  if (pct < 20) return 'lav';
+  if (pct > 90) return 'full';
+  return 'ok';
+}
+
 export function formaterTidssiden(iso: string | null | undefined): string {
   if (!iso) return '—';
   const d = new Date(iso);
