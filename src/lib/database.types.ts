@@ -102,26 +102,46 @@ export interface PotteSensorData {
   jord1: number | null;
   jord2: number | null;
   jord3: number | null;
-  vann_lav: boolean | null;
-  vann_mid: boolean | null;
+  /** Rå avstand i mm fra VL53L0X-laser til flottør. Web-appen kalibrerer tom/full → %. */
+  vann_avstand_mm: number | null;
   registrert_at: string | null;
   owner_id: string | null;
 }
 
-/** Skeletal Database type for the Supabase client. We only use the row types above directly. */
+/**
+ * Database-type for Supabase-klienten.
+ *
+ * To ting må stemme, ellers kollapser hvert `.from(...)`-kall til `never`
+ * (det var årsaken til de 5 typefeilene i `npm run check`):
+ *
+ *  1. Skjemaet må ha `Views`/`Functions`/`Enums`/`CompositeTypes`, og hver tabell
+ *     må ha `Row`/`Insert`/`Update` + `Relationships`.
+ *  2. `Row` må være et type-literal, ikke et `interface`. supabase-js krever at
+ *     raden er `Record<string, unknown>`, og et `interface` (som kan utvides) er
+ *     IKKE tilordnbart dit — bare type-literaler er. `Flat<>` mapper interfacet
+ *     om til et type-literal slik at det godtas.
+ */
+type Flat<T> = { [K in keyof T]: T[K] };
+type Tabell<Row> = {
+  Row: Flat<Row>;
+  Insert: Partial<Flat<Row>>;
+  Update: Partial<Flat<Row>>;
+  Relationships: [];
+};
+
 export type Database = {
   public: {
     Tables: {
-      lys_familier: { Row: LysFamilie; Insert: Partial<LysFamilie>; Update: Partial<LysFamilie> };
-      planter: { Row: Plante; Insert: Partial<Plante>; Update: Partial<Plante> };
-      potter: { Row: Potte; Insert: Partial<Potte>; Update: Partial<Potte> };
-      potte_planter: { Row: PottePlante; Insert: Partial<PottePlante>; Update: Partial<PottePlante> };
-      potte_commands: { Row: PotteCommand; Insert: Partial<PotteCommand>; Update: Partial<PotteCommand> };
-      potte_sensor_data: {
-        Row: PotteSensorData;
-        Insert: Partial<PotteSensorData>;
-        Update: Partial<PotteSensorData>;
-      };
+      lys_familier: Tabell<LysFamilie>;
+      planter: Tabell<Plante>;
+      potter: Tabell<Potte>;
+      potte_planter: Tabell<PottePlante>;
+      potte_commands: Tabell<PotteCommand>;
+      potte_sensor_data: Tabell<PotteSensorData>;
     };
+    Views: { [_ in never]: never };
+    Functions: { [_ in never]: never };
+    Enums: { [_ in never]: never };
+    CompositeTypes: { [_ in never]: never };
   };
 };

@@ -32,12 +32,18 @@ export function intensitetForDli(dli: number, timer: number): number {
   return Math.round((ppfd / ANTATT_PPFD_MAX) * 100);
 }
 
-/** Sortering av familier på "lys-aksen" — brukes til å beregne avstand mellom dem. */
+/**
+ * Sortering av familier på "lys-aksen" — fra lavest til høyest DLI-behov.
+ * Brukes til å beregne avstand mellom familier (naboer = lite stress).
+ * Rekkefølgen følger faktisk DLI-midtpunkt:
+ *   mikrogrønt 6–12 < skygge-tolerante 8–14 < salat-blader 12–17
+ *   < standard-urter 12–20 < solhungrige 18–30.
+ */
 const FAMILIE_AKSE: LysFamilieId[] = [
-  'skygge-tolerante',
-  'standard-urter',
-  'salat-blader',
   'mikrogront',
+  'skygge-tolerante',
+  'salat-blader',
+  'standard-urter',
   'solhungrige',
 ];
 
