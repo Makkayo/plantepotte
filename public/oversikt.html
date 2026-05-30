@@ -2174,7 +2174,7 @@
 
         <g class="comp-svg" transform="translate(890, 165)"
            data-name="DHT22 temperatur/fukt"
-           data-info="Måler romtemperatur og luftfuktighet. Bruker en spesiell 1-tråds protokoll som MicroPython kan lese rett ut av boksen. ⚠ Krever 4,7 kΩ pull-up motstand mellom VCC og DATA — koble motstand fra VCC til DATA-pinnen på breadboardet.">
+           data-info="Måler romtemperatur og luftfuktighet. Bruker en spesiell 1-tråds protokoll som MicroPython kan lese rett ut av boksen. 💡 3-pinners modulvariant (din) har pull-up-motstanden påloddet — kun den nakne 4-pinners varianten trenger at du selv setter 4,7 kΩ mellom VCC og DATA.">
           <rect width="200" height="65" rx="8" class="fill-sensor"/>
           <text x="14" y="25" class="name">🌡️ DHT22</text>
           <text x="14" y="44" class="sub">Temp + luftfuktighet</text>
@@ -2682,7 +2682,8 @@
   <!-- ── INTRO + pakke-sjekkliste ── -->
   <section>
     <div class="section-title"><span class="icon">🧱</span> Slik bygger du Potte 1</div>
-    <p class="section-intro">Følg trinnene i rekkefølge. Test hvert trinn FØR du går videre — da vet du alltid hvilken kobling som er problemet. Hver trinn viser <strong>hvilke deler du bruker</strong>.</p>
+    <p class="section-intro">Følg trinnene i rekkefølge. Test hvert trinn FØR du går videre — da vet du alltid hvilken kobling som er problemet. Hvert trinn viser <strong>hvilke deler du bruker</strong>.</p>
+    <p class="section-intro" style="margin-top:-0.3rem;">👉 <strong>Aldri gjort elektronikk før?</strong> Les <strong style="color:var(--green);">Kobling-fanen</strong> først — den forklarer alle ordene (VCC, GND, GPIO, breadboard, I2C) og viser et <strong>pinnekart over ESP32-en</strong> så du finner riktig pinne. Kom tilbake hit og bygg.</p>
 
     <div style="background:#0a1a0f; border:1px solid #14532d; border-radius:10px; padding:1rem 1.25rem; font-size:0.88rem;">
       <strong style="color:var(--green); display:block; margin-bottom:0.4rem;">📦 Når pakken kommer (~2. juni):</strong>
@@ -2729,6 +2730,17 @@
             <span class="wire-chip c-12v">12V-skinne → buck IN</span>
             <span class="wire-chip c-gnd">pigtail − → GND-skinne</span>
             <span class="wire-chip c-5v">buck OUT → multimeter (5.0V?)</span>
+          </div>
+
+          <div style="background:#12091f; border:1px solid #4c1d95; border-left:3px solid #a78bfa; border-radius:8px; padding:0.75rem 1rem; margin:0.6rem 0; font-size:0.83rem; color:var(--text);">
+            <strong style="color:#c4b5fd; display:block; margin-bottom:0.45rem;">🔧 Aldri brukt multimeter? (under ett minutt)</strong>
+            <ol style="margin-left:1.1rem; color:var(--muted); line-height:1.85;">
+              <li>Skru hjulet til <strong style="color:var(--text);">likespenning (DC)</strong> — symbolet er <code>V⎓</code> (V med rette streker over), <em>ikke</em> <code>V∼</code> (det er vekselstrøm). Har måleren tallområder, velg <strong style="color:var(--text);">20</strong>.</li>
+              <li>Sett den <strong style="color:var(--text);">svarte</strong> proben i hullet merket <code>COM</code>, den <strong style="color:#fca5a5;">røde</strong> i hullet merket <code>VΩmA</code>.</li>
+              <li>Slå på bryteren. Hold svart probe på buckens <code>OUT−</code> og rød probe på <code>OUT+</code>.</li>
+              <li>Displayet viser spenningen. Drei det <strong style="color:var(--text);">blå potmeteret</strong> sakte til det står <strong style="color:var(--green);">5.0</strong> (±0.1).</li>
+            </ol>
+            <div style="margin-top:0.4rem; color:var(--muted);">💡 Får du et <strong>minustall</strong> (f.eks. −5.0)? Da har du bare byttet om probene — snu dem, ingen skade skjer.</div>
           </div>
 
           <div class="check-tip">⚠ <strong>Over 5V på ESP32 VIN = ødelagt brett.</strong> Gå aldri videre til trinn 1 før multimeteret viser nøyaktig 5.0V.</div>
@@ -2832,7 +2844,11 @@
         <div class="step-num">5</div>
         <div class="step-body">
           <h3>DHT22 og jordfuktsensorer (×3)</h3>
-          <p>Alle får 3.3V VCC og felles GND. DHT22 data til GPIO4 — <strong>husk 4,7 kΩ pull-up mellom VCC og DATA</strong> (sett motstanden på breadboardet fra VCC-raden til DATA-ledningen). Jordfukt #1, #2, #3 til GPIO34, GPIO35, GPIO32 (alle er ADC-pinner).</p>
+          <p>Alle får 3.3V VCC og felles GND. DHT22 data til GPIO4. Jordfukt #1, #2, #3 til GPIO34, GPIO35, GPIO32 (alle er ADC-pinner).</p>
+
+          <div style="background:#0a1a2a; border-left:3px solid var(--blue); padding:0.55rem 0.8rem; margin:0.5rem 0; border-radius:0 6px 6px 0; font-size:0.82rem; color:var(--muted);">
+            💡 <strong style="color:var(--blue);">Trenger DHT22 den 4,7 kΩ-motstanden?</strong> Tell pinnene: har sensoren din <strong style="color:var(--text);">3 pinner</strong> og sitter på et lite kretskort (slik din gjør — den kom med jumper-kabler), er motstanden <strong>allerede påloddet</strong> → hopp over den. Bare den "nakne" 4-pinners varianten trenger at du selv setter 4,7 kΩ mellom VCC og DATA. Får du <code>None</code>/feil i Thonny, prøv å legge til motstanden.
+          </div>
 
           <div class="step-pics">
             <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-dht22"/></svg><span class="lbl">DHT22</span></div>
@@ -2852,7 +2868,7 @@
 
           <div class="step-wires">
             <span class="wire-chip c-33v">3V3 → alle VCC</span>
-            <span class="wire-chip c-33v">4,7 kΩ: VCC → DHT22 DATA (pull-up)</span>
+            <span class="wire-chip c-33v">4,7 kΩ VCC→DATA (kun nakent 4-pin DHT22)</span>
             <span class="wire-chip c-sig">DHT22 DATA → GPIO4</span>
             <span class="wire-chip c-sig">Jord → GPIO34/35/32</span>
             <span class="wire-chip c-gnd">felles GND</span>
