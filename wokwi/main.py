@@ -7,7 +7,7 @@
 #   DHT22               — temperatur + luftfuktighet (GPIO4)
 #   KY-040 encoder      — vridbar LED-dimmer (GPIO16/17/18)
 #   Potentiometer ×3    — jordfuktsensorer (GPIO34/35/32)
-#   Trykknapp ×2 (Q/W)  — XKC-Y25 vannstandsensorer (GPIO19/23)
+#   Potentiometer ×1    — vannstand (simulerer VL53L0X-laser, GPIO33)
 #   N-MOSFET + LED      — vekstlys: GPIO26 PWM → 100Ω → gate → LED via drain/source
 #   Slide-switch        — strøm til vekstlys-kretsen (5V inn/ut)
 #
@@ -17,9 +17,8 @@
 # Slik bruker du simulatoren:
 #   Vri encoder         → LED-lysstyrke (5% per klikk)
 #   Trykk encoder-knapp → reset lysstyrke til 80%
-#   Trykk Q (tastatur)  → XKC lav-sensor (vann detektert)
-#   Trykk W (tastatur)  → XKC mid-sensor
-#   Vri potentiometer   → jordfuktighet (venstre = tørr, høyre = våt)
+#   Vri vann-pot        → vannstand (venstre = tomt/langt, høyre = fullt/nært)
+#   Vri jord-potmetre   → jordfuktighet (venstre = tørr, høyre = våt)
 #   (Slide-switch: ikke koblet ennå — ep:VIN er ugyldig pin i Wokwi)
 
 from machine import Pin, PWM, I2C, ADC
@@ -57,10 +56,11 @@ for p in adc_pins:
     a.atten(ADC.ATTN_11DB)   # full 0–3.3V rekkevidde → 0–4095
     adc.append(a)
 
-# ── XKC-Y25 vannstandssensorer (trykknapp i simulator) ───────────
-# Intern pull-up: HIGH = ingen vann, LOW = vann detektert (NPN-sensor)
-xkc_lav = Pin(19, Pin.IN, Pin.PULL_UP)   # Q-tast i Wokwi
-xkc_mid = Pin(23, Pin.IN, Pin.PULL_UP)   # W-tast i Wokwi
+# ── Vannstand (potentiometer i simulator = VL53L0X-laser) ────────
+# Ekte hardware: laser måler avstand (mm) til en flottør. Wokwi har
+# ingen laser, så vi bruker en potmeter som stand-in for vannstanden.
+vann_adc = ADC(Pin(33))
+vann_adc.atten(ADC.ATTN_11DB)            # 0–3.3V → 0–4095
 
 # ── KY-040 rotary encoder ────────────────────────────────────────
 clk_pin     = Pin(16, Pin.IN, Pin.PULL_UP)
@@ -82,12 +82,13 @@ def encoder_dreid(pin):
 clk_pin.irq(trigger=Pin.IRQ_FALLING, handler=encoder_dreid)
 
 # ── Hjelpefunksjoner ─────────────────────────────────────────────
-def vann_status():
-    lav = not xkc_lav.value()   # True = vann detektert
-    mid = not xkc_mid.value()
-    if lav and mid: return "FULL  "
-    if lav:         return "HALV  "
-    return                 "TOM   "
+def vann_nivaa():
+    # Potmeter → simulert laser-avstand. Venstre (0) = flottør langt nede
+    # (tomt, stor mm), høyre (4095) = flottør nær laser (fullt, liten mm).
+    raw = vann_adc.read()                 # 0–4095
+    pst = max(0, min(100, int(raw / 4095 * 100)))
+    mm  = 200 - int(pst / 100 * 160)      # 200 mm (tom) … 40 mm (full)
+    return pst, mm
 
 def jord_prosent(a):
     raw = a.read()               # 0–4095
@@ -99,8 +100,7 @@ def jord_prosent(a):
 print("=" * 40)
 print("Plantepotte klar! (Wokwi-simulator)")
 print("  Vri encoder  → LED-lysstyrke")
-print("  Tast Q       → XKC lav-sensor")
-print("  Tast W       → XKC mid-sensor")
+print("  Vann-pot     → vannstand (mm + %)")
 print("  3 pottmetre  → jordfuktighet")
 print("=" * 40)
 
@@ -127,17 +127,20 @@ while True:
     # Jordfukt
     j = [jord_prosent(a) for a in adc]
 
+    # Vannstand (simulert laser)
+    vann_pst, vann_mm = vann_nivaa()
+
     # OLED oppdatering
     oled.fill(0)
     oled.text(f"{temp:.1f}C  {fukt:.0f}% rH", 0, 0)
-    oled.text(f"Vann: {vann_status()}", 0, 12)
+    oled.text(f"Vann: {vann_pst}% ({vann_mm}mm)", 0, 12)
     oled.text(f"J1:{j[0]}% J2:{j[1]}% J3:{j[2]}%", 0, 24)
     oled.text(f"LED:  {lysstyrke}%", 0, 36)
-    oled.text("Q=lav  W=mid  enc=lys", 0, 52)
+    oled.text("vann-pot  enc=lys", 0, 52)
     oled.show()
 
     # Seriell output (vises i Wokwi-konsoll)
-    print(f"T={temp:.1f}C H={fukt:.0f}% Vann={vann_status().strip()} "
+    print(f"T={temp:.1f}C H={fukt:.0f}% Vann={vann_pst}%/{vann_mm}mm "
           f"J={j[0]}/{j[1]}/{j[2]}% LED={lysstyrke}%")
 
     time.sleep_ms(200)

@@ -68,18 +68,11 @@
       "attrs": { "value": "0.7" }
     },
     {
-      "type": "wokwi-pushbutton",
-      "id": "xkc1",
-      "top": 148,
-      "left": 86,
-      "attrs": { "color": "blue", "key": "q" }
-    },
-    {
-      "type": "wokwi-pushbutton",
-      "id": "xkc2",
-      "top": 268,
-      "left": 86,
-      "attrs": { "color": "blue", "key": "w" }
+      "type": "wokwi-potentiometer",
+      "id": "vann",
+      "top": 180,
+      "left": 40,
+      "attrs": { "value": "0.6" }
     },
     {
       "type": "wokwi-slide-switch",
@@ -136,8 +129,8 @@
     ["esp:GND.1", "soil1:GND", "black", []],
     ["esp:GND.1", "soil2:GND", "black", []],
     ["esp:GND.1", "soil3:GND", "black", []],
-    ["esp:GND.1", "xkc1:1.r",  "black", []],
-    ["esp:GND.1", "xkc2:1.r",  "black", []],
+    ["esp:3V3",   "vann:VCC",  "#4488ff", []],
+    ["esp:GND.1", "vann:GND",  "black", []],
     ["esp:GND.2", "mosfet:S",  "black", []],
 
     ["esp:D21",   "oled:SDA",  "#ff66bb", []],
@@ -156,8 +149,7 @@
     ["esp:D35",   "soil2:SIG", "#aa77ff", []],
     ["esp:D32",   "soil3:SIG", "#aa77ff", []],
 
-    ["esp:D19",   "xkc1:1.l",  "#aa77ff", []],
-    ["esp:D23",   "xkc2:1.l",  "#aa77ff", []],
+    ["esp:D33",   "vann:SIG",  "#aa77ff", []],
 
     ["esp:3V3",   "sw_pwr:2",  "#ff4444", []],
     ["sw_pwr:1",  "rled:1",    "#ff4444", []],

@@ -34,11 +34,11 @@ Node 20+ kreves (`.nvmrc` setter dette).
 | `planter` | Katalog med 44 planter — DLI, timer, vann, veke-egnethet, kilder |
 | `potter` | Fysiske potter (potte_id, antall seksjoner, sensorer) |
 | `potte_planter` | Mange-til-mange: hvilke planter er i hvilken seksjon |
-| `potte_commands` | Lys-innstillinger som ESP32 leser hvert 5. sek (uendret format) |
-| `potte_sensor_data` | Sensoravlesninger fra ESP32 (uendret format) |
+| `potte_commands` | Lys-innstillinger som ESP32 leser hvert 5. sek |
+| `potte_sensor_data` | Sensoravlesninger fra ESP32 — vann måles nå som `vann_avstand_mm` (rå mm fra VL53L0X-laser), ikke lenger `vann_lav`/`vann_mid` |
 
 Alle nye tabeller har `owner_id uuid` (nullable) for fremtidig multi-user-støtte.
-ESP32-kontrakten er uendret — ingen MicroPython-kode trenger oppdatering.
+Vannmålingen ble byttet fra XKC-Y25 (boolean) til VL53L0X-laser (`vann_avstand_mm`) 2026-05-30 — `main.py` i spec-en er oppdatert tilsvarende.
 
 ## Cloudflare Pages-oppsett
 
