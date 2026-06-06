@@ -1516,7 +1516,7 @@
         <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span></div>
       </div>
 
-      <div class="comp-card">
+      <div class="comp-card" id="komp-ledclip">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-ledclip"/></svg>
         <div class="comp-body">
           <h4>LED clip connector</h4>
@@ -1550,7 +1550,7 @@
     <div class="comp-group">
       <div class="comp-group-title">📦 Bestilling 2 — Tilbehør fra AliExpress (€37,18 fri frakt, bestilt mai 2026)</div>
 
-      <div class="comp-card">
+      <div class="comp-card" id="komp-wire-silicone">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-wire-silicone"/></svg>
         <div class="comp-body">
           <h4>Silikonledning 22 AWG — rød + svart</h4>
@@ -1590,7 +1590,7 @@
         <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
       </div>
 
-      <div class="comp-card">
+      <div class="comp-card" id="komp-wago">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-wago"/></svg>
         <div class="comp-body">
           <h4>Lever-cable connectors (Wago 221-klone) — 50 stk</h4>
@@ -1713,7 +1713,7 @@
     <div class="comp-group">
       <div class="comp-group-title">🛒 Kjøp lokalt — FØR hardware ankommer</div>
 
-      <div class="comp-card">
+      <div class="comp-card" id="komp-multimeter">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-multimeter"/></svg>
         <div class="comp-body">
           <h4>Multimeter — spenningsmåler</h4>
@@ -1767,7 +1767,7 @@
     <div class="comp-group">
       <div class="comp-group-title">✅ Har allerede</div>
 
-      <div class="comp-card">
+      <div class="comp-card" id="komp-ikea-tank">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-ikea-tank"/></svg>
         <div class="comp-body">
           <h4>IKEA 365+ 5.2L — vannreservoar</h4>
@@ -3631,7 +3631,7 @@ while True:
         while(p && p !== pane){
           if(skipTag.has(p.tagName)) return NodeFilter.FILTER_REJECT;
           if(p.namespaceURI && p.namespaceURI.indexOf('svg') !== -1) return NodeFilter.FILTER_REJECT; // hopp over SVG-diagram
-          if(p.classList && (p.classList.contains('clink') || p.classList.contains('power-tree') || p.classList.contains('legend'))) return NodeFilter.FILTER_REJECT;
+          if(p.classList && (p.classList.contains('clink') || p.classList.contains('power-tree') || p.classList.contains('legend') || p.classList.contains('step-pic') || p.classList.contains('wire-chip'))) return NodeFilter.FILTER_REJECT;
           p = p.parentElement;
         }
         return NodeFilter.FILTER_ACCEPT;
@@ -3657,7 +3657,21 @@ while True:
       }
     });
   }
-  autoLinkPane(document.querySelector('[data-pane="kobling"]'));
+  // Auto-lenking i alle innholdsfaner som omtaler komponenter (ikke komponentlista selv)
+  ['kobling','bygg','advarsler'].forEach(name => {
+    autoLinkPane(document.querySelector(`[data-pane="${name}"]`));
+  });
+
+  // Gjør komponent-miniatyrer (.step-pic i Bygg) klikkbare → samme popup som ellers
+  document.querySelectorAll('.step-pic').forEach(pic => {
+    const use = pic.querySelector('use');
+    if(!use) return;
+    const href = use.getAttribute('href') || use.getAttribute('xlink:href') || '';
+    const slug = href.replace('#sym-', '');
+    if(!slug || !document.getElementById('komp-' + slug)) return;   // bare hvis kortet finnes
+    pic.style.cursor = 'pointer';
+    pic.addEventListener('click', () => openCompModal(slug));
+  });
 </script>
 
 </body>
