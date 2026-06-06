@@ -3,14 +3,12 @@
 Eget kort som tar bilder av plantene og laster dem opp til Supabase Storage.
 Programmeres i **Arduino IDE** (ikke MicroPython — kamerastøtten er best i Arduino).
 
-## Før første opplasting: lag bucket i Supabase
+## Storage-bucket — ✅ ALLEREDE OPPRETTET
 
-ESP32-CAM laster opp til en Storage-bucket. Lag den én gang:
+Bucketen `plantebilder` (public) er allerede laget med policy som lar `anon`
+laste opp (INSERT) og lese (SELECT). **Du trenger ikke gjøre noe her.**
 
-**Enklest (dashboard):** Supabase → *Storage* → *New bucket* → navn `plantebilder`,
-huk av **Public bucket** → *Create*. Deretter *Policies* → la `anon` få **INSERT**.
-
-**Eller med SQL** (Supabase → *SQL Editor*):
+SQL-en under er kun referanse hvis du må gjenskape den senere:
 
 ```sql
 -- 1) bucket (public lese, så web-appen kan vise bildene)
