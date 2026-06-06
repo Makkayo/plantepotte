@@ -2764,7 +2764,7 @@
 
           <div class="check-tip">⚠ MOSFET SIG må aldri stå løs — koble den til GPIO26 selv om du ikke kjører kode ennå. Flytende SIG-pinne får MOSFET til å bli halv-åpen og overoppheter.</div>
 
-          <div class="check-tip">⚠ <strong>Begge LED-ledningene går til MOSFETens OUT-terminaler</strong> (<code>OUT+</code> og <code>OUT−</code>) — IKKE LED-minus rett til GND-skinnen. LR7843 bryter på minus-siden: kobler du LED− utenom modulen, lyser stripa alltid (lar seg ikke dimme/slå av). 12V inn på <code>IN+</code>/<code>IN−</code>, LED ut på <code>OUT+</code>/<code>OUT−</code>.</div>
+          <div class="check-tip">⚠ <strong>Begge LED-ledningene går til MOSFETens OUT-terminaler</strong> (<code>OUT+</code> og <code>OUT−</code>) — IKKE LED-minus rett til GND-skinnen. LR7843 bryter på minus-siden: kobler du LED− utenom modulen, lyser stripa alltid (lar seg ikke dimme/slå av). 12V inn på inn-terminalene (<code>VIN</code> + <code>GND</code>), LED ut på ut-terminalene (<code>OUT+</code>/<code>OUT−</code>). Merkingen varierer mellom moduler — les hva som står trykt på din når den kommer; inn-siden er der 12V kobles, ut-siden går til LED.</div>
 
           <div style="background:#0a1a2a; border-left:3px solid var(--blue); padding:0.55rem 0.8rem; margin-top:0.6rem; border-radius:0 6px 6px 0; font-size:0.82rem; color:var(--muted);">
             💡 <strong style="color:var(--blue);">Når dette skal inn i 3D-utskriften:</strong> LED-stripen sitter under taket. Silikonledning går gjennom stolpene ned til MOSFET i basen. Bruk <strong>Wago 221-kontakter</strong> i bunn og topp av stolpa — da kan du koble fra hele topp-konstruksjonen for vedlikehold. Strip 10mm bar ledning, sett i Wago, vipp ned hendelen.
