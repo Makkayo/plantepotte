@@ -127,6 +127,8 @@ def get_cmd():
 
 def post_sensors(temp, hum, s, vann_mm):
     url = SUPABASE_URL + "/rest/v1/potte_sensor_data"
+    post_headers = dict(headers)
+    post_headers["Prefer"] = "return=minimal"
     payload = {
         "potte_id": POTTE_ID,
         "temperatur": temp,
@@ -135,7 +137,7 @@ def post_sensors(temp, hum, s, vann_mm):
         "vann_avstand_mm": vann_mm,
     }
     try:
-        r = urequests.post(url, headers=headers, json=payload)
+        r = urequests.post(url, headers=post_headers, json=payload)
         r.close()
         return True
     except Exception as e:

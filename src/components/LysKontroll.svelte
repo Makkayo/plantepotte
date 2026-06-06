@@ -23,7 +23,7 @@
 
   let intensitet = $state(70);
   let timer_on = $state('07:00');
-  let timer_off = $state('21:00');
+  let timer_off = $state('23:00');
   let lagrer = $state(false);
   let lagretSekund = $state(0);
   let kompromissApplisert = $state(false);
