@@ -1,0 +1,242 @@
+# main.py — Plantepotte firmware (potte 1)
+# ESP32 + MicroPython. Bruker logic.py for alle beslutninger (testbar på PC).
+#
+# Hva den gjor, i loop hvert 5. sekund:
+#   1. Sorger for at WiFi er oppe (gjenoppkobler ved brudd)
+#   2. Henter lys-kommando fra Supabase (intensitet + timer pa/av)
+#   3. Leser sensorer: DHT22, 3x jordfukt (ra ADC), VL53L0X vann-avstand (mm)
+#   4. Styrer LED-strip via MOSFET (PWM) etter timer + intensitet
+#   5. Lokal dimming med KY-040: vri = +/-5 %, trykk = tilbake til app-verdien
+#   6. Poster sensordata til Supabase hvert 60. sekund
+#   7. Viser status pa OLED
+
+import time
+import network
+import urequests
+import dht
+import ntptime
+from machine import Pin, PWM, ADC, SoftI2C, RTC
+
+from config import (SUPABASE_URL, ANON_KEY, POTTE_ID, TZ_OFFSET_HOURS,
+                    WIFI_SSID, WIFI_PASS, DEFAULT_INTENSITET,
+                    DEFAULT_TIMER_ON, DEFAULT_TIMER_OFF)
+import ssd1306
+import logic
+
+# Laser-driveren er valgfri: taler at den mangler/feiler (vann blir None).
+try:
+    import vl53l0x
+    _HAS_LASER_DRIVER = True
+except Exception as e:
+    print("vl53l0x-driver ikke lastet:", e)
+    _HAS_LASER_DRIVER = False
+
+# ── Hardware ──
+led = PWM(Pin(26), freq=1000)
+led.duty(0)
+
+dht_sensor = dht.DHT22(Pin(4))
+
+soil = []
+for _p in (34, 35, 32):
+    _a = ADC(Pin(_p))
+    _a.atten(ADC.ATTN_11DB)        # full 0-3.3 V -> 0-4095
+    soil.append(_a)
+
+i2c = SoftI2C(scl=Pin(22), sda=Pin(21))
+
+try:
+    display = ssd1306.SSD1306_I2C(128, 64, i2c)
+except Exception as e:
+    print("OLED-init feilet:", e)
+    display = None
+
+tof = None
+if _HAS_LASER_DRIVER:
+    try:
+        tof = vl53l0x.VL53L0X(i2c)
+    except Exception as e:
+        print("Laser-init feilet:", e)
+        tof = None
+
+# KY-040 dreieknapp
+clk = Pin(16, Pin.IN, Pin.PULL_UP)
+dt = Pin(17, Pin.IN, Pin.PULL_UP)
+sw = Pin(18, Pin.IN, Pin.PULL_UP)
+
+rtc = RTC()
+sta = network.WLAN(network.STA_IF)
+headers = {
+    "apikey": ANON_KEY,
+    "Authorization": "Bearer " + ANON_KEY,
+    "Content-Type": "application/json",
+}
+
+# ── Tilstand ──
+intensitet = DEFAULT_INTENSITET       # gjeldende lysstyrke (kan justeres av encoder)
+app_intensitet = DEFAULT_INTENSITET   # siste verdi fra appen (encoder-trykk gar hit)
+timer_on = DEFAULT_TIMER_ON
+timer_off = DEFAULT_TIMER_OFF
+last_cmd_stamp = None
+sw_prev = True
+
+
+# ── KY-040 via interrupt (mister aldri en vridning) ──
+def _on_turn(pin):
+    global intensitet
+    if dt.value():
+        intensitet = logic.adjust(intensitet, 5)     # med klokka = lysere
+    else:
+        intensitet = logic.adjust(intensitet, -5)    # mot klokka = morkere
+
+
+clk.irq(trigger=Pin.IRQ_FALLING, handler=_on_turn)
+
+
+# ── WiFi ──
+def ensure_wifi():
+    if sta.isconnected():
+        return True
+    try:
+        sta.active(True)
+        sta.connect(WIFI_SSID, WIFI_PASS)
+        for _ in range(20):
+            if sta.isconnected():
+                print("WiFi gjenoppkoblet:", sta.ifconfig()[0])
+                return True
+            time.sleep(0.5)
+    except Exception as e:
+        print("WiFi-feil:", e)
+    return sta.isconnected()
+
+
+# ── Supabase ──
+def get_cmd():
+    url = (SUPABASE_URL + "/rest/v1/potte_commands?potte_id=eq." + POTTE_ID +
+           "&select=intensitet,timer_on,timer_off,updated_at" +
+           "&order=updated_at.desc&limit=1")
+    try:
+        r = urequests.get(url, headers=headers)
+        data = r.json()
+        r.close()
+        return data[0] if data else None
+    except Exception as e:
+        print("get_cmd feilet:", e)
+        return None
+
+
+def post_sensors(temp, hum, s, vann_mm):
+    url = SUPABASE_URL + "/rest/v1/potte_sensor_data"
+    payload = {
+        "potte_id": POTTE_ID,
+        "temperatur": temp,
+        "luftfuktighet": hum,
+        "jord1": s[0], "jord2": s[1], "jord3": s[2],
+        "vann_avstand_mm": vann_mm,
+    }
+    try:
+        r = urequests.post(url, headers=headers, json=payload)
+        r.close()
+        return True
+    except Exception as e:
+        print("post_sensors feilet:", e)
+        return False
+
+
+# ── Sensorer ──
+def read_sensors():
+    try:
+        dht_sensor.measure()
+        temp = dht_sensor.temperature()
+        hum = dht_sensor.humidity()
+    except Exception:
+        temp, hum = None, None
+    s = [a.read() for a in soil]          # ra ADC 0-4095 (appen kalibrerer)
+    vann_mm = None
+    if tof:
+        try:
+            vann_mm = tof.read()
+        except Exception:
+            vann_mm = None
+    return temp, hum, s, vann_mm
+
+
+# ── OLED ──
+def _txt(v):
+    return "-" if v is None else str(v)
+
+
+def show(temp, hum, s, vann_mm, lys_pst, lyser, wifi_ok):
+    if not display:
+        return
+    display.fill(0)
+    display.text(POTTE_ID + ("   net:ON" if wifi_ok else "   net:--"), 0, 0)
+    display.text("T:" + _txt(temp) + "C RH:" + _txt(hum) + "%", 0, 11)
+    display.text("Lys:" + str(lys_pst) + "% " + ("PA" if lyser else "AV"), 0, 22)
+    display.text("Vann:" + _txt(vann_mm) + "mm", 0, 33)
+    display.text("J1:" + _txt(s[0]) + " J2:" + _txt(s[1]), 0, 44)
+    display.text("J3:" + _txt(s[2]), 0, 55)
+    display.show()
+
+
+# ── Oppstart ──
+print("=" * 40)
+print("Plantepotte firmware - " + POTTE_ID)
+ensure_wifi()
+for _ in range(3):                        # NTP med noen forsok
+    try:
+        ntptime.settime()
+        print("NTP-tid satt (UTC)")
+        break
+    except Exception:
+        time.sleep(1)
+print("=" * 40)
+
+POST_INTERVAL = 60
+last_post = -POST_INTERVAL                 # post med en gang ved oppstart
+
+# ── Hovedlokke ──
+while True:
+    wifi_ok = ensure_wifi()
+
+    # 1) Hent kommando. Ny app-verdi (updated_at endret) overstyrer lokal dimming.
+    cmd = get_cmd() if wifi_ok else None
+    if cmd:
+        stamp = cmd.get("updated_at")
+        if stamp != last_cmd_stamp:
+            last_cmd_stamp = stamp
+            app_intensitet = int(cmd.get("intensitet", DEFAULT_INTENSITET))
+            intensitet = app_intensitet
+            timer_on = cmd.get("timer_on", DEFAULT_TIMER_ON)
+            timer_off = cmd.get("timer_off", DEFAULT_TIMER_OFF)
+            print("Ny kommando:", app_intensitet, "%", timer_on, "-", timer_off)
+
+    # 2) Encoder-knapp -> tilbake til app-verdien
+    sw_now = not sw.value()
+    if sw_now and not sw_prev:
+        intensitet = app_intensitet
+        print("Encoder-knapp: tilbake til", app_intensitet, "%")
+    sw_prev = sw_now
+
+    # 3) Les sensorer
+    temp, hum, s, vann_mm = read_sensors()
+
+    # 4) Skal lyset sta pa? (timer + lokal tid)
+    _, _, _, _, hh, mm, _, _ = rtc.datetime()
+    lh, lm = logic.local_hm(hh, mm, TZ_OFFSET_HOURS)
+    now_min = lh * 60 + lm
+    lyser = logic.light_should_be_on(now_min,
+                                     logic.hhmm_to_min(timer_on),
+                                     logic.hhmm_to_min(timer_off))
+    led.duty(logic.duty_for(intensitet, lyser))
+
+    # 5) Skjerm
+    show(temp, hum, s, vann_mm, intensitet, lyser, wifi_ok)
+
+    # 6) Post sensordata hvert 60. sek
+    if wifi_ok and (time.time() - last_post) >= POST_INTERVAL:
+        if post_sensors(temp, hum, s, vann_mm):
+            last_post = time.time()
+            print("Sensordata sendt.")
+
+    time.sleep(5)

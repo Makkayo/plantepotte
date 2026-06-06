@@ -1,0 +1,28 @@
+# config.py — det ENESTE du må endre er WiFi-navn og passord nederst.
+# Resten er ferdig utfylt for potte 1.
+#
+# (ANON_KEY er en offentlig "anon"-nøkkel — den er laget for å ligge i klient-
+#  kode og er trygg å ha her. Den gir kun tilgang som RLS-policyene tillater.)
+
+# ── Supabase (ferdig utfylt — ikke endre) ──
+SUPABASE_URL = "https://ebjbxfwtwrahuokydvtj.supabase.co"
+ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImViamJ4Znd0d3JhaHVva3lkdnRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyNDgxOTksImV4cCI6MjA4ODgyNDE5OX0.25yREg6vMLUPNoebopUX-TeMWlwKjtssRQLGa2BEQC0"
+
+# ── Hvilken potte er dette? ──
+POTTE_ID = "potte1"            # bytt til "potte2" på den andre ESP32-en
+
+# ── Tidssone ──
+# ESP32 henter UTC fra internett. Norge = UTC+2 om sommeren, UTC+1 om vinteren.
+# ESP32 har ingen automatisk sommertid — endre dette tallet manuelt 2x i året.
+TZ_OFFSET_HOURS = 2
+
+# ── Standardverdier (brukes før første kommando er hentet, eller hvis nett er nede) ──
+DEFAULT_INTENSITET = 70        # prosent
+DEFAULT_TIMER_ON = "07:00"
+DEFAULT_TIMER_OFF = "23:00"
+
+# ─────────────────────────────────────────────────────────────────────
+#  ↓↓↓  ENDRE DISSE TO  ↓↓↓   (kun 2,4 GHz-nett — ESP32 ser ikke 5 GHz)
+# ─────────────────────────────────────────────────────────────────────
+WIFI_SSID = "DITT-WIFI-NAVN"
+WIFI_PASS = "DITT-WIFI-PASSORD"
