@@ -187,6 +187,9 @@
       border-bottom: 1px dotted var(--blue); font-weight: 600;
     }
     .tablink:hover { border-bottom-style: solid; }
+    /* Klikkbare chip-noder (strømtre) → åpner komponent-popup, likt resten */
+    .tree-node.node-clickable { cursor: pointer; }
+    .tree-node.node-clickable:hover { filter: brightness(1.32); }
 
     /* ─── INFRA / KOMPONENT CARDS ─── */
     .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
@@ -1297,14 +1300,14 @@
     <div class="snap-sub">~€153 til potta + ~€54 lodd/lek — se pris-oversikt</div>
   </div>
   <div class="snap-card">
-    <div class="snap-label">📦 Hardware ankommer</div>
-    <div class="snap-value">~2. juni</div>
-    <div class="snap-sub">AliExpress — alt bestilt</div>
+    <div class="snap-label">📦 Hardware</div>
+    <div class="snap-value">Begynt å komme</div>
+    <div class="snap-sub">8 deler ankommet · resten på vei</div>
   </div>
   <div class="snap-card">
     <div class="snap-label">➡️ Gjør nå</div>
     <div class="snap-value" style="font-size:1rem;">3D-design + test-print flottør</div>
-    <div class="snap-sub">Multimeter ✓ · Thonny ✓ · venter på pakke ~2. juni</div>
+    <div class="snap-sub">Multimeter ✓ · Thonny ✓ · pakker drypper inn</div>
   </div>
 </div>
 
@@ -1363,7 +1366,7 @@
         <div class="ic-icon">📦</div>
         <h3>Hardware bestilt</h3>
         <p><strong>Bestilling 1:</strong> 16 hovedkomponenter (~€90).<br><strong>Bestilling 2:</strong> 10 tilbehør — Wago, silikonledning, sikring, wire stripper (~€39).<br><strong>Bestilling 3:</strong> VL53L0X-laser ×3, ESP32-CAM ×2, conformal coating (~€22).<br><strong>Bestilling 4:</strong> loddeutstyr + lek (tredje hånd, USB-bolt, matte, servo, ESP32-kit) — ikke nødvendig for potta.</p>
-        <span class="pill pill-yellow">● Ankommer ~2. juni</span>
+        <span class="pill pill-yellow">● Delvis ankommet</span>
       </div>
       <div class="infra-card">
         <div class="ic-icon">📐</div>
@@ -1394,7 +1397,7 @@
     <p class="section-intro"><strong>16 hovedkomponenter</strong> + <strong>12 tilbehør</strong> fra AliExpress, <strong>2 lokalkjøp</strong>, og <strong>6 ting du har fra før</strong>.</p>
 
     <div class="comp-group">
-      <div class="comp-group-title">📬 Bestilling 1 — Hovedkomponenter fra AliExpress (~€90, ankommer ~2. juni)</div>
+      <div class="comp-group-title">📬 Bestilling 1 — Hovedkomponenter fra AliExpress (~€90, mest på vei)</div>
 
       <div class="comp-card" id="komp-esp32">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-esp32"/></svg>
@@ -2654,7 +2657,7 @@
     <p class="section-intro" style="margin-top:-0.3rem;">👉 <strong>Aldri gjort elektronikk før?</strong> Les <strong style="color:var(--green);">Kobling-fanen</strong> først — den forklarer alle ordene (VCC, GND, GPIO, breadboard, I2C) og viser et <strong>pinnekart over ESP32-en</strong> så du finner riktig pinne. Kom tilbake hit og bygg.</p>
 
     <div style="background:#0a1a0f; border:1px solid #14532d; border-radius:10px; padding:1rem 1.25rem; font-size:0.88rem;">
-      <strong style="color:var(--green); display:block; margin-bottom:0.4rem;">📦 Når pakken kommer (~2. juni):</strong>
+      <strong style="color:var(--green); display:block; margin-bottom:0.4rem;">📦 Når pakkene kommer:</strong>
       <ol style="margin-left:1.2rem; color:var(--muted); line-height:1.7;">
         <li>Pakk ut alt på et bord. Gå til <strong>Komponenter-fanen</strong> og sammenlign mot bildene — sjekk at alt er der.</li>
         <li>✅ <strong style="color:var(--green);">Thonny er installert og multimeteret (UT131D) er kjøpt</strong> — hopp rett til byggetrinnene under.</li>
@@ -2954,7 +2957,7 @@
       <div class="check todo">
         <div class="check-box"></div>
         <div class="check-content">
-          <h4>Hardware ankommer ~2. juni</h4>
+          <h4>Hardware — begynt å ankomme</h4>
           <p>To AliExpress-pakker: hovedkomponenter (ESP32, MOSFET, LED-strip, alle sensorer) + tilbehør (Wago, switch, sikring, silikonledning, heat shrink, 3M-tape, wire stripper).</p>
         </div>
       </div>
@@ -3087,8 +3090,8 @@
       </div>
       <div class="warn-box info">
         <div class="warn-icon">🌡️</div>
-        <h4>DHT22 krever 4,7 kΩ pull-up på DATA-linjen</h4>
-        <p>Uten pull-up motstanden får du ustabile avlesninger eller ingen data i det hele tatt. Koble en 4,7 kΩ motstand mellom DHT22 VCC og DATA på breadboardet. AM2302-modulen kan ha en innebygd, men det er tryggere å legge til en ekstern — de kan sameksistere uten problem.</p>
+        <h4>DHT22 pull-up — din 3-pinners modul har den innebygd</h4>
+        <p>DHT22 trenger en 4,7 kΩ pull-up mellom VCC og DATA. Men modulen din (3 pinner, kom med jumper-kabler) har den <strong>påloddet fra fabrikk → du trenger ikke gjøre noe</strong>. Bare en naken 4-pinners DHT22 krever at du selv setter 4,7 kΩ. Får du <code>None</code>/feil i Thonny, prøv å legge til motstanden.</p>
       </div>
       <div class="warn-box tip">
         <div class="warn-icon">🔑</div>
@@ -3615,7 +3618,7 @@ while True:
     ['OLED-skjerm','oled'], ['OLED','oled'],
     ['DHT22','dht22'], ['KY-040','ky040'], ['VL53L0X','vl53'],
     ['Jordfuktsensor','soil'], ['Jordfukt','soil'],
-    ['12V adapter','adapter'], ['12V-adapter','adapter'],
+    ['12V adapter','adapter'], ['12V-adapter','adapter'], ['Adapter 12V','adapter'],
     ['DC inline switch','switch'], ['Vippebryter','switch'], ['vippebryter','switch'],
     ['DC barrel jack','barrel'], ['Barrel jack','barrel'], ['barrel jack','barrel'],
     ['Slow-blow fuse','fuse'], ['Breadboard','breadboard']
@@ -3671,6 +3674,20 @@ while True:
     if(!slug || !document.getElementById('komp-' + slug)) return;   // bare hvis kortet finnes
     pic.style.cursor = 'pointer';
     pic.addEventListener('click', () => openCompModal(slug));
+  });
+
+  // Gjør strømtre-nodene klikkbare → samme popup (kun noder som faktisk ER en komponent)
+  function chipSlug(text){
+    const dest = text.split('→').pop() || text;   // sikt mot destinasjonen i "5V → ESP32"
+    for(const [term, slug] of COMP_TERMS) if(dest.includes(term) && document.getElementById('komp-' + slug)) return slug;
+    for(const [term, slug] of COMP_TERMS) if(text.includes(term) && document.getElementById('komp-' + slug)) return slug;
+    return null;
+  }
+  document.querySelectorAll('.tree-node').forEach(node => {
+    const slug = chipSlug(node.textContent);
+    if(!slug) return;
+    node.classList.add('node-clickable');
+    node.addEventListener('click', () => openCompModal(slug));
   });
 </script>
 
