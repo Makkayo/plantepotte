@@ -166,6 +166,28 @@
     }
     .comp-modal-goto:hover { background: var(--blue); color: #0b0e14; }
 
+    /* ─── VEGVISER (forklarer hva hver fane er for) ─── */
+    .signpost {
+      display: flex; align-items: center; gap: 0.5rem 1rem; flex-wrap: wrap;
+      background: var(--surface); border: 1px solid var(--border);
+      border-left: 3px solid var(--blue); border-radius: 10px;
+      padding: 0.7rem 1rem; margin-bottom: 1.6rem; font-size: 0.88rem;
+    }
+    .signpost-here { color: var(--text); font-weight: 700; white-space: nowrap; }
+    .signpost-desc { color: var(--muted); flex: 1; min-width: 200px; }
+    .signpost-go {
+      background: none; border: 1px solid var(--blue); color: var(--blue);
+      border-radius: 8px; padding: 0.35rem 0.8rem; font-size: 0.82rem;
+      cursor: pointer; font-family: inherit; white-space: nowrap;
+      transition: background 0.12s, color 0.12s;
+    }
+    .signpost-go:hover { background: var(--blue); color: #0b0e14; }
+    .tablink {
+      color: var(--blue); cursor: pointer;
+      border-bottom: 1px dotted var(--blue); font-weight: 600;
+    }
+    .tablink:hover { border-bottom-style: solid; }
+
     /* ─── INFRA / KOMPONENT CARDS ─── */
     .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
     .infra-card {
@@ -1892,6 +1914,12 @@
 <!-- ════════════════════════════════════════════ -->
 <div class="pane" data-pane="kobling">
 
+  <div class="signpost">
+    <span class="signpost-here">🗺️ Du er på <strong>Kobling</strong> — kartet</span>
+    <span class="signpost-desc">Her <strong>forstår</strong> du systemet: begreper, systemdiagram, pinnekart og en komplett koblingsoversikt å slå opp i. Ingen oppskrift å følge her — det er det Bygg-fanen er for.</span>
+    <button class="signpost-go" data-goto-tab="bygg">Klar til å bygge? → Bygg</button>
+  </div>
+
   <!-- ── A: Begynnerkonsepter ── -->
   <section>
     <div class="section-title"><span class="icon">📖</span> Først: noen begreper du må kunne</div>
@@ -2279,12 +2307,12 @@
     <p class="section-intro">ESP32-brettet har 30 pinner. Du bruker bare 14 (12 GPIO + 3.3V + GND). Grå = ledig. Rød = strapping-pinner som styrer oppstart — ikke koble noe til dem.</p>
 
     <div class="pinout-wrap">
-      <svg viewBox="0 0 720 660" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="-120 0 1010 565" xmlns="http://www.w3.org/2000/svg">
         <rect x="290" y="0" width="140" height="35" rx="6" fill="#475569"/>
         <text x="360" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#0f1117">USB-C</text>
-        <rect x="240" y="40" width="240" height="610" rx="10" fill="#1e1b4b" stroke="#a78bfa" stroke-width="2"/>
-        <text x="360" y="350" text-anchor="middle" font-size="22" font-weight="800" fill="#a78bfa" opacity="0.4">ESP32</text>
-        <text x="360" y="380" text-anchor="middle" font-size="11" fill="#a78bfa" opacity="0.4">WROOM-32D</text>
+        <rect x="240" y="40" width="240" height="435" rx="10" fill="#1e1b4b" stroke="#a78bfa" stroke-width="2"/>
+        <text x="360" y="250" text-anchor="middle" font-size="22" font-weight="800" fill="#a78bfa" opacity="0.4">ESP32</text>
+        <text x="360" y="275" text-anchor="middle" font-size="11" fill="#a78bfa" opacity="0.4">WROOM-32D</text>
 
         <g font-family="Courier New" font-size="11" font-weight="700">
         <!-- VENSTRE -->
@@ -2380,7 +2408,7 @@
         <text x="685" y="445" font-size="10" fill="#94a3b8">ledig (frigjort fra XKC)</text>
         </g>
 
-        <g transform="translate(40, 540)">
+        <g transform="translate(-110, 500)">
           <text x="0" y="0" font-size="11" font-weight="700" fill="#94a3b8" letter-spacing="1">FORKLARING</text>
           <rect x="0" y="10" width="14" height="14" fill="#0f2a3f" stroke="#60a5fa"/>
           <text x="22" y="22" font-size="10" fill="#e2e8f0">Brukt — sensor (3.3V)</text>
@@ -2474,8 +2502,8 @@
 
   <!-- ── E: Komplett koblingsliste ── -->
   <section>
-    <div class="section-title"><span class="icon">📋</span> Koblingsliste — i riktig rekkefølge</div>
-    <p class="section-intro">Alle ledninger gruppert etter byggesteg. Følg rekkefølgen nøyaktig — test hvert steg før du går videre.</p>
+    <div class="section-title"><span class="icon">📋</span> Komplett koblingsoversikt — alle ledninger</div>
+    <p class="section-intro">Hele koblingen i ett rutenett, ordnet etter byggesteg så du lett finner igjen. <strong>Dette er oppslags-utgaven</strong> — selve oppskriften du følger steg for steg står i <span class="tablink" data-goto-tab="bygg">Bygg-fanen</span>. Bruk denne tabellen til å dobbeltsjekke en enkelt ledning.</p>
 
     <!-- Konfidensnotat -->
     <div style="background:#0a1218; border:1px solid #1d4ed8; border-radius:10px; padding:1rem 1.25rem; font-size:0.88rem; display:flex; gap:0.9rem; align-items:flex-start;">
@@ -2612,6 +2640,12 @@
 <!-- TAB: BYGG                                    -->
 <!-- ════════════════════════════════════════════ -->
 <div class="pane active" data-pane="bygg">
+
+  <div class="signpost" style="border-left-color:var(--green);">
+    <span class="signpost-here">🔧 Du er på <strong>Bygg</strong> — ruta</span>
+    <span class="signpost-desc">Følg trinn 0→7 nedover og test hvert steg. Dette er den <strong>eneste</strong> oppskriften du følger — du trenger ikke gjøre noe parallelt i Kobling.</span>
+    <button class="signpost-go" data-goto-tab="kobling">Lurer du på et ord eller en pinne? → Kobling</button>
+  </div>
 
   <!-- ── INTRO + pakke-sjekkliste ── -->
   <section>
@@ -3558,6 +3592,12 @@ while True:
   document.addEventListener('click', e => {
     const link = e.target.closest('.clink');
     if(link){ e.preventDefault(); openCompModal(link.dataset.comp); }
+  });
+
+  // Vegviser-knapper og tab-lenker → bytt fane
+  document.addEventListener('click', e => {
+    const g = e.target.closest('[data-goto-tab]');
+    if(g){ e.preventDefault(); activateTab(g.dataset.gotoTab); }
   });
 
   // Lukk popup: X, klikk på bakgrunnen, eller Escape
