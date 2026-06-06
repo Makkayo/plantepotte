@@ -122,6 +122,21 @@
     .pill-yellow { background: #451a03; color: var(--yellow); }
     .pill-red { background: #450a0a; color: var(--red); }
     .pill-grey { background: var(--surface2); color: var(--muted); }
+    .pill-blue { background: #0c2540; color: var(--blue); }
+
+    /* ─── KLIKKBAR KOMPONENT (hopp til komponentlista) ─── */
+    .clink {
+      color: var(--blue); cursor: pointer;
+      border-bottom: 1px dotted var(--blue);
+      transition: color 0.12s, border-bottom-color 0.12s;
+    }
+    .clink:hover { color: #93c5fd; border-bottom-style: solid; }
+    .comp-svg { cursor: pointer; }
+    .comp-card { scroll-margin-top: 90px; transition: box-shadow 0.25s, border-color 0.25s; }
+    .comp-card.flash {
+      border-color: var(--green) !important;
+      box-shadow: 0 0 0 2px var(--green), 0 0 22px rgba(74,222,128,0.55);
+    }
 
     /* ─── INFRA / KOMPONENT CARDS ─── */
     .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
@@ -1331,7 +1346,7 @@
     <div class="comp-group">
       <div class="comp-group-title">📬 Bestilling 1 — Hovedkomponenter fra AliExpress (~€90, ankommer ~2. juni)</div>
 
-      <div class="comp-card">
+      <div class="comp-card" id="komp-esp32">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-esp32"/></svg>
         <div class="comp-body">
           <h4>ESP32 — "hjernen" i potten</h4>
@@ -1341,7 +1356,7 @@
         <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
       </div>
 
-      <div class="comp-card">
+      <div class="comp-card" id="komp-led-strip">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-led-strip"/></svg>
         <div class="comp-body">
           <h4>Phyto LED-strip — vekstlyset</h4>
@@ -1351,7 +1366,7 @@
         <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
       </div>
 
-      <div class="comp-card">
+      <div class="comp-card" id="komp-mosfet">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-mosfet"/></svg>
         <div class="comp-body">
           <h4>MOSFET (LR7843) — lysbryter</h4>
@@ -1361,7 +1376,7 @@
         <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
       </div>
 
-      <div class="comp-card">
+      <div class="comp-card" id="komp-adapter">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-adapter"/></svg>
         <div class="comp-body">
           <h4>12V strømadapter</h4>
@@ -1371,7 +1386,7 @@
         <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
       </div>
 
-      <div class="comp-card">
+      <div class="comp-card" id="komp-buck">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-buck"/></svg>
         <div class="comp-body">
           <h4>Buck converter — spenningsreduserer</h4>
@@ -1381,7 +1396,7 @@
         <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
       </div>
 
-      <div class="comp-card">
+      <div class="comp-card" id="komp-dht22">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-dht22"/></svg>
         <div class="comp-body">
           <h4>DHT22 — temperatur og luftfuktighet</h4>
@@ -1391,7 +1406,7 @@
         <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
       </div>
 
-      <div class="comp-card">
+      <div class="comp-card" id="komp-soil">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-soil"/></svg>
         <div class="comp-body">
           <h4>Jordfuktsensor (×3)</h4>
@@ -1401,7 +1416,7 @@
         <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
       </div>
 
-      <div class="comp-card">
+      <div class="comp-card" id="komp-oled">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-oled"/></svg>
         <div class="comp-body">
           <h4>OLED-skjerm</h4>
@@ -1411,7 +1426,7 @@
         <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
       </div>
 
-      <div class="comp-card">
+      <div class="comp-card" id="komp-ky040">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-ky040"/></svg>
         <div class="comp-body">
           <h4>KY-040 — dreieknapp</h4>
@@ -1421,7 +1436,7 @@
         <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
       </div>
 
-      <div class="comp-card">
+      <div class="comp-card" id="komp-breadboard">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-breadboard"/></svg>
         <div class="comp-body">
           <h4>Breadboard + jumper-kabler</h4>
@@ -1431,10 +1446,10 @@
         <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
       </div>
 
-      <div class="comp-card">
+      <div class="comp-card" id="komp-barrel">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-barrel"/></svg>
         <div class="comp-body">
-          <h4>DC barrel jack</h4>
+          <h4>DC barrel jack (pigtail)</h4>
           <div class="what">Der strømadapteren plugges inn. Skruklemmer = ingen lodding.</div>
           <div class="spec">5.5×2.1mm pigtail-par, 10 par</div>
         </div>
@@ -1448,7 +1463,7 @@
           <div class="what">Suger vann fra tanken opp i jorda — sub-irrigasjon uten pumpe.</div>
           <div class="spec">Bomullssnor 3mm, 10m</div>
         </div>
-        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span></div>
       </div>
 
       <div class="comp-card">
@@ -1492,7 +1507,7 @@
           <div class="what">Fleksibel høy-temp ledning for LED-kabel gjennom stolper og 12V-strekk. Rød = +, svart = − konvensjon for å unngå polaritets-feil.</div>
           <div class="spec">22 AWG, 5m rød + 5m svart, silikon-isolasjon (-60 til +200°C)</div>
         </div>
-        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span></div>
       </div>
 
       <div class="comp-card">
@@ -1502,7 +1517,7 @@
           <div class="what">Lengre jumper-kabler for sensor-strekk fra base til tank-topp. Supplement til 20cm fra ESP32-sett.</div>
           <div class="spec">40 ledninger × 30 cm × 22 AWG, M-M, fargesortert</div>
         </div>
-        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span></div>
       </div>
 
       <div class="comp-card">
@@ -1512,7 +1527,7 @@
           <div class="what">For sensor → ESP32-pinne direkte (sensor har hunn, ESP32 har hann).</div>
           <div class="spec">40 ledninger × 30 cm × 22 AWG, M-F, fargesortert</div>
         </div>
-        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span></div>
       </div>
 
       <div class="comp-card">
@@ -1552,37 +1567,37 @@
           <div class="what">Isolerer skjøter, lager strain relief, og marker ledninger med farger (rød=+, blå=GND, gul=signal). Krymp med heat insert tool eller lighter.</div>
           <div class="spec">11 størrelser (1-10mm), 6 farger, 2:1 krymp-forhold, EVA-material</div>
         </div>
-        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span></div>
       </div>
 
-      <div class="comp-card">
+      <div class="comp-card" id="komp-switch">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-switch"/></svg>
         <div class="comp-body">
-          <h4>DC inline switch 5.5×2.1mm (×2) — MJJC Inline 304</h4>
+          <h4>DC inline switch (vippebryter) — MJJC Inline 304 ×2</h4>
           <div class="what">Vippebryter som klikker inn mellom 12V-adapter og DC-jack. Slå av hele systemet uten å trekke ut støpsel — gjør Wago-jobben tryggere. 2 stk: én i bruk, én reserve.</div>
           <div class="spec">5.5×2.1mm hann-til-hunn, toggle/vippe-bryter, 2 stk</div>
         </div>
         <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
       </div>
 
-      <div class="comp-card">
+      <div class="comp-card" id="komp-fuse-holder">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-fuse"/></svg>
         <div class="comp-body">
-          <h4>Sikringholder 5×20mm (10 stk)</h4>
-          <div class="what">Inline-holder for glass-/keramikk-sikringer. Plasseres mellom 12V-adapter og resten av systemet. Beskytter mot kortslutning som ellers kunne smelte ledninger.</div>
-          <div class="spec">BLX-A, 5×20mm, ledninger på begge sider, sort, 10 stk</div>
+          <h4>Fuse holder (sikringsholder) 5×20mm</h4>
+          <div class="what">Inline-holder for 5×20mm patron-sikringer. Kom med en <strong>glass F3AL250V (rask)</strong> sikring som passer holderen — men vi vil ha en <em>treg</em> sikring, så holder + glass-F3A går i reserve. Krever en 5×20mm patron merket T3A for å brukes (kjøpes evt. senere).</div>
+          <div class="spec">BLX-A, 5×20mm, ledninger på begge sider, sort, 10 stk · reserve</div>
         </div>
-        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span></div>
       </div>
 
-      <div class="comp-card">
+      <div class="comp-card" id="komp-fuse">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-fuse"/></svg>
         <div class="comp-body">
-          <h4>Slow-blow sikringer 3A (10 stk)</h4>
-          <div class="what">Beskyttelsessikring for 12V-kretsen. Slow-blow (T-type) tolererer kort strømsuget når buck converteren først lades opp. 3A gir 50% margin over normal forbruk (~2A).</div>
-          <div class="spec">5×20mm, 3A, keramikk, Slow Blow (T-type), 10 stk</div>
+          <h4>Slow-blow fuse 3A (treg sikring) — DENNE brukes</h4>
+          <div class="what">Beskyttelsessikring for 12V-kretsen. Slow-blow (T-type) tolererer det korte strømsuget når buck converter først lades opp. 3A gir 50% margin over normal forbruk (~2A). 💡 Den vi fikk er <strong>leaded/aksial</strong> (tråd-bein ut hver ende) — kobles inline med Wago, passer IKKE patron-holderen.</div>
+          <div class="spec">Leaded/aksial T3AL250V (treg), tråd-bein · inline med Wago — IKKE 5×20mm patron</div>
         </div>
-        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span></div>
       </div>
 
       <div class="comp-card">
@@ -1592,7 +1607,7 @@
           <div class="what">Akryl-basert dobbeltsidig tape for permanent festing av sensor-klips på IKEA-tank og elektronikk-komponenter i base. Erstatter behovet for å kjøpe Scotch-tape på Jula.</div>
           <div class="spec">Transparent, 118 in (~3m) × 5 mm, sterk akryl-feste</div>
         </div>
-        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span></div>
       </div>
 
       <div class="comp-card">
@@ -1609,7 +1624,7 @@
     <div class="comp-group">
       <div class="comp-group-title">🔴 Bestilling 3 — Vannmåling-laser + kamera fra AliExpress (~€22, bestilt mai 2026)</div>
 
-      <div class="comp-card">
+      <div class="comp-card" id="komp-vl53">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-vl53"/></svg>
         <div class="comp-body">
           <h4>VL53L0X — ToF-laser vannmåling (×3)</h4>
@@ -1619,7 +1634,7 @@
         <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
       </div>
 
-      <div class="comp-card">
+      <div class="comp-card" id="komp-cam">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-cam"/></svg>
         <div class="comp-body">
           <h4>ESP32-CAM — kamera (×2)</h4>
@@ -1956,7 +1971,7 @@
 
         <!-- KOMPONENTER -->
         <g class="comp-svg" transform="translate(60, 55)"
-           data-name="12V strømadapter"
+           data-name="12V strømadapter" data-comp="adapter"
            data-info="Tar 230V fra vegguttak og lager 12V DC. Hoved-strømkilden til hele systemet.">
           <rect width="180" height="60" rx="8" class="fill-power"/>
           <text x="14" y="22" class="name">⚡ 12V adapter</text>
@@ -1965,31 +1980,31 @@
         </g>
 
         <g class="comp-svg" transform="translate(60, 142)"
-           data-name="DC vippebryter (inline switch)"
+           data-name="DC inline switch (vippebryter)" data-comp="switch"
            data-info="Slår av og på hele kretsen med ett klikk. Sitter mellom adapter og resten. Barrel jack hann/hun — plugger rett inn i kjeden. Ingen lodding.">
           <rect width="180" height="50" rx="8" style="fill:#1a1208; stroke:#ca8a04; stroke-width:1.5"/>
-          <text x="14" y="22" class="name" style="fill:#fbbf24;">🔘 Vippebryter</text>
-          <text x="14" y="40" class="sub">DC inline · 5.5×2.1mm</text>
+          <text x="14" y="22" class="name" style="fill:#fbbf24;">🔘 DC inline switch</text>
+          <text x="14" y="40" class="sub">vippebryter · 5.5×2.1mm</text>
         </g>
 
         <g class="comp-svg" transform="translate(60, 218)"
-           data-name="3A Slow-blow sikring"
-           data-info="Beskytter hele kretsen mot kortslutning. Slow-blow (T-type) tåler det korte strømsurget når buck converter lader seg opp. 3A = 50% margin over normal ~2A forbruk.">
+           data-name="Slow-blow fuse 3A (treg sikring)" data-comp="fuse"
+           data-info="Beskytter hele kretsen mot kortslutning. Slow-blow (T-type, T3A) tåler det korte strømsurget når buck converter lader seg opp. Vår sikring er leaded/aksial — kobles inline med Wago (passer ikke patron-holderen; glass-F3A er reserve).">
           <rect width="180" height="50" rx="8" style="fill:#1a1208; stroke:#ca8a04; stroke-width:1.5"/>
-          <text x="14" y="22" class="name" style="fill:#fbbf24;">⚡ 3A Sikring</text>
-          <text x="14" y="40" class="sub">Slow-blow · 5×20mm glass</text>
+          <text x="14" y="22" class="name" style="fill:#fbbf24;">⚡ Slow-blow fuse 3A</text>
+          <text x="14" y="40" class="sub">treg T3A · inline (Wago)</text>
         </g>
 
         <g class="comp-svg" transform="translate(60, 294)"
-           data-name="DC barrel jack (pigtail)"
-           data-info="Female barrel jack pigtail med skruklemmer — brukes som distribusjonspunkt for 12V. Adapter/switch-kjeden plugges inn her, og herfra fordeles 12V til MOSFET og buck converter.">
+           data-name="DC barrel jack (pigtail)" data-comp="barrel"
+           data-info="Female barrel jack-pigtail med skruklemmer — brukes som distribusjonspunkt for 12V. Adapter/switch-kjeden plugges inn her, og herfra fordeles 12V til MOSFET og buck converter.">
           <rect width="180" height="48" rx="8" class="fill-power"/>
-          <text x="14" y="22" class="name">🔌 Barrel jack pigtail</text>
+          <text x="14" y="22" class="name">🔌 DC barrel jack</text>
           <text x="14" y="40" class="sub">12V fordelingspunkt · skruklemmer</text>
         </g>
 
         <g class="comp-svg" transform="translate(60, 368)"
-           data-name="Buck converter"
+           data-name="Buck converter" data-comp="buck"
            data-info="Tar 12V inn, gir 5V ut. Et lite potmeter må justeres med multimeter. MÅ stilles til 5.0V FØR ESP32 kobles til — over 5V ødelegger ESP32.">
           <rect width="180" height="80" rx="8" class="fill-buck"/>
           <text x="14" y="25" class="name">🔻 Buck converter</text>
@@ -1999,7 +2014,7 @@
         </g>
 
         <g class="comp-svg" transform="translate(60, 520)"
-           data-name="LR7843 MOSFET"
+           data-name="LR7843 MOSFET" data-comp="mosfet"
            data-info="Elektronisk bryter. ESP32 GPIO26 sender PWM-signal på 1kHz til SIG-pinnen. MOSFET slipper gjennom 12V til LED-stripen i pulser. Logic-level betyr at 3.3V signal er nok.">
           <rect width="180" height="80" rx="8" class="fill-mosfet"/>
           <text x="14" y="25" class="name">🔌 LR7843 MOSFET</text>
@@ -2009,7 +2024,7 @@
         </g>
 
         <g class="comp-svg" transform="translate(60, 640)"
-           data-name="Phyto LED-strip"
+           data-name="Phyto LED-strip" data-comp="led-strip"
            data-info="5 meter med 12V LED-er, 4 røde for 1 blå. Trekker mye strøm, derfor må MOSFET stå mellom — ESP32 kan ikke drive dette direkte.">
           <rect width="180" height="70" rx="8" class="fill-led"/>
           <text x="14" y="25" class="name">💡 Phyto LED-strip</text>
@@ -2018,7 +2033,7 @@
         </g>
 
         <g class="comp-svg" transform="translate(500, 200)"
-           data-name="ESP32 WROOM-32D"
+           data-name="ESP32 WROOM-32D" data-comp="esp32"
            data-info="Hjernen. Kjører MicroPython, kobler seg til WiFi, snakker med Supabase. Drives på 5V via VIN, har egen LDO som lager 3.3V til alle de små sensorene.">
           <rect width="220" height="380" rx="10" class="fill-esp"/>
           <text x="110" y="32" class="name" text-anchor="middle" font-size="15">🧠 ESP32 30-pin</text>
@@ -2055,7 +2070,7 @@
         </g>
 
         <g class="comp-svg" transform="translate(890, 70)"
-           data-name="OLED-skjerm SSD1306"
+           data-name="OLED-skjerm SSD1306" data-comp="oled"
            data-info="Liten 0.96 tommers skjerm. Snakker via I2C (kun 2 ledninger: SDA og SCL). Adresse 0x3C. Driver på 3.3V.">
           <rect width="200" height="70" rx="8" class="fill-display"/>
           <text x="14" y="25" class="name">🖥️ OLED 0.96"</text>
@@ -2064,7 +2079,7 @@
         </g>
 
         <g class="comp-svg" transform="translate(890, 165)"
-           data-name="DHT22 temperatur/fukt"
+           data-name="DHT22 temperatur/fukt" data-comp="dht22"
            data-info="Måler romtemperatur og luftfuktighet. Bruker en spesiell 1-tråds protokoll som MicroPython kan lese rett ut av boksen. 💡 3-pinners modulvariant (din) har pull-up-motstanden påloddet — kun den nakne 4-pinners varianten trenger at du selv setter 4,7 kΩ mellom VCC og DATA.">
           <rect width="200" height="65" rx="8" class="fill-sensor"/>
           <text x="14" y="25" class="name">🌡️ DHT22</text>
@@ -2073,7 +2088,7 @@
         </g>
 
         <g class="comp-svg" transform="translate(890, 255)"
-           data-name="KY-040 dreieknapp"
+           data-name="KY-040 dreieknapp" data-comp="ky040"
            data-info="Rotary encoder med trykk-knapp. CLK og DT teller dreining (oppløsning ca 20 trinn per omdreining). SW er knappen. ⚠ KUN 3.3V på VCC — 5V vil ødelegge ESP32-pinnene.">
           <rect width="200" height="70" rx="8" class="fill-encoder"/>
           <text x="14" y="25" class="name">🎛️ KY-040 dreieknapp</text>
@@ -2082,7 +2097,7 @@
         </g>
 
         <g class="comp-svg" transform="translate(890, 350)"
-           data-name="Jordfuktsensor ×3"
+           data-name="Jordfuktsensor ×3" data-comp="soil"
            data-info="Kapasitiv sensor — ruster ikke. Stikkes ned i jorda. Gir analog spenning som ESP32 leser via ADC. Lavere tall = mer vått.">
           <rect width="200" height="70" rx="8" class="fill-sensor"/>
           <text x="14" y="25" class="name">🌱 Jordfukt ×3</text>
@@ -2091,7 +2106,7 @@
         </g>
 
         <g class="comp-svg" transform="translate(890, 445)"
-           data-name="VL53L0X ToF-laser (vannmåling)"
+           data-name="VL53L0X ToF-laser (vannmåling)" data-comp="vl53"
            data-info="Peker rett ned i en berolings-brønn mot en 3D-printet flottør og måler avstanden (mm) til vannflaten. I2C-enhet — deler SDA/SCL-bussen med OLED (adresse 0x29 vs OLED 0x3C). Drives på 3.3V. Henger i topp-konstruksjonen så tanken kan løftes fritt ut.">
           <rect width="200" height="70" rx="8" class="fill-water"/>
           <text x="14" y="25" class="name">🔴 VL53L0X laser</text>
@@ -2100,7 +2115,7 @@
         </g>
 
         <g class="comp-svg" transform="translate(890, 535)"
-           data-name="ESP32-CAM kamera"
+           data-name="ESP32-CAM kamera" data-comp="cam"
            data-info="Eget kort som tar bilder av plantene og laster opp til Supabase Storage over WiFi. Ingen datakabel til hoved-ESP32 — snakker kun via skyen. Drives på 5V fra buck. Programmeres i Arduino IDE.">
           <rect width="200" height="70" rx="8" class="fill-water"/>
           <text x="14" y="25" class="name">📷 ESP32-CAM</text>
@@ -2369,9 +2384,9 @@
         <span class="tree-arrow">→</span>
         <span class="tree-node" style="background:#3b0e0e; color:#fca5a5; border-color:#7f1d1d;">⚡ Adapter 12V 3A</span>
         <span class="tree-arrow">→</span>
-        <span class="tree-node" style="background:#1a1208; color:#fbbf24; border-color:#92400e;" title="DC inline switch — slår av hele kretsen. Plugger rett inn mellom adapter og resten.">🔘 Vippebryter</span>
+        <span class="tree-node" style="background:#1a1208; color:#fbbf24; border-color:#92400e;" title="DC inline switch (vippebryter) — slår av hele kretsen. Plugger rett inn mellom adapter og resten.">🔘 DC inline switch</span>
         <span class="tree-arrow">→</span>
-        <span class="tree-node" style="background:#1a1208; color:#fbbf24; border-color:#92400e;" title="Slow-blow 3A sikring — beskytter mot kortslutning. Inline i + ledningen.">⚡ 3A Sikring</span>
+        <span class="tree-node" style="background:#1a1208; color:#fbbf24; border-color:#92400e;" title="Slow-blow fuse (treg T3A) — beskytter mot kortslutning. Leaded sikring, koblet inline med Wago på + ledningen.">⚡ Slow-blow fuse 3A</span>
         <span class="tree-arrow">→</span>
         <span class="tree-node" style="background:#3b0e0e; color:#fca5a5; border-color:#7f1d1d;">12V DC fordeling</span>
       </div>
@@ -2439,7 +2454,7 @@
       <span style="font-size:1.4rem; flex-shrink:0;">🎯</span>
       <div>
         <strong style="color:var(--blue); display:block; margin-bottom:0.3rem;">Konfidens: ~95%</strong>
-        <p style="color:var(--muted); margin-bottom:0.45rem;">GPIO-tildelinger, spenningsnivåer (12V / 5V / 3.3V), strømkjeden (adapter → switch → sikring → pigtail → buck → ESP32), og alle sensor-protokoller (I2C, ADC, NPN open-collector) er verifisert mot ESP32 WROOM-32D datasheets. Én ting bekreftes når hardware ankommer:</p>
+        <p style="color:var(--muted); margin-bottom:0.45rem;">GPIO-tildelinger, spenningsnivåer (12V / 5V / 3.3V), strømkjeden (adapter → DC inline switch → barrel jack-pigtail → slow-blow fuse → buck → ESP32), og alle sensor-protokoller (I2C, ADC, NPN open-collector) er verifisert mot ESP32 WROOM-32D datasheets. Én ting bekreftes når hardware ankommer:</p>
         <p style="color:var(--yellow); font-size:0.82rem;">⚠ <strong style="color:var(--yellow);">MOSFET-modul pinout:</strong> Billige AliExpress-moduler kan ha VIN/OUT-pinner merket ulikt fra batch til batch. Logikken er riktig (GPIO26 → SIG, 12V → LED via MOSFET). Sjekk skjemaet som følger med modulen og bruk multimeter på OUT for å verifisere rett spenning <em>før</em> du kobler til LED-stripen.</p>
       </div>
     </div>
@@ -2460,39 +2475,39 @@
           <tr style="background:#0a1208;">
             <td class="step-badge">0</td>
             <td>Adapter DC-plugg (hann)</td>
-            <td>Switch <em>inngang</em> (hun-socket)</td>
+            <td>DC inline switch <em>inngang</em> (hun-socket)</td>
             <td><span class="voltage-pill v-12v">12V</span></td>
             <td>Plugg rett inn — ingen ledning nødvendig</td>
           </tr>
           <tr style="background:#0a1208;">
             <td class="step-badge">0</td>
-            <td>Switch <em>utgang</em> (hann-plugg)</td>
-            <td>Female barrel pigtail A (hun-socket)</td>
+            <td>DC inline switch <em>utgang</em> (hann-plugg)</td>
+            <td>Barrel jack-pigtail A (hun-socket)</td>
             <td><span class="voltage-pill v-12v">12V</span></td>
             <td>Plugg rett inn — gir deg skruklemmer</td>
           </tr>
           <tr style="background:#0a1208;">
             <td class="step-badge">0</td>
-            <td>Pigtail A <code>+</code> skruterm.</td>
-            <td>Sikringsholder <em>INN</em></td>
+            <td>Barrel jack-pigtail A <code>+</code> skruterm.</td>
+            <td>Slow-blow fuse — bein A</td>
             <td><span class="voltage-pill v-12v">12V</span></td>
-            <td>Skjøt med Wago (strip 10 mm bar ledning)</td>
+            <td>Skjøt med Wago (strip 10 mm bar ledning) — leaded sikring, ingen holder</td>
           </tr>
           <tr style="background:#0a1208;">
             <td class="step-badge">0</td>
-            <td>Sikringsholder <em>UT</em></td>
+            <td>Slow-blow fuse — bein B</td>
             <td>Breadboard 12V-skinne</td>
             <td><span class="voltage-pill v-12v">12V</span></td>
-            <td>12V-skinnen er nå sikret og klar</td>
+            <td>Andre bein skjøtes med Wago → 12V-skinnen er nå sikret og klar</td>
           </tr>
           <tr style="background:#0a1208;">
             <td class="step-badge">0</td>
-            <td>Pigtail A <code>−</code> skruterm.</td>
+            <td>Barrel jack-pigtail A <code>−</code> skruterm.</td>
             <td>Breadboard GND-skinne</td>
             <td><span class="voltage-pill v-gnd">GND</span></td>
             <td>Felles minus fra adapter</td>
           </tr>
-          <tr><td class="step-badge">0</td><td>Breadboard 12V-skinne</td><td>Buck converter <code>IN+</code> (via male pigtail)</td><td><span class="voltage-pill v-12v">12V</span></td><td>Mat inn til 5V-konverter</td></tr>
+          <tr><td class="step-badge">0</td><td>Breadboard 12V-skinne</td><td>Buck converter <code>IN+</code> (via barrel jack-pigtail, hann)</td><td><span class="voltage-pill v-12v">12V</span></td><td>Mat inn til 5V-konverter</td></tr>
           <tr><td class="step-badge">0</td><td>Buck converter <code>OUT−</code></td><td>GND-skinne</td><td><span class="voltage-pill v-gnd">GND</span></td><td>Felles minus fra 5V</td></tr>
           <tr class="warn-row"><td class="step-badge" style="color:var(--yellow);">⚠</td><td colspan="4" style="color:var(--yellow); font-size:0.83rem;">Slå på vippebryteren, mål buck converter <code>OUT+</code> med multimeter — skru på det <strong>blå potmeteret</strong> til du ser nøyaktig <strong>5.0V</strong>. Slå av igjen.</td></tr>
 
@@ -2597,20 +2612,20 @@
           <div style="background:#0a1208; border:1px solid #451a03; border-radius:8px; padding:0.85rem 1rem; margin:0.4rem 0 0.6rem; font-size:0.84rem; color:var(--text);">
             <strong style="color:var(--yellow); display:block; margin-bottom:0.5rem;">⚡ Slik kobles dette fysisk (i rekkefølge):</strong>
             <ol style="margin-left:1.1rem; color:var(--muted); line-height:1.9;">
-              <li><strong style="color:var(--text);">Adapter → Switch:</strong> Plugg adapterens DC-plugg rett inn i hun-enden av vippebryteren. Ingen ledning.</li>
-              <li><strong style="color:var(--text);">Switch → Female barrel pigtail:</strong> Plugg hann-enden av switch inn i hun-socketen på den ene barrel jack-pigtailen. Du har nå skruklemmer tilgjengelig.</li>
-              <li><strong style="color:var(--text);">Pigtail + terminal → Sikringsholder:</strong> Strip 10 mm bar ledning. Koble <code>+</code>-skruklemmen via Wago til sikringsholderens ene ende, og sikringsholderens andre ende til breadboard 12V-skinnen.</li>
+              <li><strong style="color:var(--text);">Adapter → DC inline switch:</strong> Plugg adapterens DC-plugg rett inn i hun-enden av vippebryteren. Ingen ledning.</li>
+              <li><strong style="color:var(--text);">DC inline switch → barrel jack-pigtail:</strong> Plugg hann-enden av switchen inn i hun-socketen på den ene barrel jack-pigtailen. Du har nå skruklemmer tilgjengelig.</li>
+              <li><strong style="color:var(--text);">Barrel jack-pigtail + → slow-blow fuse:</strong> Strip 10 mm bar ledning. Koble <code>+</code>-skruklemmen via Wago til det ene tråd-beinet på den leaded slow-blow-sikringen (T3A), og det andre beinet via en ny Wago til breadboard 12V-skinnen. <em>Ingen holder</em> — sikringen kobles direkte inline.</li>
               <li><strong style="color:var(--text);">Pigtail − terminal → GND-skinne:</strong> Koble <code>−</code>-skruklemmen direkte til breadboard GND-skinne.</li>
-              <li><strong style="color:var(--text);">12V-skinne → Buck converter:</strong> Koble male barrel-pigtail (hann-plugg) inn i buck converterens inngang. Pigtailens skruklemmer kobles til 12V-skinne (+) og GND-skinne (−).</li>
+              <li><strong style="color:var(--text);">12V-skinne → Buck converter:</strong> Koble barrel jack-pigtail (hann-plugg) inn i buck converterens inngang. Pigtailens skruklemmer kobles til 12V-skinne (+) og GND-skinne (−).</li>
               <li><strong style="color:var(--text);">Mål:</strong> Slå på bryteren. Bruk multimeter på buck converterens <code>OUT+</code> og <code>OUT−</code>. Drei det <strong>blå potmeteret</strong> til du ser nøyaktig <strong>5.0V</strong>. Slå av bryteren.</li>
             </ol>
           </div>
 
           <div class="step-pics">
             <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-adapter"/></svg><span class="lbl">12V adapter</span></div>
-            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-switch"/></svg><span class="lbl">Vippebryter</span></div>
-            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-fuse"/></svg><span class="lbl">3A sikring</span></div>
-            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-barrel"/></svg><span class="lbl">Barrel jack pigtail<br><em style="font-size:0.66rem;">skruklemmer</em></span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-switch"/></svg><span class="lbl">DC inline switch</span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-fuse"/></svg><span class="lbl">Slow-blow fuse</span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-barrel"/></svg><span class="lbl">DC barrel jack<br><em style="font-size:0.66rem;">pigtail · skruklemmer</em></span></div>
             <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-buck"/></svg><span class="lbl">Buck converter</span></div>
             <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-multimeter"/></svg><span class="lbl">Multimeter</span></div>
           </div>
@@ -3077,6 +3092,16 @@
         <p>Flash reserve-ESP32-CAM, stream til nettleser eller ta bilder ved bevegelse. Øving før plantekameraet.</p>
         <div class="parts">Deler: ESP32-CAM (reserve)</div>
       </div>
+      <div class="proj-card">
+        <h4>🐦 Fuglekasse-kamera <span class="pill pill-grey">Idé</span></h4>
+        <p>ESP32-CAM i en fuglekasse → stream eller bilder av hekkingen over WiFi. Nær slektning av plantekameraet — samme kort, bare ny kasse. (IR-LED for natt-sikt senere.)</p>
+        <div class="parts">Deler: ESP32-CAM (reserve) · evt. IR-LED · værsikkert hus</div>
+      </div>
+      <div class="proj-card">
+        <h4>🖱️ 3D-mus (SpaceMouse) <span class="pill pill-grey">Idé</span></h4>
+        <p>Egenbygd 3D-mus til CAD-en (NX/Solid Edge): joystick eller hall-sensorer + ESP32 som USB-HID for å panorere og rotere modeller. Mekanikk-vennlig prosjekt.</p>
+        <div class="parts">Deler: ESP32 (USB-HID) · joystick/hall-sensorer · 3D-printet hus</div>
+      </div>
     </div>
   </section>
 
@@ -3456,6 +3481,85 @@ while True:
       tooltip.classList.remove('visible');
     });
   });
+
+  // ═══════════ KLIKK → HOPP TIL KOMPONENT ═══════════
+  function jumpToComp(slug){
+    if(!slug) return;
+    const card = document.getElementById('komp-' + slug);
+    if(!card) return;
+    activateTab('komponenter');
+    setTimeout(() => {
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      card.classList.remove('flash');
+      void card.offsetWidth;          // tving reflow så blinket kan kjøre på nytt
+      card.classList.add('flash');
+      setTimeout(() => card.classList.remove('flash'), 2200);
+    }, 60);
+  }
+
+  // Klikkbare diagram-bokser
+  document.querySelectorAll('.comp-svg[data-comp]').forEach(box => {
+    box.addEventListener('click', () => jumpToComp(box.dataset.comp));
+  });
+
+  // Delegert klikk for tekst-lenker (.clink)
+  document.addEventListener('click', e => {
+    const link = e.target.closest('.clink');
+    if(link){ e.preventDefault(); jumpToComp(link.dataset.comp); }
+  });
+
+  // ═══════════ AUTO-LENKING av komponentnavn i koblings-teksten ═══════════
+  // Lengste navn først, så «ESP32-CAM» matcher før «ESP32».
+  const COMP_TERMS = [
+    ['ESP32-CAM','cam'], ['ESP32','esp32'], ['LR7843','mosfet'], ['MOSFET','mosfet'],
+    ['Buck converter','buck'], ['buck converter','buck'],
+    ['Phyto LED-strip','led-strip'], ['LED-strip','led-strip'], ['LED-stripen','led-strip'], ['LED-stripa','led-strip'],
+    ['OLED-skjerm','oled'], ['OLED','oled'],
+    ['DHT22','dht22'], ['KY-040','ky040'], ['VL53L0X','vl53'],
+    ['Jordfuktsensor','soil'], ['Jordfukt','soil'],
+    ['12V adapter','adapter'], ['12V-adapter','adapter'],
+    ['DC inline switch','switch'], ['Vippebryter','switch'], ['vippebryter','switch'],
+    ['DC barrel jack','barrel'], ['Barrel jack','barrel'], ['barrel jack','barrel'],
+    ['Slow-blow fuse','fuse'], ['Breadboard','breadboard']
+  ];
+  function isWordChar(ch){ return !!ch && /[0-9A-Za-zÆØÅæøå]/.test(ch); }
+  function autoLinkPane(pane){
+    if(!pane) return;
+    const skipTag = new Set(['A','CODE','SCRIPT','STYLE','BUTTON','TEXTAREA']);
+    const walker = document.createTreeWalker(pane, NodeFilter.SHOW_TEXT, {
+      acceptNode(node){
+        if(!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        let p = node.parentElement;
+        while(p && p !== pane){
+          if(skipTag.has(p.tagName)) return NodeFilter.FILTER_REJECT;
+          if(p.namespaceURI && p.namespaceURI.indexOf('svg') !== -1) return NodeFilter.FILTER_REJECT; // hopp over SVG-diagram
+          if(p.classList && (p.classList.contains('clink') || p.classList.contains('power-tree') || p.classList.contains('legend'))) return NodeFilter.FILTER_REJECT;
+          p = p.parentElement;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    const nodes = [];
+    let n; while(n = walker.nextNode()) nodes.push(n);
+    nodes.forEach(node => {
+      const text = node.nodeValue;
+      for(const [term, slug] of COMP_TERMS){
+        const idx = text.indexOf(term);
+        if(idx === -1) continue;
+        if(isWordChar(text[idx-1])) continue;             // ordgrense før
+        if(isWordChar(text[idx+term.length])) continue;   // ordgrense etter
+        const span = document.createElement('span');
+        span.className = 'clink';
+        span.dataset.comp = slug;
+        span.textContent = term;
+        const after = node.splitText(idx);
+        after.nodeValue = after.nodeValue.slice(term.length);
+        node.parentNode.insertBefore(span, after);
+        break;   // én lenke per tekstbit holder
+      }
+    });
+  }
+  autoLinkPane(document.querySelector('[data-pane="kobling"]'));
 </script>
 
 </body>
