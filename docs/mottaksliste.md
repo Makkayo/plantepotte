@@ -77,5 +77,5 @@ Holder styr på hva som er **bestilt → ankommet → testet** på breadboard.
 
 | Status | Del | Notat |
 |:------:|-----|-------|
-| ⬜ | Multimeter | MÅ ha før buck → ESP32 |
+| ✅ | Multimeter (UT131D) | Kjøpt — brukes til å sette buck til 5.0V før ESP32 |
 | ⬜ | USB-C datakabel | Sjekk at den støtter data |

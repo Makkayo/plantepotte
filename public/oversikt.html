@@ -2682,7 +2682,7 @@
               <li><strong style="color:var(--text);">Barrel jack-pigtail + → slow-blow fuse:</strong> Strip 10 mm bar ledning. Koble <code>+</code>-skruklemmen via Wago til det ene tråd-beinet på den leaded slow-blow-sikringen (T3A), og det andre beinet via en ny Wago til breadboard 12V-skinnen. <em>Ingen holder</em> — sikringen kobles direkte inline.</li>
               <li><strong style="color:var(--text);">Pigtail − terminal → GND-skinne:</strong> Koble <code>−</code>-skruklemmen direkte til breadboard GND-skinne.</li>
               <li><strong style="color:var(--text);">12V-skinne → Buck converter:</strong> Koble barrel jack-pigtail (hann-plugg) inn i buck converterens inngang. Pigtailens skruklemmer kobles til 12V-skinne (+) og GND-skinne (−).</li>
-              <li><strong style="color:var(--text);">Mål:</strong> Slå på bryteren. Bruk multimeter på buck converterens <code>OUT+</code> og <code>OUT−</code>. Drei det <strong>blå potmeteret</strong> til du ser nøyaktig <strong>5.0V</strong>. Slå av bryteren.</li>
+              <li><strong style="color:var(--text);">Mål:</strong> Slå på bryteren. Bruk multimeter på buck converterens <code>OUT+</code> og <code>OUT−</code>. Drei det <strong>blå potmeteret</strong> til du ser nøyaktig <strong>5.0V</strong>. <em>Har din modul ikke noe potmeter (fast 5V-modul)?</em> Da bekrefter du bare at den viser ~5,0V (±0,2) — er den langt unna, er modulen feil og skal ikke brukes. Slå av bryteren.</li>
             </ol>
           </div>
 
@@ -2764,6 +2764,8 @@
 
           <div class="check-tip">⚠ MOSFET SIG må aldri stå løs — koble den til GPIO26 selv om du ikke kjører kode ennå. Flytende SIG-pinne får MOSFET til å bli halv-åpen og overoppheter.</div>
 
+          <div class="check-tip">⚠ <strong>Begge LED-ledningene går til MOSFETens OUT-terminaler</strong> (<code>OUT+</code> og <code>OUT−</code>) — IKKE LED-minus rett til GND-skinnen. LR7843 bryter på minus-siden: kobler du LED− utenom modulen, lyser stripa alltid (lar seg ikke dimme/slå av). 12V inn på <code>IN+</code>/<code>IN−</code>, LED ut på <code>OUT+</code>/<code>OUT−</code>.</div>
+
           <div style="background:#0a1a2a; border-left:3px solid var(--blue); padding:0.55rem 0.8rem; margin-top:0.6rem; border-radius:0 6px 6px 0; font-size:0.82rem; color:var(--muted);">
             💡 <strong style="color:var(--blue);">Når dette skal inn i 3D-utskriften:</strong> LED-stripen sitter under taket. Silikonledning går gjennom stolpene ned til MOSFET i basen. Bruk <strong>Wago 221-kontakter</strong> i bunn og topp av stolpa — da kan du koble fra hele topp-konstruksjonen for vedlikehold. Strip 10mm bar ledning, sett i Wago, vipp ned hendelen.
           </div>
@@ -2795,7 +2797,13 @@
         <div class="step-num">4</div>
         <div class="step-body">
           <h3>OLED-skjerm (I2C)</h3>
-          <p>Bare 4 ledninger: VCC til 3.3V, GND til felles, SDA til GPIO21, SCL til GPIO22. Kjør <code>i2c.scan()</code> i Thonny — skal returnere <code>[60]</code> (= 0x3C).</p>
+
+          <div style="background:#12091f; border:1px solid #4c1d95; border-left:3px solid #a78bfa; border-radius:8px; padding:0.75rem 1rem; margin:0.2rem 0 0.7rem; font-size:0.83rem; color:var(--text);">
+            <strong style="color:#c4b5fd; display:block; margin-bottom:0.45rem;">📌 Gjør dette ÉN gang før trinn 4–7: mat 3.3V-skinnen</strong>
+            ESP32 har bare <strong>én 3V3-pinne</strong>, men 6 enheter skal ha 3.3V (OLED, laser, DHT22, 3× jordfukt, KY-040). Løsning: kjør <strong>én</strong> jumper fra ESP32 <code>3V3</code>-pinnen til en ledig breadboard-skinne, og <strong>én</strong> fra en <code>GND</code>-pinne til GND-skinnen. Deretter plugger alle «3V3 → …» og «felles GND»-ledningene i skinnene — ikke i selve ESP32-pinnen. (Akkurat som 5V- og 12V-skinnene du allerede lagde.) 3V3-pinnen er strømførende så snart ESP32 har USB- eller buck-strøm.
+          </div>
+
+          <p>Selve OLED: 4 ledninger. VCC til <strong>3.3V-skinnen</strong>, GND til GND-skinnen, SDA til GPIO21, SCL til GPIO22. Kjør <code>i2c.scan()</code> i Thonny — skal returnere <code>[60]</code> (= 0x3C).</p>
 
           <div class="step-pics">
             <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-oled"/></svg><span class="lbl">OLED 0.96"</span></div>
@@ -2869,6 +2877,7 @@
             <span class="wire-chip c-5v">buck OUT → ESP32-CAM 5V</span>
             <span class="wire-chip c-gnd">felles GND</span>
           </div>
+          <div class="ok-tip">✓ <strong>Test:</strong> Kjør <code>i2c.scan()</code> i Thonny igjen — nå skal den vise <strong>BÅDE <code>41</code> (laser, 0x29) og <code>60</code> (OLED, 0x3C)</strong>. Mangler 41: sjekk at VIN står på 3.3V og at SDA/SCL ikke er byttet om. Last <code>vl53l0x.py</code> opp på ESP32 sammen med de andre filene.</div>
           <div class="ok-tip">💡 Laseren bruker MicroPython-driveren <code>vl53l0x.py</code> på samme I2C-buss som OLED. Kalibrer tom/full per potte i appen (samme prinsipp som jordfukt). Ingenting festes på tanken — laser og kamera henger i topp-konstruksjonen, så tanken løftes rett ut for rengjøring.</div>
         </div>
       </div>

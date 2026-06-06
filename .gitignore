@@ -9,3 +9,7 @@ dist
 
 # 3D-modell rendringer (genereres lokalt, ikke commit)
 3d-modell/render-*.png
+
+# Python bytecode (fra test_logic.py)
+__pycache__/
+*.pyc
