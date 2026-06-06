@@ -138,6 +138,34 @@
       box-shadow: 0 0 0 2px var(--green), 0 0 22px rgba(74,222,128,0.55);
     }
 
+    /* ─── KOMPONENT-POPUP (vises uten å forlate fanen) ─── */
+    .comp-modal {
+      position: fixed; inset: 0; z-index: 1000;
+      display: none; align-items: center; justify-content: center;
+      padding: 1rem; background: rgba(0,0,0,0.62); backdrop-filter: blur(2px);
+    }
+    .comp-modal.open { display: flex; }
+    .comp-modal-box {
+      position: relative; width: 100%; max-width: 540px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 14px; padding: 1.4rem 1.3rem 1.2rem;
+      box-shadow: 0 14px 44px rgba(0,0,0,0.55);
+    }
+    .comp-modal-box .comp-card { background: var(--surface); cursor: default; }
+    .comp-modal-close {
+      position: absolute; top: 0.4rem; right: 0.6rem;
+      background: none; border: none; color: var(--muted);
+      font-size: 1.6rem; line-height: 1; cursor: pointer; font-family: inherit;
+    }
+    .comp-modal-close:hover { color: var(--text); }
+    .comp-modal-goto {
+      display: inline-block; margin-top: 1rem;
+      background: none; border: 1px solid var(--blue); color: var(--blue);
+      border-radius: 8px; padding: 0.4rem 0.85rem; font-size: 0.82rem;
+      cursor: pointer; font-family: inherit; transition: background 0.12s, color 0.12s;
+    }
+    .comp-modal-goto:hover { background: var(--blue); color: #0b0e14; }
+
     /* ─── INFRA / KOMPONENT CARDS ─── */
     .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
     .infra-card {
@@ -3397,6 +3425,15 @@ while True:
 <footer style="text-align:center; padding:2.5rem; color:var(--muted); font-size:0.82rem; border-top:1px solid var(--border); margin-top:2rem;">
   Plantepotte · Markus · Oppdatert <span id="sist-oppdatert">mai 2026</span>
 </footer>
+<!-- Popup-boks for komponent (vises ved klikk, uten å bytte fane) -->
+<div id="comp-modal" class="comp-modal" role="dialog" aria-modal="true" aria-label="Komponentdetaljer">
+  <div class="comp-modal-box">
+    <button class="comp-modal-close" aria-label="Lukk">×</button>
+    <div id="comp-modal-content"></div>
+    <button id="comp-modal-goto" class="comp-modal-goto">Vis i komponentlista →</button>
+  </div>
+</div>
+
 <script>
   // Viser når denne siden sist ble endret/deployet (oppdateres automatisk ved push).
   (function () {
@@ -3497,16 +3534,37 @@ while True:
     }, 60);
   }
 
-  // Klikkbare diagram-bokser
+  // ── Popup-boks: vis komponenten uten å forlate fanen man står på ──
+  function openCompModal(slug){
+    const card = document.getElementById('komp-' + slug);
+    if(!card) return;
+    const clone = card.cloneNode(true);
+    clone.removeAttribute('id');
+    clone.classList.remove('flash');
+    const content = document.getElementById('comp-modal-content');
+    content.innerHTML = '';
+    content.appendChild(clone);
+    document.getElementById('comp-modal-goto').onclick = () => { closeCompModal(); jumpToComp(slug); };
+    document.getElementById('comp-modal').classList.add('open');
+  }
+  function closeCompModal(){ document.getElementById('comp-modal').classList.remove('open'); }
+
+  // Klikkbare diagram-bokser → popup
   document.querySelectorAll('.comp-svg[data-comp]').forEach(box => {
-    box.addEventListener('click', () => jumpToComp(box.dataset.comp));
+    box.addEventListener('click', () => openCompModal(box.dataset.comp));
   });
 
-  // Delegert klikk for tekst-lenker (.clink)
+  // Delegert klikk for tekst-lenker (.clink) → popup
   document.addEventListener('click', e => {
     const link = e.target.closest('.clink');
-    if(link){ e.preventDefault(); jumpToComp(link.dataset.comp); }
+    if(link){ e.preventDefault(); openCompModal(link.dataset.comp); }
   });
+
+  // Lukk popup: X, klikk på bakgrunnen, eller Escape
+  document.getElementById('comp-modal').addEventListener('click', e => {
+    if(e.target.id === 'comp-modal' || e.target.classList.contains('comp-modal-close')) closeCompModal();
+  });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeCompModal(); });
 
   // ═══════════ AUTO-LENKING av komponentnavn i koblings-teksten ═══════════
   // Lengste navn først, så «ESP32-CAM» matcher før «ESP32».
