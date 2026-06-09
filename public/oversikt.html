@@ -1369,6 +1369,12 @@
         <span class="pill pill-yellow">● Best. 1+2 inne · 3+4 på vei</span>
       </div>
       <div class="infra-card">
+        <div class="ic-icon">🔌</div>
+        <h3>Breadboard-testing</h3>
+        <p>Første moduler verifisert på breadboard 9. juni: <strong>ESP32</strong> (MicroPython flashet), <strong>OLED</strong>, <strong>DHT22</strong>, <strong>jordfukt</strong> (1 av 3) og <strong>KY-040</strong> dreieknapp. Gjenstår: jordfukt ×2 til, og LED-strip + MOSFET på 12V.</p>
+        <span class="pill pill-green">● 5 moduler testet</span>
+      </div>
+      <div class="infra-card">
         <div class="ic-icon">📐</div>
         <h3>3D-modell (Fusion 360)</h3>
         <p>Plantekassa.3mf — 18 bodies, 450×535×235mm. Mangler: lokk-på-tank, fyllerør, elektronikk-skuff, klips.</p>
@@ -1406,7 +1412,7 @@
           <div class="what">En liten datamaskin som kobler seg til WiFi og snakker med appen. Leser sensorer og styrer lyset. Programmeres via Thonny.</div>
           <div class="spec">WROOM-32D, 30-pin, Type-C · ×2 stk (én per potte)</div>
         </div>
-        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span></div>
+        <div class="comp-status"><span class="pill pill-green">✅ Testet</span><br><small style="color:var(--green);">MicroPython v1.28.0 flashet 9. juni</small></div>
       </div>
 
       <div class="comp-card" id="komp-led-strip">
@@ -1456,7 +1462,7 @@
           <div class="what">Måler rommet rundt potten. Data vises i appen.</div>
           <div class="spec">AM2302, digital sensor, 3.3V</div>
         </div>
-        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span></div>
+        <div class="comp-status"><span class="pill pill-green">✅ Testet</span><br><small style="color:var(--green);">GPIO4 — leste 28.4°C / 48.2%</small></div>
       </div>
 
       <div class="comp-card" id="komp-soil">
@@ -1466,7 +1472,7 @@
           <div class="what">Stikkes ned i jorda. Kapasitiv = ruster ikke. Én per planteseksjon.</div>
           <div class="spec">Kapasitiv v2.0, korrosjonsbestandig, ADC, 3.3V</div>
         </div>
-        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span></div>
+        <div class="comp-status"><span class="pill pill-green">✅ Testet</span><br><small style="color:var(--green);">1 av 3 (GPIO34) — reagerer på vann</small></div>
       </div>
 
       <div class="comp-card" id="komp-oled">
@@ -1476,7 +1482,7 @@
           <div class="what">Liten skjerm (ca. 2×2cm) på selve potten. Viser temperatur, jordfukt og vannstand uten å åpne appen.</div>
           <div class="spec">SSD1306, 0.96", I2C, 128×64 piksler, 3.3V</div>
         </div>
-        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span></div>
+        <div class="comp-status"><span class="pill pill-green">✅ Testet</span><br><small style="color:var(--green);">I2C 0x3C — viser sensordata live</small></div>
       </div>
 
       <div class="comp-card" id="komp-ky040">
@@ -1486,7 +1492,7 @@
           <div class="what">Knapp du kan dreie og trykke på. Til å justere lysstyrken fysisk på potten uten å bruke telefonen.</div>
           <div class="spec">360° rotary encoder med knapp, 3 stk · 3.3V — KOBLE 3.3V, IKKE 5V</div>
         </div>
-        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span></div>
+        <div class="comp-status"><span class="pill pill-green">✅ Testet</span><br><small style="color:var(--green);">IRQ + 200ms debounce — dimmer 0–10 + av/på</small></div>
       </div>
 
       <div class="comp-card" id="komp-breadboard">
@@ -3003,8 +3009,8 @@
       <div class="phase-item current">
         <div class="phase-circle">1</div>
         <div class="phase-body">
-          <h4>Fase 1 — Breadboard-prototype <span class="pill pill-yellow phase-tag">Venter på hardware</span></h4>
-          <p>LED-strip på/av og dimming via app + WiFi + Supabase. Backend klar. Koble opp på breadboard når hardware kommer.</p>
+          <h4>Fase 1 — Breadboard-prototype <span class="pill pill-green phase-tag">Pågår — 5 moduler testet</span></h4>
+          <p>Hardware ankommet. Verifisert på breadboard 9. juni: ESP32 (MicroPython), OLED, DHT22, jordfukt og KY-040. Gjenstår: jordfukt ×2, og LED-strip på/av + dimming via MOSFET på 12V (krever buck converter stilt til 5V med multimeter).</p>
         </div>
       </div>
       <div class="phase-item">

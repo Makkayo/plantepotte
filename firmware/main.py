@@ -79,11 +79,20 @@ timer_on = DEFAULT_TIMER_ON
 timer_off = DEFAULT_TIMER_OFF
 last_cmd_stamp = None
 sw_prev = True
+_last_turn_ms = 0                     # debounce: tidspunkt for siste godkjente vridning
 
 
 # ── KY-040 via interrupt (mister aldri en vridning) ──
+# Billige KY-040 spretter mekanisk og gir falske trinn uten debounce.
+# 200 ms mellom godkjente vridninger filtrerer bort sprettet (bevist pa
+# breadboard 2026-06-09). Raskt nok for en dimmer; trege vridninger taper
+# ingen trinn.
 def _on_turn(pin):
-    global intensitet
+    global intensitet, _last_turn_ms
+    now = time.ticks_ms()
+    if time.ticks_diff(now, _last_turn_ms) < 200:
+        return
+    _last_turn_ms = now
     if dt.value():
         intensitet = logic.adjust(intensitet, 5)     # med klokka = lysere
     else:

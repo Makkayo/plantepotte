@@ -8,7 +8,7 @@ Holder styr på hva som er **bestilt → ankommet → testet** på breadboard.
 - ✅ Testet og funker
 - ⚠️ Ankommet, men problem (se notat)
 
-*Sist oppdatert: 2026-06-09*
+*Sist oppdatert: 2026-06-09 (kveld)*
 
 ---
 
@@ -16,7 +16,7 @@ Holder styr på hva som er **bestilt → ankommet → testet** på breadboard.
 
 | Status | Del | Antall | Notat |
 |:------:|-----|:------:|-------|
-| 📦 | ESP32 32S DevKit (30-pin) | ×2 | Kom 9. juni — «ESP32-WROOM-32S 32D», 30-pin Type-C |
+| ✅ | ESP32 32S DevKit (30-pin) | ×2 | Kom 9. juni — MicroPython v1.28.0 flashet, testet 9. juni |
 | 📦 | LR7843 MOSFET-modul | ×4 | Kom 9. juni — «FR120N LR7843 MOS Tube FET», individuelt pakket |
 | 📦 | LED-strip phyto 12V 5050 (5m) | ×1 | Kom 9. juni — fraktlapp «ZYDT-5050-60F-5M», håndskrevet «4:1» bekrefter 4R:1B phyto-ratio ✅ |
 | 📦 | 12V 3A adapter | ×1 | Kom 9. juni — «12V 3A, EU-plugg», 5.5×2.1mm |
@@ -28,10 +28,10 @@ Holder styr på hva som er **bestilt → ankommet → testet** på breadboard.
 | 📦 | Vekemateriale bomullssnor 3mm | ×1 | Kom 6. juni |
 | 📦 | Elektrisk tape | ×1 | Kom 9. juni — «20m PVC electrical tape, svart» |
 | 📦 | XKC-Y25 (reserve) | ×4 | Kom 9. juni — «Y25-NPN-5-12V», minst 1 verifisert (bestilt ×4) |
-| 📦 | KY-040 rotary encoder | ×1 | Kom 9. juni — CLK/DT-modul m/knott-caps (3-pack) |
-| 📦 | Jordfuktsensor kapasitiv v2.0 | ×1 (3stk) | Kom 9. juni — «Capacitive Soil Moisture Sensor, 3pc» |
-| 📦 | OLED SSD1306 0.96" | ×1 | Kom 9. juni — «SSD1306 I2C 128×64, blå» |
-| 📦 | DHT22 (AM2302) | ×1 | Kom 9. juni — «DHT22 … AM2302» |
+| ✅ | KY-040 rotary encoder | ×1 | Testet 9. juni — IRQ-basert, dimmer 0–10 + av/på-knapp fungerer |
+| ✅ | Jordfuktsensor kapasitiv v2.0 | ×1 (3stk) | Testet 9. juni — 1 av 3 testet (GPIO34), reagerer på vann. GPIO35+32 gjenstår |
+| ✅ | OLED SSD1306 0.96" | ×1 | Testet 9. juni — viser temp/fukt/jord/lys. ssd1306.py lastet opp til ESP32 |
+| ✅ | DHT22 (AM2302) | ×1 | Testet 9. juni — 28.4°C / 48.2% ved første test |
 
 ## Bestilling 2 — AliExpress tilbehør (~€37)
 
@@ -78,4 +78,4 @@ Holder styr på hva som er **bestilt → ankommet → testet** på breadboard.
 | Status | Del | Notat |
 |:------:|-----|-------|
 | ✅ | Multimeter (UT131D) | Kjøpt — brukes til å sette buck til 5.0V før ESP32 |
-| ⬜ | USB-C datakabel | Sjekk at den støtter data |
+| ✅ | USB-C datakabel | Fungerer — Thonny koblet til ESP32 uten problemer |
