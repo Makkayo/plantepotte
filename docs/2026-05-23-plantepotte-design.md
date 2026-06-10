@@ -1,8 +1,8 @@
 # Plantepotte — System Design
 
 **Dato opprettet:** 2026-05-23
-**Sist oppdatert:** 2026-05-30 (vannmåling oppdatert til VL53L0X-laser)
-**Status:** Backend og web-app live. Hardware ankommer ~2. juni.
+**Sist oppdatert:** 2026-06-10 (4 jordfukt-plasser, målt kalibrering + strøm, fast 5V-buck, firmware herdet)
+**Status:** Backend og web-app live. Hardware B1+B2 ankommet og i stor grad breadboard-testet (LED tent 10. juni). B3–B5 i posten. Neste: main.py + WiFi + Supabase end-to-end.
 
 > ⚠️ **Dette er et øyeblikksbilde — gjeldende fasit er prosjekt-skillen** (`C:\Users\marku\.claude\skills\plantepotte\skill.md`). Disse delene er fortsatt historiske og er IKKE oppdatert her:
 > - **Kamera:** ESP32-CAM lagt til på potte 1 → bilder til Supabase Storage → vekst-tidslinje i appen (gjøres når kameraet er testet).
@@ -145,6 +145,9 @@ Mål på nytt med skyvelær når deler ankommer.
 ## MicroPython-kode
 
 ### config.py
+
+> `firmware/config.py` er **gitignored** (WiFi-passordet skal aldri til GitHub). Kopier `firmware/config.example.py` → `config.py` og fyll inn.
+
 ```python
 WIFI_SSID = "ditt-nett"
 WIFI_PASS = "ditt-passord"
@@ -155,6 +158,13 @@ POTTE_ID = "potte1"           # "potte2" for den andre
 # Norsk tidssone. UTC+1 om vinteren, UTC+2 om sommeren.
 # ESP32 har ikke automatisk DST — endre denne manuelt to ganger i året.
 TZ_OFFSET_HOURS = 2
+
+# Hvilke av de 4 jordfukt-plassene (GPIO 34/35/32/33) er koblet til?
+AKTIVE_JORDSENSORER = [1, 2, 3]
+
+# Watchdog: True i drift (ESP32 restarter seg selv hvis programmet henger
+# >2 min), False under utvikling i Thonny (ellers restarter brettet midt i økta).
+BRUK_WATCHDOG = False
 ```
 
 ### boot.py

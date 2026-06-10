@@ -45,12 +45,15 @@ led = PWM(Pin(26), freq=1000)
 intensitet = APP_INTENSITET
 
 # ── Jordfukt + vann (potmeter i sim) ──
+# Sim viser 3 jord-pot; den ekte firmwaren støtter 4 plasser (34/35/32/33,
+# styrt av AKTIVE_JORDSENSORER i config). Vann-potmeteret ligger derfor på
+# GPIO 39 (VN) — GPIO 33 er reservert jordfukt #4 i det ekte bygget.
 adc = []
 for p in (34, 35, 32):
     a = ADC(Pin(p))
     a.atten(ADC.ATTN_11DB)
     adc.append(a)
-vann_adc = ADC(Pin(33))
+vann_adc = ADC(Pin(39))
 vann_adc.atten(ADC.ATTN_11DB)
 
 # ── KY-040 ──

@@ -22,14 +22,19 @@
       "id": "oled",
       "top": 20,
       "left": 700,
-      "attrs": { "i2cAddress": "0x3c" }
+      "attrs": {
+        "i2cAddress": "0x3c"
+      }
     },
     {
       "type": "wokwi-dht22",
       "id": "dht",
       "top": 155,
       "left": 700,
-      "attrs": { "humidity": "62", "temperature": "21.5" }
+      "attrs": {
+        "humidity": "62",
+        "temperature": "21.5"
+      }
     },
     {
       "type": "wokwi-resistor",
@@ -37,7 +42,9 @@
       "top": 240,
       "left": 808,
       "rotate": 90,
-      "attrs": { "value": "4700" }
+      "attrs": {
+        "value": "4700"
+      }
     },
     {
       "type": "wokwi-ky-040",
@@ -51,35 +58,45 @@
       "id": "soil1",
       "top": 440,
       "left": 700,
-      "attrs": { "value": "0.3" }
+      "attrs": {
+        "value": "0.3"
+      }
     },
     {
       "type": "wokwi-potentiometer",
       "id": "soil2",
       "top": 540,
       "left": 700,
-      "attrs": { "value": "0.5" }
+      "attrs": {
+        "value": "0.5"
+      }
     },
     {
       "type": "wokwi-potentiometer",
       "id": "soil3",
       "top": 640,
       "left": 700,
-      "attrs": { "value": "0.7" }
+      "attrs": {
+        "value": "0.7"
+      }
     },
     {
       "type": "wokwi-potentiometer",
       "id": "vann",
       "top": 180,
       "left": 40,
-      "attrs": { "value": "0.6" }
+      "attrs": {
+        "value": "0.6"
+      }
     },
     {
       "type": "wokwi-slide-switch",
       "id": "sw_pwr",
       "top": 388,
       "left": 86,
-      "attrs": { "value": "1" }
+      "attrs": {
+        "value": "1"
+      }
     },
     {
       "type": "wokwi-nmosfet",
@@ -93,7 +110,9 @@
       "id": "led",
       "top": 555,
       "left": 145,
-      "attrs": { "color": "red" }
+      "attrs": {
+        "color": "red"
+      }
     },
     {
       "type": "wokwi-resistor",
@@ -101,7 +120,9 @@
       "top": 581,
       "left": 145,
       "rotate": 90,
-      "attrs": { "value": "68" }
+      "attrs": {
+        "value": "68"
+      }
     },
     {
       "type": "wokwi-resistor",
@@ -109,54 +130,221 @@
       "top": 581,
       "left": 326,
       "rotate": 90,
-      "attrs": { "value": "100" }
+      "attrs": {
+        "value": "100"
+      }
     }
   ],
   "connections": [
-    ["esp:TX0",   "$serialMonitor:RX", "", []],
-    ["$serialMonitor:TX", "esp:RX0",   "", []],
-
-    ["esp:3V3",   "oled:VCC",  "#4488ff", []],
-    ["esp:3V3",   "dht:VCC",   "#4488ff", []],
-    ["esp:3V3",   "enc:+",     "#4488ff", []],
-    ["esp:3V3",   "soil1:VCC", "#4488ff", []],
-    ["esp:3V3",   "soil2:VCC", "#4488ff", []],
-    ["esp:3V3",   "soil3:VCC", "#4488ff", []],
-
-    ["esp:GND.1", "oled:GND",  "black", []],
-    ["esp:GND.1", "dht:GND",   "black", []],
-    ["esp:GND.1", "enc:GND",   "black", []],
-    ["esp:GND.1", "soil1:GND", "black", []],
-    ["esp:GND.1", "soil2:GND", "black", []],
-    ["esp:GND.1", "soil3:GND", "black", []],
-    ["esp:3V3",   "vann:VCC",  "#4488ff", []],
-    ["esp:GND.1", "vann:GND",  "black", []],
-    ["esp:GND.2", "mosfet:S",  "black", []],
-
-    ["esp:D21",   "oled:SDA",  "#ff66bb", []],
-    ["esp:D22",   "oled:SCL",  "#ff66bb", []],
-
-    ["esp:D4",    "dht:SDA",   "#aa77ff", []],
-
-    ["esp:3V3",   "r_dht:1",   "#4488ff", []],
-    ["r_dht:2",   "dht:SDA",   "#aa77ff", []],
-
-    ["esp:D16",   "enc:CLK",   "#aa77ff", []],
-    ["esp:D17",   "enc:DT",    "#aa77ff", []],
-    ["esp:D18",   "enc:SW",    "#aa77ff", []],
-
-    ["esp:D34",   "soil1:SIG", "#aa77ff", []],
-    ["esp:D35",   "soil2:SIG", "#aa77ff", []],
-    ["esp:D32",   "soil3:SIG", "#aa77ff", []],
-
-    ["esp:D33",   "vann:SIG",  "#aa77ff", []],
-
-    ["esp:3V3",   "sw_pwr:2",  "#ff4444", []],
-    ["sw_pwr:1",  "rled:1",    "#ff4444", []],
-    ["rled:2",    "led:A",     "#ff4444", []],
-    ["led:K",     "mosfet:D",  "#ff4444", []],
-
-    ["esp:D26",   "rgate:1",   "#aa77ff", []],
-    ["rgate:2",   "mosfet:G",  "#aa77ff", []]
+    [
+      "esp:TX0",
+      "$serialMonitor:RX",
+      "",
+      []
+    ],
+    [
+      "$serialMonitor:TX",
+      "esp:RX0",
+      "",
+      []
+    ],
+    [
+      "esp:3V3",
+      "oled:VCC",
+      "#4488ff",
+      []
+    ],
+    [
+      "esp:3V3",
+      "dht:VCC",
+      "#4488ff",
+      []
+    ],
+    [
+      "esp:3V3",
+      "enc:+",
+      "#4488ff",
+      []
+    ],
+    [
+      "esp:3V3",
+      "soil1:VCC",
+      "#4488ff",
+      []
+    ],
+    [
+      "esp:3V3",
+      "soil2:VCC",
+      "#4488ff",
+      []
+    ],
+    [
+      "esp:3V3",
+      "soil3:VCC",
+      "#4488ff",
+      []
+    ],
+    [
+      "esp:GND.1",
+      "oled:GND",
+      "black",
+      []
+    ],
+    [
+      "esp:GND.1",
+      "dht:GND",
+      "black",
+      []
+    ],
+    [
+      "esp:GND.1",
+      "enc:GND",
+      "black",
+      []
+    ],
+    [
+      "esp:GND.1",
+      "soil1:GND",
+      "black",
+      []
+    ],
+    [
+      "esp:GND.1",
+      "soil2:GND",
+      "black",
+      []
+    ],
+    [
+      "esp:GND.1",
+      "soil3:GND",
+      "black",
+      []
+    ],
+    [
+      "esp:3V3",
+      "vann:VCC",
+      "#4488ff",
+      []
+    ],
+    [
+      "esp:GND.1",
+      "vann:GND",
+      "black",
+      []
+    ],
+    [
+      "esp:GND.2",
+      "mosfet:S",
+      "black",
+      []
+    ],
+    [
+      "esp:D21",
+      "oled:SDA",
+      "#ff66bb",
+      []
+    ],
+    [
+      "esp:D22",
+      "oled:SCL",
+      "#ff66bb",
+      []
+    ],
+    [
+      "esp:D4",
+      "dht:SDA",
+      "#aa77ff",
+      []
+    ],
+    [
+      "esp:3V3",
+      "r_dht:1",
+      "#4488ff",
+      []
+    ],
+    [
+      "r_dht:2",
+      "dht:SDA",
+      "#aa77ff",
+      []
+    ],
+    [
+      "esp:D16",
+      "enc:CLK",
+      "#aa77ff",
+      []
+    ],
+    [
+      "esp:D17",
+      "enc:DT",
+      "#aa77ff",
+      []
+    ],
+    [
+      "esp:D18",
+      "enc:SW",
+      "#aa77ff",
+      []
+    ],
+    [
+      "esp:D34",
+      "soil1:SIG",
+      "#aa77ff",
+      []
+    ],
+    [
+      "esp:D35",
+      "soil2:SIG",
+      "#aa77ff",
+      []
+    ],
+    [
+      "esp:D32",
+      "soil3:SIG",
+      "#aa77ff",
+      []
+    ],
+    [
+      "esp:VN",
+      "vann:SIG",
+      "#aa77ff",
+      []
+    ],
+    [
+      "esp:3V3",
+      "sw_pwr:2",
+      "#ff4444",
+      []
+    ],
+    [
+      "sw_pwr:1",
+      "rled:1",
+      "#ff4444",
+      []
+    ],
+    [
+      "rled:2",
+      "led:A",
+      "#ff4444",
+      []
+    ],
+    [
+      "led:K",
+      "mosfet:D",
+      "#ff4444",
+      []
+    ],
+    [
+      "esp:D26",
+      "rgate:1",
+      "#aa77ff",
+      []
+    ],
+    [
+      "rgate:2",
+      "mosfet:G",
+      "#aa77ff",
+      []
+    ]
   ]
 }

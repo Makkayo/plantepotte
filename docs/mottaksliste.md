@@ -73,7 +73,7 @@ Holder styr på hva som er **bestilt → ankommet → testet** på breadboard.
 | ⬜ | I2C level converter (ikke i bruk) | ×1 | |
 | ⬜ | WS2812B RGB-strip (lek) | ×1 | |
 
-## Bestilling 5 — påfyll & semi-permanent bygg (~€30, bestilt 10. juni)
+## Bestilling 5 — påfyll & semi-permanent bygg (~€38, bestilt 10. juni)
 
 Samlet etter kveldens testing. AliExpress-søkeord i parentes.
 
@@ -93,6 +93,7 @@ Samlet etter kveldens testing. AliExpress-søkeord i parentes.
 | ⬜ | Perfboard double-sided 7×9cm | 5-pk | Semi-permanent bygg (hovedkort) |
 | ⬜ | Perfboard double-sided 5×7cm | 10-pk | Lodde-øving + små kort |
 | ⬜ | Pinnerader 2,54mm (male+female) | 5 sett | Hunn-headers på perfboard → moduler plugges i |
+| ⬜ | 6-i-1 elektrisk presisjonsskrutrekker | ×1 | N20-håndtak, USB-C-ladbar, magnetiske bits (PH000/PH00/P2/Y0.6) — til elektronikk-skruing |
 
 ## Kjøp lokalt
 

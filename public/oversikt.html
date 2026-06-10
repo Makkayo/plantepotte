@@ -1296,8 +1296,8 @@
   </div>
   <div class="snap-card">
     <div class="snap-label">💰 Brukt så langt</div>
-    <div class="snap-value">~€240</div>
-    <div class="snap-sub">~€153 potta + ~€54 lodd/lek + ~€30 påfyll (B5) — se pris-oversikt</div>
+    <div class="snap-value">~€248</div>
+    <div class="snap-sub">~€153 potta + ~€54 lodd/lek + ~€38 påfyll (B5) — se pris-oversikt</div>
   </div>
   <div class="snap-card">
     <div class="snap-label">📦 Hardware</div>
@@ -1836,7 +1836,7 @@
         <div class="comp-status"><span class="pill pill-green">Klar</span></div>
       </div>
 
-      <div class="comp-group-title" style="grid-column:1/-1;">🛒 Bestilling 5 — påfyll &amp; semi-permanent bygg (~€30, bestilt 10. juni)</div>
+      <div class="comp-group-title" style="grid-column:1/-1;">🛒 Bestilling 5 — påfyll &amp; semi-permanent bygg (~€38, bestilt 10. juni)</div>
       <div style="grid-column:1/-1; background:#0a1218; border:1px solid #1d4ed8; border-radius:10px; padding:1rem 1.25rem; font-size:0.87rem;">
         <p style="color:var(--muted); margin:0 0 0.6rem;">Samlet etter kveldens breadboard-testing. Alt gjennomgått del-for-del mot AliExpress-screenshots (de to fellene — flux-type og rask/treg sikring — er sjekket).</p>
         <ul style="color:var(--muted); margin:0 0 0.6rem 1.1rem; padding:0; line-height:1.7;">
@@ -1848,6 +1848,7 @@
           <li><strong style="color:var(--text);">Flux-penn (no-clean)</strong> — lettere lodding (IKKE syre-flux)</li>
           <li><strong style="color:var(--text);">Perfboard double-sided 7×9 + 5×7</strong> + <strong style="color:var(--text);">pinnerader male+female</strong> — semi-permanent bygg: loddet kort med hunn-headers (moduler plugges i, kan byttes)</li>
           <li><strong style="color:var(--text);">Motstand-sortiment + 5mm LED</strong> — pulldown-auto-deteksjon, indikator-LED-test på GPIO26, lek</li>
+          <li><strong style="color:var(--text);">6-i-1 elektrisk presisjonsskrutrekker</strong> (N20, USB-C-ladbar, magnetiske bits) — til elektronikk-skruing</li>
         </ul>
         <p style="color:var(--dim); margin:0; font-size:0.83rem;">Loddeutstyr, laser og kamera ligger allerede i Bestilling 3 &amp; 4 (i posten).</p>
       </div>
@@ -1915,15 +1916,20 @@
             <td>Perfboard double-sided 7×9 + 5×7, pinnerader male+female 2,54mm, flux-penn (no-clean), motstand-sortiment + 5mm LED</td>
             <td style="text-align:right;">~€8</td>
           </tr>
+          <tr>
+            <td>Verktøy</td>
+            <td>6-i-1 elektrisk presisjonsskrutrekker (N20, USB-C-ladbar, magnetiske bits)</td>
+            <td style="text-align:right;">~€8</td>
+          </tr>
           <tr style="background:#0a1218; font-weight:600;">
             <td colspan="2" style="color:var(--blue);">Sum Bestilling 5</td>
-            <td style="text-align:right; color:var(--blue);">~€30</td>
+            <td style="text-align:right; color:var(--blue);">~€38</td>
           </tr>
 
           <tr class="step-header"><td colspan="3">Σ Totalt</td></tr>
           <tr style="font-weight:700; font-size:1.02em;">
             <td colspan="2">Alt inkl. frakt (~€3)</td>
-            <td style="text-align:right;">~€240</td>
+            <td style="text-align:right;">~€248</td>
           </tr>
         </tbody>
       </table>
@@ -2012,7 +2018,7 @@
       <div class="gloss-card">
         <h4><span class="gi">📊</span> ADC (analog-til-digital)</h4>
         <p>Noen sensorer (som jordfukt) gir en analog spenning som forteller hvor våt jorda er. ESP32 leser denne som et tall mellom 0 og 4095. <strong>Lavt tall = vått, høyt tall = tørt.</strong></p>
-        <div class="ex">GPIO 34, 35, 32 er ADC-pinner og brukes til de tre jordfuktsensorene.</div>
+        <div class="ex">GPIO 34, 35, 32, 33 er ADC-pinner og brukes til de fire jordfukt-plassene.</div>
       </div>
 
       <div class="gloss-card">
@@ -2880,19 +2886,20 @@
               </svg>
               <span class="lbl">4,7 kΩ<br><em style="font-size:0.66rem;">pull-up VCC→DATA</em></span>
             </div>
-            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-soil"/></svg><span class="lbl">Jordfukt #1</span></div>
-            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-soil"/></svg><span class="lbl">Jordfukt #2</span></div>
-            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-soil"/></svg><span class="lbl">Jordfukt #3</span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-soil"/></svg><span class="lbl">Jordfukt #1<br><em style="font-size:0.66rem;">✅ testet</em></span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-soil"/></svg><span class="lbl">Jordfukt #2<br><em style="font-size:0.66rem;">✅ testet</em></span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-soil"/></svg><span class="lbl">Jordfukt #3<br><em style="font-size:0.66rem;">✅ testet</em></span></div>
+            <div class="step-pic" style="opacity:0.55;"><svg viewBox="0 0 100 70"><use href="#sym-soil"/></svg><span class="lbl">Jordfukt #4<br><em style="font-size:0.66rem;">venter B5-sensor</em></span></div>
           </div>
 
           <div class="step-wires">
             <span class="wire-chip c-33v">3V3 → alle VCC</span>
             <span class="wire-chip c-33v">4,7 kΩ VCC→DATA (kun nakent 4-pin DHT22)</span>
             <span class="wire-chip c-sig">DHT22 DATA → GPIO4</span>
-            <span class="wire-chip c-sig">Jord → GPIO34/35/32</span>
+            <span class="wire-chip c-sig">Jord → GPIO34/35/32/33</span>
             <span class="wire-chip c-gnd">felles GND</span>
           </div>
-          <div class="ok-tip">💡 <strong>Kalibrer jordfukt:</strong> les rå ADC i tørr jord (notér tall, typisk 3000–4000) og i et glass vann (typisk 1000–2000). Bruk verdiene i appens kalibrering.</div>
+          <div class="ok-tip">💡 <strong>Kalibrert 10. juni:</strong> tørr (luft) ~3190, våt (vann) ~1140 — alle 3 sensorene nesten like, så felles kalibrering brukes (<code>JORD_TORR</code>/<code>JORD_VAT</code> i appens <code>utils.ts</code>).</div>
         </div>
       </div>
 
@@ -2991,37 +2998,37 @@
         <div class="check-box">✓</div>
         <div class="check-content">
           <h4>Kjøp multimeter (Jula)</h4>
-          <p>Kritisk verktøy — brukes til å stille buck converter til 5.0V og verifisere spenninger underveis.</p>
-          <span class="tip">✓ Kjøpt: Uni-Trend UT131D (199 kr)</span>
+          <p>Kritisk verktøy — brukt til å verifisere buck-utgangen (fast 5V, målt 5,26V) og måle LED-strøm i serie (0,36 A/stripe). Brukes videre til å verifisere MOSFET-kobling og spenninger underveis.</p>
+          <span class="tip">✓ Kjøpt: Uni-Trend UT131D (199 kr) — i aktiv bruk</span>
+        </div>
+      </div>
+      <div class="check done">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <h4>USB-C datakabel</h4>
+          <p>Bekreftet: støtter data — Thonny snakker med ESP32 uten problemer (9. juni).</p>
+          <span class="tip">✓ Har fungerende kabel</span>
+        </div>
+      </div>
+      <div class="check done">
+        <div class="check-box">✓</div>
+        <div class="check-content">
+          <h4>Hardware ankommet (bestilling 1 + 2)</h4>
+          <p>Begge AliExpress-pakkene komplett ankommet 6.–9. juni. Bestilling 3 (laser + kamera), 4 (loddeutstyr) og 5 (påfyll + semi-permanent) er i posten. Status per del: <code>docs/mottaksliste.md</code>.</p>
         </div>
       </div>
       <div class="check waiting">
         <div class="check-box">→</div>
         <div class="check-content">
-          <h4>Sjekk om du har en USB-C datakabel</h4>
-          <p>Må støtte data (ikke kun lading). Test: koble en telefon — ser PC den?</p>
-          <span class="tip">Kjøp bare hvis du må</span>
+          <h4>Følg byggetrinnene over (0–7) — godt i gang</h4>
+          <p>Testet 9.–10. juni: ESP32, OLED, DHT22, KY-040, jordfukt ×3 (kalibrert), buck (5,26V), LED-strip tent direkte på 12V (0,94 A/potte). Neste: full <code>main.py</code> + WiFi + Supabase end-to-end (ikke blokkert), MOSFET-lys når loddebolt kommer.</p>
         </div>
       </div>
-      <div class="check todo">
-        <div class="check-box"></div>
+      <div class="check done">
+        <div class="check-box">✓</div>
         <div class="check-content">
-          <h4>Hardware — begynt å ankomme</h4>
-          <p>To AliExpress-pakker: hovedkomponenter (ESP32, MOSFET, LED-strip, alle sensorer) + tilbehør (Wago, switch, sikring, silikonledning, heat shrink, 3M-tape, wire stripper).</p>
-        </div>
-      </div>
-      <div class="check todo">
-        <div class="check-box"></div>
-        <div class="check-content">
-          <h4>Følg byggetrinnene over (0–7)</h4>
-          <p>Start med trinn 0: verifiser at buck-utgangen er ~5V (fast 5V-modul, ingen justering) før du gjør noe annet.</p>
-        </div>
-      </div>
-      <div class="check todo">
-        <div class="check-box"></div>
-        <div class="check-content">
-          <h4>Legg til sensordata-posting i main.py</h4>
-          <p>Eksempelkode med riktig format (rå ADC, ikke prosent) ligger i <code>docs/2026-05-23-plantepotte-design.md</code>.</p>
+          <h4>Komplett firmware bygget (<code>firmware/</code>)</h4>
+          <p>Flashbar MicroPython-firmware med sensordata-posting (rå ADC, jord1–4), lys-timer, KY-040-dimming, watchdog, NTP-resynk og 18 logikk-tester. Gjenstår bare å fylle inn WiFi i <code>config.py</code> og laste opp.</p>
         </div>
       </div>
     </div>
