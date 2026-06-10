@@ -1371,7 +1371,7 @@
       <div class="infra-card">
         <div class="ic-icon">🔌</div>
         <h3>Breadboard-testing</h3>
-        <p>Første moduler verifisert på breadboard 9. juni: <strong>ESP32</strong> (MicroPython flashet), <strong>OLED</strong>, <strong>DHT22</strong>, <strong>jordfukt</strong> (1 av 3) og <strong>KY-040</strong> dreieknapp. Gjenstår: jordfukt ×2 til, og LED-strip + MOSFET på 12V.</p>
+        <p>Breadboard-testing 9.–10. juni: <strong>ESP32</strong> (MicroPython), <strong>OLED</strong>, <strong>DHT22</strong>, <strong>KY-040</strong>, <strong>alle 3 jordfukt</strong> (kalibrert: tørr ~3190 / våt ~1140), <strong>buck</strong> (5,26V) og <strong>LED-strip tent</strong> (0,94 A/potte). Gjenstår: MOSFET-styrt lys (venter loddebolt — modulen er et byggesett), <strong>full main.py + WiFi + Supabase</strong> (ikke blokkert), laser + kamera (i posten).</p>
         <span class="pill pill-green">● 5 moduler testet</span>
       </div>
       <div class="infra-card">
@@ -1420,19 +1420,19 @@
         <div class="comp-body">
           <h4>Phyto LED-strip — vekstlyset</h4>
           <div class="what">Røde og blå LEDs spesielt laget for planter. Rød = fotosyntese og blomstring, blå = bladvekst. 4:1 rød:blå er standard for innendørs vekstlys.</div>
-          <div class="spec">12V, 5050 SMD, 4 rød : 1 blå, IP65 (vanntett), 5m</div>
+          <div class="spec">12V, 5050 SMD, 4 rød : 1 blå, IP65 (vanntett), 5m · målt 0,36 A/40cm</div>
         </div>
-        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span></div>
+        <div class="comp-status"><span class="pill pill-green">✅ Tent 10. juni</span><br><small style="color:var(--green);">3×40cm parallell, 0,94 A/potte</small></div>
       </div>
 
       <div class="comp-card" id="komp-mosfet">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-mosfet"/></svg>
         <div class="comp-body">
-          <h4>MOSFET (LR7843) — lysbryter</h4>
-          <div class="what">Elektronisk bryter. ESP32 sender et lavt signal, MOSFET slår på/av høyspenningen til LED-stripen. Tåler logic-level signal fra ESP32.</div>
-          <div class="spec">LR7843, PCB-modul, logic-level · ×4 stk</div>
+          <h4>MOSFET (LR7843/FR120N) — lysbryter</h4>
+          <div class="what">Elektronisk bryter. ESP32 sender et lavt signal (PWM, GPIO26), MOSFET slår på/av 12V til LED-stripen. Opto-isolert. ⚠️ Er et <strong>byggesett</strong>: grønn 2-v (PWM/GND) + blå 3-v (+/LOAD/−) skrueklemme MÅ loddes på. Medfølgende 3-pins header passer ikke (reserve).</div>
+          <div class="spec">Opto-isolert modul, logic-level · ×4 stk · venter loddebolt</div>
         </div>
-        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span></div>
+        <div class="comp-status"><span class="pill pill-blue">📦 Byggesett — loddes</span></div>
       </div>
 
       <div class="comp-card" id="komp-adapter">
@@ -1449,10 +1449,10 @@
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-buck"/></svg>
         <div class="comp-body">
           <h4>Buck converter — spenningsreduserer</h4>
-          <div class="what">Tar 12V inn, gir 5V ut. ESP32 trenger 5V. Stilles inn med potmeter + multimeter FØR ESP32 kobles til.</div>
-          <div class="spec">DC-DC 5V/5A step-down, barrel jack inn + skruklemmer ut</div>
+          <div class="what">Tar 12V inn, gir 5V ut. ESP32 trenger 5V. FAST 5V (ikke justerbar) — verifiser ~5V med multimeter FØR ESP32. Målt 5,26V ✅</div>
+          <div class="spec">FAST 5V USB-buck (KIS3R33S-type), 5A — barrel-jack inn (VIN) + USB/skruklemmer ut (5V/GND)</div>
         </div>
-        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span></div>
+        <div class="comp-status"><span class="pill pill-green">✅ Testet 10. juni — 5,26V</span></div>
       </div>
 
       <div class="comp-card" id="komp-dht22">
@@ -1468,11 +1468,11 @@
       <div class="comp-card" id="komp-soil">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-soil"/></svg>
         <div class="comp-body">
-          <h4>Jordfuktsensor (×3)</h4>
+          <h4>Jordfuktsensor (×4 plasser)</h4>
           <div class="what">Stikkes ned i jorda. Kapasitiv = ruster ikke. Én per planteseksjon.</div>
           <div class="spec">Kapasitiv v2.0, korrosjonsbestandig, ADC, 3.3V</div>
         </div>
-        <div class="comp-status"><span class="pill pill-green">✅ Testet</span><br><small style="color:var(--green);">1 av 3 (GPIO34) — reagerer på vann</small></div>
+        <div class="comp-status"><span class="pill pill-green">✅ Testet</span><br><small style="color:var(--green);">Alle 3 kalibrert 10. juni — tørr ~3190 / våt ~1140. Firmware støtter 4 (GPIO 34/35/32/33)</small></div>
       </div>
 
       <div class="comp-card" id="komp-oled">
@@ -1726,7 +1726,7 @@
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-multimeter"/></svg>
         <div class="comp-body">
           <h4>Multimeter — spenningsmåler</h4>
-          <div class="what">Stiller inn buck converter til 5.0V. MÅ gjøres før ESP32 kobles til.</div>
+          <div class="what">Verifiserer buck-utgangen (~5V) før ESP32. Også brukt til LED-strømmåling i serie (0,36 A/stripe). Bucken er fast 5V — ingen justering.</div>
           <div class="spec" style="margin-top:0.4rem;">
             ✅ <strong style="color:var(--green);">Kjøpt: Uni-Trend UT131D (199 kr fra Jula)</strong><br>
             <span style="color:var(--dim);">Det dyreste, men beste valget av de to.</span>
@@ -1961,7 +1961,7 @@
 
       <div class="gloss-card">
         <h4><span class="gi">🔻</span> Buck converter</h4>
-        <p>Tar høyere spenning inn og gir lavere ut. Vår tar 12V og lager 5V. Du stiller den med et potmeter og en multimeter til den viser nøyaktig 5.0V.</p>
+        <p>Tar høyere spenning inn og gir lavere ut. Vår tar 12V og lager 5V. Den er en FAST 5V-buck (USB-port + skruklemmer, ingen trim-skrue) — kan ikke stilles feil. Verifiser likevel ~5V med multimeter før ESP32 (vi målte 5,26V).</p>
         <div class="ex">Uten dette: 12V på ESP32 = ødelagt brett.</div>
       </div>
 
@@ -2070,11 +2070,11 @@
 
         <g class="comp-svg" transform="translate(60, 368)"
            data-name="Buck converter" data-comp="buck"
-           data-info="Tar 12V inn, gir 5V ut. Et lite potmeter må justeres med multimeter. MÅ stilles til 5.0V FØR ESP32 kobles til — over 5V ødelegger ESP32.">
+           data-info="Tar 12V inn, gir 5V ut. FAST 5V (KIS3R33S-type, ingen trim-skrue) — kan ikke stilles feil. Verifiser ~5V med multimeter før ESP32. Målt 5,26V.">
           <rect width="180" height="80" rx="8" class="fill-buck"/>
           <text x="14" y="25" class="name">🔻 Buck converter</text>
-          <text x="14" y="44" class="sub">12V → 5V justerbar</text>
-          <text x="14" y="62" class="sub" fill="#fbbf24">⚠ Still 5.0V FØR</text>
+          <text x="14" y="44" class="sub">12V → 5V (fast)</text>
+          <text x="14" y="62" class="sub" fill="#4ade80">✓ Målt 5,26V</text>
           <text x="14" y="76" class="sub" fill="#fbbf24">ESP32 kobles til</text>
         </g>
 
@@ -2120,8 +2120,8 @@
           <text x="206" y="240" class="pin" text-anchor="end">GPIO34 ← jord1</text>
           <text x="206" y="255" class="pin" text-anchor="end">GPIO35 ← jord2</text>
           <text x="206" y="270" class="pin" text-anchor="end">GPIO32 ← jord3</text>
-          <text x="206" y="290" class="pin" text-anchor="end" fill="#64748b">GPIO19 — ledig</text>
-          <text x="206" y="305" class="pin" text-anchor="end" fill="#64748b">GPIO23 — ledig</text>
+          <text x="206" y="285" class="pin" text-anchor="end">GPIO33 ← jord4</text>
+          <text x="206" y="303" class="pin" text-anchor="end" fill="#64748b">GPIO19/23 — ledig</text>
 
           <text x="110" y="355" class="sub" text-anchor="middle" fill="#60a5fa">📶 WiFi 2.4GHz → Supabase</text>
         </g>
@@ -2165,7 +2165,7 @@
            data-name="Jordfuktsensor ×3" data-comp="soil"
            data-info="Kapasitiv sensor — ruster ikke. Stikkes ned i jorda. Gir analog spenning som ESP32 leser via ADC. Lavere tall = mer vått.">
           <rect width="200" height="70" rx="8" class="fill-sensor"/>
-          <text x="14" y="25" class="name">🌱 Jordfukt ×3</text>
+          <text x="14" y="25" class="name">🌱 Jordfukt ×4</text>
           <text x="14" y="44" class="sub">Kapasitiv v2.0 · analog</text>
           <text x="14" y="60" class="pin">VCC · GND · AOUT</text>
         </g>
@@ -2275,7 +2275,7 @@
         <path class="wire w-sig" d="M 720 440 L 875 440 L 875 378 L 890 378"/>
         <path class="wire w-sig" d="M 720 455 L 880 455 L 880 390 L 890 390"/>
         <path class="wire w-sig" d="M 720 470 L 885 470 L 885 402 L 890 402"/>
-        <text x="724" y="450" class="wire-label">ADC 34/35/32</text>
+        <text x="724" y="450" class="wire-label">ADC 34/35/32/33</text>
 
         <!-- VL53L0X laser: 3.3V + I2C (SDA/SCL) til ESP32 — deler bussen med OLED -->
         <path class="wire w-33v" d="M 890 462 L 775 462 L 775 478 L 720 478"/>
@@ -2492,7 +2492,7 @@
       </div>
       <div class="tree-row tree-indent-3">
         <span style="color:var(--dim);">├──</span>
-        <span class="tree-node" style="background:#1e3a5f; color:#93c5fd; border-color:#1d4ed8;">3.3V → Jordfukt ×3</span>
+        <span class="tree-node" style="background:#1e3a5f; color:#93c5fd; border-color:#1d4ed8;">3.3V → Jordfukt ×4</span>
       </div>
       <div class="tree-row tree-indent-3">
         <span style="color:var(--dim);">└──</span>
@@ -2574,7 +2574,7 @@
           </tr>
           <tr><td class="step-badge">0</td><td>Breadboard 12V-skinne</td><td>Buck converter <code>IN+</code> (via barrel jack-pigtail, hann)</td><td><span class="voltage-pill v-12v">12V</span></td><td>Mat inn til 5V-konverter</td></tr>
           <tr><td class="step-badge">0</td><td>Buck converter <code>OUT−</code></td><td>GND-skinne</td><td><span class="voltage-pill v-gnd">GND</span></td><td>Felles minus fra 5V</td></tr>
-          <tr class="warn-row"><td class="step-badge" style="color:var(--yellow);">⚠</td><td colspan="4" style="color:var(--yellow); font-size:0.83rem;">Slå på vippebryteren, mål buck converter <code>OUT+</code> med multimeter — skru på det <strong>blå potmeteret</strong> til du ser nøyaktig <strong>5.0V</strong>. Slå av igjen.</td></tr>
+          <tr class="warn-row"><td class="step-badge" style="color:var(--yellow);">⚠</td><td colspan="4" style="color:var(--yellow); font-size:0.83rem;">Slå på vippebryteren, mål buck <code>OUT+</code> (5V/GND-siden) med multimeter — bekreft ~5V (fast 5V-modul, ingenting å justere; vi målte 5,26V). Slå av igjen.</td></tr>
 
           <!-- STEG 1 -->
           <tr class="step-header"><td colspan="5">🖥️ Steg 1 — Flash MicroPython og test WiFi (kun USB-C)</td></tr>
@@ -2609,12 +2609,13 @@
           <tr class="warn-row"><td class="step-badge">5</td><td>DHT22 <code>VCC</code></td><td>DHT22 <code>DATA</code></td><td><span class="voltage-pill v-33v">Pull-up</span></td><td>⚠ <strong>4,7 kΩ motstand</strong> mellom VCC og DATA — nødvendig for pålitelig kommunikasjon. Sett motstanden på breadboard mellom VCC-rad og DATA-ledning.</td></tr>
           <tr><td class="step-badge">5</td><td>ESP32 <code>GPIO4</code></td><td>DHT22 <code>DATA</code></td><td><span class="voltage-pill v-sig">Signal</span></td><td>Temp og luftfuktighet</td></tr>
           <tr><td class="step-badge">5</td><td>DHT22 <code>GND</code></td><td>GND-skinne</td><td><span class="voltage-pill v-gnd">GND</span></td><td>Sensor-minus</td></tr>
-          <tr><td class="step-badge">5</td><td>ESP32 <code>3V3</code></td><td>Jordfukt ×3 <code>VCC</code></td><td><span class="voltage-pill v-33v">3.3V</span></td><td>Sensor-strøm (alle tre)</td></tr>
+          <tr><td class="step-badge">5</td><td>ESP32 <code>3V3</code></td><td>Jordfukt ×4 <code>VCC</code></td><td><span class="voltage-pill v-33v">3.3V</span></td><td>Sensor-strøm (alle)</td></tr>
           <tr><td class="step-badge">5</td><td>ESP32 <code>GPIO34</code></td><td>Jordfukt #1 <code>AOUT</code></td><td><span class="voltage-pill v-sig">ADC</span></td><td>Analog jordfukt — planteseksjon 1</td></tr>
           <tr><td class="step-badge">5</td><td>ESP32 <code>GPIO35</code></td><td>Jordfukt #2 <code>AOUT</code></td><td><span class="voltage-pill v-sig">ADC</span></td><td>Analog jordfukt — planteseksjon 2</td></tr>
           <tr><td class="step-badge">5</td><td>ESP32 <code>GPIO32</code></td><td>Jordfukt #3 <code>AOUT</code></td><td><span class="voltage-pill v-sig">ADC</span></td><td>Analog jordfukt — planteseksjon 3</td></tr>
-          <tr><td class="step-badge">5</td><td>Jordfukt ×3 <code>GND</code></td><td>GND-skinne</td><td><span class="voltage-pill v-gnd">GND</span></td><td>Sensor-minus (alle tre)</td></tr>
-          <tr class="warn-row"><td class="step-badge" style="color:var(--green);">✓</td><td colspan="4" style="color:var(--green); font-size:0.83rem;">Jordfukt-test: les <code>soil1.read()</code> — tørt jord gir ca. 3000–4000, fuktig jord gir 1000–2000. Notér verdiene for kalibrering.</td></tr>
+          <tr><td class="step-badge">5</td><td>ESP32 <code>GPIO33</code></td><td>Jordfukt #4 <code>AOUT</code></td><td><span class="voltage-pill v-sig">ADC</span></td><td>Analog jordfukt — planteseksjon 4 (config: AKTIVE_JORDSENSORER)</td></tr>
+          <tr><td class="step-badge">5</td><td>Jordfukt ×4 <code>GND</code></td><td>GND-skinne</td><td><span class="voltage-pill v-gnd">GND</span></td><td>Sensor-minus (alle)</td></tr>
+          <tr class="warn-row"><td class="step-badge" style="color:var(--green);">✓</td><td colspan="4" style="color:var(--green); font-size:0.83rem;">Jordfukt-test (gjort 10. juni): tørr ~3190, våt ~1140 — alle 3 nesten like. App kalibrerer (JORD_TORR/JORD_VAT i utils.ts).</td></tr>
 
           <!-- STEG 6 -->
           <tr class="step-header"><td colspan="5">💧 Steg 6 — VL53L0X ToF-laser vannmåling (3.3V — deler I2C-buss med OLED)</td></tr>
@@ -2688,7 +2689,7 @@
               <li><strong style="color:var(--text);">Barrel jack-pigtail + → slow-blow fuse:</strong> Strip 10 mm bar ledning. Koble <code>+</code>-skruklemmen via Wago til det ene tråd-beinet på den leaded slow-blow-sikringen (T3A), og det andre beinet via en ny Wago til breadboard 12V-skinnen. <em>Ingen holder</em> — sikringen kobles direkte inline.</li>
               <li><strong style="color:var(--text);">Pigtail − terminal → GND-skinne:</strong> Koble <code>−</code>-skruklemmen direkte til breadboard GND-skinne.</li>
               <li><strong style="color:var(--text);">12V-skinne → Buck converter:</strong> Koble barrel jack-pigtail (hann-plugg) inn i buck converterens inngang. Pigtailens skruklemmer kobles til 12V-skinne (+) og GND-skinne (−).</li>
-              <li><strong style="color:var(--text);">Mål:</strong> Slå på bryteren. Bruk multimeter på buck converterens <code>OUT+</code> og <code>OUT−</code>. Drei det <strong>blå potmeteret</strong> til du ser nøyaktig <strong>5.0V</strong>. <em>Har din modul ikke noe potmeter (fast 5V-modul)?</em> Da bekrefter du bare at den viser ~5,0V (±0,2) — er den langt unna, er modulen feil og skal ikke brukes. Slå av bryteren.</li>
+              <li><strong style="color:var(--text);">Mål:</strong> Slå på bryteren. Bruk multimeter på buckens <code>5V</code>/<code>GND</code>-utgang (USB-siden). Vår modul er <strong>fast 5V</strong> (ingen potmeter), så du bekrefter bare at den viser ~5V — vi målte <strong>5,26V</strong> (trygt). Er den langt unna 5V, er modulen feil og skal ikke brukes. Slå av bryteren.</li>
             </ol>
           </div>
 
@@ -2715,12 +2716,12 @@
               <li>Skru hjulet til <strong style="color:var(--text);">likespenning (DC)</strong> — symbolet er <code>V⎓</code> (V med rette streker over), <em>ikke</em> <code>V∼</code> (det er vekselstrøm). Har måleren tallområder, velg <strong style="color:var(--text);">20</strong>.</li>
               <li>Sett den <strong style="color:var(--text);">svarte</strong> proben i hullet merket <code>COM</code>, den <strong style="color:#fca5a5;">røde</strong> i hullet merket <code>VΩmA</code>.</li>
               <li>Slå på bryteren. Hold svart probe på buckens <code>OUT−</code> og rød probe på <code>OUT+</code>.</li>
-              <li>Displayet viser spenningen. Drei det <strong style="color:var(--text);">blå potmeteret</strong> sakte til det står <strong style="color:var(--green);">5.0</strong> (±0.1).</li>
+              <li>Displayet skal vise ca. <strong style="color:var(--green);">5.0</strong> (vi målte 5,26V — trygt). Vår buck er <strong>fast 5V</strong>, så det er ingenting å justere — bare bekreft at den ligger rundt 5 (±0,3). Er den langt unna, er modulen feil.</li>
             </ol>
             <div style="margin-top:0.4rem; color:var(--muted);">💡 Får du et <strong>minustall</strong> (f.eks. −5.0)? Da har du bare byttet om probene — snu dem, ingen skade skjer.</div>
           </div>
 
-          <div class="check-tip">⚠ <strong>Over 5V på ESP32 VIN = ødelagt brett.</strong> Gå aldri videre til trinn 1 før multimeteret viser nøyaktig 5.0V.</div>
+          <div class="check-tip">⚠ <strong>Mye over 5V på ESP32 VIN = ødelagt brett.</strong> Gå aldri videre til trinn 1 før multimeteret bekrefter at buck-utgangen ligger rundt 5V (vi målte 5,26V — trygt). Bucken er fast 5V, så det er bare en bekreftelse.</div>
           <div style="background:#0a1a2a; border-left:3px solid var(--blue); padding:0.55rem 0.8rem; margin-top:0.6rem; border-radius:0 6px 6px 0; font-size:0.82rem; color:var(--muted);">
             💡 <strong style="color:var(--blue);">Hvorfor switch og sikring?</strong> Vippebryteren lar deg slå av hele kretsen med ett klikk — du slipper å trekke ut støpselet hver gang du endrer koblingen. Sikringen blåser (som planlagt) hvis noe kortslutter, slik at ledningene ikke smelter.
           </div>
@@ -2828,8 +2829,8 @@
       <div class="step">
         <div class="step-num">5</div>
         <div class="step-body">
-          <h3>DHT22 og jordfuktsensorer (×3)</h3>
-          <p>Alle får 3.3V VCC og felles GND. DHT22 data til GPIO4. Jordfukt #1, #2, #3 til GPIO34, GPIO35, GPIO32 (alle er ADC-pinner).</p>
+          <h3>DHT22 og jordfuktsensorer (×4 plasser)</h3>
+          <p>Alle får 3.3V VCC og felles GND. DHT22 data til GPIO4. Jordfukt #1–4 til GPIO34, GPIO35, GPIO32, GPIO33 (alle ADC1-pinner, trygge med WiFi). <code>config.AKTIVE_JORDSENSORER</code> styrer hvilke som leses — du plugger inn 1–4 sensorer. Testet 10. juni: tørr ~3190 / våt ~1140.</p>
 
           <div style="background:#0a1a2a; border-left:3px solid var(--blue); padding:0.55rem 0.8rem; margin:0.5rem 0; border-radius:0 6px 6px 0; font-size:0.82rem; color:var(--muted);">
             💡 <strong style="color:var(--blue);">Trenger DHT22 den 4,7 kΩ-motstanden?</strong> Tell pinnene: har sensoren din <strong style="color:var(--text);">3 pinner</strong> og sitter på et lite kretskort (slik din gjør — den kom med jumper-kabler), er motstanden <strong>allerede påloddet</strong> → hopp over den. Bare den "nakne" 4-pinners varianten trenger at du selv setter 4,7 kΩ mellom VCC og DATA. Får du <code>None</code>/feil i Thonny, prøv å legge til motstanden.
@@ -2980,7 +2981,7 @@
         <div class="check-box"></div>
         <div class="check-content">
           <h4>Følg byggetrinnene over (0–7)</h4>
-          <p>Start med trinn 0: still buck converter til nøyaktig 5.0V før du gjør noe annet.</p>
+          <p>Start med trinn 0: verifiser at buck-utgangen er ~5V (fast 5V-modul, ingen justering) før du gjør noe annet.</p>
         </div>
       </div>
       <div class="check todo">
@@ -3017,7 +3018,7 @@
         <div class="phase-circle">2</div>
         <div class="phase-body">
           <h4>Fase 2 — Alle sensorer aktive</h4>
-          <p>DHT22, jordfukt ×3, VL53L0X-laser (vannmåling), ESP32-CAM (bilder), OLED-display og dreieknapp. All sensordata i appen.</p>
+          <p>DHT22, jordfukt ×4, VL53L0X-laser (vannmåling), ESP32-CAM (bilder), OLED-display og dreieknapp. All sensordata i appen.</p>
         </div>
       </div>
       <div class="phase-item">
@@ -3065,8 +3066,8 @@
     <div class="warn-grid">
       <div class="warn-box danger">
         <div class="warn-icon">⚡</div>
-        <h4>Still buck converter til 5V FØR tilkobling</h4>
-        <p>Mål spenningen med multimeter og drei potmeteret til du ser 5.0V. For høy spenning ødelegger ESP32.</p>
+        <h4>Verifiser buck ~5V FØR tilkobling</h4>
+        <p>Vår buck er fast 5V (ingen justering). Mål med multimeter og bekreft ~5V (vi målte 5,26V — trygt) før ESP32 kobles til. Er den langt unna 5V, er modulen feil.</p>
       </div>
       <div class="warn-box danger">
         <div class="warn-icon">🎛️</div>

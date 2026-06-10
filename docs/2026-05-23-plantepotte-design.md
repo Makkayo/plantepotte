@@ -47,11 +47,11 @@ Detaljert designplan: se `3d-design.html`.
 | Del | Spesifikasjon | Antall |
 |-----|---------------|--------|
 | ESP32 30-pin Type-C | WROOM-32D 32S | ×2 |
-| LR7843 MOSFET-modul | Logic-level (threshold 1.5–2.5V), skruklemmer | ×4 |
-| Phyto LED-strip | 12V, 5050, 4 rød:1 blå, IP65, 5m | ×1 |
-| 12V adapter | AC 110–240V → 12V 3A, EU | ×1 |
+| LR7843/FR120N MOSFET-modul | Opto-isolert byggesett: bart kort + løs grønn 2-v (PWM/GND) + blå 3-v (+/LOAD/−) skrueklemme (loddes på). 3-pins header som fulgte med passer IKKE (5mm vs 2,54mm) — reserve | ×4 |
+| Phyto LED-strip | 12V, 5050, 4 rød:1 blå, IP65, 5m. Målt 0,36 A per 40 cm (10,8 W/m) | ×1 |
+| 12V adapter | AC 110–240V → 12V 3A, EU (5A-oppgradering planlagt for 2 potter) | ×1 |
 | DC barrel jack | 5.5×2.1mm pigtail med skruklemmer | 10 par |
-| Buck converter | DC-DC 5V/5A step-down, barrel jack inn + skruklemmer ut | ×1 |
+| Buck converter | **FAST 5V** USB-buck (KIS3R33S-type), 5A — barrel-jack inn (VIN) + USB/skruklemmer ut (5V/GND). IKKE justerbar | ×1 |
 | Breadboard MB-102 | 830-punkt + 65 jumper-kabler | ×2 |
 | LED clip connector | 8mm 2-pin solderless | 5 stk |
 | KF301 terminalblokk | 2-pin sort, 5mm pitch | 10 stk |
@@ -101,11 +101,11 @@ GPIO **19 og 23 er nå frie** (var XKC-Y25 før) — reserve, f.eks. fremtidig s
                                      │      MOSFET OUT → LED-strip
                                      │      MOSFET SIG ← ESP32 GPIO26 (PWM)
                                      │
-                                     └─→ Buck converter (still til 5.0V FØR ESP32!)
+                                     └─→ Buck converter (FAST 5V — verifiser ~5V FØR ESP32)
                                            ├─→ 5V til ESP32 VIN
                                            └─→ 5V til ESP32-CAM (eget kort, ~300mA)
 
-ESP32 3.3V pin → OLED VCC, DHT22 VCC, Jordfukt ×3 VCC, KY-040 +, VL53L0X VIN
+ESP32 3.3V pin → OLED VCC, DHT22 VCC, Jordfukt ×4 VCC, KY-040 +, VL53L0X VIN
 ESP32 GPIO    → alle signal/data-pinner som spesifisert i tabellen over
 
 OLED + VL53L0X deler I2C-buss: SDA→GPIO21, SCL→GPIO22 (ulike adresser: OLED 0x3C, laser 0x29)
@@ -116,7 +116,7 @@ OLED + VL53L0X deler I2C-buss: SDA→GPIO21, SCL→GPIO22 (ulike adresser: OLED 
 
 ### Sikkerhetsregler
 
-- **Buck converter:** Still til nøyaktig 5.0V med multimeter FØR ESP32 kobles til. Over 5V ødelegger ESP32.
+- **Buck converter:** Det innkjøpte kortet er en **FAST 5V USB-buck (KIS3R33S-type)** — IKKE justerbar (har USB-port + to skrueklemmer, ingen trim-skrue). Den kan ikke stilles feil. Verifiser likevel ~5V med multimeter FØR ESP32 kobles til (målt 5,26V 2026-06-10 — trygt). Barrel-jack inn = VIN, USB-side = 5V/GND ut.
 - **LR7843** (logic-level MOSFET, threshold 1.5–2.5V). Standard IRF540N fungerer IKKE direkte fra ESP32 — krever 10V gate-spenning.
 - **KY-040** drives på 3.3V — ALDRI 5V. Ellers sender signal-pinnene 5V tilbake til ESP32 GPIO og ødelegger dem.
 - **MOSFET SIG** må alltid være koblet til GPIO — aldri la den henge løs (MOSFET blir halvåpen og varmes opp).
@@ -362,7 +362,7 @@ INSERT INTO potte_commands (potte_id, intensitet, timer_on, timer_off) VALUES
 
 ### Datakontrakt mellom ESP32 og web-app
 
-- **`jord1/2/3/4`** er RÅ ADC-verdier (0–4095). Web-appen mapper til prosent (4095 = 0 %, ~1500 = 100 %) og kalibrerer per sensor om nødvendig. ESP32 skal IKKE konvertere til prosent — da blir kalibrering umulig uten å flashe på nytt. Inntil 4 plasser (GPIO 34/35/32/33); `config.AKTIVE_JORDSENSORER` styrer hvilke som leses — resten sendes som `null` og skjules i appen.
+- **`jord1/2/3/4`** er RÅ ADC-verdier (0–4095). Web-appen mapper til prosent (målt kalibrering 2026-06-10: tørr ~3200 = 0 %, våt ~1140 = 100 % — se `JORD_TORR`/`JORD_VAT` i `utils.ts`) og kalibrerer per sensor om nødvendig. ESP32 skal IKKE konvertere til prosent — da blir kalibrering umulig uten å flashe på nytt. Inntil 4 plasser (GPIO 34/35/32/33); `config.AKTIVE_JORDSENSORER` styrer hvilke som leses — resten sendes som `null` og skjules i appen.
 - **`vann_avstand_mm`** er rå avstand i mm fra VL53L0X-laseren til flottøren. Stor avstand = lite vann, liten avstand = mye vann. Web-appen kalibrerer tom/full per potte og viser nivå i %.
 - **`temperatur/luftfuktighet`** er numeriske verdier fra DHT22 direkte (°C og %).
 
@@ -382,7 +382,7 @@ Funksjoner:
 - Plantetype-velger fra `planteprofiler` (auto-fyller intensitet og timer)
 - Slider for intensitet, tidsvelger for lys på/av
 - "Lagre" gjør upsert til `potte_commands` (krever UNIQUE-constraint, se SQL)
-- Sensor-visning per potte: temperatur, fukt, jordfukt ×3, vannstand ×2
+- Sensor-visning per potte: temperatur, fukt, jordfukt ×4 (kun tilkoblede vises), vannstand
 
 ---
 

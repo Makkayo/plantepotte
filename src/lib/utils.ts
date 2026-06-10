@@ -1,8 +1,24 @@
+/**
+ * Kalibrering for de kapasitive jordfuktsensorene (v2.0).
+ * Målt på breadboard 2026-06-10 med alle 3 sensorene — de leste nesten likt:
+ *   - Tørr (i luft):  ~3190 ADC
+ *   - Våt (i vann):   ~1140 ADC
+ * Lavere ADC = våtere. Standardene under brukes globalt; senere kan de lagres
+ * per sensor (med "sett tørr"/"sett våt"-knapp) — samme prinsipp som vannstand.
+ */
+export const JORD_TORR = 3200; // ADC tørr → 0 %
+export const JORD_VAT = 1140; // ADC våt → 100 %
+
 /** Map kapasitiv jordfuktsensor ADC (0–4095) til prosent (lavere ADC = våtere). */
-export function jordfuktProsent(raw: number | null | undefined): number | null {
+export function jordfuktProsent(
+  raw: number | null | undefined,
+  tort: number = JORD_TORR,
+  vat: number = JORD_VAT,
+): number | null {
   if (raw === null || raw === undefined) return null;
-  // Empirisk: ~1500 = vått, ~4095 = bone-dry
-  return Math.max(0, Math.min(100, Math.round(((4095 - raw) / 2595) * 100)));
+  const spenn = tort - vat;
+  if (spenn <= 0) return null; // ugyldig kalibrering
+  return Math.max(0, Math.min(100, Math.round(((tort - raw) / spenn) * 100)));
 }
 
 export function jordfuktKlasse(pct: number | null): 'dry' | 'ok' | 'wet' | 'unknown' {
