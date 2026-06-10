@@ -107,6 +107,44 @@
         {/if}
       </div>
 
+      <!-- Stell-guide: så → stell → høst -->
+      {#if plante.sa_instruks || plante.stell_instruks || plante.host_instruks}
+        <div>
+          <h3 class="text-sm font-semibold text-text-muted uppercase tracking-wider mb-2">
+            Slik gjør du det
+          </h3>
+          <div class="space-y-2.5">
+            {#if plante.sa_instruks}
+              <div class="card-raised p-3 flex gap-3">
+                <span class="text-lg shrink-0">🌱</span>
+                <div>
+                  <div class="text-xs font-semibold text-text-muted mb-0.5">Såing</div>
+                  <p class="text-text text-sm leading-relaxed">{plante.sa_instruks}</p>
+                </div>
+              </div>
+            {/if}
+            {#if plante.stell_instruks}
+              <div class="card-raised p-3 flex gap-3">
+                <span class="text-lg shrink-0">✂️</span>
+                <div>
+                  <div class="text-xs font-semibold text-text-muted mb-0.5">Stell underveis</div>
+                  <p class="text-text text-sm leading-relaxed">{plante.stell_instruks}</p>
+                </div>
+              </div>
+            {/if}
+            {#if plante.host_instruks}
+              <div class="card-raised p-3 flex gap-3">
+                <span class="text-lg shrink-0">🧺</span>
+                <div>
+                  <div class="text-xs font-semibold text-text-muted mb-0.5">Høsting</div>
+                  <p class="text-text text-sm leading-relaxed">{plante.host_instruks}</p>
+                </div>
+              </div>
+            {/if}
+          </div>
+        </div>
+      {/if}
+
       <!-- Tips -->
       {#if plante.dyrking_tips}
         <div>

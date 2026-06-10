@@ -50,6 +50,12 @@ export interface Plante {
   beskrivelse: string | null;
   dyrking_tips: string | null;
   nering_notat: string | null;
+  /** Såing: frø per seksjon, dybde, spiretid, forbehandling. */
+  sa_instruks: string | null;
+  /** Stell underveis: kniping/tynning/oppbinding — teknikk og hvor på planten. */
+  stell_instruks: string | null;
+  /** Høsting: når, med hva, og nøyaktig hvor det kuttes. */
+  host_instruks: string | null;
   varianter: string[] | null;
   kilder: string[] | null;
   owner_id: string | null;
