@@ -1296,8 +1296,8 @@
   </div>
   <div class="snap-card">
     <div class="snap-label">💰 Brukt så langt</div>
-    <div class="snap-value">~€210</div>
-    <div class="snap-sub">~€153 til potta + ~€54 lodd/lek — se pris-oversikt</div>
+    <div class="snap-value">~€240</div>
+    <div class="snap-sub">~€153 potta + ~€54 lodd/lek + ~€30 påfyll (B5) — se pris-oversikt</div>
   </div>
   <div class="snap-card">
     <div class="snap-label">📦 Hardware</div>
@@ -1372,7 +1372,7 @@
         <div class="ic-icon">🔌</div>
         <h3>Breadboard-testing</h3>
         <p>Breadboard-testing 9.–10. juni: <strong>ESP32</strong> (MicroPython), <strong>OLED</strong>, <strong>DHT22</strong>, <strong>KY-040</strong>, <strong>alle 3 jordfukt</strong> (kalibrert: tørr ~3190 / våt ~1140), <strong>buck</strong> (5,26V) og <strong>LED-strip tent</strong> (0,94 A/potte). Gjenstår: MOSFET-styrt lys (venter loddebolt — modulen er et byggesett), <strong>full main.py + WiFi + Supabase</strong> (ikke blokkert), laser + kamera (i posten).</p>
-        <span class="pill pill-green">● 5 moduler testet</span>
+        <span class="pill pill-green">● 7 moduler + buck + LED testet</span>
       </div>
       <div class="infra-card">
         <div class="ic-icon">📐</div>
@@ -1643,8 +1643,8 @@
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-fuse"/></svg>
         <div class="comp-body">
           <h4>Fuse holder (sikringsholder) 5×20mm</h4>
-          <div class="what">Inline-holder for 5×20mm patron-sikringer. Kom med en <strong>glass F3AL250V (rask)</strong> sikring som passer holderen — men vi vil ha en <em>treg</em> sikring, så holder + glass-F3A går i reserve. Krever en 5×20mm patron merket T3A for å brukes (kjøpes evt. senere).</div>
-          <div class="spec">BLX-A, 5×20mm, ledninger på begge sider, sort, 10 stk · reserve</div>
+          <div class="what">Inline-holder for 5×20mm patron-sikringer. Kom med en <strong>glass F3AL250V (rask)</strong> som passer holderen — men vi vil ha <em>treg</em>. ✅ Løst i Bestilling 5: kjøpt <strong>5×20 slow-blow 3A + 5A (glass)</strong> som passer holderen → da brukes holderen i stedet for den leadede inline-sikringen.</div>
+          <div class="spec">BLX-A, 5×20mm, ledninger på begge sider, sort, 10 stk · brukes med treg patron (B5)</div>
         </div>
         <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span></div>
       </div>
@@ -1835,13 +1835,29 @@
         </div>
         <div class="comp-status"><span class="pill pill-green">Klar</span></div>
       </div>
+
+      <div class="comp-group-title" style="grid-column:1/-1;">🛒 Bestilling 5 — påfyll &amp; semi-permanent bygg (~€30, bestilt 10. juni)</div>
+      <div style="grid-column:1/-1; background:#0a1218; border:1px solid #1d4ed8; border-radius:10px; padding:1rem 1.25rem; font-size:0.87rem;">
+        <p style="color:var(--muted); margin:0 0 0.6rem;">Samlet etter kveldens breadboard-testing. Alt gjennomgått del-for-del mot AliExpress-screenshots (de to fellene — flux-type og rask/treg sikring — er sjekket).</p>
+        <ul style="color:var(--muted); margin:0 0 0.6rem 1.1rem; padding:0; line-height:1.7;">
+          <li><strong style="color:var(--text);">12V 5A-adapter</strong> (self-adapting 2,1/2,5mm plugg) — margin for 2 potter (3A var i snaueste laget ved 2,5 A)</li>
+          <li><strong style="color:var(--text);">Wago 221-415 (5-v) + 221-413 (3-v)</strong>, original — samle 3 takstriper + ned-kabel (PCT-211 du har er bare 2-v)</li>
+          <li><strong style="color:var(--text);">Jordfukt v2.0 10-pk</strong> → 13 totalt: 8 til 2 potter (4/potte) + 5 reserve</li>
+          <li><strong style="color:var(--text);">Silikon 2-pin 20 AWG 10m</strong>, LED-clips 8mm — kraft-runs + reserve</li>
+          <li><strong style="color:var(--text);">Sikring 5×20 slow-blow 3A + 5A</strong> (glass) — treg patron til BLX-A-holderen</li>
+          <li><strong style="color:var(--text);">Flux-penn (no-clean)</strong> — lettere lodding (IKKE syre-flux)</li>
+          <li><strong style="color:var(--text);">Perfboard double-sided 7×9 + 5×7</strong> + <strong style="color:var(--text);">pinnerader male+female</strong> — semi-permanent bygg: loddet kort med hunn-headers (moduler plugges i, kan byttes)</li>
+          <li><strong style="color:var(--text);">Motstand-sortiment + 5mm LED</strong> — pulldown-auto-deteksjon, indikator-LED-test på GPIO26, lek</li>
+        </ul>
+        <p style="color:var(--dim); margin:0; font-size:0.83rem;">Loddeutstyr, laser og kamera ligger allerede i Bestilling 3 &amp; 4 (i posten).</p>
+      </div>
     </div>
   </section>
 
   <!-- ── Pris-oversikt ── -->
   <section>
     <div class="section-title"><span class="icon">💰</span> Pris-oversikt — etter hva tingene er til</div>
-    <p class="section-intro">Delt i to: det du faktisk trenger for å bygge potta, og «ekstra» (loddeutstyr + lekegreier) som er for læring. Alle priser er omtrentlige i euro (€) fra AliExpress inkl. mva.</p>
+    <p class="section-intro">Delt i tre: det du faktisk trenger for å bygge potta, «ekstra» (loddeutstyr + lekegreier), og påfyll/semi-permanent (Bestilling 5). Alle priser er omtrentlige i euro (€) fra AliExpress inkl. mva.</p>
 
     <div class="conn-table" style="margin-top:0.9rem;">
       <table>
@@ -1888,15 +1904,31 @@
             <td style="text-align:right; color:var(--yellow);">~€54</td>
           </tr>
 
+          <tr class="step-header"><td colspan="3">🔧 Påfyll &amp; semi-permanent (Bestilling 5, bestilt 10. juni)</td></tr>
+          <tr>
+            <td>Påfyll til 2 potter</td>
+            <td>12V 5A-adapter (self-adapting), Wago 221-415 + 221-413, jordfukt 10-pk, silikon 2-pin 20 AWG 10m, LED-clips, sikring 3A+5A (treg glass)</td>
+            <td style="text-align:right;">~€22</td>
+          </tr>
+          <tr>
+            <td>Semi-permanent + lodding</td>
+            <td>Perfboard double-sided 7×9 + 5×7, pinnerader male+female 2,54mm, flux-penn (no-clean), motstand-sortiment + 5mm LED</td>
+            <td style="text-align:right;">~€8</td>
+          </tr>
+          <tr style="background:#0a1218; font-weight:600;">
+            <td colspan="2" style="color:var(--blue);">Sum Bestilling 5</td>
+            <td style="text-align:right; color:var(--blue);">~€30</td>
+          </tr>
+
           <tr class="step-header"><td colspan="3">Σ Totalt</td></tr>
           <tr style="font-weight:700; font-size:1.02em;">
             <td colspan="2">Alt inkl. frakt (~€3)</td>
-            <td style="text-align:right;">~€210</td>
+            <td style="text-align:right;">~€240</td>
           </tr>
         </tbody>
       </table>
     </div>
-    <p class="section-intro" style="margin-top:0.7rem;">💡 Selve den fungerende potta koster <strong style="color:var(--green);">rundt €150</strong>. Resten (~€54) er loddeutstyr og lekegreier du valgte å ta med for å lære — potta bygges helt loddefritt med Wago + Dupont.</p>
+    <p class="section-intro" style="margin-top:0.7rem;">💡 Selve den fungerende potta koster <strong style="color:var(--green);">rundt €150</strong>. Sensor-/modulkoblingene er loddefrie (Wago + Dupont), <strong>men noe lodding trengs likevel</strong>: MOSFET-modulen er et byggesett der skrueklemmene loddes på, og Markus heller mot et loddet perfboard for det permanente bygget. Derfor er loddeutstyret (Bestilling 4) nå på kritisk sti, ikke bare «lek».</p>
 
     <div style="background:#0a1218; border:1px solid #1d4ed8; border-radius:10px; padding:1rem 1.25rem; font-size:0.88rem; display:flex; gap:0.9rem; align-items:flex-start; margin-top:1.1rem;">
       <span style="font-size:1.4rem; flex-shrink:0;">🪴</span>
@@ -2520,7 +2552,7 @@
       <div>
         <strong style="color:var(--blue); display:block; margin-bottom:0.3rem;">Konfidens: ~95%</strong>
         <p style="color:var(--muted); margin-bottom:0.45rem;">GPIO-tildelinger, spenningsnivåer (12V / 5V / 3.3V), strømkjeden (adapter → DC inline switch → barrel jack-pigtail → slow-blow fuse → buck → ESP32), og alle sensor-protokoller (I2C, ADC, NPN open-collector) er verifisert mot ESP32 WROOM-32D datasheets. Én ting bekreftes når hardware ankommer:</p>
-        <p style="color:var(--yellow); font-size:0.82rem;">⚠ <strong style="color:var(--yellow);">MOSFET-modul pinout:</strong> Billige AliExpress-moduler kan ha VIN/OUT-pinner merket ulikt fra batch til batch. Logikken er riktig (GPIO26 → SIG, 12V → LED via MOSFET). Sjekk skjemaet som følger med modulen og bruk multimeter på OUT for å verifisere rett spenning <em>før</em> du kobler til LED-stripen.</p>
+        <p style="color:var(--yellow); font-size:0.82rem;">⚠ <strong style="color:var(--yellow);">MOSFET-modul (faktisk merking):</strong> opto-isolert byggesett — grønn 2-v <code>PWM</code>/<code>GND</code> (styreside), blå 3-v <code>+</code>/<code>LOAD</code>/<code>−</code> (kraftside). Skrueklemmene loddes på først; medfølgende 3-pins header passer ikke. Standard low-side: 12V+ og LED+ → <code>+</code>, 12V− → <code>−</code>, LED− → <code>LOAD</code>. Verifiser med multimeter <em>før</em> LED kobles til.</p>
       </div>
     </div>
 
@@ -2581,17 +2613,18 @@
           <tr style="background:#0a1a2a;"><td class="step-badge" style="color:var(--blue);">1</td><td colspan="4" style="color:var(--muted); font-size:0.83rem;">Ingen ledninger i dette steget — koble kun ESP32 til PC via USB-C. Flash MicroPython én gang via Thonny, last opp <code>boot.py</code> med WiFi-info. Verifiser at Thonny-konsollen viser en IP-adresse.</td></tr>
 
           <!-- STEG 2 -->
-          <tr class="step-header"><td colspan="5">💡 Steg 2 — LED-strip og MOSFET (ESP32 på USB-C)</td></tr>
-          <tr><td class="step-badge">2</td><td>12V-skinne (fra pigtail/sikring)</td><td>MOSFET <code>VIN</code></td><td><span class="voltage-pill v-12v">12V</span></td><td>12V inn til MOSFET fra strømkjeden i Steg 0</td></tr>
-          <tr><td class="step-badge">2</td><td>MOSFET <code>GND</code></td><td>GND-skinne</td><td><span class="voltage-pill v-gnd">GND</span></td><td>Referanse for signal</td></tr>
-          <tr><td class="step-badge">2</td><td>ESP32 <code>GPIO26</code></td><td>MOSFET <code>SIG</code></td><td><span class="voltage-pill v-sig">PWM</span></td><td>1 kHz dimming-signal fra ESP32</td></tr>
-          <tr><td class="step-badge">2</td><td>MOSFET <code>OUT</code></td><td>LED-strip <code>+</code></td><td><span class="voltage-pill v-12v">12V</span></td><td>Byttet 12V ut til LED via clip</td></tr>
-          <tr><td class="step-badge">2</td><td>LED-strip <code>−</code></td><td>GND-skinne</td><td><span class="voltage-pill v-gnd">GND</span></td><td>Retur for LED-krets</td></tr>
-          <tr class="warn-row"><td class="step-badge" style="color:var(--green);">✓</td><td colspan="4" style="color:var(--green); font-size:0.83rem;">Test: kjør <code>led.duty(512)</code> i Thonny — LED-stripen skal lyse svakt. Styr lysstyrke fra web-appen.</td></tr>
+          <tr class="step-header"><td colspan="5">💡 Steg 2 — LED-strip og MOSFET (ESP32 på USB-C) · modulen må loddes først (byggesett)</td></tr>
+          <tr><td class="step-badge">2</td><td>12V-skinne (fra pigtail/sikring)</td><td>MOSFET blå <code>+</code></td><td><span class="voltage-pill v-12v">12V</span></td><td>12V inn fra strømkjeden i Steg 0</td></tr>
+          <tr><td class="step-badge">2</td><td>12V− / GND-skinne</td><td>MOSFET blå <code>−</code></td><td><span class="voltage-pill v-gnd">GND</span></td><td>12V-retur (source)</td></tr>
+          <tr><td class="step-badge">2</td><td>ESP32 <code>GPIO26</code></td><td>MOSFET grønn <code>PWM</code></td><td><span class="voltage-pill v-sig">PWM</span></td><td>1 kHz dimming-signal (opto-isolert)</td></tr>
+          <tr><td class="step-badge">2</td><td>ESP32 <code>GND</code></td><td>MOSFET grønn <code>GND</code></td><td><span class="voltage-pill v-gnd">GND</span></td><td>Referanse for styresignalet</td></tr>
+          <tr><td class="step-badge">2</td><td>LED-strip <code>+</code></td><td>MOSFET blå <code>+</code></td><td><span class="voltage-pill v-12v">12V</span></td><td>LED-pluss på samme terminal som 12V+ (via clip)</td></tr>
+          <tr><td class="step-badge">2</td><td>LED-strip <code>−</code></td><td>MOSFET blå <code>LOAD</code></td><td><span class="voltage-pill v-sig">brytes</span></td><td>LED-minus brytes mot GND av MOSFETen — IKKE rett til GND-skinne</td></tr>
+          <tr class="warn-row"><td class="step-badge" style="color:var(--green);">✓</td><td colspan="4" style="color:var(--green); font-size:0.83rem;">Verifiser +/LOAD/− med multimeter før LED kobles til. Test: kjør <code>led.duty(512)</code> i Thonny — LED-stripen skal lyse svakt. Styr lysstyrke fra web-appen.</td></tr>
 
           <!-- STEG 3 -->
           <tr class="step-header"><td colspan="5">🔋 Steg 3 — Bytt til buck-strøm (koble fra USB-C)</td></tr>
-          <tr><td class="step-badge">3</td><td>Buck converter <code>OUT+</code></td><td>ESP32 <code>VIN</code></td><td><span class="voltage-pill v-5v">5V</span></td><td>Fast strøm til ESP32</td></tr>
+          <tr><td class="step-badge">3</td><td>Buck <code>5V</code>-utgang (USB-side)</td><td>ESP32 <code>VIN</code></td><td><span class="voltage-pill v-5v">5V</span></td><td>Fast 5V til ESP32 (målt 5,26V)</td></tr>
           <tr><td class="step-badge">3</td><td>ESP32 <code>GND</code></td><td>GND-skinne</td><td><span class="voltage-pill v-gnd">GND</span></td><td>ESP32 til felles minus</td></tr>
           <tr class="warn-row"><td class="step-badge" style="color:var(--yellow);">⚠</td><td colspan="4" style="color:var(--yellow); font-size:0.83rem;">Ha ALDRI USB-C og VIN-kobling inne samtidig under normal drift. Koble alltid fra VIN-kabelen FØR du programmerer via USB-C.</td></tr>
 
@@ -2752,7 +2785,7 @@
         <div class="step-num">2</div>
         <div class="step-body">
           <h3>LED-strip + MOSFET — kjernefunksjonen</h3>
-          <p>Trekk ut alt strøm. Plasser MOSFET ved siden av ESP32 på breadboardet. Koble <strong>12V fra barrel jack</strong> til MOSFET VIN, og <strong>GPIO26 fra ESP32</strong> til MOSFET SIG. Bruk LED clip connector på LED-stripen (ingen lodding). Sett USB-C tilbake i ESP32 og kjør <code>main.py</code> — test fra web-appen at lyset dimmes.</p>
+          <p>⚠️ MOSFET-modulen er et <strong>byggesett</strong> — lodd først på de to skrueklemmene (grønn 2-v <code>PWM</code>/<code>GND</code>, blå 3-v <code>+</code>/<code>LOAD</code>/<code>−</code>). Den medfølgende 3-pins headeren passer ikke (reserve). Trekk så ut alt strøm. Koble <strong>GPIO26 → grønn <code>PWM</code></strong> og <strong>ESP32 GND → grønn <code>GND</code></strong> (opto-isolert styreside). På blå kraftside: <strong>12V+ → <code>+</code></strong>, <strong>12V− → <code>−</code></strong>, og <strong>LED-stripa mellom <code>+</code> (pluss) og <code>LOAD</code> (minus)</strong> via clip. Sett USB-C tilbake og kjør <code>main.py</code> — test dimming fra appen. <em>(LED-strip allerede testet direkte på 12V 10. juni — lyser; gjenstår å la ESP32 styre den via MOSFET.)</em></p>
 
           <div class="step-pics">
             <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-mosfet"/></svg><span class="lbl">MOSFET</span></div>
@@ -2763,18 +2796,18 @@
           </div>
 
           <div class="step-wires">
-            <span class="wire-chip c-12v">barrel jack → MOSFET VIN</span>
-            <span class="wire-chip c-12v">MOSFET OUT → LED + (via clip)</span>
-            <span class="wire-chip c-sig">ESP32 GPIO26 → MOSFET SIG</span>
-            <span class="wire-chip c-gnd">felles GND</span>
+            <span class="wire-chip c-12v">12V+ → blå <code>+</code></span>
+            <span class="wire-chip c-12v">LED− → blå <code>LOAD</code> (via clip)</span>
+            <span class="wire-chip c-sig">ESP32 GPIO26 → grønn <code>PWM</code></span>
+            <span class="wire-chip c-gnd">felles GND (+ grønn <code>GND</code>)</span>
           </div>
 
-          <div class="check-tip">⚠ MOSFET SIG må aldri stå løs — koble den til GPIO26 selv om du ikke kjører kode ennå. Flytende SIG-pinne får MOSFET til å bli halv-åpen og overoppheter.</div>
+          <div class="check-tip">⚠ Grønn <code>PWM</code> må aldri stå løs — koble den til GPIO26 selv om du ikke kjører kode ennå. Flytende gate-signal får MOSFET til å bli halv-åpen og overoppheter.</div>
 
-          <div class="check-tip">⚠ <strong>Begge LED-ledningene går til MOSFETens OUT-terminaler</strong> (<code>OUT+</code> og <code>OUT−</code>) — IKKE LED-minus rett til GND-skinnen. LR7843 bryter på minus-siden: kobler du LED− utenom modulen, lyser stripa alltid (lar seg ikke dimme/slå av). 12V inn på inn-terminalene (<code>VIN</code> + <code>GND</code>), LED ut på ut-terminalene (<code>OUT+</code>/<code>OUT−</code>). Merkingen varierer mellom moduler — les hva som står trykt på din når den kommer; inn-siden er der 12V kobles, ut-siden går til LED.</div>
+          <div class="check-tip">⚠ <strong>Modulen bryter på minus-siden (low-side).</strong> Faktiske merkelapper på din modul: blå 3-v <code>+</code>/<code>LOAD</code>/<code>−</code>. Standard kobling: <strong>12V+ og LED+ → <code>+</code></strong>, <strong>12V− → <code>−</code></strong>, <strong>LED− → <code>LOAD</code></strong> (den brytes mot <code>−</code> av MOSFETen). Kobler du LED− rett til GND-skinnen utenom modulen, lyser stripa alltid (lar seg ikke dimme). ✅ Verifiser den eksakte +/LOAD/−-koblingen med multimeter før LED kobles til (gjøres sammen ved oppkobling).</div>
 
           <div style="background:#0a1a2a; border-left:3px solid var(--blue); padding:0.55rem 0.8rem; margin-top:0.6rem; border-radius:0 6px 6px 0; font-size:0.82rem; color:var(--muted);">
-            💡 <strong style="color:var(--blue);">Når dette skal inn i 3D-utskriften:</strong> LED-stripen sitter under taket. Silikonledning går gjennom stolpene ned til MOSFET i basen. Bruk <strong>Wago 221-kontakter</strong> i bunn og topp av stolpa — da kan du koble fra hele topp-konstruksjonen for vedlikehold. Strip 10mm bar ledning, sett i Wago, vipp ned hendelen.
+            💡 <strong style="color:var(--blue);">Når dette skal inn i 3D-utskriften:</strong> de <strong>3 takstripene (3×40cm) kobles i parallell</strong> — alle pluss + alle minus samles med en <strong>Wago 221-415 (5-veis)</strong> til ett ledningspar (målt 0,94 A/potte). Silikonledning (20 AWG) går gjennom stolpene ned til MOSFET i basen. Bruk <strong>Wago 221</strong> i bunn og topp av stolpa — da kan du koble fra hele topp-konstruksjonen for vedlikehold. Strip 10mm bar ledning, sett i Wago, vipp ned hendelen.
           </div>
         </div>
       </div>
@@ -3010,8 +3043,8 @@
       <div class="phase-item current">
         <div class="phase-circle">1</div>
         <div class="phase-body">
-          <h4>Fase 1 — Breadboard-prototype <span class="pill pill-green phase-tag">Pågår — 5 moduler testet</span></h4>
-          <p>Hardware ankommet. Verifisert på breadboard 9. juni: ESP32 (MicroPython), OLED, DHT22, jordfukt og KY-040. Gjenstår: jordfukt ×2, og LED-strip på/av + dimming via MOSFET på 12V (krever buck converter stilt til 5V med multimeter).</p>
+          <h4>Fase 1 — Breadboard-prototype <span class="pill pill-green phase-tag">Pågår — mye testet 9.–10. juni</span></h4>
+          <p>Verifisert på breadboard: ESP32 (MicroPython), OLED, DHT22, KY-040, <strong>alle 3 jordfukt</strong> (kalibrert tørr ~3190 / våt ~1140), <strong>buck</strong> (fast 5V, målt 5,26V) og <strong>LED-strip tent direkte på 12V</strong> (0,94 A/potte). Gjenstår: ESP32-styrt lys via MOSFET (modulen er et byggesett — venter loddebolt), <strong>full main.py + WiFi + Supabase end-to-end</strong> (ikke blokkert — trenger bare WiFi i config.py), laser + kamera (i posten).</p>
         </div>
       </div>
       <div class="phase-item">
