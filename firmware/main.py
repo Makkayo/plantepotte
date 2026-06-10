@@ -7,19 +7,23 @@
 #   3. Leser sensorer: DHT22, 3x jordfukt (ra ADC), VL53L0X vann-avstand (mm)
 #   4. Styrer LED-strip via MOSFET (PWM) etter timer + intensitet
 #   5. Lokal dimming med KY-040: vri = +/-5 %, trykk = tilbake til app-verdien
+#      (begge reagerer OYEBLIKKELIG via interrupt — venter ikke pa loopen)
 #   6. Poster sensordata til Supabase hvert 60. sekund
 #   7. Viser status pa OLED
+#   8. Re-synker klokka mot NTP en gang i dognet (ESP32-klokka drifter)
+#   9. Watchdog (hvis BRUK_WATCHDOG=True): restarter ESP32 automatisk hvis
+#      loopen henger i over 2 min (f.eks. nettverkskall som aldri svarer)
 
 import time
 import network
 import urequests
 import dht
 import ntptime
-from machine import Pin, PWM, ADC, SoftI2C, RTC
+from machine import Pin, PWM, ADC, SoftI2C, RTC, WDT
 
 from config import (SUPABASE_URL, ANON_KEY, POTTE_ID, TZ_OFFSET_HOURS,
                     WIFI_SSID, WIFI_PASS, DEFAULT_INTENSITET,
-                    DEFAULT_TIMER_ON, DEFAULT_TIMER_OFF)
+                    DEFAULT_TIMER_ON, DEFAULT_TIMER_OFF, BRUK_WATCHDOG)
 import ssd1306
 import logic
 
@@ -77,9 +81,16 @@ intensitet = DEFAULT_INTENSITET       # gjeldende lysstyrke (kan justeres av enc
 app_intensitet = DEFAULT_INTENSITET   # siste verdi fra appen (encoder-trykk gar hit)
 timer_on = DEFAULT_TIMER_ON
 timer_off = DEFAULT_TIMER_OFF
+lyser = False                         # er lyset pa akkurat na? (timer-styrt, settes i loopen)
 last_cmd_stamp = None
-sw_prev = True
 _last_turn_ms = 0                     # debounce: tidspunkt for siste godkjente vridning
+_last_press_ms = 0                    # debounce for encoder-knappen
+
+
+def _apply_duty():
+    """Oppdater PWM med en gang — kalles bade fra loopen og fra interrupts,
+    sa knappen/vridninger far OYEBLIKKELIG effekt (ikke 5+ sek forsinkelse)."""
+    led.duty(logic.duty_for(intensitet, lyser))
 
 
 # ── KY-040 via interrupt (mister aldri en vridning) ──
@@ -97,9 +108,23 @@ def _on_turn(pin):
         intensitet = logic.adjust(intensitet, 5)     # med klokka = lysere
     else:
         intensitet = logic.adjust(intensitet, -5)    # mot klokka = morkere
+    _apply_duty()
+
+
+# Encoder-knapp via interrupt: trykk = tilbake til appens verdi.
+# (Var tidligere pollet hvert 5. sek — korte trykk kunne forsvinne.)
+def _on_press(pin):
+    global intensitet, _last_press_ms
+    now = time.ticks_ms()
+    if time.ticks_diff(now, _last_press_ms) < 300:
+        return
+    _last_press_ms = now
+    intensitet = app_intensitet
+    _apply_duty()
 
 
 clk.irq(trigger=Pin.IRQ_FALLING, handler=_on_turn)
+sw.irq(trigger=Pin.IRQ_FALLING, handler=_on_press)
 
 
 # ── WiFi ──
@@ -190,25 +215,55 @@ def show(temp, hum, s, vann_mm, lys_pst, lyser, wifi_ok):
     display.show()
 
 
+# ── Klokke (NTP) ──
+def sync_ntp():
+    try:
+        ntptime.settime()                  # setter RTC til UTC
+        return True
+    except Exception:
+        return False
+
+
 # ── Oppstart ──
 print("=" * 40)
 print("Plantepotte firmware - " + POTTE_ID)
 ensure_wifi()
+ntp_ok = False
 for _ in range(3):                        # NTP med noen forsok
-    try:
-        ntptime.settime()
+    if sync_ntp():
+        ntp_ok = True
         print("NTP-tid satt (UTC)")
         break
-    except Exception:
-        time.sleep(1)
+    time.sleep(1)
+if not ntp_ok:
+    print("ADVARSEL: ingen NTP-tid enna - lystimer venter pa nett")
 print("=" * 40)
 
 POST_INTERVAL = 60
+NTP_INTERVAL = 24 * 3600                   # re-synk klokka en gang i dognet
 last_post = -POST_INTERVAL                 # post med en gang ved oppstart
+last_ntp = time.time()
+
+# Watchdog: ESP32 restarter seg selv hvis loopen ikke "melder fra" (feed)
+# innen 2 min — redder potta hvis et nettverkskall henger for alltid.
+wdt = WDT(timeout=120000) if BRUK_WATCHDOG else None
+if wdt:
+    print("Watchdog aktiv (2 min)")
 
 # ── Hovedlokke ──
 while True:
+    if wdt:
+        wdt.feed()
     wifi_ok = ensure_wifi()
+
+    # Klokke: re-synk hvert dogn, og prov igjen sa fort nettet er oppe
+    # hvis oppstarten skjedde uten internett (ellers er lystimeren feil).
+    if wifi_ok and (not ntp_ok or (time.time() - last_ntp) >= NTP_INTERVAL):
+        if sync_ntp():
+            if not ntp_ok:
+                print("NTP-tid satt (UTC)")
+            ntp_ok = True
+            last_ntp = time.time()
 
     # 1) Hent kommando. Ny app-verdi (updated_at endret) overstyrer lokal dimming.
     cmd = get_cmd() if wifi_ok else None
@@ -222,29 +277,22 @@ while True:
             timer_off = cmd.get("timer_off", DEFAULT_TIMER_OFF)
             print("Ny kommando:", app_intensitet, "%", timer_on, "-", timer_off)
 
-    # 2) Encoder-knapp -> tilbake til app-verdien
-    sw_now = not sw.value()
-    if sw_now and not sw_prev:
-        intensitet = app_intensitet
-        print("Encoder-knapp: tilbake til", app_intensitet, "%")
-    sw_prev = sw_now
-
-    # 3) Les sensorer
+    # 2) Les sensorer (encoder-knappen handteres na av interrupt, ikke her)
     temp, hum, s, vann_mm = read_sensors()
 
-    # 4) Skal lyset sta pa? (timer + lokal tid)
+    # 3) Skal lyset sta pa? (timer + lokal tid)
     _, _, _, _, hh, mm, _, _ = rtc.datetime()
     lh, lm = logic.local_hm(hh, mm, TZ_OFFSET_HOURS)
     now_min = lh * 60 + lm
     lyser = logic.light_should_be_on(now_min,
                                      logic.hhmm_to_min(timer_on),
                                      logic.hhmm_to_min(timer_off))
-    led.duty(logic.duty_for(intensitet, lyser))
+    _apply_duty()
 
-    # 5) Skjerm
+    # 4) Skjerm
     show(temp, hum, s, vann_mm, intensitet, lyser, wifi_ok)
 
-    # 6) Post sensordata hvert 60. sek
+    # 5) Post sensordata hvert 60. sek
     if wifi_ok and (time.time() - last_post) >= POST_INTERVAL:
         if post_sensors(temp, hum, s, vann_mm):
             last_post = time.time()

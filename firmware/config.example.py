@@ -1,4 +1,6 @@
-# config.py — det ENESTE du må endre er WiFi-navn og passord nederst.
+# config.example.py — MAL for config.py.
+# Kopier denne fila til `config.py` og fyll inn WiFi-navn og passord nederst.
+# (config.py er gitignored slik at WiFi-passordet ditt ALDRI havner på GitHub.)
 # Resten er ferdig utfylt for potte 1.
 #
 # (ANON_KEY er en offentlig "anon"-nøkkel — den er laget for å ligge i klient-
@@ -20,6 +22,14 @@ TZ_OFFSET_HOURS = 2
 DEFAULT_INTENSITET = 70        # prosent
 DEFAULT_TIMER_ON = "07:00"
 DEFAULT_TIMER_OFF = "23:00"
+
+# ── Vaktbikkje (watchdog) ──
+# True  = ESP32 restarter seg selv automatisk hvis programmet henger i over
+#         2 minutter (f.eks. et nettverkskall som aldri svarer). Skal være
+#         True når potta står i drift uten PC tilkoblet.
+# False = av. Bruk under utvikling i Thonny — en aktiv watchdog kan ikke skrus
+#         av igjen, og restarter brettet midt i økta når du stopper programmet.
+BRUK_WATCHDOG = False          # ⚠️ sett True når potta settes i drift!
 
 # ─────────────────────────────────────────────────────────────────────
 #  ↓↓↓  ENDRE DISSE TO  ↓↓↓   (kun 2,4 GHz-nett — ESP32 ser ikke 5 GHz)

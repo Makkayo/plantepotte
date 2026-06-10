@@ -13,3 +13,6 @@ dist
 # Python bytecode (fra test_logic.py)
 __pycache__/
 *.pyc
+
+# WiFi-passord skal ALDRI til GitHub — bruk config.example.py som mal
+firmware/config.py
