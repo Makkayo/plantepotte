@@ -4,7 +4,7 @@
 # Hva den gjor, i loop hvert 5. sekund:
 #   1. Sorger for at WiFi er oppe (gjenoppkobler ved brudd)
 #   2. Henter lys-kommando fra Supabase (intensitet + timer pa/av)
-#   3. Leser sensorer: DHT22, 3x jordfukt (ra ADC), VL53L0X vann-avstand (mm)
+#   3. Leser sensorer: DHT22, inntil 4x jordfukt (ra ADC), VL53L0X vann-avstand (mm)
 #   4. Styrer LED-strip via MOSFET (PWM) etter timer + intensitet
 #   5. Lokal dimming med KY-040: vri = +/-5 %, trykk = tilbake til app-verdien
 #      (begge reagerer OYEBLIKKELIG via interrupt — venter ikke pa loopen)
@@ -277,7 +277,8 @@ while True:
         stamp = cmd.get("updated_at")
         if stamp != last_cmd_stamp:
             last_cmd_stamp = stamp
-            app_intensitet = int(cmd.get("intensitet", DEFAULT_INTENSITET))
+            # `or DEFAULT` fanger ogsa null-verdi fra DB (ikke bare manglende felt)
+            app_intensitet = int(cmd.get("intensitet") or DEFAULT_INTENSITET)
             intensitet = app_intensitet
             timer_on = cmd.get("timer_on", DEFAULT_TIMER_ON)
             timer_off = cmd.get("timer_off", DEFAULT_TIMER_OFF)
