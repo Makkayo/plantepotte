@@ -10,9 +10,13 @@
 
   let { sensor }: { sensor: PotteSensorData | null } = $props();
 
+  // Inntil 4 jordsensor-plasser. Vis bare de som faktisk har en avlesning —
+  // en plass uten sensor sender null fra ESP32 og skjules her.
   const jord = $derived.by(() => {
-    if (!sensor) return [null, null, null];
-    return [sensor.jord1, sensor.jord2, sensor.jord3].map((r) => jordfuktProsent(r));
+    const raa = sensor ? [sensor.jord1, sensor.jord2, sensor.jord3, sensor.jord4] : [];
+    return raa
+      .map((r, idx) => ({ nr: idx + 1, pct: jordfuktProsent(r) }))
+      .filter((j) => j.pct !== null);
   });
 
   const vannPct = $derived(vannNivaProsent(sensor?.vann_avstand_mm));
@@ -77,34 +81,33 @@
       </div>
     </div>
 
-    <!-- Jordfukt-stolper -->
-    <div class="mt-5">
-      <div class="text-xs text-text-muted mb-2">Jordfuktighet</div>
-      <div class="space-y-2">
-        {#each [1, 2, 3] as n, idx}
-          {@const pct = jord[idx]}
-          {@const kl = jordfuktKlasse(pct)}
-          <div class="flex items-center gap-3">
-            <div class="text-xs text-text-muted w-20">Sensor {n}</div>
-            <div class="flex-1 h-2 bg-border rounded-full overflow-hidden">
-              {#if pct !== null}
+    <!-- Jordfukt-stolper (kun tilkoblede sensorer) -->
+    {#if jord.length > 0}
+      <div class="mt-5">
+        <div class="text-xs text-text-muted mb-2">Jordfuktighet</div>
+        <div class="space-y-2">
+          {#each jord as j}
+            {@const kl = jordfuktKlasse(j.pct)}
+            <div class="flex items-center gap-3">
+              <div class="text-xs text-text-muted w-20">Sensor {j.nr}</div>
+              <div class="flex-1 h-2 bg-border rounded-full overflow-hidden">
                 <div
                   class="h-full rounded-full transition-all duration-500 {kl === 'dry'
                     ? 'bg-rose'
                     : kl === 'wet'
                       ? 'bg-sky'
                       : 'bg-leaf'}"
-                  style="width: {pct}%"
+                  style="width: {j.pct}%"
                 ></div>
-              {/if}
+              </div>
+              <div class="text-xs font-medium w-12 text-right tabular-nums">
+                {j.pct}%
+              </div>
             </div>
-            <div class="text-xs font-medium w-12 text-right tabular-nums">
-              {pct !== null ? `${pct}%` : '—'}
-            </div>
-          </div>
-        {/each}
+          {/each}
+        </div>
       </div>
-    </div>
+    {/if}
 
     <!-- Advarsler -->
     {#if vannKl === 'lav'}

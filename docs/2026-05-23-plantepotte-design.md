@@ -82,6 +82,7 @@ Detaljert designplan: se `3d-design.html`.
 | 34   | Jordfukt #1 | ADC (input-only pin) | 3.3V |
 | 35   | Jordfukt #2 | ADC (input-only pin) | 3.3V |
 | 32   | Jordfukt #3 | ADC | 3.3V |
+| 33   | Jordfukt #4 | ADC | 3.3V |
 | 16   | KY-040 CLK | Rotary encoder | 3.3V |
 | 17   | KY-040 DT | Rotary encoder | 3.3V |
 | 18   | KY-040 SW | Encoder-knapp | 3.3V |
@@ -239,7 +240,7 @@ def post_sensors(temp, hum, soil, vann_mm):
         "potte_id": POTTE_ID,
         "temperatur": temp,
         "luftfuktighet": hum,
-        "jord1": soil[0], "jord2": soil[1], "jord3": soil[2],
+        "jord1": soil[0], "jord2": soil[1], "jord3": soil[2], "jord4": soil[3],
         "vann_avstand_mm": vann_mm,
     }
     try:
@@ -324,6 +325,7 @@ CREATE TABLE potte_sensor_data (
   jord1           integer,   -- RÅ ADC 0-4095 (lavere = våtere for kapasitiv sensor)
   jord2           integer,
   jord3           integer,
+  jord4           integer,   -- 4. plass (GPIO 33); null hvis ingen sensor koblet til
   vann_avstand_mm integer,   -- RÅ avstand i mm fra VL53L0X-laser til flottør
   registrert_at   timestamptz DEFAULT now()
 );
@@ -360,7 +362,7 @@ INSERT INTO potte_commands (potte_id, intensitet, timer_on, timer_off) VALUES
 
 ### Datakontrakt mellom ESP32 og web-app
 
-- **`jord1/2/3`** er RÅ ADC-verdier (0–4095). Web-appen mapper til prosent (4095 = 0 %, ~1500 = 100 %) og kalibrerer per sensor om nødvendig. ESP32 skal IKKE konvertere til prosent — da blir kalibrering umulig uten å flashe på nytt.
+- **`jord1/2/3/4`** er RÅ ADC-verdier (0–4095). Web-appen mapper til prosent (4095 = 0 %, ~1500 = 100 %) og kalibrerer per sensor om nødvendig. ESP32 skal IKKE konvertere til prosent — da blir kalibrering umulig uten å flashe på nytt. Inntil 4 plasser (GPIO 34/35/32/33); `config.AKTIVE_JORDSENSORER` styrer hvilke som leses — resten sendes som `null` og skjules i appen.
 - **`vann_avstand_mm`** er rå avstand i mm fra VL53L0X-laseren til flottøren. Stor avstand = lite vann, liten avstand = mye vann. Web-appen kalibrerer tom/full per potte og viser nivå i %.
 - **`temperatur/luftfuktighet`** er numeriske verdier fra DHT22 direkte (°C og %).
 

@@ -102,6 +102,7 @@ export interface PotteSensorData {
   jord1: number | null;
   jord2: number | null;
   jord3: number | null;
+  jord4: number | null;
   /** Rå avstand i mm fra VL53L0X-laser til flottør. Web-appen kalibrerer tom/full → %. */
   vann_avstand_mm: number | null;
   registrert_at: string | null;

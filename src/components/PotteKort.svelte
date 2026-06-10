@@ -24,7 +24,7 @@
 
   const jordfuktAvg = $derived.by(() => {
     if (!sensor) return null;
-    const verdier = [sensor.jord1, sensor.jord2, sensor.jord3]
+    const verdier = [sensor.jord1, sensor.jord2, sensor.jord3, sensor.jord4]
       .map((r) => jordfuktProsent(r))
       .filter((x): x is number => x !== null);
     if (verdier.length === 0) return null;

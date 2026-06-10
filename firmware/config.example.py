@@ -13,6 +13,12 @@ ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
 # ── Hvilken potte er dette? ──
 POTTE_ID = "potte1"            # bytt til "potte2" på den andre ESP32-en
 
+# ── Jordfuktsensorer ──
+# Hvilke av de 4 sensor-plassene er faktisk koblet til? Plass 1-4 sitter på
+# GPIO 34/35/32/33. Skriv bare numrene du har plugget inn — resten sendes som
+# null (appen viser dem ikke). Eks: [1, 2] hvis du bare bruker to.
+AKTIVE_JORDSENSORER = [1, 2, 3]
+
 # ── Tidssone ──
 # ESP32 henter UTC fra internett. Norge = UTC+2 om sommeren, UTC+1 om vinteren.
 # ESP32 har ingen automatisk sommertid — endre dette tallet manuelt 2x i året.

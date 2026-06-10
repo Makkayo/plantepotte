@@ -50,11 +50,15 @@ Web-app  ──skriver──►  Supabase  ◄──leser hvert 5s──  ESP32 
 (lysstyrke,            potte_commands                  └► styrer LED via MOSFET
  timer)                                                
 ESP32  ──poster hvert 60s──►  potte_sensor_data  ──►  Web-app viser sensorer
-(temp, fukt, jord×3, vann-mm)
+(temp, fukt, jord×opptil 4, vann-mm)
 ```
 
 - **Jordfukt og vann sendes som RÅ tall** (ADC 0–4095 / avstand i mm). Web-appen
   kalibrerer — så ESP32 skal *ikke* regne om til prosent.
+- **Opptil 4 jordfuktsensorer** (GPIO 34/35/32/33). `AKTIVE_JORDSENSORER` i
+  `config.py` styrer hvilke plasser som er koblet til — f.eks. `[1, 2, 3]`.
+  Plasser som ikke er listet sendes som `null` og skjules i appen. Ingen
+  motstand nødvendig.
 - **KY-040:** vri = ±5 % lokalt, trykk = tilbake til appens verdi. En ny
   innstilling fra appen nullstiller lokal justering.
 - **Lys-timer** støtter at av-tid er før på-tid (krysser midnatt).

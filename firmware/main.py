@@ -23,7 +23,8 @@ from machine import Pin, PWM, ADC, SoftI2C, RTC, WDT
 
 from config import (SUPABASE_URL, ANON_KEY, POTTE_ID, TZ_OFFSET_HOURS,
                     WIFI_SSID, WIFI_PASS, DEFAULT_INTENSITET,
-                    DEFAULT_TIMER_ON, DEFAULT_TIMER_OFF, BRUK_WATCHDOG)
+                    DEFAULT_TIMER_ON, DEFAULT_TIMER_OFF, BRUK_WATCHDOG,
+                    AKTIVE_JORDSENSORER)
 import ssd1306
 import logic
 
@@ -41,8 +42,11 @@ led.duty(0)
 
 dht_sensor = dht.DHT22(Pin(4))
 
+# 4 jordfukt-plasser pa ADC1-pinner (trygge med WiFi). Plass 1-4 = GPIO
+# 34/35/32/33. Vi setter opp alle 4, men leser kun de i AKTIVE_JORDSENSORER.
+SOIL_PINS = (34, 35, 32, 33)
 soil = []
-for _p in (34, 35, 32):
+for _p in SOIL_PINS:
     _a = ADC(Pin(_p))
     _a.atten(ADC.ATTN_11DB)        # full 0-3.3 V -> 0-4095
     soil.append(_a)
@@ -167,7 +171,7 @@ def post_sensors(temp, hum, s, vann_mm):
         "potte_id": POTTE_ID,
         "temperatur": temp,
         "luftfuktighet": hum,
-        "jord1": s[0], "jord2": s[1], "jord3": s[2],
+        "jord1": s[0], "jord2": s[1], "jord3": s[2], "jord4": s[3],
         "vann_avstand_mm": vann_mm,
     }
     try:
@@ -187,7 +191,9 @@ def read_sensors():
         hum = dht_sensor.humidity()
     except Exception:
         temp, hum = None, None
-    s = [a.read() for a in soil]          # ra ADC 0-4095 (appen kalibrerer)
+    # Les kun aktive plasser; resten blir None (appen viser dem ikke).
+    s = [soil[i].read() if (i + 1) in AKTIVE_JORDSENSORER else None
+         for i in range(4)]               # ra ADC 0-4095 (appen kalibrerer)
     vann_mm = None
     if tof:
         try:
@@ -211,7 +217,7 @@ def show(temp, hum, s, vann_mm, lys_pst, lyser, wifi_ok):
     display.text("Lys:" + str(lys_pst) + "% " + ("PA" if lyser else "AV"), 0, 22)
     display.text("Vann:" + _txt(vann_mm) + "mm", 0, 33)
     display.text("J1:" + _txt(s[0]) + " J2:" + _txt(s[1]), 0, 44)
-    display.text("J3:" + _txt(s[2]), 0, 55)
+    display.text("J3:" + _txt(s[2]) + " J4:" + _txt(s[3]), 0, 55)
     display.show()
 
 

@@ -29,7 +29,7 @@ Holder styr på hva som er **bestilt → ankommet → testet** på breadboard.
 | 📦 | Elektrisk tape | ×1 | Kom 9. juni — «20m PVC electrical tape, svart» |
 | 📦 | XKC-Y25 (reserve) | ×4 | Kom 9. juni — «Y25-NPN-5-12V», minst 1 verifisert (bestilt ×4) |
 | ✅ | KY-040 rotary encoder | ×1 | Testet 9. juni — IRQ-basert, dimmer 0–10 + av/på-knapp fungerer |
-| ✅ | Jordfuktsensor kapasitiv v2.0 | ×1 (3stk) | Testet 9. juni — 1 av 3 testet (GPIO34), reagerer på vann. GPIO35+32 gjenstår |
+| ✅ | Jordfuktsensor kapasitiv v2.0 | ×1 (3stk) | Testet 9. juni — 1 av 3 testet (GPIO34), reagerer på vann. GPIO35+32 gjenstår. NB: firmware/app støtter nå 4 plasser (GPIO 34/35/32/33) — kjøp 1 sensor til hvis alle 4 seksjoner skal ha egen føler |
 | ✅ | OLED SSD1306 0.96" | ×1 | Testet 9. juni — viser temp/fukt/jord/lys. ssd1306.py lastet opp til ESP32 |
 | ✅ | DHT22 (AM2302) | ×1 | Testet 9. juni — 28.4°C / 48.2% ved første test |
 
