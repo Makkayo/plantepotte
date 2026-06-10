@@ -13,6 +13,12 @@ ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
 # ── Hvilken potte er dette? ──
 POTTE_ID = "potte1"            # bytt til "potte2" på den andre ESP32-en
 
+# ── Sensordata-frekvens ──
+# Hvor ofte sensordata postes til Supabase, i sekunder. 300 = hvert 5. minutt.
+# (Minutt-oppløsning trengs aldri for planter — endres her uten å røre main.py.
+#  ESP32 leser fortsatt kommandoer hvert 5. sek, så lys-styring er like kjapp.)
+POST_INTERVALL_SEK = 300
+
 # ── Jordfuktsensorer ──
 # Hvilke av de 4 sensor-plassene er faktisk koblet til? Plass 1-4 sitter på
 # GPIO 34/35/32/33. Skriv bare numrene du har plugget inn — resten sendes som

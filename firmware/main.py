@@ -8,7 +8,7 @@
 #   4. Styrer LED-strip via MOSFET (PWM) etter timer + intensitet
 #   5. Lokal dimming med KY-040: vri = +/-5 %, trykk = tilbake til app-verdien
 #      (begge reagerer OYEBLIKKELIG via interrupt — venter ikke pa loopen)
-#   6. Poster sensordata til Supabase hvert 60. sekund
+#   6. Poster sensordata til Supabase (intervall fra config, standard 5 min)
 #   7. Viser status pa OLED
 #   8. Re-synker klokka mot NTP en gang i dognet (ESP32-klokka drifter)
 #   9. Watchdog (hvis BRUK_WATCHDOG=True): restarter ESP32 automatisk hvis
@@ -24,7 +24,7 @@ from machine import Pin, PWM, ADC, SoftI2C, RTC, WDT
 from config import (SUPABASE_URL, ANON_KEY, POTTE_ID, TZ_OFFSET_HOURS,
                     WIFI_SSID, WIFI_PASS, DEFAULT_INTENSITET,
                     DEFAULT_TIMER_ON, DEFAULT_TIMER_OFF, BRUK_WATCHDOG,
-                    AKTIVE_JORDSENSORER)
+                    AKTIVE_JORDSENSORER, POST_INTERVALL_SEK)
 import ssd1306
 import logic
 
@@ -245,7 +245,7 @@ if not ntp_ok:
     print("ADVARSEL: ingen NTP-tid enna - lystimer venter pa nett")
 print("=" * 40)
 
-POST_INTERVAL = 60
+POST_INTERVAL = POST_INTERVALL_SEK         # fra config (standard 300 = 5 min)
 NTP_INTERVAL = 24 * 3600                   # re-synk klokka en gang i dognet
 last_post = -POST_INTERVAL                 # post med en gang ved oppstart
 last_ntp = time.time()
@@ -299,7 +299,7 @@ while True:
     # 4) Skjerm
     show(temp, hum, s, vann_mm, intensitet, lyser, wifi_ok)
 
-    # 5) Post sensordata hvert 60. sek
+    # 5) Post sensordata (intervall fra config)
     if wifi_ok and (time.time() - last_post) >= POST_INTERVAL:
         if post_sensors(temp, hum, s, vann_mm):
             last_post = time.time()

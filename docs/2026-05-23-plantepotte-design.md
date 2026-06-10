@@ -165,6 +165,9 @@ AKTIVE_JORDSENSORER = [1, 2, 3]
 # Watchdog: True i drift (ESP32 restarter seg selv hvis programmet henger
 # >2 min), False under utvikling i Thonny (ellers restarter brettet midt i økta).
 BRUK_WATCHDOG = False
+
+# Sensordata-posting i sekunder (300 = hvert 5. min — minutt trengs aldri).
+POST_INTERVALL_SEK = 300
 ```
 
 ### boot.py
@@ -373,7 +376,7 @@ INSERT INTO potte_commands (potte_id, intensitet, timer_on, timer_off) VALUES
 ### Datakontrakt mellom ESP32 og web-app
 
 - **`jord1/2/3/4`** er RÅ ADC-verdier (0–4095). Web-appen mapper til prosent (målt kalibrering 2026-06-10: tørr ~3200 = 0 %, våt ~1140 = 100 % — se `JORD_TORR`/`JORD_VAT` i `utils.ts`) og kalibrerer per sensor om nødvendig. ESP32 skal IKKE konvertere til prosent — da blir kalibrering umulig uten å flashe på nytt. Inntil 4 plasser (GPIO 34/35/32/33); `config.AKTIVE_JORDSENSORER` styrer hvilke som leses — resten sendes som `null` og skjules i appen.
-- **`vann_avstand_mm`** er rå avstand i mm fra VL53L0X-laseren til flottøren. Stor avstand = lite vann, liten avstand = mye vann. Web-appen kalibrerer tom/full per potte og viser nivå i %.
+- **`vann_avstand_mm`** er rå avstand i mm fra VL53L0X-laseren til flottøren. Stor avstand = lite vann, liten avstand = mye vann. Web-appen kalibrerer tom/full **per potte** via `potter.vann_tom_mm`/`vann_full_mm` (settes med «Sett som tom/full»-knappene i SensorPanel, lagt til 2026-06-10; NULL = global standard i `utils.ts`) og viser nivå i %.
 - **`temperatur/luftfuktighet`** er numeriske verdier fra DHT22 direkte (°C og %).
 
 ---

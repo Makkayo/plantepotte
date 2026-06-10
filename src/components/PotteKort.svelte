@@ -33,7 +33,11 @@
 
   const vannStatus = $derived.by(() => {
     if (!sensor) return null;
-    const pct = vannNivaProsent(sensor.vann_avstand_mm);
+    const pct = vannNivaProsent(
+      sensor.vann_avstand_mm,
+      potte.vann_tom_mm ?? undefined,
+      potte.vann_full_mm ?? undefined,
+    );
     if (pct === null) return null;
     const kl = vannKlasse(pct);
     const farge = kl === 'lav' ? 'text-rose' : kl === 'full' ? 'text-sky' : 'text-leaf';

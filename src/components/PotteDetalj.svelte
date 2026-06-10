@@ -130,7 +130,7 @@
 
     <!-- Sensorer -->
     {#if potte.har_sensorer}
-      <SensorPanel {sensor} />
+      <SensorPanel {sensor} {potte} />
     {/if}
   </div>
 

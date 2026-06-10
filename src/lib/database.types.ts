@@ -65,6 +65,9 @@ export interface Potte {
   antall_seksjoner: number;
   har_sensorer: boolean;
   notater: string | null;
+  /** Laser-avstand (mm) ved tom/full tank — per-potte kalibrering satt fra appen. NULL = global standard. */
+  vann_tom_mm: number | null;
+  vann_full_mm: number | null;
   owner_id: string | null;
   opprettet_at: string;
 }
