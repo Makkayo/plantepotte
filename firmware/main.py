@@ -149,18 +149,33 @@ def ensure_wifi():
 
 
 # ── Supabase ──
+def _lukk(r):
+    """Lukk en urequests-respons trygt (taler at close selv feiler)."""
+    if r:
+        try:
+            r.close()
+        except Exception:
+            pass
+
+
 def get_cmd():
     url = (SUPABASE_URL + "/rest/v1/potte_commands?potte_id=eq." + POTTE_ID +
            "&select=intensitet,timer_on,timer_off,updated_at" +
            "&order=updated_at.desc&limit=1")
+    # try/finally: ESP32 har bare en handfull nettverks-sockets. Feiler
+    # r.json() (halvt svar, ruter-hikke) MA responsen likevel lukkes -
+    # ellers lekker vi en socket per feil, og etter noen fa slike er alle
+    # opptatt og INGEN nettkall virker for reboot.
+    r = None
     try:
         r = urequests.get(url, headers=headers)
         data = r.json()
-        r.close()
         return data[0] if data else None
     except Exception as e:
         print("get_cmd feilet:", e)
         return None
+    finally:
+        _lukk(r)
 
 
 def post_sensors(temp, hum, s, vann_mm):
@@ -174,13 +189,15 @@ def post_sensors(temp, hum, s, vann_mm):
         "jord1": s[0], "jord2": s[1], "jord3": s[2], "jord4": s[3],
         "vann_avstand_mm": vann_mm,
     }
+    r = None
     try:
         r = urequests.post(url, headers=post_headers, json=payload)
-        r.close()
         return True
     except Exception as e:
         print("post_sensors feilet:", e)
         return False
+    finally:
+        _lukk(r)
 
 
 # ── Sensorer ──
@@ -277,11 +294,14 @@ while True:
         stamp = cmd.get("updated_at")
         if stamp != last_cmd_stamp:
             last_cmd_stamp = stamp
-            # `or DEFAULT` fanger ogsa null-verdi fra DB (ikke bare manglende felt)
-            app_intensitet = int(cmd.get("intensitet") or DEFAULT_INTENSITET)
+            # int_or_default tar vare pa gyldig 0 % (int(v or DEFAULT) gjor
+            # IKKE det - `0 or 70` er 70) og fanger null/sopple fra DB.
+            app_intensitet = logic.int_or_default(cmd.get("intensitet"),
+                                                  DEFAULT_INTENSITET)
             intensitet = app_intensitet
-            timer_on = cmd.get("timer_on", DEFAULT_TIMER_ON)
-            timer_off = cmd.get("timer_off", DEFAULT_TIMER_OFF)
+            # `or DEFAULT` her er riktig: tom streng/null er aldri gyldig tid.
+            timer_on = cmd.get("timer_on") or DEFAULT_TIMER_ON
+            timer_off = cmd.get("timer_off") or DEFAULT_TIMER_OFF
             print("Ny kommando:", app_intensitet, "%", timer_on, "-", timer_off)
 
     # 2) Les sensorer (encoder-knappen handteres na av interrupt, ikke her)

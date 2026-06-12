@@ -27,6 +27,18 @@ def clamp(v, lo, hi):
     return v
 
 
+def int_or_default(v, default):
+    """Heltall fra et kommando-felt. None/ugyldig -> default.
+
+    VIKTIG: `int(v or default)` er IKKE det samme — `0 or 70` blir 70 i
+    Python, så gyldig 0 % fra appen ville blitt til 70 %. Denne tar vare på 0.
+    """
+    try:
+        return int(v)
+    except (ValueError, TypeError):
+        return default
+
+
 def light_should_be_on(now_min, on_min, off_min):
     """Skal lyset stå på nå? Støtter at timeren krysser midnatt.
 

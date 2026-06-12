@@ -5,7 +5,7 @@
 # før vi laster koden opp på ESP32-en.
 
 from logic import (hhmm_to_min, local_hm, light_should_be_on,
-                   duty_for, clamp, adjust)
+                   duty_for, clamp, adjust, int_or_default)
 
 _fails = 0
 
@@ -46,6 +46,12 @@ check("12:00 -> AV (natt)", light_should_be_on(720, on2, off2), False)
 check("70% & på", duty_for(70, True), int(70 / 100 * 1023))
 check("70% & av", duty_for(70, False), 0)
 check("over 100 klampes", duty_for(150, True), 1023)
+
+# ── kommando-parsing (int_or_default) ──
+check("0 % forblir 0 (ikke 70!)", int_or_default(0, 70), 0)
+check("None -> default", int_or_default(None, 70), 70)
+check("tall som tekst", int_or_default("55", 70), 55)
+check("sopple -> default", int_or_default("xyz", 70), 70)
 
 # ── encoder-justering ──
 check("adjust +5", adjust(80, 5), 85)
