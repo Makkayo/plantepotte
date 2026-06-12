@@ -27,13 +27,18 @@ with check (bucket_id = 'plantebilder');
 1. *File → Preferences →* legg til ESP32 board-URL, installer **esp32 by Espressif** i Boards Manager.
 2. *Tools → Board →* **AI Thinker ESP32-CAM**.
 3. *Tools → Partition Scheme →* **Huge APP (3MB No OTA/1MB SPIFFS)**.
-4. Åpne `esp32cam.ino`, **endre WiFi-navn og passord** øverst.
+4. **Lag `secrets.h`**: kopier `secrets.example.h` → `secrets.h` og fyll inn
+   WiFi-navn og passord der. `secrets.h` er gitignored — passordet havner
+   aldri på GitHub (samme mønster som `config.py` på hoved-ESP32-en).
+   ⚠️ IKKE skriv passordet rett i `esp32cam.ino` — den fila ER på GitHub.
 5. Koble til via ESP32-CAM-MB-bordet (USB) eller en USB-TTL-adapter, last opp.
 
 ## Slik virker den
 
 - Våkner, tar ett bilde, laster opp som `plantebilder/potte1/ÅÅÅÅMMDD-TTMMSS.jpg`,
-  og går i **deep sleep** i `CAPTURE_INTERVAL_MIN` minutter (standard 60).
+  og går i **deep sleep** i `CAPTURE_INTERVAL_MIN` minutter (standard 720 =
+  2 bilder/dag). Feiler noe (kamera/WiFi/opplasting), prøver den igjen etter
+  `RETRY_MIN` minutter (standard 10) i stedet for å vente et halvt døgn.
 - Bruker 5 V + GND fra buck converter (samme som hoved-ESP32). Ingen datakabel
   mellom kortene — alt går via WiFi/skyen.
 

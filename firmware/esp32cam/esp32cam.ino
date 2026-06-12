@@ -23,10 +23,12 @@
 #include <WiFiClientSecure.h>
 #include "time.h"
 
-// ====================== ENDRE DISSE ======================
-const char* WIFI_SSID = "DITT-WIFI-NAVN";       // kun 2,4 GHz
-const char* WIFI_PASS = "DITT-WIFI-PASSORD";
+// WiFi-navn og passord ligger i secrets.h (gitignored — skal ALDRI hit).
+// Første gang: kopier secrets.example.h -> secrets.h og fyll inn der.
+#include "secrets.h"
 
+// ================== RESTEN ER FERDIG UTFYLT ==================
+// (ANON_KEY er en offentlig "anon"-nøkkel — laget for å ligge i klientkode.)
 const char* SUPABASE_HOST = "ebjbxfwtwrahuokydvtj.supabase.co";
 const char* ANON_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImViamJ4Znd0d3JhaHVva3lkdnRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyNDgxOTksImV4cCI6MjA4ODgyNDE5OX0.25yREg6vMLUPNoebopUX-TeMWlwKjtssRQLGa2BEQC0";
@@ -34,7 +36,16 @@ const char* ANON_KEY =
 const char* POTTE_ID = "potte1";
 const char* BUCKET   = "plantebilder";          // ma finnes i Supabase Storage
 
-const int   CAPTURE_INTERVAL_MIN = 60;          // minutter mellom hvert bilde
+// 720 min = 2 bilder/dag — matcher frekvens-filosofien (1–2 bilder/dag er nok
+// for en vekst-tidslinje, og holder AI-analysekostnaden på ~5–10 kr/mnd).
+// TODO (fase 4b, når kameraet er montert): ta bildet i et vindu der vekst-
+// lyset er AV (les timer fra potte_commands) eller bruk flash-LED-en — ellers
+// blir bildene magenta av phyto-lyset og ubrukelige for AI-vurdering.
+const int   CAPTURE_INTERVAL_MIN = 720;
+
+// Ved feil (kamera/WiFi/opplasting): prøv igjen raskt i stedet for å vente
+// et halvt døgn på neste ordinære forsøk.
+const int   RETRY_MIN = 10;
 // =========================================================
 
 // AI-Thinker ESP32-CAM pinout
@@ -164,8 +175,8 @@ void setup() {
   Serial.begin(115200);
   delay(300);
 
-  if (!cameraInit()) { deepSleepMinutes(CAPTURE_INTERVAL_MIN); }
-  if (!wifiConnect()) { deepSleepMinutes(CAPTURE_INTERVAL_MIN); }
+  if (!cameraInit()) { deepSleepMinutes(RETRY_MIN); }
+  if (!wifiConnect()) { deepSleepMinutes(RETRY_MIN); }
 
   // Kast de forste rammene (auto-eksponering trenger a stabilisere seg)
   for (int i = 0; i < 3; i++) {
@@ -177,7 +188,7 @@ void setup() {
   camera_fb_t* fb = esp_camera_fb_get();
   if (!fb) {
     Serial.println("Bilde-fangst feilet");
-    deepSleepMinutes(CAPTURE_INTERVAL_MIN);
+    deepSleepMinutes(RETRY_MIN);
   }
 
   String path = timestampName();
@@ -186,7 +197,7 @@ void setup() {
   esp_camera_fb_return(fb);
   Serial.println(ok ? "Opplasting OK" : "Opplasting feilet");
 
-  deepSleepMinutes(CAPTURE_INTERVAL_MIN);
+  deepSleepMinutes(ok ? CAPTURE_INTERVAL_MIN : RETRY_MIN);
 }
 
 void loop() {

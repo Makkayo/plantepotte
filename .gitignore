@@ -16,3 +16,6 @@ __pycache__/
 
 # WiFi-passord skal ALDRI til GitHub — bruk config.example.py som mal
 firmware/config.py
+
+# Samme for kameraet — bruk secrets.example.h som mal
+firmware/esp32cam/secrets.h
