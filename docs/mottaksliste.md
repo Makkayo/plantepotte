@@ -8,7 +8,7 @@ Holder styr på hva som er **bestilt → ankommet → testet** på breadboard.
 - ✅ Testet og funker
 - ⚠️ Ankommet, men problem (se notat)
 
-*Sist oppdatert: 2026-06-10 (kveld) — buck + LED-strip + alle 3 jordfukt testet*
+*Sist oppdatert: 2026-06-12 — Bestilling 6 lagt til (manglet i lista)*
 
 ---
 
@@ -94,6 +94,14 @@ Samlet etter kveldens testing. AliExpress-søkeord i parentes.
 | ⬜ | Perfboard double-sided 5×7cm | 10-pk | Lodde-øving + små kort |
 | ⬜ | Pinnerader 2,54mm (male+female) | 5 sett | Hunn-headers på perfboard → moduler plugges i |
 | ⬜ | 6-i-1 elektrisk presisjonsskrutrekker | ×1 | N20-håndtak, USB-C-ladbar, magnetiske bits (PH000/PH00/P2/Y0.6) — til elektronikk-skruing |
+
+## Bestilling 6 — montering & kabling (~€23, bestilt 11. juni)
+
+| Status | Del | Antall | Notat |
+|:------:|-----|:------:|-------|
+| ⬜ | Heat-set insert + skrue-sett (M2/M2.5/M3/M4 messing, 1050 stk) | ×1 | Smeltes inn i PETG med loddebolt — metallgjenger for PCB-moduler |
+| ⬜ | PCB-distansebolter / standoffs (Rafford messing, M2–M6, 14 stk) | ×1 | Løfter moduler opp fra overflaten |
+| ⬜ | Kabelspiral-wrap (svart, fleksibel) | ×1 | Kabelbeskyttelse |
 
 ## Kjøp lokalt
 

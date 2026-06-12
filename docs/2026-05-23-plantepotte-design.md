@@ -1,7 +1,7 @@
 # Plantepotte — System Design
 
 **Dato opprettet:** 2026-05-23
-**Sist oppdatert:** 2026-06-10 (4 jordfukt-plasser, målt kalibrering + strøm, fast 5V-buck, firmware herdet)
+**Sist oppdatert:** 2026-06-12 (totalrevisjon: utdatert main.py-skisse fjernet — `firmware/` er fasiten)
 **Status:** Backend og web-app live. Hardware B1+B2 ankommet og i stor grad breadboard-testet (LED tent 10. juni). B3–B5 i posten. Neste: main.py + WiFi + Supabase end-to-end.
 
 > ⚠️ **Dette er et øyeblikksbilde — gjeldende fasit er prosjekt-skillen** (`C:\Users\marku\.claude\skills\plantepotte\skill.md`). Disse delene er fortsatt historiske og er IKKE oppdatert her:
@@ -10,7 +10,7 @@
 > - **Auto-justerende lys** (stepper + lead screw) er en utforsket fremtidsidé — se skillen.
 > - **Fysisk design** nederst beskriver et eldre "3 deler"-konsept; gjeldende 3D-modell er base + 4 stolper + tak (se skillen).
 >
-> ✅ **Vannmåling er nå oppdatert i dette dokumentet:** XKC-Y25 er erstattet av **VL53L0X ToF-laser + 3D-printet flottør** i en berolings-brønn, og datafeltet er `vann_avstand_mm` (rå mm fra laser til flottør). XKC-Y25 ×4 er reserve. GPIO-tabell, koblingsdiagram, `main.py`, SQL og datakontrakt under reflekterer laseren.
+> ✅ **Vannmåling er nå oppdatert i dette dokumentet:** XKC-Y25 er erstattet av **VL53L0X ToF-laser + 3D-printet flottør** i en berolings-brønn, og datafeltet er `vann_avstand_mm` (rå mm fra laser til flottør). XKC-Y25 ×4 er reserve. GPIO-tabell, koblingsdiagram, SQL og datakontrakt under reflekterer laseren (firmware-koden ligger i `firmware/`, ikke her).
 
 ---
 
@@ -170,143 +170,17 @@ BRUK_WATCHDOG = False
 POST_INTERVALL_SEK = 300
 ```
 
-### boot.py
-```python
-import network, time
-from config import WIFI_SSID, WIFI_PASS
+### boot.py og main.py — IKKE kopier herfra
 
-sta = network.WLAN(network.STA_IF)
-sta.active(True)
-sta.connect(WIFI_SSID, WIFI_PASS)
-for _ in range(20):
-    if sta.isconnected(): break
-    time.sleep(0.5)
-print("WiFi:", sta.ifconfig()[0])
-```
-
-### main.py
-```python
-import time, urequests, dht, ntptime
-from machine import Pin, PWM, RTC, ADC, SoftI2C
-from config import SUPABASE_URL, ANON_KEY, POTTE_ID, TZ_OFFSET_HOURS
-import ssd1306
-import vl53l0x   # last opp vl53l0x.py-driveren sammen med main.py
-
-# ─── Hardware-oppsett ───
-led = PWM(Pin(26), freq=1000)
-
-dht_sensor = dht.DHT22(Pin(4))
-
-soil1 = ADC(Pin(34)); soil1.atten(ADC.ATTN_11DB)
-soil2 = ADC(Pin(35)); soil2.atten(ADC.ATTN_11DB)
-soil3 = ADC(Pin(32)); soil3.atten(ADC.ATTN_11DB)
-
-i2c = SoftI2C(scl=Pin(22), sda=Pin(21))
-display = ssd1306.SSD1306_I2C(128, 64, i2c)
-
-# VL53L0X-laser deler samme I2C-buss som OLED (adresse 0x29).
-tof = vl53l0x.VL53L0X(i2c)
-
-rtc = RTC()
-headers = {
-    "apikey": ANON_KEY,
-    "Authorization": f"Bearer {ANON_KEY}",
-    "Content-Type": "application/json",
-}
-
-# ─── Hjelpefunksjoner ───
-def local_hour_min():
-    """ESP32 RTC er UTC etter ntptime.settime(). Konverter til norsk tid."""
-    y, mo, d, _, h, m, s, _ = rtc.datetime()
-    h = (h + TZ_OFFSET_HOURS) % 24
-    return h, m
-
-def get_cmd():
-    url = f"{SUPABASE_URL}/rest/v1/potte_commands?potte_id=eq.{POTTE_ID}&order=updated_at.desc&limit=1"
-    try:
-        r = urequests.get(url, headers=headers)
-        data = r.json()
-        r.close()
-        return data[0] if data else None
-    except Exception as e:
-        print("get_cmd feilet:", e)
-        return None
-
-def read_sensors():
-    try:
-        dht_sensor.measure()
-        temp, hum = dht_sensor.temperature(), dht_sensor.humidity()
-    except Exception:
-        temp, hum = None, None
-    # Send RÅ ADC-verdier (0-4095) — kalibrering gjøres i web-appen.
-    soil = [soil1.read(), soil2.read(), soil3.read()]
-    # Vannstand: rå avstand i mm fra laser til flottør. Web-appen kalibrerer tom/full.
-    try:
-        vann_mm = tof.read()
-    except Exception:
-        vann_mm = None
-    return temp, hum, soil, vann_mm
-
-def post_sensors(temp, hum, soil, vann_mm):
-    url = f"{SUPABASE_URL}/rest/v1/potte_sensor_data"
-    payload = {
-        "potte_id": POTTE_ID,
-        "temperatur": temp,
-        "luftfuktighet": hum,
-        "jord1": soil[0], "jord2": soil[1], "jord3": soil[2], "jord4": soil[3],
-        "vann_avstand_mm": vann_mm,
-    }
-    try:
-        r = urequests.post(url, headers=headers, json=payload)
-        r.close()
-    except Exception as e:
-        print("post_sensors feilet:", e)
-
-def update_display(temp, hum, soil, vann_mm):
-    display.fill(0)
-    display.text(f"Temp: {temp}C", 0, 0)
-    display.text(f"Fukt: {hum}%", 0, 12)
-    display.text(f"Jord: {soil[0]}", 0, 24)
-    display.text(f"Vann: {vann_mm}mm", 0, 36)
-    display.show()
-
-# ─── Bootstrap ───
-try:
-    ntptime.settime()
-except Exception:
-    pass
-
-last_post = 0
-POST_INTERVAL = 60  # sek mellom hver sensorposting
-
-# ─── Hovedløkke ───
-while True:
-    cmd = get_cmd()
-    temp, hum, soil, vann_mm = read_sensors()
-    update_display(temp, hum, soil, vann_mm)
-
-    if cmd:
-        intensitet = cmd.get('intensitet', 0)
-        timer_on  = cmd.get('timer_on', '07:00')
-        timer_off = cmd.get('timer_off', '23:00')
-        h, m = local_hour_min()
-        now_min = h * 60 + m
-        on_min  = int(timer_on[:2]) * 60 + int(timer_on[3:])
-        off_min = int(timer_off[:2]) * 60 + int(timer_off[3:])
-        # Støtt at off < on (krysser midnatt)
-        if on_min < off_min:
-            light_on = on_min <= now_min < off_min
-        else:
-            light_on = now_min >= on_min or now_min < off_min
-        led.duty(int(intensitet / 100 * 1023) if light_on else 0)
-
-    now = time.time()
-    if now - last_post >= POST_INTERVAL:
-        post_sensors(temp, hum, soil, vann_mm)
-        last_post = now
-
-    time.sleep(5)
-```
+> ⛔ **Koden ligger i [`firmware/`](../firmware/) — det er fasiten.** Tidligere
+> sto en forenklet main.py-skisse her, men den ble liggende etter (den manglet
+> bl.a. jord4, watchdog, NTP-resynk og socket-opprydding, og hadde en
+> indekseringsfeil). For å unngå at noen flasher en gammel kopi er den fjernet.
+>
+> - `firmware/main.py` — hovedprogrammet (sensorer, lys, Supabase, OLED, encoder)
+> - `firmware/logic.py` — ren beslutningslogikk, testes på PC med `python test_logic.py`
+> - `firmware/boot.py` — WiFi-oppkobling ved oppstart
+> - Flashe-instruksjoner: `firmware/README.md`
 
 ---
 
@@ -363,6 +237,18 @@ CREATE POLICY "anon all" ON potte_commands FOR ALL USING (true) WITH CHECK (true
 
 ALTER TABLE potte_sensor_data ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "anon all" ON potte_sensor_data FOR ALL USING (true) WITH CHECK (true);
+
+-- Appen henter alltid «nyeste avlesning per potte» — uten denne blir det
+-- full tabellskanning når dataene vokser (~105k rader/år/potte). (Lagt til 12. juni 2026.)
+CREATE INDEX IF NOT EXISTS potte_sensor_data_potte_id_registrert_at_idx
+  ON potte_sensor_data (potte_id, registrert_at DESC);
+
+-- Storage (bucket `plantebilder`): ESP32-CAM laster opp som anon, web-appen
+-- er INNLOGGET (authenticated) og trenger egen SELECT-policy for å kunne
+-- LISTE filene til veksttidslinja. (Lagt til 12. juni 2026.)
+-- CREATE POLICY "authenticated read plantebilder"
+--   ON storage.objects FOR SELECT TO authenticated
+--   USING (bucket_id = 'plantebilder');
 
 ALTER TABLE planteprofiler ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "anon read" ON planteprofiler FOR SELECT USING (true);

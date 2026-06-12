@@ -81,6 +81,7 @@ ESP32  ──poster hvert 5. min*──►  potte_sensor_data  ──►  Web-ap
   svarer). **Sett `True` når potta settes i drift** — men `False` mens du jobber
   i Thonny, ellers restarter brettet midt i økta (watchdog kan ikke skrus av
   når den først er startet).
-- 🔌 Husk: still buck converter til **5,0 V** før ESP32 kobles til, og koble fra
-  VIN før du programmerer via USB-C.
+- 🔌 Bucken er **fast 5V** (KIS3R33S-type, kan ikke stilles — målt 5,26V ✅).
+  Verifiser likevel ~5V med multimeter før ESP32 kobles til første gang, og
+  koble fra VIN før du programmerer via USB-C.
 - 🌍 `TZ_OFFSET_HOURS` i `config.py`: 2 om sommeren, 1 om vinteren (endre 2× i året).
