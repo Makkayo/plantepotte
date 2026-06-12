@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
+  import { get } from 'svelte/store';
   import { potter, pottePlanter, loadAllPottePlanter } from '../lib/stores';
   import { supabase } from '../lib/supabase';
   import type { PotteCommand, PotteSensorData } from '../lib/database.types';
@@ -13,13 +14,24 @@
   let timer: ReturnType<typeof setInterval> | undefined;
 
   async function refresh() {
-    const [cmd, sens] = await Promise.all([
+    // Nyeste avlesning hentes PER potte (limit 1 hver). En felles
+    // «siste 50 rader»-spørring ville latt en aktiv potte skvise en
+    // offline potte helt ut av lista etter noen timer — da så det ut som
+    // den aldri hadde sendt data, akkurat når man trenger å se at noe er galt.
+    const potteListe = get(potter);
+    const [cmd, sensSvar] = await Promise.all([
       supabase.from('potte_commands').select('*'),
-      supabase
-        .from('potte_sensor_data')
-        .select('*')
-        .order('registrert_at', { ascending: false })
-        .limit(50),
+      Promise.all(
+        potteListe.map((p) =>
+          supabase
+            .from('potte_sensor_data')
+            .select('*')
+            .eq('potte_id', p.potte_id)
+            .order('registrert_at', { ascending: false })
+            .limit(1)
+            .maybeSingle(),
+        ),
+      ),
     ]);
 
     if (cmd.data) {
@@ -27,14 +39,11 @@
       for (const c of cmd.data) m[c.potte_id] = c;
       commands = m;
     }
-    if (sens.data) {
-      // Behold kun nyeste per potte
-      const m: Record<string, PotteSensorData> = {};
-      for (const s of sens.data) {
-        if (!m[s.potte_id]) m[s.potte_id] = s;
-      }
-      sensors = m;
-    }
+    const m: Record<string, PotteSensorData> = {};
+    sensSvar.forEach((res, idx) => {
+      if (res.data) m[potteListe[idx]!.potte_id] = res.data;
+    });
+    sensors = m;
   }
 
   onMount(async () => {

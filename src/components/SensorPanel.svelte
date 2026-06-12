@@ -44,10 +44,27 @@
 
   // Kalibrering: lagre gjeldende laser-avstand som tom-/full-punkt for denne potta.
   let kalibrerer = $state<'tom' | 'full' | null>(null);
+  let kalibreringsFeil = $state<string | null>(null);
 
   async function settKalibrering(type: 'tom' | 'full') {
     const mm = sensor?.vann_avstand_mm;
     if (mm == null || kalibrerer !== null) return;
+    kalibreringsFeil = null;
+    // Tom tank = flottør på bunnen = STOR avstand; full = LITEN avstand.
+    // Stopp umulige kombinasjoner (tom ≤ full) — ellers blir prosenten «—».
+    if (type === 'tom') {
+      const full = potte.vann_full_mm ?? VANN_FULL_MM;
+      if (mm <= full) {
+        kalibreringsFeil = `Avlest ${mm} mm er ikke større enn full-punktet (${full} mm). Tom tank skal gi størst avstand — er tanken faktisk tom nå?`;
+        return;
+      }
+    } else {
+      const tom = potte.vann_tom_mm ?? VANN_TOM_MM;
+      if (mm >= tom) {
+        kalibreringsFeil = `Avlest ${mm} mm er ikke mindre enn tom-punktet (${tom} mm). Full tank skal gi minst avstand — er tanken faktisk full nå?`;
+        return;
+      }
+    }
     kalibrerer = type;
     const oppdatering: Partial<Potte> =
       type === 'tom' ? { vann_tom_mm: mm } : { vann_full_mm: mm };
@@ -58,6 +75,7 @@
       );
     } else {
       console.error('Kalibrering feilet:', error);
+      kalibreringsFeil = 'Lagring feilet — prøv igjen (sjekk at du er innlogget).';
     }
     kalibrerer = null;
   }
@@ -148,6 +166,11 @@
               {potte.vann_full_mm ?? `${VANN_FULL_MM} (standard)`} mm
             </span>
           </div>
+          {#if kalibreringsFeil}
+            <div class="mt-2 p-2 rounded-md bg-rose/10 border border-rose/30 text-rose text-xs">
+              {kalibreringsFeil}
+            </div>
+          {/if}
         {/if}
       </div>
     </div>
