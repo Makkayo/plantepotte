@@ -4,12 +4,13 @@
   import { vurderLysKompatibilitet, vurderVannKompatibilitet, vekeEgnetFarge } from '../lib/lys';
 
   let {
-    seksjon,
+    plassLabel,
     eksisterendePlanter,
     onLukk,
     onValgt,
   }: {
-    seksjon: number;
+    /** Visningsnavn for plassen, f.eks. "Potte 1 · foran". */
+    plassLabel: string;
     eksisterendePlanter: Plante[];
     onLukk: () => void;
     onValgt: (planteId: string) => void;
@@ -88,7 +89,7 @@
     <!-- Header -->
     <div class="p-5 border-b border-border flex items-center gap-4">
       <div class="flex-1">
-        <h2 class="font-bold text-lg">Velg plante til seksjon {seksjon}</h2>
+        <h2 class="font-bold text-lg">Velg plante til {plassLabel}</h2>
         <p class="text-text-muted text-xs mt-0.5">
           {filtrert.length} planter passer dine valg
         </p>

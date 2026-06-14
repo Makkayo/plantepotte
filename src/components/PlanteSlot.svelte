@@ -3,13 +3,14 @@
   import { vekeEgnetFarge } from '../lib/lys';
 
   let {
-    seksjon,
+    etikett,
     plante,
     pottePlanteId,
     onLeggTil,
     onFjern,
   }: {
-    seksjon: number;
+    /** Rolle-tekst i potta: "Foran" / "Bak" / "" (udelt potte). */
+    etikett: string;
     plante: Plante | null;
     pottePlanteId: string | null;
     onLeggTil: () => void;
@@ -21,7 +22,9 @@
 
 {#if plante && pottePlanteId}
   <div class="card-raised p-4 relative group">
-    <div class="text-[10px] uppercase tracking-wider text-text-dim mb-2">Seksjon {seksjon}</div>
+    {#if etikett}
+      <div class="text-[10px] uppercase tracking-wider text-text-dim mb-2">{etikett}</div>
+    {/if}
     <div class="flex items-start gap-3">
       <span class="text-3xl">{plante.emoji ?? '🌿'}</span>
       <div class="flex-1 min-w-0">
@@ -65,7 +68,9 @@
     onclick={onLeggTil}
   >
     <div class="text-2xl mb-1.5">+</div>
-    <div class="text-xs uppercase tracking-wider">Seksjon {seksjon}</div>
+    {#if etikett}
+      <div class="text-xs uppercase tracking-wider">{etikett}</div>
+    {/if}
     <div class="text-xs mt-1">Legg til plante</div>
   </button>
 {/if}

@@ -27,7 +27,7 @@
           : 'text-text-muted hover:text-text hover:bg-surface-raised/50'}"
         onclick={() => onNavigate({ name: 'oversikt' })}
       >
-        Mine potter
+        Mine blomsterkasser
       </button>
       <button
         class="px-3 py-1.5 rounded-lg text-sm transition-colors {active === 'katalog'

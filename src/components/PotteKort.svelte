@@ -1,6 +1,12 @@
 <script lang="ts">
   import type { Potte, PotteCommand, PotteSensorData, PottePlanteFull } from '../lib/database.types';
-  import { formaterTidssiden, jordfuktProsent, vannNivaProsent, vannKlasse } from '../lib/utils';
+  import {
+    formaterTidssiden,
+    jordfuktProsent,
+    vannNivaProsent,
+    vannKlasse,
+    antallPlasser,
+  } from '../lib/utils';
 
   let {
     potte,
@@ -17,7 +23,7 @@
   } = $props();
 
   const fyltSeksjoner = $derived(planter.length);
-  const ledig = $derived(potte.antall_seksjoner - fyltSeksjoner);
+  const ledig = $derived(antallPlasser(potte.skillevegger) - fyltSeksjoner);
 
   const harData = $derived(!!sensor);
   const sistOppdatert = $derived(formaterTidssiden(sensor?.registrert_at ?? command?.updated_at));

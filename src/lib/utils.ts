@@ -90,3 +90,77 @@ export function debounce<T extends (...args: any[]) => void>(fn: T, ms: number):
     timer = setTimeout(() => fn(...args), ms);
   }) as T;
 }
+
+/* ============================ Blomsterkasse-oppsett ============================
+ *
+ * En blomsterkasse (rad i `potter`) inneholder N potter (beholdere) — i praksis 2.
+ * Hver potte kan ha skillevegg (delt i FORAN + BAK = 2 planteplasser) eller stå
+ * udelt (1 plass). `skillevegger`-lista er den ENESTE sannheten: lengden = antall
+ * potter, hver verdi = om den potta har skillevegg.
+ *
+ * Seksjonsnumrene (potte_planter.seksjon) ligger FAST per potte, slik at planter
+ * ikke flyttes når man slår en skillevegg av/på:
+ *   Potte 1 → seksjon 1 (foran) + 2 (bak)
+ *   Potte 2 → seksjon 3 (foran) + 4 (bak)
+ * En udelt potte bruker kun sin fremre seksjon (1 / 3); den bakre (2 / 4) er ledig.
+ */
+
+export type PlassRolle = 'foran' | 'bak' | 'hel';
+
+export interface Planteplass {
+  /** Fast nummer i potte_planter.seksjon (1–4). */
+  seksjon: number;
+  /** 'hel' når potta er udelt, ellers 'foran'/'bak'. */
+  rolle: PlassRolle;
+  /** Visningstekst: "Foran" / "Bak" / "" (hel). */
+  etikett: string;
+}
+
+export interface PotteOppsett {
+  /** 1-basert beholder-nummer i kassa. */
+  potteNr: number;
+  delt: boolean;
+  plasser: Planteplass[];
+}
+
+/** Fremre seksjonsnummer for en potte (0-basert indeks). */
+export function foranSeksjon(potteIdx: number): number {
+  return potteIdx * 2 + 1;
+}
+
+/** Bakre seksjonsnummer for en potte (0-basert indeks). */
+export function bakSeksjon(potteIdx: number): number {
+  return potteIdx * 2 + 2;
+}
+
+/** Bygg hele oppsettet for en blomsterkasse ut fra skillevegg-lista. */
+export function blomsterkasseOppsett(skillevegger: boolean[]): PotteOppsett[] {
+  return skillevegger.map((delt, idx) => {
+    const plasser: Planteplass[] = delt
+      ? [
+          { seksjon: foranSeksjon(idx), rolle: 'foran', etikett: 'Foran' },
+          { seksjon: bakSeksjon(idx), rolle: 'bak', etikett: 'Bak' },
+        ]
+      : [{ seksjon: foranSeksjon(idx), rolle: 'hel', etikett: '' }];
+    return { potteNr: idx + 1, delt, plasser };
+  });
+}
+
+/** Totalt antall planteplasser i en blomsterkasse. */
+export function antallPlasser(skillevegger: boolean[]): number {
+  return skillevegger.reduce((sum, delt) => sum + (delt ? 2 : 1), 0);
+}
+
+/**
+ * Visningsetikett for en jordfuktsensor (jord1–4) ut fra kassas oppsett.
+ * jordN hører til seksjon N → finn hvilken potte/rolle det er.
+ */
+export function sensorEtikett(sensorNr: number, skillevegger: boolean[]): string {
+  const potteIdx = Math.floor((sensorNr - 1) / 2); // seksjon 1,2 → potte 0; 3,4 → potte 1
+  const delt = skillevegger[potteIdx];
+  if (delt === undefined) return `Sensor ${sensorNr}`;
+  const potteNavn = `Potte ${potteIdx + 1}`;
+  if (!delt) return potteNavn; // udelt potte: bare "Potte N"
+  const erForan = (sensorNr - 1) % 2 === 0;
+  return `${potteNavn} ${erForan ? 'foran' : 'bak'}`;
+}

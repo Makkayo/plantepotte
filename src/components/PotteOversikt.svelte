@@ -56,15 +56,15 @@
 <div class="flex flex-col gap-6">
   <div class="flex items-end justify-between">
     <div>
-      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">Mine potter</h1>
-      <p class="text-text-muted text-sm mt-1">Oversikt over alle potter og deres status</p>
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">Mine blomsterkasser</h1>
+      <p class="text-text-muted text-sm mt-1">Oversikt over alle blomsterkasser og deres status</p>
     </div>
   </div>
 
   {#if $potter.length === 0}
     <div class="card p-10 text-center text-text-muted">
       <div class="text-3xl mb-3">🪴</div>
-      <p>Ingen potter registrert ennå</p>
+      <p>Ingen blomsterkasser registrert ennå</p>
     </div>
   {:else}
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">

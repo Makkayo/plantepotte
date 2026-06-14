@@ -68,7 +68,13 @@ export interface Potte {
   potte_id: string;
   navn: string;
   emoji: string | null;
-  antall_seksjoner: number;
+  /**
+   * Hvilke av blomsterkassas potter (beholdere) som har skillevegg.
+   * true = delt i foran/bak (2 planteplasser), false = udelt (1 plass).
+   * Lengde = antall potter i kassa (2). Erstatter det gamle `antall_seksjoner` —
+   * antall plasser regnes nå ut fra denne (se utils: blomsterkasseOppsett).
+   */
+  skillevegger: boolean[];
   har_sensorer: boolean;
   notater: string | null;
   /** Laser-avstand (mm) ved tom/full tank — per-potte kalibrering satt fra appen. NULL = global standard. */

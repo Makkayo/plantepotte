@@ -8,6 +8,7 @@
     jordfuktKlasse,
     vannNivaProsent,
     vannKlasse,
+    sensorEtikett,
     VANN_TOM_MM,
     VANN_FULL_MM,
   } from '../lib/utils';
@@ -19,7 +20,11 @@
   const jord = $derived.by(() => {
     const raa = sensor ? [sensor.jord1, sensor.jord2, sensor.jord3, sensor.jord4] : [];
     return raa
-      .map((r, idx) => ({ nr: idx + 1, pct: jordfuktProsent(r) }))
+      .map((r, idx) => ({
+        nr: idx + 1,
+        etikett: sensorEtikett(idx + 1, potte.skillevegger),
+        pct: jordfuktProsent(r),
+      }))
       .filter((j) => j.pct !== null);
   });
 
@@ -183,7 +188,7 @@
           {#each jord as j}
             {@const kl = jordfuktKlasse(j.pct)}
             <div class="flex items-center gap-3">
-              <div class="text-xs text-text-muted w-20">Sensor {j.nr}</div>
+              <div class="text-xs text-text-muted w-28 shrink-0 truncate">{j.etikett}</div>
               <div class="flex-1 h-2 bg-border rounded-full overflow-hidden">
                 <div
                   class="h-full rounded-full transition-all duration-500 {kl === 'dry'
