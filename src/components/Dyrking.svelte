@@ -44,10 +44,10 @@
     },
     {
       id: 'naring',
-      tekst: 'Universal flytende plantenæring — fra dag 1 med kokos (rimelig universal ~80–130 holder)',
-      butikk: 'Felleskjøpet / Plantasjen',
-      pris: '~80–230',
-      lenke: 'https://www.felleskjopet.no/produkt/hage-og-uterom/dyrk-og-plante/gjoedsel-og-kalk/spesialgjoedsel-og-vekstnaering/plantenaering-grow-organisk-500-ml-50350574_BASE',
+      tekst: 'CANNA Coco A+B (kokos-spesifikk mineralnæring) — ha i A først, så B',
+      butikk: 'nett: MikroGartneriet / Gartnergrossisten',
+      pris: '~239',
+      lenke: 'https://www.mikrogartneriet.no/products/canna-coco-ab',
     },
     {
       id: 'fro',
@@ -180,6 +180,11 @@
   <!-- Næring -->
   <div class="card p-4 sm:p-5">
     <h2 class="font-semibold flex items-center gap-2"><span>💧</span> Næring</h2>
+    <p class="text-sm text-text-muted mt-2">
+      Passiv hydroponi → <strong>mineral, kokos-bufret</strong> næring er best (ikke organisk — den
+      grumser i et stille vannbad). Anbefalt: <strong>CANNA Coco A+B</strong>. Egen Cal-Mag trengs
+      vanligvis ikke.
+    </p>
     <div class="mt-3 p-3 rounded-lg bg-sun/10 border border-sun/25">
       <div class="text-sm font-medium text-sun">⚠️ De to beholderne deler ett vannbad</div>
       <p class="text-sm text-text-muted mt-1">

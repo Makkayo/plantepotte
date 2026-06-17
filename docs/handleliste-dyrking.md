@@ -55,9 +55,17 @@ Valgt fra vår egen plantekatalog: **lettstelt + rask + tåler veke-fukt**. Hver
 
 ---
 
-## 3) 💧 Næring
+## 3) 💧 Næring — hvilken er best for kokos + passiv hydro?
 
-Med kokos (valgt vei) er flytende næring **obligatorisk fra start**. Konkret produkt: se kjøpslista (pkt. 6).
+Systemet er i praksis **passiv hydroponi** (kokos = inert, næring løst i vannbadet). Det styrer valget:
+- **Mineral, ikke organisk.** I et vannbad som står i dagevis er mineralnæring best — fullt oppløst, tas opp med en gang, gror/fermenterer ikke. Organisk («bio») er laget for jord med mikroliv og kan grumse/lukte i et stille reservoar.
+- **Kokos-spesifikk pga. Ca/Mg.** Kokos binder kalsium/magnesium → vanlig universalnæring kan gi mangel. En næring **bufret for kokos** løser dette.
+
+> ⭐ **Beste valg: CANNA Coco A+B** — mineral, bufret/chelatert for kokos (slipper som regel egen Cal-Mag), komplett, laget for vanning-/hydrosystemer. **~239 kr** (1 L A+B varer veldig lenge). Norske nett-grow-shops (MikroGartneriet, Gartnergrossisten, canna-no.com). **Krever nettkjøp** — men klart bedre for dette systemet.
+> - 2-delt, men enkelt: ha i **A først**, rør, så **B** (aldri bland konsentratene rett i hverandre). Lik mengde A og B.
+
+**Cal-Mag:** trengs vanligvis ikke med CANNA Coco A+B til urter/salat — kjøp kun hvis du ser mangel (gulning mellom bladnervene).
+**Fysisk samme-dag-alternativ:** universal mineral flytende plantenæring fra Plantasjen/Felleskjøpet funker — bare ikke kokos-optimert, så følg litt med på Ca/Mg.
 
 > ⚠️ **De to beholderne i en blomsterkasse deler ett vannbad.** Regel mot over-gjødsling:
 > - **Ikke stable to næringskilder.** Kokos (inert) + næring i vannbadet — likt til begge. Ikke bruk næringsjord i tillegg.
@@ -94,14 +102,15 @@ Lenker går til faktiske produktsider (verifisert 17. juni). **Lager:** hyllevar
 |---|------|---------|--------|------|-------|
 | 1 | **Kokos-medium** | Torvfri plantejord (kokos, → ~10 L) | Clas Ohlson | **39,90** | [clasohlson.com](https://www.clasohlson.com/no/Torvfri-plantejord/p/Pr318238000) |
 | 2 | **Perlite** | Perlite 6 L (Nelson Garden) | Felleskjøpet | **119** | [felleskjopet.no](https://www.felleskjopet.no/hjem-og-fritid/hage/jord-og-torv/jordforbedring/perlite-6-liter-50319797/) |
-| 3 | **Flytende næring** | Universal flytende plantenæring (organisk el. mineral) | Felleskjøpet / Plantasjen | ~80–230 | [felleskjopet.no (Grow organisk)](https://www.felleskjopet.no/produkt/hage-og-uterom/dyrk-og-plante/gjoedsel-og-kalk/spesialgjoedsel-og-vekstnaering/plantenaering-grow-organisk-500-ml-50350574_BASE) |
+| 3 | **Flytende næring** ⭐ | CANNA Coco A+B (kokos-spesifikk, mineral) | nett: MikroGartneriet / Gartnergrossisten | ~239 | [mikrogartneriet.no](https://www.mikrogartneriet.no/products/canna-coco-ab) |
+| 3b | *(fysisk alt.)* Næring | Universal mineral flytende plantenæring | Plantasjen / Felleskjøpet | ~80–130 | i butikk |
 | 4 | **Frø — basilikum** | Nelson Garden salatbasilikum «Large Leaved» | Felleskjøpet | 75 | [felleskjopet.no](https://www.felleskjopet.no/hjem-og-fritid/hage/dyrke-og-plante/froepakker/urter/basilikum-salat-50319814/) |
 | 5 | **Frø — resten** | Ruccola, løsbladsalat, gressløk, dill | Plantasjen frø-vegg / Felleskjøpet | ~30–75/pose | i butikk (størst utvalg på frø-veggen) |
 | 6 | **Spray-flaske** | Liten blomstersprøyte/håndforstøver | Clas Ohlson / Biltema / Europris | ~30–50 | bredt tilgjengelig i butikk |
 
 **Merknader:**
 - **Plantasjen Moa** fører alt dette i butikk (one-stop). Lenkene går til Felleskjøpet/Clas Ohlson fordi de produktsidene er verifisert å virke — Plantasjens egne produkt-URLer er ustabile.
-- **Næring:** den linkede organiske er ~229 kr (litt dyr). En **rimelig universal flytende plantenæring (~80–130 kr)** holder helt fint — finnes hos Plantasjen/Clas Ohlson i butikk.
+- **Næring:** beste valg er **CANNA Coco A+B** (kokos-spesifikk mineral, nettkjøp ~239 kr). Vil du heller plukke noe fysisk samme dag, funker en universal mineralnæring (~80–130) — bare ikke kokos-optimert. Se pkt. 3 for hvorfor.
 - Perlite også på **Europris**; kokos også på **Biltema** (torvfri planteringsjord 10 L).
 
 > ⚠️ **Ikke kjøp** Substral Universal 500 ml hos Clas Ohlson — den er **utgått**.
@@ -117,4 +126,5 @@ Lenker går til faktiske produktsider (verifisert 17. juni). **Lager:** hyllevar
 ### Kilder
 - Auk mini (jordløst / kokos valgfritt): [tek.no samletest](https://www.tek.no/samletest/i/mQqrp1/automatiske-plantedyrkere)
 - Kokos vs jord for veke/SIP: [Gartnerbutikken](https://www.gartnerbutikken.no/blog/kokos-eller-jord), [AlboPepper SIP](https://albopepper.com/SIP-raised-bed.php)
-- Produkter (verifisert å virke): [Clas Ohlson kokos-jord](https://www.clasohlson.com/no/Torvfri-plantejord/p/Pr318238000), [Felleskjøpet perlite 6 L](https://www.felleskjopet.no/hjem-og-fritid/hage/jord-og-torv/jordforbedring/perlite-6-liter-50319797/), [Felleskjøpet Grow organisk næring](https://www.felleskjopet.no/produkt/hage-og-uterom/dyrk-og-plante/gjoedsel-og-kalk/spesialgjoedsel-og-vekstnaering/plantenaering-grow-organisk-500-ml-50350574_BASE), [Felleskjøpet basilikumfrø](https://www.felleskjopet.no/hjem-og-fritid/hage/dyrke-og-plante/froepakker/urter/basilikum-salat-50319814/)
+- Produkter (verifisert å virke): [Clas Ohlson kokos-jord](https://www.clasohlson.com/no/Torvfri-plantejord/p/Pr318238000), [Felleskjøpet perlite 6 L](https://www.felleskjopet.no/hjem-og-fritid/hage/jord-og-torv/jordforbedring/perlite-6-liter-50319797/), [CANNA Coco A+B (MikroGartneriet)](https://www.mikrogartneriet.no/products/canna-coco-ab), [Felleskjøpet basilikumfrø](https://www.felleskjopet.no/hjem-og-fritid/hage/dyrke-og-plante/froepakker/urter/basilikum-salat-50319814/)
+- Næring for kokos/hydro (mineral vs organisk + Cal-Mag): [Coir.com](https://coir.com/uncategorized/best-nutrients-for-coco/), [CANNA Norge — bruke Canna Coco](https://www.canna-no.com/articles/bruke-canna-coco)
