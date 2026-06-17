@@ -23,9 +23,18 @@ Når noe bestilles → flyttes til `mottaksliste.md`. Når det ankommer → inn 
 |:---:|-----|---------|---------|
 | 🟡 | **ESP32 DevKit (30-pin) ×2** | Lek/eksperiment + reserve. Alle nåværende ESP32-er er øremerket (2 potte-hjerner, 2 kamera, 1 i pultlyset) → ingen ledig til nye sideprosjekt. Billig forsikring hvis ett ryker under lodding/læring | ~€4/stk |
 
-## 🌱 Plantepotte
+## 🌱 Plantepotte (hardware)
 
 *(ingen åpne ønsker ennå — alt nødvendig er bestilt i B1–B6)*
+
+## 🪴 Dyrking (jord/frø/utstyr)
+
+| Pri | Del | Hvorfor | Ca. pris |
+|:---:|-----|---------|---------|
+| 🟢 | **pH-strips / pH-måler** | Kokos-systemer går best ~5,8–6,2. Klarer seg uten i starten, gir kontroll senere | ~50–150 kr |
+| 🟢 | **EC/TDS-måler** | Måler næringskonsentrasjonen i vannbadet. Avansert finjustering | ~100–200 kr |
+
+> Se [`handleliste-dyrking.md`](handleliste-dyrking.md) for hva som skal kjøpes nå (jord, frø, næring, perlite, spray).
 
 ---
 

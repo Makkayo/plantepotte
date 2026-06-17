@@ -37,16 +37,16 @@
     },
     {
       id: 'perlite',
-      tekst: 'Perlite (bland inn ~30 %)',
-      butikk: 'Plantasjen ~40 kr / Felleskjøpet 6 L 119 kr',
-      pris: '40+',
-      lenke: 'https://www.felleskjopet.no/hjem-og-fritid/hage/jord-og-torv/jordforbedring/perlite-6-liter-50319797/',
+      tekst: 'Perlite 6 L (bland inn ~30 %)',
+      butikk: 'Plantasjen / Felleskjøpet',
+      pris: '119,90',
+      lenke: 'https://plantasjen.no/no/p/perlite-6-l-1a1ad-511656',
     },
     {
       id: 'naring',
-      tekst: 'Flytende plantenæring (universal) — fra dag 1 med kokos',
-      butikk: 'Plantasjen (organisk 500 ml)',
-      pris: '~80–100',
+      tekst: 'Flytende plantenæring (organisk 500 ml) — fra dag 1 med kokos',
+      butikk: 'Plantasjen',
+      pris: '~90',
       lenke: 'https://plantasjen.no/no/p/organisk-plantenaering-flytende-500-ml-555204',
     },
     {
@@ -58,10 +58,10 @@
     },
     {
       id: 'spray',
-      tekst: 'Spray-flaske (frøene spirer ikke i tørr topp)',
-      butikk: 'Clas Ohlson / Biltema',
+      tekst: 'Spray-flaske / blomstersprøyte (frøene spirer ikke i tørr topp)',
+      butikk: 'Clas Ohlson / Biltema / Europris',
       pris: '~30–50',
-      lenke: 'https://www.clasohlson.com/no',
+      lenke: '',
     },
   ];
 
@@ -106,7 +106,9 @@
             <div class="flex items-center gap-2 flex-wrap mt-1">
               <span class="text-xs text-text-dim">{m.butikk}</span>
               <span class="chip border-border bg-surface text-text-muted">{m.pris} kr</span>
-              <a href={m.lenke} target="_blank" rel="noopener" class="text-xs text-sky hover:underline">lenke ↗</a>
+              {#if m.lenke}
+                <a href={m.lenke} target="_blank" rel="noopener" class="text-xs text-sky hover:underline">lenke ↗</a>
+              {/if}
             </div>
           </div>
         </div>
