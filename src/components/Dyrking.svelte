@@ -44,10 +44,10 @@
     },
     {
       id: 'naring',
-      tekst: 'CANNA Coco A+B (kokos-spesifikk mineralnæring) — ha i A først, så B',
-      butikk: 'nett: MikroGartneriet / Gartnergrossisten',
-      pris: '~239',
-      lenke: 'https://www.mikrogartneriet.no/products/canna-coco-ab',
+      tekst: 'Nelson Garden Hydroponisk næring 250 ml (komplett, ettdelt)',
+      butikk: 'Felleskjøpet / Plantasjen / Clas Ohlson',
+      pris: '89',
+      lenke: 'https://www.felleskjopet.no/hjem-og-fritid/hage/dyrke-og-plante/gjoedsel-og-kalk/vekstnaering-og-spesialgjoedsel/plantenaering-250ml-hydroponis-50340547/',
     },
     {
       id: 'fro',
@@ -190,9 +190,9 @@
   <div class="card p-4 sm:p-5">
     <h2 class="font-semibold flex items-center gap-2"><span>💧</span> Næring</h2>
     <p class="text-sm text-text-muted mt-2">
-      Passiv hydroponi → <strong>mineral, kokos-bufret</strong> næring er best (ikke organisk — den
-      grumser i et stille vannbad). Anbefalt: <strong>CANNA Coco A+B</strong>. Egen Cal-Mag trengs
-      vanligvis ikke.
+      Passiv hydroponi → bruk en <strong>komplett hydroponisk</strong> næring (mineral, ikke organisk
+      — organisk grumser i et stille vannbad). Anbefalt: <strong>Nelson Garden Hydroponisk næring
+      250 ml</strong> (ettdelt, ~89 kr). Egen Cal-Mag bare hvis du ser mangel.
     </p>
     <div class="mt-3 p-3 rounded-lg bg-sun/10 border border-sun/25">
       <div class="text-sm font-medium text-sun">⚠️ De to beholderne deler ett vannbad</div>
@@ -203,8 +203,8 @@
       </p>
     </div>
     <p class="text-xs text-text-dim mt-3">
-      <strong>Bland A+B:</strong> vann → A → rør → B → rør (aldri konsentrert A rett i B). Begge
-      beholderne får samme ferdige blanding — ingen får «bare B», også når du bytter plante senere.
+      <strong>Bland:</strong> ettdelt → bare mål opp i vannet og rør. Begge beholderne får samme
+      ferdige vann — ingen får ulik næring, også når du bytter plante senere.
     </p>
     <p class="text-xs text-text-dim mt-2">
       Dosering: følg flaska (~1–2 ml/L). Underdoser heller enn å overdose — urter/salat er nøysomme.
