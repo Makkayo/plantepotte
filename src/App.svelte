@@ -5,7 +5,11 @@
   import Login from './components/Login.svelte';
   import Shell from './components/Shell.svelte';
 
-  type View = { name: 'oversikt' } | { name: 'potte'; potteId: string } | { name: 'katalog' };
+  type View =
+    | { name: 'oversikt' }
+    | { name: 'potte'; potteId: string }
+    | { name: 'katalog' }
+    | { name: 'dyrking' };
 
   let currentView: View = $state({ name: 'oversikt' });
   let dataLoaded = $state(false);
@@ -32,6 +36,7 @@
       const h = window.location.hash.replace(/^#\/?/, '');
       if (!h || h === 'oversikt') return navigate({ name: 'oversikt' });
       if (h === 'katalog') return navigate({ name: 'katalog' });
+      if (h === 'dyrking') return navigate({ name: 'dyrking' });
       if (h.startsWith('potte/')) return navigate({ name: 'potte', potteId: h.slice(6) });
     };
     fromHash();
@@ -46,7 +51,9 @@
         ? ''
         : view.name === 'katalog'
           ? '#/katalog'
-          : `#/potte/${view.potteId}`;
+          : view.name === 'dyrking'
+            ? '#/dyrking'
+            : `#/potte/${view.potteId}`;
     if (window.location.hash !== hash) {
       history.replaceState(null, '', window.location.pathname + (hash || ''));
     }

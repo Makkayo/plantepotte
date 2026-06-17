@@ -3,8 +3,13 @@
   import PotteOversikt from './PotteOversikt.svelte';
   import PotteDetalj from './PotteDetalj.svelte';
   import PlanteKatalog from './PlanteKatalog.svelte';
+  import Dyrking from './Dyrking.svelte';
 
-  type View = { name: 'oversikt' } | { name: 'potte'; potteId: string } | { name: 'katalog' };
+  type View =
+    | { name: 'oversikt' }
+    | { name: 'potte'; potteId: string }
+    | { name: 'katalog' }
+    | { name: 'dyrking' };
 
   let { view, onNavigate }: { view: View; onNavigate: (v: View) => void } = $props();
 </script>
@@ -19,6 +24,8 @@
       <PotteDetalj potteId={view.potteId} {onNavigate} />
     {:else if view.name === 'katalog'}
       <PlanteKatalog {onNavigate} />
+    {:else if view.name === 'dyrking'}
+      <Dyrking {onNavigate} />
     {/if}
   </main>
 </div>

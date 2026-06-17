@@ -2,7 +2,11 @@
   import { supabase } from '../lib/supabase';
   import { user } from '../lib/stores';
 
-  type View = { name: 'oversikt' } | { name: 'potte'; potteId: string } | { name: 'katalog' };
+  type View =
+    | { name: 'oversikt' }
+    | { name: 'potte'; potteId: string }
+    | { name: 'katalog' }
+    | { name: 'dyrking' };
   let { active, onNavigate }: { active: View['name']; onNavigate: (v: View) => void } = $props();
 
   async function loggUt() {
@@ -36,6 +40,14 @@
         onclick={() => onNavigate({ name: 'katalog' })}
       >
         Plantekatalog
+      </button>
+      <button
+        class="px-3 py-1.5 rounded-lg text-sm transition-colors {active === 'dyrking'
+          ? 'bg-surface-raised text-text'
+          : 'text-text-muted hover:text-text hover:bg-surface-raised/50'}"
+        onclick={() => onNavigate({ name: 'dyrking' })}
+      >
+        Dyrking
       </button>
       <div class="hidden sm:flex items-center ml-2 pl-3 border-l border-border">
         <span class="text-xs text-text-dim mr-3">{$user?.email}</span>
