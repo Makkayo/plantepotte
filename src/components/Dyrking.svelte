@@ -38,16 +38,16 @@
     {
       id: 'perlite',
       tekst: 'Perlite 6 L (bland inn ~30 %)',
-      butikk: 'Plantasjen / Felleskjøpet',
-      pris: '119,90',
-      lenke: 'https://plantasjen.no/no/p/perlite-6-l-1a1ad-511656',
+      butikk: 'Felleskjøpet / Plantasjen',
+      pris: '119',
+      lenke: 'https://www.felleskjopet.no/hjem-og-fritid/hage/jord-og-torv/jordforbedring/perlite-6-liter-50319797/',
     },
     {
       id: 'naring',
-      tekst: 'Flytende plantenæring (organisk 500 ml) — fra dag 1 med kokos',
-      butikk: 'Plantasjen',
-      pris: '~90',
-      lenke: 'https://plantasjen.no/no/p/organisk-plantenaering-flytende-500-ml-555204',
+      tekst: 'Universal flytende plantenæring — fra dag 1 med kokos (rimelig universal ~80–130 holder)',
+      butikk: 'Felleskjøpet / Plantasjen',
+      pris: '~80–230',
+      lenke: 'https://www.felleskjopet.no/produkt/hage-og-uterom/dyrk-og-plante/gjoedsel-og-kalk/spesialgjoedsel-og-vekstnaering/plantenaering-grow-organisk-500-ml-50350574_BASE',
     },
     {
       id: 'fro',

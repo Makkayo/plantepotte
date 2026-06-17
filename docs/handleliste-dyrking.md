@@ -93,18 +93,18 @@ Lenker går til faktiske produktsider (verifisert 17. juni). **Lager:** hyllevar
 | # | Vare | Produkt | Butikk | Pris | Lenke |
 |---|------|---------|--------|------|-------|
 | 1 | **Kokos-medium** | Torvfri plantejord (kokos, → ~10 L) | Clas Ohlson | **39,90** | [clasohlson.com](https://www.clasohlson.com/no/Torvfri-plantejord/p/Pr318238000) |
-| 2 | **Perlite** | Perlite 6 L (Nelson Garden) | Plantasjen | **119,90** | [plantasjen.no](https://plantasjen.no/no/p/perlite-6-l-1a1ad-511656) |
-| 3 | **Flytende næring** | Organisk plantenæring flytende 500 ml (NPK 3-0,8-5) | Plantasjen | ~90 | [plantasjen.no](https://plantasjen.no/no/p/organisk-plantenaering-flytende-500-ml-555204) |
+| 2 | **Perlite** | Perlite 6 L (Nelson Garden) | Felleskjøpet | **119** | [felleskjopet.no](https://www.felleskjopet.no/hjem-og-fritid/hage/jord-og-torv/jordforbedring/perlite-6-liter-50319797/) |
+| 3 | **Flytende næring** | Universal flytende plantenæring (organisk el. mineral) | Felleskjøpet / Plantasjen | ~80–230 | [felleskjopet.no (Grow organisk)](https://www.felleskjopet.no/produkt/hage-og-uterom/dyrk-og-plante/gjoedsel-og-kalk/spesialgjoedsel-og-vekstnaering/plantenaering-grow-organisk-500-ml-50350574_BASE) |
 | 4 | **Frø — basilikum** | Nelson Garden salatbasilikum «Large Leaved» | Felleskjøpet | 75 | [felleskjopet.no](https://www.felleskjopet.no/hjem-og-fritid/hage/dyrke-og-plante/froepakker/urter/basilikum-salat-50319814/) |
 | 5 | **Frø — resten** | Ruccola, løsbladsalat, gressløk, dill | Plantasjen frø-vegg / Felleskjøpet | ~30–75/pose | i butikk (størst utvalg på frø-veggen) |
 | 6 | **Spray-flaske** | Liten blomstersprøyte/håndforstøver | Clas Ohlson / Biltema / Europris | ~30–50 | bredt tilgjengelig i butikk |
 
-**Alternativer (hvis du vil ha alt på ett sted eller billigere):**
-- Perlite også på **Felleskjøpet** ([6 L, 119 kr](https://www.felleskjopet.no/hjem-og-fritid/hage/jord-og-torv/jordforbedring/perlite-6-liter-50319797/)) og **Europris**.
-- Næring også på **Felleskjøpet** ([Grow organisk 500 ml](https://www.felleskjopet.no/produkt/hage-og-uterom/dyrk-og-plante/gjoedsel-og-kalk/spesialgjoedsel-og-vekstnaering/plantenaering-grow-organisk-500-ml-50350574_BASE)).
-- Kokos også på **Biltema** (torvfri planteringsjord 10 L, kokos).
+**Merknader:**
+- **Plantasjen Moa** fører alt dette i butikk (one-stop). Lenkene går til Felleskjøpet/Clas Ohlson fordi de produktsidene er verifisert å virke — Plantasjens egne produkt-URLer er ustabile.
+- **Næring:** den linkede organiske er ~229 kr (litt dyr). En **rimelig universal flytende plantenæring (~80–130 kr)** holder helt fint — finnes hos Plantasjen/Clas Ohlson i butikk.
+- Perlite også på **Europris**; kokos også på **Biltema** (torvfri planteringsjord 10 L).
 
-> ⚠️ **Ikke kjøp** Substral Universal 500 ml hos Clas Ohlson — den er **utgått**. Bruk næringen i pkt. 3.
+> ⚠️ **Ikke kjøp** Substral Universal 500 ml hos Clas Ohlson — den er **utgått**.
 
 ### To handle-strategier
 - **Enklest (én tur):** **Plantasjen Moa** har frø, perlite, næring, spray og småplanter på ett sted (litt dyrere på enkelte varer).
@@ -117,4 +117,4 @@ Lenker går til faktiske produktsider (verifisert 17. juni). **Lager:** hyllevar
 ### Kilder
 - Auk mini (jordløst / kokos valgfritt): [tek.no samletest](https://www.tek.no/samletest/i/mQqrp1/automatiske-plantedyrkere)
 - Kokos vs jord for veke/SIP: [Gartnerbutikken](https://www.gartnerbutikken.no/blog/kokos-eller-jord), [AlboPepper SIP](https://albopepper.com/SIP-raised-bed.php)
-- Produkter (verifisert): [Clas Ohlson kokos-jord](https://www.clasohlson.com/no/Torvfri-plantejord/p/Pr318238000), [Plantasjen perlite 6 L](https://plantasjen.no/no/p/perlite-6-l-1a1ad-511656), [Plantasjen organisk næring](https://plantasjen.no/no/p/organisk-plantenaering-flytende-500-ml-555204), [Felleskjøpet basilikumfrø](https://www.felleskjopet.no/hjem-og-fritid/hage/dyrke-og-plante/froepakker/urter/basilikum-salat-50319814/)
+- Produkter (verifisert å virke): [Clas Ohlson kokos-jord](https://www.clasohlson.com/no/Torvfri-plantejord/p/Pr318238000), [Felleskjøpet perlite 6 L](https://www.felleskjopet.no/hjem-og-fritid/hage/jord-og-torv/jordforbedring/perlite-6-liter-50319797/), [Felleskjøpet Grow organisk næring](https://www.felleskjopet.no/produkt/hage-og-uterom/dyrk-og-plante/gjoedsel-og-kalk/spesialgjoedsel-og-vekstnaering/plantenaering-grow-organisk-500-ml-50350574_BASE), [Felleskjøpet basilikumfrø](https://www.felleskjopet.no/hjem-og-fritid/hage/dyrke-og-plante/froepakker/urter/basilikum-salat-50319814/)
