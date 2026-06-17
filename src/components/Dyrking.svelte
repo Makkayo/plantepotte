@@ -155,6 +155,15 @@
     </div>
     <p class="text-xs text-text-dim mt-2">Frø av disse er tregt/upålitelig. Mynte må ha egen seksjon — røttene kveler naboene.</p>
 
+    <div class="mt-4 p-3 rounded-lg bg-surface-raised">
+      <div class="text-xs font-medium text-text">🏷️ Sort & merke</div>
+      <p class="text-xs text-text-muted mt-1">
+        Innendørs + lys → velg <strong>bolt-resistente</strong> sorter (salat: Salad Bowl, Eikeblad,
+        Buttercrunch, Little Gem · basilikum: Genovese). Merke: Nelson Garden (fysisk, Plantasjen/Felleskjøpet)
+        eller Impecta (nett, størst utvalg).
+      </p>
+    </div>
+
     <button class="btn-secondary mt-4 text-sm" onclick={() => onNavigate({ name: 'katalog' })}>
       Se full plantekatalog med så-instrukser →
     </button>
@@ -194,6 +203,10 @@
       </p>
     </div>
     <p class="text-xs text-text-dim mt-3">
+      <strong>Bland A+B:</strong> vann → A → rør → B → rør (aldri konsentrert A rett i B). Begge
+      beholderne får samme ferdige blanding — ingen får «bare B», også når du bytter plante senere.
+    </p>
+    <p class="text-xs text-text-dim mt-2">
       Dosering: følg flaska (~1–2 ml/L). Underdoser heller enn å overdose — urter/salat er nøysomme.
       Frisk opp næringsvannet ca. annenhver uke.
     </p>

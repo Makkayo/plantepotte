@@ -38,6 +38,17 @@ Valgt fra vår egen plantekatalog: **lettstelt + rask + tåler veke-fukt**. Hver
 
 > 💡 Mikrogrønt (karse, reddik, solsikke) er den raskeste «vinnerlykken» — ferdig på under en uke. Fin for kjapp suksess.
 
+### 🏷️ Sort & merke — best for innendørs + vekstlys
+
+Innendørs med konstant lys + varmt rom → planter **stokkløper** (går i frø) raskere. Velg derfor **bolt-resistente** sorter og «klipp-og-kom-igjen»-typer:
+- **Salat (bolt-resistent, løsblad/butterhead):** «Salad Bowl», «Eikeblad/Oakleaf», «Black Seeded Simpson», «Buttercrunch», «Little Gem» — tåler varme + tett klipping godt.
+- **Basilikum:** «Genovese» (klassisk storbladet) — trenger lys for spiring, strø frøene på overflaten.
+- Ruccola, gressløk, dill: standard sorter funker fint.
+
+**Merke:**
+- **Nelson Garden** — lett å få fysisk (Plantasjen/Felleskjøpet), god kvalitet, har økologisk serie. Greit for det meste.
+- **Impecta** ([impecta.no](https://www.impecta.no/), nett) — størst utvalg hvis du vil ha en spesifikk bolt-resistent sort hagesenteret ikke fører.
+
 ---
 
 ## 2) 🪴 Dyrkemedium — kokos + perlite (VALGT)
@@ -71,7 +82,9 @@ Systemet er i praksis **passiv hydroponi** (kokos = inert, næring løst i vannb
 > - **Ikke stable to næringskilder.** Kokos (inert) + næring i vannbadet — likt til begge. Ikke bruk næringsjord i tillegg.
 > - Vil du dyrke ulikt i de to beholderne → bruk jord + **topp-mating** per beholder i stedet, og hold vannbadet som rent vann.
 
-**Dosering:** følg flaska (typisk ~1–2 ml/L). Underdoser heller enn å overdose — urter/salat er nøysomme. Frisk opp næringsvannet ca. annenhver uke.
+**Slik blander du (A+B):** fyll vann → ha i **A** → rør → ha i **B** → rør. Aldri hell konsentrert A rett i konsentrert B (da feller de ut/klumper seg). Begge beholderne suger fra den samme ferdige blandingen → begge får komplett næring (ingen får «bare B»). Bytter du plante i én beholder senere, wiker den nye planten fra samme vannbad og får full næring med en gang.
+
+**Dosering:** følg flaska (typisk ~1–2 ml/L). Underdoser heller enn å overdose — urter/salat er nøysomme. Frisk opp næringsvannet ca. annenhver uke; små etterfyll innimellom kan være rent vann.
 
 ---
 
@@ -109,7 +122,7 @@ Lenker går til faktiske produktsider (verifisert 17. juni). **Lager:** hyllevar
 | 6 | **Spray-flaske** | Liten blomstersprøyte/håndforstøver | Clas Ohlson / Biltema / Europris | ~30–50 | bredt tilgjengelig i butikk |
 
 **Merknader:**
-- **Plantasjen Moa** fører alt dette i butikk (one-stop). Lenkene går til Felleskjøpet/Clas Ohlson fordi de produktsidene er verifisert å virke — Plantasjens egne produkt-URLer er ustabile.
+- **Plantasjen Moa** fører alt dette i butikk (one-stop). Lenkene går til Felleskjøpet/Clas Ohlson som er enkle å verifisere herfra; flere av Plantasjens egne sider virker også (f.eks. [perlite 6 L](https://plantasjen.no/no/p/perlite-6-l-1a1ad-511656)).
 - **Næring:** beste valg er **CANNA Coco A+B** (kokos-spesifikk mineral, nettkjøp ~239 kr). Vil du heller plukke noe fysisk samme dag, funker en universal mineralnæring (~80–130) — bare ikke kokos-optimert. Se pkt. 3 for hvorfor.
 - Perlite også på **Europris**; kokos også på **Biltema** (torvfri planteringsjord 10 L).
 
