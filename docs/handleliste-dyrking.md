@@ -116,16 +116,31 @@ Med kokos (Alt. B) er dette **obligatorisk** fra start. Med jord (Alt. A) starte
 
 ---
 
-## 7) ✅ Minimums-handleliste (det aller nødvendigste for å starte)
+## 7) 🛒 Konkret kjøpsliste (produkt + butikk + pris + lenke)
 
-1. **Frø:** ruccola, en løsbladsalat, basilikum, gressløk (+ evt. dill/babyleaf) — ~4–6 poser
-2. **Medium (Alt. B):** 1 kokos-brikett (komprimert) **+** 1 pose perlite
-3. **Flytende plantenæring** — 1 flaske universal (**fra dag 1** med kokos)
-4. **Spray-flaske**
+> Priser sjekket 17. juni 2026. **Lager:** disse er hyllevarer, men nettsidene viser butikk-lager dynamisk — sjekk «din butikk» (Ålesund/Moa) på produktsiden, eller regn med at de finnes i butikk. Fysisk dagslager kan jeg ikke garantere herfra.
 
-*(Plante-etiketter printer/3D-printer du selv.)*
+| # | Vare | Konkret produkt | Butikk | Pris | Lenke |
+|---|------|-----------------|--------|------|-------|
+| 1 | **Kokos-medium** | Torvfri plantejord (kokos, sveller til ~10 L) | Clas Ohlson | **39,90** | [clasohlson](https://www.clasohlson.com/no/Torvfri-plantejord/p/Pr318238000) |
+| 1b | *(alt.)* Kokos-medium | Torvfri planteringsjord 10 L (kokos) | Biltema | ~40–50 | [biltema.no](https://www.biltema.no) (søk «kokos planteringsjord») |
+| 2 | **Perlite** | Perlite 3 L (liten pose, nok til oss) | Plantasjen | ~40 | [plantasjen.no](https://plantasjen.no) (søk «perlite») |
+| 2b | *(alt.)* Perlite | Nelson Garden Perlite 6 L | Felleskjøpet | **119** | [felleskjopet](https://www.felleskjopet.no/hjem-og-fritid/hage/jord-og-torv/jordforbedring/perlite-6-liter-50319797/) |
+| 3 | **Flytende næring** | Organisk plantenæring flytende 500 ml | Plantasjen | ~80–100 | [plantasjen](https://plantasjen.no/no/p/organisk-plantenaering-flytende-500-ml-555204) |
+| 3b | *(alt.)* Næring | Plantenæring 750 ml | Felleskjøpet | ~100–130 | [felleskjopet](https://www.felleskjopet.no/hjem-og-fritid/hage/dyrke-og-plante/gjoedsel-og-kalk/vekstnaering-og-spesialgjoedsel/plantenaering-750-ml-50324804/) |
+| 4 | **Frø — basilikum** | Nelson Garden salatbasilikum «Large Leaved» | Felleskjøpet | 75 | [felleskjopet](https://www.felleskjopet.no/hjem-og-fritid/hage/dyrke-og-plante/froepakker/urter/basilikum-salat-50319814/) |
+| 4b | **Frø — resten** | Ruccola, løsbladsalat, gressløk, dill (Nelson Garden / Plantasjen-vegg) | Plantasjen el. Felleskjøpet | ~30–75/pose | Plantasjen frø-vegg har størst utvalg på ett sted |
+| 5 | **Spray-flaske** | Liten håndforstøver | Clas Ohlson / Biltema | ~30–50 | [clasohlson](https://www.clasohlson.com/no) (søk «forstøver») |
 
-→ Anslått totalt: **~270–470 kr** for å være i gang. Resten (kokos, vermikulitt, pH) er finjustering du kan ta senere.
+> ⚠️ **Ikke kjøp:** Substral Universal 500 ml hos Clas Ohlson er **utgått** — bruk Plantasjen/Felleskjøpet-næringen i stedet.
+
+### To handle-strategier
+- **Enklest (én tur):** **Plantasjen Moa** har frø, kokos, perlite, næring og spray på ett sted. Litt dyrere på enkelte varer, men én tur.
+- **Billigst (to stopp):** **Clas Ohlson** (kokos 39,90 + spray) + **Plantasjen** (frø + næring). Felleskjøpet hvis du vil ha perlite i stor pose.
+
+→ Anslått totalt: **~270–470 kr** for å være i gang.
+
+*(Plante-etiketter printer/3D-printer du selv. Vermikulitt/pH er finjustering senere.)*
 
 ---
 

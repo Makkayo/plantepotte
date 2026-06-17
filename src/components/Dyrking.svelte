@@ -25,20 +25,50 @@
 
   const smaplante = ['Mynte (egen seksjon!)', 'Rosmarin', 'Salvie', 'Fransk estragon', 'Timian'];
 
-  // Minimums-handleliste
+  // Konkret kjøpsliste (produkt + butikk + pris + lenke). Avkrysning huskes ikke ennå.
   let kjopt = $state<Record<string, boolean>>({});
   const minimum = [
-    { id: 'fro', tekst: 'Frø: ruccola, løsbladsalat, basilikum, gressløk (+ evt. dill/babyleaf)' },
-    { id: 'kokos', tekst: 'Kokos-brikett (komprimert) — sveller til 5–9 L i vann' },
-    { id: 'perlite', tekst: 'Perlite (bland inn ~30 %)' },
-    { id: 'naring', tekst: 'Flytende plantenæring (universal) — fra dag 1 med kokos' },
-    { id: 'spray', tekst: 'Spray-flaske (frøene spirer ikke i tørr topp)' },
+    {
+      id: 'kokos',
+      tekst: 'Kokos-medium: Torvfri plantejord (sveller til ~10 L)',
+      butikk: 'Clas Ohlson',
+      pris: '39,90',
+      lenke: 'https://www.clasohlson.com/no/Torvfri-plantejord/p/Pr318238000',
+    },
+    {
+      id: 'perlite',
+      tekst: 'Perlite (bland inn ~30 %)',
+      butikk: 'Plantasjen ~40 kr / Felleskjøpet 6 L 119 kr',
+      pris: '40+',
+      lenke: 'https://www.felleskjopet.no/hjem-og-fritid/hage/jord-og-torv/jordforbedring/perlite-6-liter-50319797/',
+    },
+    {
+      id: 'naring',
+      tekst: 'Flytende plantenæring (universal) — fra dag 1 med kokos',
+      butikk: 'Plantasjen (organisk 500 ml)',
+      pris: '~80–100',
+      lenke: 'https://plantasjen.no/no/p/organisk-plantenaering-flytende-500-ml-555204',
+    },
+    {
+      id: 'fro',
+      tekst: 'Frø: ruccola, løsbladsalat, basilikum, gressløk (+ evt. dill)',
+      butikk: 'Plantasjen frø-vegg / Felleskjøpet',
+      pris: '~30–75/pose',
+      lenke: 'https://www.felleskjopet.no/hjem-og-fritid/hage/dyrke-og-plante/froepakker/urter/basilikum-salat-50319814/',
+    },
+    {
+      id: 'spray',
+      tekst: 'Spray-flaske (frøene spirer ikke i tørr topp)',
+      butikk: 'Clas Ohlson / Biltema',
+      pris: '~30–50',
+      lenke: 'https://www.clasohlson.com/no',
+    },
   ];
 
   const butikker = [
-    { navn: 'Plantasjen (Moa)', for: 'Frø, kokos, perlite, næring, spray, småplanter', type: 'Fysisk — one-stop' },
-    { navn: 'Felleskjøpet', for: 'Perlite (større pose), vermikulitt, næring, frø', type: 'Fysisk' },
-    { navn: 'Clas Ohlson / Biltema', for: 'Spray-flaske, Substral-næring, billig perlite', type: 'Fysisk — småutstyr' },
+    { navn: 'Plantasjen (Moa)', for: 'Frø, kokos, perlite, næring, spray, småplanter — én tur', type: 'Fysisk — one-stop' },
+    { navn: 'Clas Ohlson', for: 'Kokos-jord 39,90 (billigst!), spray-flaske', type: 'Fysisk — billig' },
+    { navn: 'Felleskjøpet', for: 'Perlite i stor pose, vermikulitt, næring, frø', type: 'Fysisk' },
     { navn: 'Gartnerbutikken / Botanisk Verden', for: 'Buffret kokos, Biobizz, hydro-næring, bredt frøutvalg', type: 'Nett — backup' },
   ];
 </script>
@@ -59,13 +89,32 @@
     <p class="text-text-dim text-xs mt-1">Det aller nødvendigste — ~270–470 kr. Huk av mens du handler.</p>
     <div class="mt-3 flex flex-col gap-1.5">
       {#each minimum as m (m.id)}
-        <label class="flex items-start gap-3 p-2.5 rounded-lg bg-surface-raised hover:bg-surface-hover transition-colors cursor-pointer">
-          <input type="checkbox" bind:checked={kjopt[m.id]} class="mt-0.5 accent-leaf w-4 h-4 shrink-0" />
-          <span class="text-sm {kjopt[m.id] ? 'line-through text-text-dim' : 'text-text'}">{m.tekst}</span>
-        </label>
+        <div class="flex items-start gap-3 p-2.5 rounded-lg bg-surface-raised">
+          <input
+            type="checkbox"
+            bind:checked={kjopt[m.id]}
+            class="mt-1 accent-leaf w-4 h-4 shrink-0"
+            id={'chk-' + m.id}
+          />
+          <div class="min-w-0 flex-1">
+            <label
+              for={'chk-' + m.id}
+              class="text-sm cursor-pointer {kjopt[m.id] ? 'line-through text-text-dim' : 'text-text'}"
+            >
+              {m.tekst}
+            </label>
+            <div class="flex items-center gap-2 flex-wrap mt-1">
+              <span class="text-xs text-text-dim">{m.butikk}</span>
+              <span class="chip border-border bg-surface text-text-muted">{m.pris} kr</span>
+              <a href={m.lenke} target="_blank" rel="noopener" class="text-xs text-sky hover:underline">lenke ↗</a>
+            </div>
+          </div>
+        </div>
       {/each}
     </div>
-    <p class="text-text-dim text-xs mt-3">Plante-etiketter printer/3D-printer du selv.</p>
+    <p class="text-text-dim text-xs mt-3">
+      ⚠️ Ikke kjøp Substral hos Clas Ohlson — den er utgått. Plante-etiketter printer du selv.
+    </p>
   </div>
 
   <!-- Frø-utvalg -->
