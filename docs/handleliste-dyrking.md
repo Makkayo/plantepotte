@@ -75,6 +75,8 @@ Systemet er i praksis **passiv hydroponi** (kokos = inert, næring løst i vannb
 > ⭐ **Beste valg for deg: Nelson Garden Hydroponisk næring 250 ml** — komplett, mineral, **ettdelt** (én flaske, ingen A/B-fikling), laget nettopp for urter + bladgrønt i vann. **~89 kr**, og 250 ml rekker ~83 L næringsvann (3 ml/L) → varer veldig lenge. **Fås fysisk** på Felleskjøpet/Plantasjen/Clas Ohlson.
 > - **Cal-Mag:** kokos binder litt Ca/Mg. For nøysomme urter/salat holder den komplette hydronæringen som regel — legg til litt Cal-Mag bare hvis du ser mangel (gulning mellom bladnervene på nye blad).
 
+> 💡 **«Hydroponisk» = bare at næringen leverer alt oppløst i vann.** Funker like godt om røttene står rett i vannet (som på produktbildet) eller vannet **wikes opp gjennom kokosen** til røttene (ditt system). Kokosen er bare et inert, fuktig transportlag — samme næringsvann, samme opptak.
+
 **Premium-oppgradering (valgfritt):** CANNA Coco A+B er kokos-bufret og marginalt «riktigere» for kokos, men 2-delt, dyrere, og 1 L/5 L er ofte utsolgt (10 L til 1.490 kr er meningsløst mye for deg). Ikke nødvendig for urter.
 
 > ⚠️ **De to beholderne i en blomsterkasse deler ett vannbad.** Regel mot over-gjødsling:

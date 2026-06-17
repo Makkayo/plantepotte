@@ -194,6 +194,10 @@
       — organisk grumser i et stille vannbad). Anbefalt: <strong>Nelson Garden Hydroponisk næring
       250 ml</strong> (ettdelt, ~89 kr). Egen Cal-Mag bare hvis du ser mangel.
     </p>
+    <p class="text-xs text-text-dim mt-2">
+      «Hydroponisk» betyr bare at næringen leverer alt oppløst i vann — funker like godt om røttene
+      står i vann (som på produktbildet) eller vannet wikes opp gjennom kokosen til røttene (ditt system).
+    </p>
     <div class="mt-3 p-3 rounded-lg bg-sun/10 border border-sun/25">
       <div class="text-sm font-medium text-sun">⚠️ De to beholderne deler ett vannbad</div>
       <p class="text-sm text-text-muted mt-1">
