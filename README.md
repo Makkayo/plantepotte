@@ -4,7 +4,7 @@ Modulær, selvvannende innendørs plantepotte med app-styrte vekstlys og fakta-b
 
 - **Live web-app:** https://plantepotte.pages.dev/
 - **Prosjektoversikt:** [`/oversikt.html`](public/oversikt.html) (kopiert til `dist/` ved build)
-- **3D-design:** [`/3d-design.html`](public/3d-design.html)
+- **3D-design (arkivert):** [`docs/legacy/3d-design.html`](docs/legacy/3d-design.html)
 - **ESP32-firmware:** [`firmware/`](firmware/) (MicroPython — se [`firmware/README.md`](firmware/README.md))
 - **Wokwi-simulator:** [`wokwi/`](wokwi/) (test lys-timer/encoder i nettleseren)
 - **Mottaksliste (hardware-status):** [`docs/mottaksliste.md`](docs/mottaksliste.md)

@@ -36,7 +36,7 @@ Inspirert av Auk mini 2 — men 3D-printet, modulær og fullt egenbygd.
 **Printer:** Bambu Lab P2S, 256×256×256 mm byggeflate
 **Veke:** 3 mm bomullssnor
 
-Detaljert designplan: se `3d-design.html`.
+Detaljert designplan: se `docs/legacy/3d-design.html` (arkivert).
 
 ---
 
@@ -292,7 +292,7 @@ Funksjoner:
 | 1 | Breadboard-prototype: LED PWM, WiFi, Supabase, web-app | Backend ferdig, hardware venter |
 | 2 | Alle sensorer aktive, OLED, KY-040, sensorposting | Planlagt |
 | 3 | Push-varsler ved lavt vann, historikk | Planlagt |
-| 4 | 3D-printet innkapsling (se `3d-design.html`) | Skissefase |
+| 4 | 3D-printet innkapsling (se `docs/legacy/3d-design.html`) | Skissefase |
 | 5 | Potte 2 + evt. aktiv vannpumpe | Fremtid |
 
 ---
