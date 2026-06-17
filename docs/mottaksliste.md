@@ -8,7 +8,7 @@ Holder styr på hva som er **bestilt → ankommet → testet** på breadboard.
 - ✅ Testet og funker
 - ⚠️ Ankommet, men problem (se notat)
 
-*Sist oppdatert: 2026-06-12 — Bestilling 6 lagt til (manglet i lista)*
+*Sist oppdatert: 2026-06-17 — Bestilling 3 og 4 delvis ankommet*
 
 ---
 
@@ -54,24 +54,24 @@ Holder styr på hva som er **bestilt → ankommet → testet** på breadboard.
 
 | Status | Del | Antall | Notat |
 |:------:|-----|:------:|-------|
-| ⬜ | VL53L0X ToF-laser | ×3 | |
-| ⬜ | ESP32-CAM-MB (OV2640) | ×2 | |
-| ⬜ | Elektronikk-lakk (konformell coating) | ×1 | |
+| 📦 | VL53L0X ToF-laser | ×3 | Kom 17. juni — «A03-VL53L0X-Zi», Estardyn GY-VL53L0XV2, 940nm I2C, 25×10.7mm. Alle 3 i separate ESD-poser |
+| 📦 | ESP32-CAM-MB (OV2640) | ×2 | Kom 17. juni — «I64-ESP32-CAM+I65-MB-DIZuo», CH340G, Micro USB. Begge sett i ESD-poser |
+| ⬜ | Elektronikk-lakk (konformell coating) | ×1 | Ikke ankommet ennå |
 
 ## Bestilling 4 — loddeutstyr & lek (~€54)
 
 | Status | Del | Antall | Notat |
 |:------:|-----|:------:|-------|
-| ⬜ | Tredje hånd (loddestasjon) | ×1 | |
-| ⬜ | Magnetisk tredje hånd | ×1 | |
-| ⬜ | USB-loddebolt C200S | ×1 | |
-| ⬜ | Loddetinn 0.8mm | ×1 | |
-| ⬜ | Avloddefletning | ×1 | |
-| ⬜ | Silikon-loddematte | ×1 | |
-| ⬜ | ESP32 starter kit | ×1 | |
-| ⬜ | MG90S servo | ×2 | |
-| ⬜ | I2C level converter (ikke i bruk) | ×1 | |
-| ⬜ | WS2812B RGB-strip (lek) | ×1 | |
+| 📦 | Tredje hånd (loddestasjon) | ×1 | Kom 17. juni — «PCB Holder with Alligator Clips for Electronics Repair», 3 fleksible armer + alligator-klips |
+| 📦 | Magnetisk tredje hånd | ×1 | Kom 17. juni — «Soldering Station with Flexible Arms Soldering Iron Holder», gooseneck-armer (kuleleddskjede) |
+| 📦 | USB-loddebolt C200S | ×1 | Kom 17. juni — «Portable Soldering Iron USB Battery 3.7V», display + +/- knapper. NB: ser ut som batteri-drevet USB-bolt (ikke vanlig C200S) |
+| 📦 | Loddetinn 0.8mm | ×1 | Kom 17. juni — «0.8mm 100g Soldering Tin Wire, No-clean Rosin Core FLUX 2.0%» |
+| 📦 | Avloddefletning | ×1 | Kom 17. juni — CP-2015, 2.0mm × 1.5m, RoHS |
+| 📦 | Silikon-loddematte | ×1 | Kom 17. juni — S160, blå, 30×45cm |
+| 📦 | ESP32 starter kit | ×1 | Kom 17. juni — «ESP32 Basic Starter Kit» i plastboks med DHT22, OLED, reléer m.m. |
+| 📦 | MG90S servo | ×2 | Kom 17. juni — begge i separate pakker merket «MG90S-1pcs», All Metal Gear 9g |
+| 📦 | I2C level converter (ikke i bruk) | ×1 | Kom 17. juni — «10pcs 4 Channels IIC I2C Logic Level Converter, 3.3V to 5V» — ikke planlagt brukt (laser+OLED er begge 3.3V) |
+| 📦 | WS2812B RGB-strip (lek) | ×1 | Kom 17. juni — «WS2812B DC5V, 1m 30 LED/m, IP30, White PCB» |
 
 ## Bestilling 5 — påfyll & semi-permanent bygg (~€38, bestilt 10. juni)
 
