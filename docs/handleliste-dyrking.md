@@ -36,6 +36,8 @@ Valgt fra vår egen plantekatalog: **lettstelt + rask + tåler veke-fukt**. Hver
 ### 🔴 Kjøp som småplante (ikke frø — tregt/upålitelig)
 **Mynte** (egen seksjon — røttene tar over alt), **rosmarin**, **salvie**, **fransk estragon**. Timian kan også være enklere som småplante.
 
+> 💧 **Veke = konstant fuktig.** Perfekt for **basilikum, salat, ruccola, persille, mynte, dill, koriander** (elsker jevn fukt — dine valg). Men **middelhavsurter (rosmarin, timian, oregano, salvie) vil ha det tørrere** og passer dårlig i et vekesystem — innendørs dør urter oftere av *for mye* fukt enn av tørke. Dropp dem her, eller gi dem ekstra perlite + minimal veke i en egen, tørrere seksjon.
+
 > 💡 Mikrogrønt (karse, reddik, solsikke) er den raskeste «vinnerlykken» — ferdig på under en uke. Fin for kjapp suksess.
 
 ### 🏷️ Sort & merke — best for innendørs + vekstlys
@@ -59,6 +61,7 @@ Innendørs med konstant lys + varmt rom → planter **stokkløper** (går i frø
 **Hvorfor perlite i tillegg til kokos?** I et veke-system mates mediet konstant med fukt nedenfra, så ren kokos kan bli vel våt og pakke seg. Perlite (~20–30 %) holder luft til røttene og hindrer surt/oksygenfattig medium. Behold den.
 
 - **Net pots / planteplasser 3D-printes selv** — du kjøper bare *fyllet*. ~4–8 L ferdig blanding dekker begge pottene med margin.
+- **Bunnlag i net pots:** legg et lag **leca-kuler** (eller småstein) i bunnen av hver net pot → stabilitet, drenering, mindre bakterievekst, og hindrer at fin kokos/perlite siler ut gjennom hullene. Billig (Plantasjen/Biltema/Jula).
 - Velg gjerne **«buffret»/lett gjødslet** kokos (lettere næringsbalanse).
 - 🧂 Vann av og til **ovenfra** for å skylle ut salter som samler seg på toppen (hver 3.–4. uke).
 
@@ -108,19 +111,31 @@ Systemet er i praksis **passiv hydroponi** (kokos = inert, næring løst i vannb
 
 ---
 
+## 5b) 🌱 Oppstart & veke-tips (best practice fra SIP-litteraturen)
+
+- **Topp-vann første uka.** Vann ovenfra til røttene og mediet «kobler seg» til veka/vannbadet. Slutt så — la veka ta over. Sjekk at mediet under overflaten holder seg fuktig.
+- **Veke-dybde:** stikk veka **2,5–5 cm opp i mediet**, og helt **ned til bunnen** av vannreservoaret. For bladgrønt: **flere veker** gir jevnere fukt (grunne røtter, bred plante).
+- **Spir ved svak næring.** Bittesmå frøplanter brennes av full styrke → start med **rent vann / ¼ styrke** til de har ekte blad, øk gradvis.
+- **Hold reservoaret mørkt.** Næringsvann + lys = alger. Skjerm tanken/overflaten for lys (3D-basen hjelper).
+- **Design-tips (3D-modellen):** lag et **overløpshull** ved maks vannivå i basen — da kan du ikke overfylle (standard sikring mot rotråte i selvvannende systemer).
+- Bytt veke hvis bomullen mugner over tid (evt. syntetisk veke / kapillærmatte for lengre levetid).
+
+---
+
 ## 6) 🛒 Konkret kjøpsliste (produkt + butikk + pris + lenke)
 
 Lenker går til faktiske produktsider (verifisert 17. juni). **Lager:** hyllevarer, men nettsidene viser butikk-lager dynamisk — sjekk «din butikk» (Moa/Ålesund) på produktsiden.
 
 | # | Vare | Produkt | Butikk | Pris | Lenke |
 |---|------|---------|--------|------|-------|
-| 1 | **Kokos-medium** | Torvfri plantejord (kokos, → ~10 L) | Clas Ohlson | **39,90** | [clasohlson.com](https://www.clasohlson.com/no/Torvfri-plantejord/p/Pr318238000) |
-| 2 | **Perlite** | Perlite 6 L (Nelson Garden) | Felleskjøpet | **119** | [felleskjopet.no](https://www.felleskjopet.no/hjem-og-fritid/hage/jord-og-torv/jordforbedring/perlite-6-liter-50319797/) |
-| 3 | **Flytende næring** ⭐ | Nelson Garden Hydroponisk næring 250 ml (komplett, ettdelt) | Felleskjøpet / Plantasjen / Clas Ohlson | **89** | [felleskjopet.no](https://www.felleskjopet.no/hjem-og-fritid/hage/dyrke-og-plante/gjoedsel-og-kalk/vekstnaering-og-spesialgjoedsel/plantenaering-250ml-hydroponis-50340547/) |
+| 1 | **Kokos-medium** | Torvfri plantejord (kokos, → ~10 L) | Clas Ohlson · Biltema | **39,90** | [Clas Ohlson](https://www.clasohlson.com/no/Torvfri-plantejord/p/Pr318238000) · Biltema i butikk |
+| 2 | **Perlite** | Perlite 6 L (Nelson Garden) | Felleskjøpet · Plantasjen | **119** | [Felleskjøpet](https://www.felleskjopet.no/hjem-og-fritid/hage/jord-og-torv/jordforbedring/perlite-6-liter-50319797/) · [Plantasjen](https://plantasjen.no/no/p/perlite-6-l-1a1ad-511656) |
+| 3 | **Flytende næring** ⭐ | Nelson Garden Hydroponisk næring 250 ml (komplett, ettdelt) | Felleskjøpet · Clas Ohlson · Plantasjen | **80–89** | [Felleskjøpet (89)](https://www.felleskjopet.no/hjem-og-fritid/hage/dyrke-og-plante/gjoedsel-og-kalk/vekstnaering-og-spesialgjoedsel/plantenaering-250ml-hydroponis-50340547/) · [Clas Ohlson (79,90)](https://www.clasohlson.com/no/Nelson-Garden-flytende-hydroponisk-plantenaering,-250-ml/p/31-6837) |
 | 3b | *(valgfri premium)* Næring | CANNA Coco A+B (kokos-bufret, 2-delt) | nett-grow-shops | 239 (1 L) | ofte utsolgt i 1 L — sjekk lager |
-| 4 | **Frø — basilikum** | Nelson Garden salatbasilikum «Large Leaved» | Felleskjøpet | 75 | [felleskjopet.no](https://www.felleskjopet.no/hjem-og-fritid/hage/dyrke-og-plante/froepakker/urter/basilikum-salat-50319814/) |
+| 4 | **Frø — basilikum** | Nelson Garden salatbasilikum / «Genovese» | Felleskjøpet · Impecta | 75 | [Felleskjøpet](https://www.felleskjopet.no/hjem-og-fritid/hage/dyrke-og-plante/froepakker/urter/basilikum-salat-50319814/) · [Impecta «Genovese»](https://www.impecta.no/fro/urter/storbladet-basilikum-genovese) |
 | 5 | **Frø — resten** | Ruccola, løsbladsalat, gressløk, dill | Plantasjen frø-vegg / Felleskjøpet | ~30–75/pose | i butikk (størst utvalg på frø-veggen) |
 | 6 | **Spray-flaske** | Liten blomstersprøyte/håndforstøver | Clas Ohlson / Biltema / Europris | ~30–50 | bredt tilgjengelig i butikk |
+| 7 | *(anbefalt)* **Leca-kuler** | Bunnlag i net pots (stabilitet/drenering/containment) | Plantasjen / Biltema / Jula | ~50–100 | i butikk |
 
 **Merknader:**
 - **Plantasjen Moa** fører alt dette i butikk (one-stop). Lenkene går til Felleskjøpet/Clas Ohlson som er enkle å verifisere herfra; flere av Plantasjens egne sider virker også (f.eks. [perlite 6 L](https://plantasjen.no/no/p/perlite-6-l-1a1ad-511656)).

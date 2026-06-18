@@ -25,43 +25,53 @@
 
   const smaplante = ['Mynte (egen seksjon!)', 'Rosmarin', 'Salvie', 'Fransk estragon', 'Timian'];
 
-  // Konkret kjøpsliste (produkt + butikk + pris + lenke). Avkrysning huskes ikke ennå.
+  // Konkret kjøpsliste (produkt + pris + lenker til flere butikker). Avkrysning huskes ikke ennå.
   let kjopt = $state<Record<string, boolean>>({});
   const minimum = [
     {
       id: 'kokos',
       tekst: 'Kokos-medium: Torvfri plantejord (sveller til ~10 L)',
-      butikk: 'Clas Ohlson',
       pris: '39,90',
-      lenke: 'https://www.clasohlson.com/no/Torvfri-plantejord/p/Pr318238000',
+      lenker: [{ l: 'Clas Ohlson', u: 'https://www.clasohlson.com/no/Torvfri-plantejord/p/Pr318238000' }],
     },
     {
       id: 'perlite',
       tekst: 'Perlite 6 L (bland inn ~30 %)',
-      butikk: 'Felleskjøpet / Plantasjen',
       pris: '119',
-      lenke: 'https://www.felleskjopet.no/hjem-og-fritid/hage/jord-og-torv/jordforbedring/perlite-6-liter-50319797/',
+      lenker: [
+        { l: 'Felleskjøpet', u: 'https://www.felleskjopet.no/hjem-og-fritid/hage/jord-og-torv/jordforbedring/perlite-6-liter-50319797/' },
+        { l: 'Plantasjen', u: 'https://plantasjen.no/no/p/perlite-6-l-1a1ad-511656' },
+      ],
     },
     {
       id: 'naring',
       tekst: 'Nelson Garden Hydroponisk næring 250 ml (komplett, ettdelt)',
-      butikk: 'Felleskjøpet / Plantasjen / Clas Ohlson',
-      pris: '89',
-      lenke: 'https://www.felleskjopet.no/hjem-og-fritid/hage/dyrke-og-plante/gjoedsel-og-kalk/vekstnaering-og-spesialgjoedsel/plantenaering-250ml-hydroponis-50340547/',
+      pris: '~80–89',
+      lenker: [
+        { l: 'Felleskjøpet', u: 'https://www.felleskjopet.no/hjem-og-fritid/hage/dyrke-og-plante/gjoedsel-og-kalk/vekstnaering-og-spesialgjoedsel/plantenaering-250ml-hydroponis-50340547/' },
+        { l: 'Clas Ohlson', u: 'https://www.clasohlson.com/no/Nelson-Garden-flytende-hydroponisk-plantenaering,-250-ml/p/31-6837' },
+      ],
     },
     {
       id: 'fro',
       tekst: 'Frø: ruccola, løsbladsalat, basilikum, gressløk (+ evt. dill)',
-      butikk: 'Plantasjen frø-vegg / Felleskjøpet',
-      pris: '~30–75/pose',
-      lenke: 'https://www.felleskjopet.no/hjem-og-fritid/hage/dyrke-og-plante/froepakker/urter/basilikum-salat-50319814/',
+      pris: '~30–75',
+      lenker: [
+        { l: 'Felleskjøpet (basilikum)', u: 'https://www.felleskjopet.no/hjem-og-fritid/hage/dyrke-og-plante/froepakker/urter/basilikum-salat-50319814/' },
+        { l: 'Impecta', u: 'https://www.impecta.no/' },
+      ],
+    },
+    {
+      id: 'leca',
+      tekst: 'Leca-kuler (Plantasjen/Biltema/Jula) — bunnlag i net pots: drenering + hindrer at mediet siler ut',
+      pris: '~50–100',
+      lenker: [],
     },
     {
       id: 'spray',
-      tekst: 'Spray-flaske / blomstersprøyte (frøene spirer ikke i tørr topp)',
-      butikk: 'Clas Ohlson / Biltema / Europris',
+      tekst: 'Spray-flaske / blomstersprøyte (Clas Ohlson/Biltema/Europris) — frø spirer ikke i tørr topp',
       pris: '~30–50',
-      lenke: '',
+      lenker: [],
     },
   ];
 
@@ -86,7 +96,7 @@
     <h2 class="font-semibold flex items-center gap-2">
       <span>✅</span> Kom-i-gang-liste
     </h2>
-    <p class="text-text-dim text-xs mt-1">Det aller nødvendigste — ~270–470 kr. Huk av mens du handler.</p>
+    <p class="text-text-dim text-xs mt-1">Kjøp for å komme i gang — ~350–500 kr. Huk av mens du handler.</p>
     <div class="mt-3 flex flex-col gap-1.5">
       {#each minimum as m (m.id)}
         <div class="flex items-start gap-3 p-2.5 rounded-lg bg-surface-raised">
@@ -104,11 +114,10 @@
               {m.tekst}
             </label>
             <div class="flex items-center gap-2 flex-wrap mt-1">
-              <span class="text-xs text-text-dim">{m.butikk}</span>
               <span class="chip border-border bg-surface text-text-muted">{m.pris} kr</span>
-              {#if m.lenke}
-                <a href={m.lenke} target="_blank" rel="noopener" class="text-xs text-sky hover:underline">lenke ↗</a>
-              {/if}
+              {#each m.lenker as lk}
+                <a href={lk.u} target="_blank" rel="noopener" class="text-xs text-sky hover:underline">{lk.l} ↗</a>
+              {/each}
             </div>
           </div>
         </div>
@@ -154,6 +163,7 @@
       {/each}
     </div>
     <p class="text-xs text-text-dim mt-2">Frø av disse er tregt/upålitelig. Mynte må ha egen seksjon — røttene kveler naboene.</p>
+    <p class="text-xs text-text-dim mt-2">💧 Veke = konstant fuktig → perfekt for basilikum/salat/persille/mynte/dill/koriander. Middelhavsurter (rosmarin/timian/oregano/salvie) vil ha det tørrere og passer dårlig i vekesystemet.</p>
 
     <div class="mt-4 p-3 rounded-lg bg-surface-raised">
       <div class="text-xs font-medium text-text">🏷️ Sort & merke</div>
@@ -214,6 +224,18 @@
       Dosering: følg flaska (~1–2 ml/L). Underdoser heller enn å overdose — urter/salat er nøysomme.
       Frisk opp næringsvannet ca. annenhver uke.
     </p>
+  </div>
+
+  <!-- Oppstart & veke-tips -->
+  <div class="card p-4 sm:p-5">
+    <h2 class="font-semibold flex items-center gap-2"><span>🌱</span> Oppstart & veke-tips</h2>
+    <ul class="mt-2 flex flex-col gap-2 text-sm text-text-muted">
+      <li><strong>Topp-vann første uka</strong> til røttene «kobler seg» til veka — slutt så og la veka ta over.</li>
+      <li><strong>Veke 2,5–5 cm opp i mediet</strong>, helt ned til bunnen av vannbadet. Flere veker = jevnere fukt for bladgrønt.</li>
+      <li><strong>Spir ved svak næring</strong> (rent vann / ¼ styrke til ekte blad) — full styrke brenner små frøplanter.</li>
+      <li><strong>Hold reservoaret mørkt</strong> — næringsvann + lys = alger.</li>
+      <li><strong>Design:</strong> lag et <strong>overløpshull</strong> ved maks vannivå i basen → kan ikke overfylle (mot rotråte).</li>
+    </ul>
   </div>
 
   <!-- Hvor handle -->
