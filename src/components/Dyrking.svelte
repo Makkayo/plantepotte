@@ -62,12 +62,6 @@
       ],
     },
     {
-      id: 'leca',
-      tekst: 'Leca-kuler (Plantasjen/Biltema/Jula) — bunnlag i net pots: drenering + hindrer at mediet siler ut',
-      pris: '~50–100',
-      lenker: [],
-    },
-    {
       id: 'spray',
       tekst: 'Spray-flaske / blomstersprøyte (Clas Ohlson/Biltema/Europris) — frø spirer ikke i tørr topp',
       pris: '~30–50',
@@ -96,7 +90,7 @@
     <h2 class="font-semibold flex items-center gap-2">
       <span>✅</span> Kom-i-gang-liste
     </h2>
-    <p class="text-text-dim text-xs mt-1">Kjøp for å komme i gang — ~350–500 kr. Huk av mens du handler.</p>
+    <p class="text-text-dim text-xs mt-1">Kjøp for å komme i gang — ~300–450 kr. Huk av mens du handler.</p>
     <div class="mt-3 flex flex-col gap-1.5">
       {#each minimum as m (m.id)}
         <div class="flex items-start gap-3 p-2.5 rounded-lg bg-surface-raised">
@@ -234,7 +228,7 @@
       <li><strong>Veke 2,5–5 cm opp i mediet</strong>, helt ned til bunnen av vannbadet. Flere veker = jevnere fukt for bladgrønt.</li>
       <li><strong>Spir ved svak næring</strong> (rent vann / ¼ styrke til ekte blad) — full styrke brenner små frøplanter.</li>
       <li><strong>Hold reservoaret mørkt</strong> — næringsvann + lys = alger.</li>
-      <li><strong>Design:</strong> lag et <strong>overløpshull</strong> ved maks vannivå i basen → kan ikke overfylle (mot rotråte).</li>
+      <li><strong>Vannivå:</strong> du fyller manuelt + ser nivået via laser-sensoren → ingen overfylling, ikke behov for overløpshull. Hold maks nivå <strong>under vekehullene</strong> så mediet ikke står i vann.</li>
     </ul>
   </div>
 

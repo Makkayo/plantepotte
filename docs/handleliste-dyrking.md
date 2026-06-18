@@ -61,7 +61,7 @@ Innendørs med konstant lys + varmt rom → planter **stokkløper** (går i frø
 **Hvorfor perlite i tillegg til kokos?** I et veke-system mates mediet konstant med fukt nedenfra, så ren kokos kan bli vel våt og pakke seg. Perlite (~20–30 %) holder luft til røttene og hindrer surt/oksygenfattig medium. Behold den.
 
 - **Net pots / planteplasser 3D-printes selv** — du kjøper bare *fyllet*. ~4–8 L ferdig blanding dekker begge pottene med margin.
-- **Bunnlag i net pots:** legg et lag **leca-kuler** (eller småstein) i bunnen av hver net pot → stabilitet, drenering, mindre bakterievekst, og hindrer at fin kokos/perlite siler ut gjennom hullene. Billig (Plantasjen/Biltema/Jula).
+- **Bunnlag (unødvendig for ditt design):** leca-kuler anbefales for *slissede* net pots, men du har bare 1–2 små vekehull → lite siler ut, og kokos klumper seg fuktig. Vil du ha ekstra drenering i bunnen, bruk heller en neve **ekstra perlite** (som du uansett kjøper) — slipper et eget innkjøp.
 - Velg gjerne **«buffret»/lett gjødslet** kokos (lettere næringsbalanse).
 - 🧂 Vann av og til **ovenfra** for å skylle ut salter som samler seg på toppen (hver 3.–4. uke).
 
@@ -105,8 +105,9 @@ Systemet er i praksis **passiv hydroponi** (kokos = inert, næring løst i vannb
 
 ## 5) 🔮 Kjekt å ha senere (ikke nå)
 
-- **pH-strips / pH-måler** — kokos går best ~5,8–6,2. Klarer deg uten i starten. *(→ ønskeliste)*
-- **EC/TDS-måler** — måler næringskonsentrasjon. Avansert. *(→ ønskeliste)*
+- **pH-strips / pH-måler** — kokos går best ~5,8–6,2. **Trenger du det? Nei, ikke for å starte** — urter/salat er tilgivende, og norsk vann + dosert hydronæring gir som regel greit resultat. Mål kun hvis planter mistrives tross gjødsling. *(→ ønskeliste)*
+- **EC/TDS-måler** — måler næringskonsentrasjon. Heller ikke nødvendig nå; følg flaska. *(→ ønskeliste)*
+- **Hvor (pH/EC):** fås *ikke* på Plantasjen/Felleskjøpet — det er grow-shop-/akvarie-varer. Bestill på nett (Gartnerbutikken/MikroGartneriet) eller billige digitale pH/EC-penner fra Amazon/AliExpress (~100–200 kr) når/hvis du vil ha dem.
 - **Småplanter** av mynte/rosmarin/salvie hvis du vil slippe frø-venting.
 
 ---
@@ -117,7 +118,7 @@ Systemet er i praksis **passiv hydroponi** (kokos = inert, næring løst i vannb
 - **Veke-dybde:** stikk veka **2,5–5 cm opp i mediet**, og helt **ned til bunnen** av vannreservoaret. For bladgrønt: **flere veker** gir jevnere fukt (grunne røtter, bred plante).
 - **Spir ved svak næring.** Bittesmå frøplanter brennes av full styrke → start med **rent vann / ¼ styrke** til de har ekte blad, øk gradvis.
 - **Hold reservoaret mørkt.** Næringsvann + lys = alger. Skjerm tanken/overflaten for lys (3D-basen hjelper).
-- **Design-tips (3D-modellen):** lag et **overløpshull** ved maks vannivå i basen — da kan du ikke overfylle (standard sikring mot rotråte i selvvannende systemer).
+- **Vannivå, ikke overløpshull:** i et manuelt fylt vekesystem styrer du nivået selv (+ laser-sensoren viser det i appen), så overfylling er ikke noe problem — du trenger *ikke* overløpshull. Det viktige: hold maks vannivå **under vekehullene / bunnen av plantebeholderen**, så mediet wiker fuktig uten å stå i vann.
 - Bytt veke hvis bomullen mugner over tid (evt. syntetisk veke / kapillærmatte for lengre levetid).
 
 ---
@@ -135,7 +136,8 @@ Lenker går til faktiske produktsider (verifisert 17. juni). **Lager:** hyllevar
 | 4 | **Frø — basilikum** | Nelson Garden salatbasilikum / «Genovese» | Felleskjøpet · Impecta | 75 | [Felleskjøpet](https://www.felleskjopet.no/hjem-og-fritid/hage/dyrke-og-plante/froepakker/urter/basilikum-salat-50319814/) · [Impecta «Genovese»](https://www.impecta.no/fro/urter/storbladet-basilikum-genovese) |
 | 5 | **Frø — resten** | Ruccola, løsbladsalat, gressløk, dill | Plantasjen frø-vegg / Felleskjøpet | ~30–75/pose | i butikk (størst utvalg på frø-veggen) |
 | 6 | **Spray-flaske** | Liten blomstersprøyte/håndforstøver | Clas Ohlson / Biltema / Europris | ~30–50 | bredt tilgjengelig i butikk |
-| 7 | *(anbefalt)* **Leca-kuler** | Bunnlag i net pots (stabilitet/drenering/containment) | Plantasjen / Biltema / Jula | ~50–100 | i butikk |
+
+*(Leca-bunnlag er IKKE nødvendig for ditt design med 1–2 vekehull — kjøp heller litt ekstra perlite hvis du vil ha mer drenering.)*
 
 **Merknader:**
 - **Plantasjen Moa** fører alt dette i butikk (one-stop). Lenkene går til Felleskjøpet/Clas Ohlson som er enkle å verifisere herfra; flere av Plantasjens egne sider virker også (f.eks. [perlite 6 L](https://plantasjen.no/no/p/perlite-6-l-1a1ad-511656)).
@@ -148,7 +150,7 @@ Lenker går til faktiske produktsider (verifisert 17. juni). **Lager:** hyllevar
 - **Enklest (én tur):** **Plantasjen Moa** har frø, perlite, næring, spray og småplanter på ett sted (litt dyrere på enkelte varer).
 - **Billigst (to stopp):** **Clas Ohlson** (kokos 39,90 + spray) + **Plantasjen** (frø + perlite + næring).
 
-→ Anslått totalt: **~350–500 kr** for å være i gang (perliten og næringen er engangskjøp som varer lenge).
+→ Anslått totalt: **~300–450 kr** for å være i gang (perliten og næringen er engangskjøp som varer lenge).
 
 ---
 
