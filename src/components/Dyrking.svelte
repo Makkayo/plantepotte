@@ -157,7 +157,7 @@
       {/each}
     </div>
     <p class="text-xs text-text-dim mt-2">Frø av disse er tregt/upålitelig. Mynte må ha egen seksjon — røttene kveler naboene.</p>
-    <p class="text-xs text-text-dim mt-2">💧 Veke = konstant fuktig → perfekt for basilikum/salat/persille/mynte/dill/koriander. Middelhavsurter (rosmarin/timian/oregano/salvie) vil ha det tørrere og passer dårlig i vekesystemet.</p>
+    <p class="text-xs text-text-dim mt-2">💧 Veke = konstant fuktig → perfekt for basilikum/salat/persille/mynte/dill/koriander. Middelhavsurter (rosmarin/timian/oregano/salvie) trenger tørke-perioder → dyrk dem heller i en egen, godt drenert potte utenfor vekesystemet (også Auk-type systemer er for våte for dem).</p>
 
     <div class="mt-4 p-3 rounded-lg bg-surface-raised">
       <div class="text-xs font-medium text-text">🏷️ Sort & merke</div>

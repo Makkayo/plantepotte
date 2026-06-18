@@ -36,7 +36,9 @@ Valgt fra vår egen plantekatalog: **lettstelt + rask + tåler veke-fukt**. Hver
 ### 🔴 Kjøp som småplante (ikke frø — tregt/upålitelig)
 **Mynte** (egen seksjon — røttene tar over alt), **rosmarin**, **salvie**, **fransk estragon**. Timian kan også være enklere som småplante.
 
-> 💧 **Veke = konstant fuktig.** Perfekt for **basilikum, salat, ruccola, persille, mynte, dill, koriander** (elsker jevn fukt — dine valg). Men **middelhavsurter (rosmarin, timian, oregano, salvie) vil ha det tørrere** og passer dårlig i et vekesystem — innendørs dør urter oftere av *for mye* fukt enn av tørke. Dropp dem her, eller gi dem ekstra perlite + minimal veke i en egen, tørrere seksjon.
+> 💧 **Veke = konstant fuktig.** Perfekt for **basilikum, salat, ruccola, persille, mynte, dill, koriander** (elsker jevn fukt — dine valg). Men **middelhavsurter (rosmarin, timian, oregano, salvie) vil ha det tørrere** og passer dårlig i et vekesystem — de trenger *tørke-perioder*, ellers råtner de vedaktige røttene. Innendørs dør urter oftere av for mye fukt enn av tørke.
+>
+> **Vil du dyrke middelhavsurter?** Enklest: sett dem i en **egen, godt drenert potte utenfor vekesystemet** (luftig blanding, gjerne terrakotta, vann først når tørt). Vekesystemer — også Auk-type benkesystemer — er for våte for dem; de som lykkes i hydro kjører *intermitterende* vanning (drypp 2×/dag) så røttene tørker imellom, noe en passiv veke ikke gir. La vekepotta gjøre det den er best på (de fukt-elskende over).
 
 > 💡 Mikrogrønt (karse, reddik, solsikke) er den raskeste «vinnerlykken» — ferdig på under en uke. Fin for kjapp suksess.
 
