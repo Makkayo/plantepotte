@@ -1,6 +1,6 @@
 <script lang="ts">
   import { planter, lysFamilier } from '../lib/stores';
-  import type { LysFamilieId, PlanteKategori, Plante } from '../lib/database.types';
+  import type { LysFamilieId, PlanteKategori, Plante, Vanskelighet } from '../lib/database.types';
   import PlanteDetalj from './PlanteDetalj.svelte';
 
   type View = { name: 'oversikt' } | { name: 'potte'; potteId: string } | { name: 'katalog' };
@@ -9,6 +9,8 @@
   let sok = $state('');
   let kategoriFilter = $state<PlanteKategori | 'alle'>('alle');
   let familieFilter = $state<LysFamilieId | 'alle'>('alle');
+  let vekeFilter = $state<'alle' | 'passer' | 'forsiktig'>('alle');
+  let vanskFilter = $state<'alle' | Vanskelighet>('alle');
   let aktivPlante = $state<Plante | null>(null);
   let bildeFeilet = $state<Record<string, boolean>>({});
 
@@ -26,6 +28,11 @@
     let liste = $planter.filter((p) => p.publisert);
     if (kategoriFilter !== 'alle') liste = liste.filter((p) => p.kategori === kategoriFilter);
     if (familieFilter !== 'alle') liste = liste.filter((p) => p.lys_familie === familieFilter);
+    if (vekeFilter === 'passer')
+      liste = liste.filter((p) => p.veke_egnet === 'utmerket' || p.veke_egnet === 'bra');
+    else if (vekeFilter === 'forsiktig')
+      liste = liste.filter((p) => p.veke_egnet === 'forsiktig' || p.veke_egnet === 'ikke_anbefalt');
+    if (vanskFilter !== 'alle') liste = liste.filter((p) => p.vanskelighetsgrad === vanskFilter);
     if (sok.trim()) {
       const q = sok.toLowerCase().trim();
       liste = liste.filter(
@@ -91,6 +98,21 @@
           <span>{f.navn.split(' ')[0]}</span>
         </button>
       {/each}
+    </div>
+
+    <div class="flex gap-1.5 flex-wrap items-center">
+      <span class="text-xs text-text-dim mr-1">Veke:</span>
+      <button class="chip border-border transition-colors {vekeFilter === 'alle' ? 'bg-surface-hover text-text border-border-strong' : 'bg-surface-raised text-text-muted hover:bg-surface-hover'}" onclick={() => (vekeFilter = 'alle')}>Alle</button>
+      <button class="chip border-border transition-colors {vekeFilter === 'passer' ? 'bg-surface-hover text-text border-border-strong' : 'bg-surface-raised text-text-muted hover:bg-surface-hover'}" onclick={() => (vekeFilter = 'passer')}>✓ Passer godt</button>
+      <button class="chip border-border transition-colors {vekeFilter === 'forsiktig' ? 'bg-surface-hover text-text border-border-strong' : 'bg-surface-raised text-text-muted hover:bg-surface-hover'}" onclick={() => (vekeFilter = 'forsiktig')}>⚠ Forsiktig</button>
+    </div>
+
+    <div class="flex gap-1.5 flex-wrap items-center">
+      <span class="text-xs text-text-dim mr-1">Nivå:</span>
+      <button class="chip border-border transition-colors {vanskFilter === 'alle' ? 'bg-surface-hover text-text border-border-strong' : 'bg-surface-raised text-text-muted hover:bg-surface-hover'}" onclick={() => (vanskFilter = 'alle')}>Alle</button>
+      <button class="chip border-border transition-colors {vanskFilter === 'lett' ? 'bg-surface-hover text-text border-border-strong' : 'bg-surface-raised text-text-muted hover:bg-surface-hover'}" onclick={() => (vanskFilter = 'lett')}>🟢 Lett</button>
+      <button class="chip border-border transition-colors {vanskFilter === 'middels' ? 'bg-surface-hover text-text border-border-strong' : 'bg-surface-raised text-text-muted hover:bg-surface-hover'}" onclick={() => (vanskFilter = 'middels')}>🟡 Middels</button>
+      <button class="chip border-border transition-colors {vanskFilter === 'vanskelig' ? 'bg-surface-hover text-text border-border-strong' : 'bg-surface-raised text-text-muted hover:bg-surface-hover'}" onclick={() => (vanskFilter = 'vanskelig')}>🔴 Vanskelig</button>
     </div>
 
     <div class="text-xs text-text-dim pt-1">{filtrert.length} planter</div>
