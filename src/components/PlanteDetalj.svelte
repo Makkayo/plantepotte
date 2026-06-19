@@ -6,6 +6,7 @@
   let { plante, onLukk }: { plante: Plante; onLukk: () => void } = $props();
 
   const familie = $derived($lysFamilier.find((f) => f.id === plante.lys_familie));
+  let bildeFeilet = $state(false);
 
   function lukk(e?: KeyboardEvent) {
     if (e && e.key !== 'Escape') return;
@@ -22,18 +23,42 @@
   <div
     class="relative w-full max-w-2xl bg-surface border border-border rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col max-h-[92vh]"
   >
-    <div class="p-5 border-b border-border flex items-center gap-4">
-      <span class="text-4xl">{plante.emoji ?? '🌿'}</span>
-      <div class="flex-1">
+    {#if plante.bilde_url && !bildeFeilet}
+      <div class="relative shrink-0">
+        <img
+          src={plante.bilde_url}
+          alt={plante.navn}
+          onerror={() => (bildeFeilet = true)}
+          class="w-full h-48 sm:h-60 object-cover rounded-t-2xl"
+        />
+        <button
+          class="absolute top-3 right-3 p-2 rounded-full bg-black/45 text-white hover:bg-black/65 transition-colors"
+          onclick={onLukk}
+          aria-label="Lukk"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="p-5 border-b border-border">
         <h2 class="text-xl font-bold leading-tight">{plante.navn}</h2>
         {#if plante.vitenskapelig}
           <p class="text-sm italic text-text-muted mt-0.5">{plante.vitenskapelig}</p>
         {/if}
       </div>
-      <button class="btn-ghost !px-2 !py-2" onclick={onLukk} aria-label="Lukk">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
+    {:else}
+      <div class="p-5 border-b border-border flex items-center gap-4">
+        <span class="text-4xl">{plante.emoji ?? '🌿'}</span>
+        <div class="flex-1">
+          <h2 class="text-xl font-bold leading-tight">{plante.navn}</h2>
+          {#if plante.vitenskapelig}
+            <p class="text-sm italic text-text-muted mt-0.5">{plante.vitenskapelig}</p>
+          {/if}
+        </div>
+        <button class="btn-ghost !px-2 !py-2" onclick={onLukk} aria-label="Lukk">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    {/if}
 
     <div class="flex-1 overflow-y-auto p-5 space-y-5">
       {#if plante.beskrivelse}
@@ -191,6 +216,10 @@
             {/each}
           </ul>
         </div>
+      {/if}
+
+      {#if plante.bilde_url && plante.bilde_kilde && !bildeFeilet}
+        <p class="text-[11px] text-text-dim pt-1">Bilde: {plante.bilde_kilde}</p>
       {/if}
     </div>
   </div>

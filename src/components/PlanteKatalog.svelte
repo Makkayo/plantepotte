@@ -10,6 +10,7 @@
   let kategoriFilter = $state<PlanteKategori | 'alle'>('alle');
   let familieFilter = $state<LysFamilieId | 'alle'>('alle');
   let aktivPlante = $state<Plante | null>(null);
+  let bildeFeilet = $state<Record<string, boolean>>({});
 
   const kategorier: { id: PlanteKategori | 'alle'; navn: string; emoji: string }[] = [
     { id: 'alle', navn: 'Alle', emoji: '🌿' },
@@ -102,7 +103,17 @@
         class="card p-4 text-left hover:border-border-strong hover:bg-surface-hover transition-colors flex items-start gap-3"
         onclick={() => (aktivPlante = p)}
       >
-        <span class="text-3xl">{p.emoji ?? '🌿'}</span>
+        {#if p.bilde_url && !bildeFeilet[p.id]}
+          <img
+            src={p.bilde_url}
+            alt={p.navn}
+            loading="lazy"
+            onerror={() => (bildeFeilet[p.id] = true)}
+            class="w-12 h-12 rounded-lg object-cover shrink-0 bg-surface-raised"
+          />
+        {:else}
+          <span class="text-3xl">{p.emoji ?? '🌿'}</span>
+        {/if}
         <div class="flex-1 min-w-0">
           <div class="font-semibold leading-tight">{p.navn}</div>
           {#if p.vitenskapelig}

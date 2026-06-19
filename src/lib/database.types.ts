@@ -58,6 +58,9 @@ export interface Plante {
   host_instruks: string | null;
   varianter: string[] | null;
   kilder: string[] | null;
+  /** Bilde-URL (Wikimedia Commons, hotlinket). NULL = vis emoji som fallback. */
+  bilde_url: string | null;
+  bilde_kilde: string | null;
   owner_id: string | null;
   publisert: boolean;
   opprettet_at: string;
