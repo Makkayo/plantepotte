@@ -50,6 +50,17 @@
   // Kalibrering: lagre gjeldende laser-avstand som tom-/full-punkt for denne potta.
   let kalibrerer = $state<'tom' | 'full' | null>(null);
   let kalibreringsFeil = $state<string | null>(null);
+  // To-stegs bekreftelse: første klikk «armerer», andre klikk utfører.
+  let bekreftKalib = $state<'tom' | 'full' | null>(null);
+
+  function klikkKalib(type: 'tom' | 'full') {
+    if (bekreftKalib === type) {
+      bekreftKalib = null;
+      settKalibrering(type);
+    } else {
+      bekreftKalib = type;
+    }
+  }
 
   async function settKalibrering(type: 'tom' | 'full') {
     const mm = sensor?.vann_avstand_mm;
@@ -151,20 +162,24 @@
         {#if sensor.vann_avstand_mm !== null}
           <div class="flex items-center gap-2 mt-3 flex-wrap">
             <button
-              class="text-[11px] px-2 py-1 rounded-md border border-border text-text-muted hover:text-text hover:border-border-strong transition-colors disabled:opacity-50"
+              class="text-[11px] px-2 py-1 rounded-md border transition-colors disabled:opacity-50 {bekreftKalib === 'tom'
+                ? 'border-sun/50 bg-sun/10 text-sun'
+                : 'border-border text-text-muted hover:text-text hover:border-border-strong'}"
               disabled={kalibrerer !== null}
-              onclick={() => settKalibrering('tom')}
+              onclick={() => klikkKalib('tom')}
               title="Lagre nåværende avstand ({sensor.vann_avstand_mm} mm) som tom tank"
             >
-              {kalibrerer === 'tom' ? 'Lagrer…' : 'Sett som tom'}
+              {kalibrerer === 'tom' ? 'Lagrer…' : bekreftKalib === 'tom' ? 'Bekreft tom?' : 'Sett som tom'}
             </button>
             <button
-              class="text-[11px] px-2 py-1 rounded-md border border-border text-text-muted hover:text-text hover:border-border-strong transition-colors disabled:opacity-50"
+              class="text-[11px] px-2 py-1 rounded-md border transition-colors disabled:opacity-50 {bekreftKalib === 'full'
+                ? 'border-sun/50 bg-sun/10 text-sun'
+                : 'border-border text-text-muted hover:text-text hover:border-border-strong'}"
               disabled={kalibrerer !== null}
-              onclick={() => settKalibrering('full')}
+              onclick={() => klikkKalib('full')}
               title="Lagre nåværende avstand ({sensor.vann_avstand_mm} mm) som full tank"
             >
-              {kalibrerer === 'full' ? 'Lagrer…' : 'Sett som full'}
+              {kalibrerer === 'full' ? 'Lagrer…' : bekreftKalib === 'full' ? 'Bekreft full?' : 'Sett som full'}
             </button>
             <span class="text-[10px] text-text-dim">
               Kalibrering: tom {potte.vann_tom_mm ?? `${VANN_TOM_MM} (standard)`} mm · full

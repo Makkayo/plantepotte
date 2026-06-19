@@ -13,6 +13,8 @@
     await supabase.auth.signOut();
   }
 
+  let bekreftLoggUt = $state(false);
+
   // «Kasser» dekker både oversikten og en åpnet blomsterkasse-detalj.
   const kasserAktiv = $derived(active === 'oversikt' || active === 'potte');
 </script>
@@ -55,14 +57,14 @@
       </button>
       <div class="flex items-center ml-2 pl-3 border-l border-border">
         <span class="text-xs text-text-dim mr-3">{$user?.email}</span>
-        <button class="btn-ghost text-xs" onclick={loggUt}>Logg ut</button>
+        <button class="btn-ghost text-xs" onclick={() => (bekreftLoggUt = true)}>Logg ut</button>
       </div>
     </nav>
 
     <!-- Mobil: kun «logg ut» til høyre (navigasjon ligger i bunnlinja) -->
     <button
       class="ml-auto sm:hidden btn-ghost !px-2 !py-2"
-      onclick={loggUt}
+      onclick={() => (bekreftLoggUt = true)}
       aria-label="Logg ut"
     >
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -102,3 +104,22 @@
     </button>
   </div>
 </nav>
+
+{#if bekreftLoggUt}
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
+    <button
+      class="absolute inset-0 bg-black/60 backdrop-blur-sm"
+      aria-label="Avbryt"
+      onclick={() => (bekreftLoggUt = false)}
+    ></button>
+    <div class="relative card p-6 w-full max-w-sm text-center">
+      <div class="text-3xl mb-2">👋</div>
+      <h2 class="font-semibold text-lg">Logge ut?</h2>
+      <p class="text-text-muted text-sm mt-1">Du må logge inn igjen for å styre pottene.</p>
+      <div class="flex gap-2 mt-5">
+        <button class="btn-secondary flex-1" onclick={() => (bekreftLoggUt = false)}>Avbryt</button>
+        <button class="btn-primary flex-1" onclick={loggUt}>Logg ut</button>
+      </div>
+    </div>
+  </div>
+{/if}
