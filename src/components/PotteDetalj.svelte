@@ -3,7 +3,7 @@
   import { potter, pottePlanter, loadPottePlanter } from '../lib/stores';
   import { supabase } from '../lib/supabase';
   import { blomsterkasseOppsett, antallPlasser, bakSeksjon } from '../lib/utils';
-  import type { PotteCommand, PotteSensorData } from '../lib/database.types';
+  import type { Potte, PotteCommand, PotteSensorData, PottePlanteFull } from '../lib/database.types';
   import SensorPanel from './SensorPanel.svelte';
   import LysKontroll from './LysKontroll.svelte';
   import PlanteSlot from './PlanteSlot.svelte';
@@ -23,6 +23,9 @@
   let skilleveggFeil = $state<string | null>(null);
   let lagrerSkillevegg = $state<number | null>(null);
   let timer: ReturnType<typeof setInterval> | undefined;
+  let historikk = $state<PottePlanteFull[]>([]);
+  let iDriftLagrer = $state(false);
+  let bekreftDrift = $state(false);
 
   async function refresh() {
     const [cmd, sens] = await Promise.all([
@@ -46,14 +49,80 @@
   }
 
   onMount(async () => {
-    await Promise.all([refresh(), loadPottePlanter(potteId)]);
+    await Promise.all([refresh(), loadPottePlanter(potteId), loadHistorikk()]);
     timer = setInterval(refresh, 10000);
   });
+
+  async function loadHistorikk() {
+    const { data } = await supabase
+      .from('potte_planter')
+      .select('*, plante:planter(*)')
+      .eq('potte_id', potteId)
+      .not('fjernet_at', 'is', null)
+      .order('fjernet_at', { ascending: false });
+    if (data) historikk = data as unknown as PottePlanteFull[];
+  }
   onDestroy(() => clearInterval(timer));
 
   async function fjernPlante(pottePlanteId: string) {
-    await supabase.from('potte_planter').delete().eq('id', pottePlanteId);
+    // I drift: myk-slett (behold for historikk). I testmodus: slett helt.
+    if (potte?.i_drift) {
+      await supabase
+        .from('potte_planter')
+        .update({ fjernet_at: new Date().toISOString() })
+        .eq('id', pottePlanteId);
+    } else {
+      await supabase.from('potte_planter').delete().eq('id', pottePlanteId);
+    }
+    await Promise.all([loadPottePlanter(potteId), loadHistorikk()]);
+  }
+
+  async function lagreNotat(pottePlanteId: string, tekst: string) {
+    await supabase.from('potte_planter').update({ notater: tekst || null }).eq('id', pottePlanteId);
     await loadPottePlanter(potteId);
+  }
+
+  async function settIDrift(ny: boolean) {
+    const kasse = potte;
+    if (!kasse || iDriftLagrer) return;
+    iDriftLagrer = true;
+    const { error } = await supabase.from('potter').update({ i_drift: ny }).eq('id', kasse.id);
+    if (!error) {
+      // Go-live: nullstill plantedato til nå for aktive planter → ren start.
+      if (ny && planter.length > 0) {
+        await supabase
+          .from('potte_planter')
+          .update({ plantet_at: new Date().toISOString() })
+          .eq('potte_id', potteId)
+          .is('fjernet_at', null);
+        await loadPottePlanter(potteId);
+      }
+      potter.update((liste) => liste.map((p) => (p.id === kasse.id ? { ...p, i_drift: ny } : p)));
+    } else {
+      console.error('Lagring av i_drift feilet:', error);
+    }
+    iDriftLagrer = false;
+  }
+
+  function klikkDrift() {
+    if (potte?.i_drift) {
+      settIDrift(false); // tilbake til test — harmløst, ingen bekreftelse
+    } else if (bekreftDrift) {
+      bekreftDrift = false;
+      settIDrift(true);
+    } else {
+      bekreftDrift = true; // armér: andre klikk går i drift (nullstiller datoer)
+    }
+  }
+
+  function formaterDato(iso: string | null): string {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleDateString('nb-NO', { day: 'numeric', month: 'short' });
+  }
+  function varighet(fra: string, til: string | null): string {
+    const slutt = til ? new Date(til).getTime() : Date.now();
+    const dager = Math.max(0, Math.floor((slutt - new Date(fra).getTime()) / 86400000));
+    return `${dager} ${dager === 1 ? 'dag' : 'dager'}`;
   }
 
   function apneVelger(seksjon: number) {
@@ -75,16 +144,23 @@
 
   async function planteValgt(planteId: string) {
     if (velgerSeksjon === null) return;
-    await supabase.from('potte_planter').upsert(
-      {
-        potte_id: potteId,
-        plante_id: planteId,
-        seksjon: velgerSeksjon,
-      },
-      { onConflict: 'potte_id,seksjon' },
-    );
+    const seksjon = velgerSeksjon;
+    // Den delvise unik-indeksen tillater bare én AKTIV plante per plass, så en
+    // evt. eksisterende må fjernes først (myk-slett i drift, ellers hard-slett).
+    const eksisterende = planter.find((pp) => pp.seksjon === seksjon);
+    if (eksisterende) {
+      if (potte?.i_drift) {
+        await supabase
+          .from('potte_planter')
+          .update({ fjernet_at: new Date().toISOString() })
+          .eq('id', eksisterende.id);
+      } else {
+        await supabase.from('potte_planter').delete().eq('id', eksisterende.id);
+      }
+    }
+    await supabase.from('potte_planter').insert({ potte_id: potteId, plante_id: planteId, seksjon });
     velgerSeksjon = null;
-    await loadPottePlanter(potteId);
+    await Promise.all([loadPottePlanter(potteId), loadHistorikk()]);
   }
 
   /** Slå skillevegg av/på for én potte (beholder). */
@@ -134,6 +210,35 @@
           <p class="text-text-muted text-sm mt-0.5">{potte.notater}</p>
         {/if}
       </div>
+    </div>
+
+    <!-- Drift-status: testmodus vs ekte drift -->
+    <div class="card p-4 flex items-center justify-between gap-3">
+      <div class="min-w-0">
+        <div class="font-medium text-sm">{potte.i_drift ? '🌱 I drift' : '🧪 Testmodus'}</div>
+        <p class="text-text-muted text-xs mt-0.5">
+          {potte.i_drift
+            ? 'Plantedato og historikk teller for ekte.'
+            : 'Lek fritt — plantedato og historikk lagres ikke før du går i drift.'}
+        </p>
+      </div>
+      <button
+        class="shrink-0 text-xs px-3 py-1.5 rounded-lg border transition-colors disabled:opacity-50 {potte.i_drift
+          ? 'border-border text-text-muted hover:text-text hover:border-border-strong'
+          : bekreftDrift
+            ? 'border-sun/50 bg-sun/10 text-sun'
+            : 'border-leaf/40 bg-leaf/10 text-leaf hover:bg-leaf/15'}"
+        disabled={iDriftLagrer}
+        onclick={klikkDrift}
+      >
+        {iDriftLagrer
+          ? 'Lagrer…'
+          : potte.i_drift
+            ? 'Sett i testmodus'
+            : bekreftDrift
+              ? 'Bekreft — nullstiller datoer'
+              : 'Sett i drift →'}
+      </button>
     </div>
 
     <!-- Planter: 2 potter (beholdere), hver med valgfri skillevegg (foran/bak) -->
@@ -186,8 +291,12 @@
                     etikett={plass.etikett}
                     plante={eksisterende?.plante ?? null}
                     pottePlanteId={eksisterende?.id ?? null}
+                    plantetAt={eksisterende?.plantet_at ?? null}
+                    notater={eksisterende?.notater ?? null}
+                    iDrift={potte.i_drift}
                     onLeggTil={() => apneVelger(plass.seksjon)}
                     onFjern={(id) => fjernPlante(id)}
+                    onNotat={(id, tekst) => lagreNotat(id, tekst)}
                   />
                 </div>
               {/each}
@@ -208,6 +317,26 @@
     <!-- Sensorer -->
     {#if potte.har_sensorer}
       <SensorPanel {sensor} {potte} />
+    {/if}
+
+    <!-- Historikk: tidligere planter (kun samlet i drift-modus) -->
+    {#if historikk.length > 0}
+      <section class="card p-5">
+        <h2 class="font-semibold text-lg">Historikk</h2>
+        <p class="text-text-muted text-xs mt-0.5 mb-4">Planter som har stått i denne kassa tidligere.</p>
+        <div class="space-y-2.5">
+          {#each historikk as h (h.id)}
+            <div class="flex items-center gap-3">
+              <span class="text-xl shrink-0">{h.plante.emoji ?? '🌿'}</span>
+              <span class="flex-1 min-w-0 truncate text-sm">{h.plante.navn}</span>
+              <span class="text-xs text-text-dim shrink-0 text-right leading-tight">
+                stod {varighet(h.plantet_at, h.fjernet_at)}<br />
+                <span class="text-[11px]">{formaterDato(h.plantet_at)}–{formaterDato(h.fjernet_at)}</span>
+              </span>
+            </div>
+          {/each}
+        </div>
+      </section>
     {/if}
   </div>
 

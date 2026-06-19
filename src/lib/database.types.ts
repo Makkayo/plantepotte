@@ -79,6 +79,8 @@ export interface Potte {
    */
   skillevegger: boolean[];
   har_sensorer: boolean;
+  /** Er kassa i ekte drift? false = testmodus (plantedato/historikk teller ikke). */
+  i_drift: boolean;
   notater: string | null;
   /** Laser-avstand (mm) ved tom/full tank — per-potte kalibrering satt fra appen. NULL = global standard. */
   vann_tom_mm: number | null;
@@ -93,6 +95,8 @@ export interface PottePlante {
   plante_id: string;
   seksjon: number;
   plantet_at: string;
+  /** Satt når planten fjernes/byttes (myk-sletting). NULL = aktiv planting. */
+  fjernet_at: string | null;
   notater: string | null;
 }
 

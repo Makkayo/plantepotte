@@ -60,7 +60,9 @@
     <span class="text-2xl">{potte.emoji ?? '🪴'}</span>
     <div class="flex-1 min-w-0">
       <h2 class="font-semibold text-lg leading-tight">{potte.navn}</h2>
-      <p class="text-xs text-text-muted mt-0.5">{sistOppdatert}</p>
+      <p class="text-xs text-text-muted mt-0.5">
+        {#if !potte.i_drift}<span class="text-sun">🧪 Testmodus</span> · {/if}{sistOppdatert}
+      </p>
     </div>
     <svg
       width="18"

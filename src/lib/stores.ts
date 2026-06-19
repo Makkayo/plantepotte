@@ -44,6 +44,7 @@ export async function loadPottePlanter(potteId: string): Promise<void> {
     .from('potte_planter')
     .select('*, plante:planter(*)')
     .eq('potte_id', potteId)
+    .is('fjernet_at', null)
     .order('seksjon');
 
   if (error) {
@@ -58,6 +59,7 @@ export async function loadAllPottePlanter(): Promise<void> {
   const { data, error } = await supabase
     .from('potte_planter')
     .select('*, plante:planter(*)')
+    .is('fjernet_at', null)
     .order('seksjon');
 
   if (error) {

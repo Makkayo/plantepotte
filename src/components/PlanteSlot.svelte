@@ -6,18 +6,45 @@
     etikett,
     plante,
     pottePlanteId,
+    plantetAt,
+    notater,
+    iDrift,
     onLeggTil,
     onFjern,
+    onNotat,
   }: {
     /** Rolle-tekst i potta: "Foran" / "Bak" / "" (udelt potte). */
     etikett: string;
     plante: Plante | null;
     pottePlanteId: string | null;
+    /** Når planten ble satt (ISO). Vises som alder når kassa er i drift. */
+    plantetAt: string | null;
+    notater: string | null;
+    /** Kassa i ekte drift? Styrer om plantedato teller. */
+    iDrift: boolean;
     onLeggTil: () => void;
     onFjern: (id: string) => void;
+    onNotat: (id: string, tekst: string) => void;
   } = $props();
 
   let bekreftFjern = $state(false);
+  let redigererNotat = $state(false);
+  let notatTekst = $state('');
+
+  function dagerSiden(iso: string): number {
+    return Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 86400000));
+  }
+  function formaterDato(iso: string): string {
+    return new Date(iso).toLocaleDateString('nb-NO', { day: 'numeric', month: 'short' });
+  }
+  function startNotat() {
+    notatTekst = notater ?? '';
+    redigererNotat = true;
+  }
+  function lagreNotat() {
+    if (pottePlanteId) onNotat(pottePlanteId, notatTekst.trim());
+    redigererNotat = false;
+  }
 </script>
 
 {#if plante && pottePlanteId}
@@ -43,8 +70,47 @@
             ✕ Anbefales ikke
           {/if}
         </div>
+        {#if iDrift && plantetAt}
+          <div class="text-[11px] text-text-dim mt-1.5">
+            🌱 Plantet {formaterDato(plantetAt)} · {dagerSiden(plantetAt)}
+            {dagerSiden(plantetAt) === 1 ? 'dag' : 'dager'}
+          </div>
+        {:else}
+          <div class="text-[11px] text-text-dim mt-1.5">🧪 Testmodus — teller ikke ennå</div>
+        {/if}
       </div>
     </div>
+
+    <!-- Notat per planting -->
+    {#if redigererNotat}
+      <div class="mt-2.5">
+        <textarea
+          bind:value={notatTekst}
+          rows="2"
+          placeholder="Notat — f.eks. «sådde 5 frø, spirte 4. juni»"
+          class="input !text-xs !py-1.5 resize-none"
+        ></textarea>
+        <div class="flex gap-2 mt-1.5 justify-end">
+          <button class="btn-ghost text-xs !px-2 !py-1" onclick={() => (redigererNotat = false)}>Avbryt</button>
+          <button class="btn-secondary text-xs !px-2 !py-1" onclick={lagreNotat}>Lagre notat</button>
+        </div>
+      </div>
+    {:else if notater}
+      <button
+        class="mt-2.5 text-left w-full text-[11px] text-text-muted italic hover:text-text transition-colors"
+        onclick={startNotat}
+        title="Rediger notat"
+      >
+        📝 {notater}
+      </button>
+    {:else}
+      <button
+        class="mt-2.5 text-[11px] text-text-dim hover:text-text transition-colors"
+        onclick={startNotat}
+      >
+        + Legg til notat
+      </button>
+    {/if}
 
     <div class="mt-3 pt-3 border-t border-border flex items-center justify-end gap-2">
       {#if bekreftFjern}
