@@ -91,6 +91,9 @@
       <span>✅</span> Kom-i-gang-liste
     </h2>
     <p class="text-text-dim text-xs mt-1">Kjøp for å komme i gang — ~300–450 kr. Huk av mens du handler.</p>
+    <div class="mt-2 p-2.5 rounded-lg bg-leaf/10 border border-leaf/25 text-xs text-leaf">
+      ✅ <strong>Alt kjøpt 19. juni 2026</strong> — medium, perlite, næring, frø og spray (spray: hadde fra før). Du er klar til å så når kassa er bygd.
+    </div>
     <div class="mt-3 flex flex-col gap-1.5">
       {#each minimum as m (m.id)}
         <div class="flex items-start gap-3 p-2.5 rounded-lg bg-surface-raised">
@@ -126,6 +129,14 @@
   <div class="card p-4 sm:p-5">
     <h2 class="font-semibold flex items-center gap-2"><span>🌱</span> Anbefalt frø-utvalg</h2>
     <p class="text-text-dim text-xs mt-1">Lettstelt, rask og tåler veke-fukt. Start med 4–6 sorter, reså etter hvert.</p>
+
+    <div class="mt-3 p-3 rounded-lg bg-surface-raised border border-border">
+      <div class="text-xs font-medium text-text">🎯 Din oppstart (kjøpt 19. juni)</div>
+      <p class="text-xs text-text-muted mt-1">
+        4 raske vekster, én per plass: <strong>basilikum 'Gustosa' · baby leaf-mix · bladsalat 'Witte Dunsel' · ruccola 'Wasabi'</strong>
+        — alle deler én lysinnstilling (~13 t, ~75 %). <strong>Hvitløksgressløken</strong> (flerårig + treg) holdes utenfor → egen krukke på siden.
+      </p>
+    </div>
 
     <h3 class="label mt-4 mb-2">🟢 Lettest — start her</h3>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -177,15 +188,19 @@
   <div class="card p-4 sm:p-5">
     <h2 class="font-semibold flex items-center gap-2"><span>🪴</span> Dyrkemedium</h2>
     <div class="mt-3 p-3 rounded-lg bg-leaf/10 border border-leaf/25">
-      <div class="text-sm font-medium text-leaf">✅ Valgt: kokos + perlite + flytende næring</div>
+      <div class="text-sm font-medium text-leaf">✅ Valgt: torvfri kokos-jord + perlite, to-fase næring</div>
       <p class="text-sm text-text-muted mt-1">
-        Kokos veker vann best og gir luft til røttene. ~70/30 kokos/perlite. Kokos er inert, så
-        næringen kommer fra vannet — lettest å holde gående over tid (jord tømmes på 4–6 uker).
+        Den kjøpte kokos-jorda (~70/30 med perlite) har <strong>innebygd mineral starter-næring for
+        3–6 uker</strong> + riktig pH (5,0–6,5). Kokos veker vann og gir luft til røttene; mineral-næringen
+        grumser ikke vannbadet.
       </p>
     </div>
     <p class="text-xs text-text-dim mt-3">
-      <span class="font-medium text-text-muted">Backup (Alt. A):</span> torvfri plantejord + ~25 % perlite — enklere,
-      men må topp-mates manuelt når næringen tømmes.
+      <span class="font-medium text-text-muted">To faser:</span> (1) uke 0–~6 → <strong>rent vann</strong> i badet,
+      jorda mater. (2) Fra ~uke 3–6 når jorda er tom → start Nelson Garden i badet, svakt først. Aldri stable begge samtidig.
+    </p>
+    <p class="text-xs text-text-dim mt-2">
+      💧 Kokosen er tørr/komprimert → tilsett ~3 L vann per pose og elt inn (1 L først, så 2 L til) før du blander inn perliten.
     </p>
     <p class="text-xs text-text-dim mt-2">🧂 Vann av og til ovenfra for å skylle ut salter som samler seg på toppen (hver 3.–4. uke).</p>
   </div>
@@ -205,9 +220,9 @@
     <div class="mt-3 p-3 rounded-lg bg-sun/10 border border-sun/25">
       <div class="text-sm font-medium text-sun">⚠️ De to beholderne deler ett vannbad</div>
       <p class="text-sm text-text-muted mt-1">
-        Flytende næring i vannbadet treffer <strong>begge</strong> beholderne likt. Ikke stable to
-        kilder: bruk kokos (inert) + næring i vannet — ikke næringsjord i tillegg, ellers blir det
-        for mye. Vil du dyrke ulikt i de to → bruk jord + topp-mating per beholder.
+        Ikke stable to næringskilder samtidig. Kokos-jorda har starter-næring i 3–6 uker → hold da
+        vannbadet som <strong>rent vann</strong>. Først når jorda er tom starter du Nelson Garden i badet
+        (to-fase) — da treffer næringen <strong>begge</strong> beholderne likt.
       </p>
     </div>
     <p class="text-xs text-text-dim mt-3">

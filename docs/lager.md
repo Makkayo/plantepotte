@@ -7,7 +7,7 @@
 
 **Status-koder:** ✅ på lager · 📦 ankommet (ikke testet) · ⬜ bestilt, ikke ankommet · 🔧 i bruk · 🔋 reserve
 
-*Sist oppdatert: 2026-06-17*
+*Sist oppdatert: 2026-06-19*
 
 ---
 
@@ -123,12 +123,11 @@
 | Del | Totalt | I bruk | Ledig | Status | Notat |
 |-----|:------:|:------:|:-----:|:------:|-------|
 | MG90S servo (9g metal gear) | 2 | 0 | 2 | 📦 | Lek — evt. vannfylling-luke senere |
-| Elektronikk-lakk (konformell) | 1 | 0 | — | ⬜ | Ikke ankommet (B3) |
+| Elektronikk-lakk (konformell) | 1 | 0 | 1 | 📦 | Kom 19. juni — B3 komplett |
 
 ---
 
 ## ⬜ Mangler fortsatt i posten
 
-- **B3:** elektronikk-lakk
 - **B5:** 5A-adapter, Wago 221-415/413, jordfukt 10-pk, motstand-sortiment, 5mm LED, 2-pin ledning, LED clip 5-pk, flux-penn, sikringer 3A+5A, perfboard ×2, pinnerader, presisjonsskrutrekker
 - **B6:** heat-set insert-sett, standoffs, kabelspiral-wrap

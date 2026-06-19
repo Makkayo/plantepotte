@@ -9,6 +9,16 @@ Alt for å komme i gang med å gro **urter + salat/bladgrønt** i den selvvannen
 
 *Laget 17. juni 2026. Priser/lenker sjekket samme dag — pris kan variere, fysisk butikklager kan ikke garanteres herfra.*
 
+> ✅ **KJØPT 19. juni 2026 — alt nødvendig for å så er i hus:**
+> - **Medium:** Torvfri plantejord (kokos) ×3 + **Perlite** → bland ~70/30
+> - **Næring:** Nelson Garden Hydroponisk næring 250 ml
+> - **Frø (Plantasjen):** Basilikum 'Gustosa' · Salat Baby Leaf mix · Bladsalat 'Witte Dunsel' · Ruccola 'Wasabi' · Hvitløksgressløk
+> - **Spray-flaske:** har fra før
+>
+> 🎯 **Oppstart — 4 raske vekster, én per plass:** basilikum · baby leaf · Witte Dunsel · ruccola wasabi. Alle deler én lysinnstilling (~13 t, ~75 %). **Hvitløksgressløken holdes utenfor** (flerårig + treg, *Allium tuberosum*) → egen krukke på siden. Så rett i veke-systemet **når kassa er bygd**; frøene holder årevis, så ingen hast.
+>
+> ⚠️ **Viktig oppdagelse:** kokos-jorda har **innebygd mineralnæring for 3–6 uker** (står på baksiden) → nærings-planen er nå **to faser**, se pkt. 2–3.
+
 ---
 
 ## 1) 🌱 Frø-utvalg (nybegynner, matchet til systemet)
@@ -57,8 +67,10 @@ Innendørs med konstant lys + varmt rom → planter **stokkløper** (går i frø
 
 ## 2) 🪴 Dyrkemedium — kokos + perlite (VALGT)
 
-> ✅ **Beslutning (17. juni 2026):** **kokos + perlite (~70/30) + flytende næring i vannbadet.**
-> Grunn: lettest å holde gående over tid. Jordas næring tømmes på 4–6 uker og må topp-mates manuelt for planter som står lenge; med kokos + flytende næring holder du bare næringsnivået i vannet kontinuerlig.
+> ✅ **Beslutning (oppdatert 19. juni 2026):** **torvfri kokos-jord + perlite (~70/30), TO-FASE næring.**
+> Den kjøpte kokos-jorda (Clas Ohlson) er kokosfiber med **innebygd mineral starter-næring for 3–6 uker** + riktig pH (5,0–6,5). Det treffer systemet godt: kokos veker vann, mineral (ikke organisk) grumser ikke vannbadet, og starter-ladningen gir en mild, tilgivende start.
+> **To faser:** (1) uke 0–~6 → vannbadet er **rent vann**, jorda mater. (2) Fra ~uke 3–6 når jorda tømmes / plantene «sulter» → start **Nelson Garden** i badet, svakt først. Aldri stable de to samtidig.
+> 💧 Kokosen er komprimert/tørr → tilsett ~3 L vann per pose og elt inn før bruk (1 L først, så 2 L til). Bland inn perliten (~25–30 %) etterpå.
 
 **Hvorfor perlite i tillegg til kokos?** I et veke-system mates mediet konstant med fukt nedenfra, så ren kokos kan bli vel våt og pakke seg. Perlite (~20–30 %) holder luft til røttene og hindrer surt/oksygenfattig medium. Behold den.
 
@@ -67,7 +79,7 @@ Innendørs med konstant lys + varmt rom → planter **stokkløper** (går i frø
 - Velg gjerne **«buffret»/lett gjødslet** kokos (lettere næringsbalanse).
 - 🧂 Vann av og til **ovenfra** for å skylle ut salter som samler seg på toppen (hver 3.–4. uke).
 
-> **Backup (Alt. A):** torvfri plantejord + ~25 % perlite. Enklere (litt næring innebygd), men må topp-mates manuelt når næringen tømmes. Bruk **enten** A **eller** B konsekvent — ikke bland næringsjord med flytende næring i vannbadet (se pkt. 3).
+> *Historisk: vi skilte tidligere mellom «inert kokos» (plan B) og «torvfri plantejord m/næring» (Alt. A). Produktet vi endte med ER torvfri kokos-jord med starter-ladning → vi kjører to-fase-varianten over. Ren inert kokos er ikke nødvendig.*
 
 ---
 
@@ -85,8 +97,8 @@ Systemet er i praksis **passiv hydroponi** (kokos = inert, næring løst i vannb
 **Premium-oppgradering (valgfritt):** CANNA Coco A+B er kokos-bufret og marginalt «riktigere» for kokos, men 2-delt, dyrere, og 1 L/5 L er ofte utsolgt (10 L til 1.490 kr er meningsløst mye for deg). Ikke nødvendig for urter.
 
 > ⚠️ **De to beholderne i en blomsterkasse deler ett vannbad.** Regel mot over-gjødsling:
-> - **Ikke stable to næringskilder.** Kokos (inert) + næring i vannbadet — likt til begge. Ikke bruk næringsjord i tillegg.
-> - Vil du dyrke ulikt i de to beholderne → bruk jord + **topp-mating** per beholder i stedet, og hold vannbadet som rent vann.
+> - **Ikke stable to næringskilder samtidig.** Kokos-jorda vår har starter-næring for 3–6 uker → hold da vannbadet som **rent vann**. Først når jorda er tom starter du Nelson Garden i badet (to-fase, se pkt. 2) — da treffer næringen begge beholderne likt.
+> - Vil du dyrke ulikt i de to beholderne → bruk jord + **topp-mating** per beholder, og hold vannbadet som rent vann.
 
 **Slik blander du:** ettdelt næring (anbefalt) → bare mål opp i vannet og rør. (Går du for 2-delt Canna: ha i **A** i vannet, rør, så **B** — aldri konsentrert A rett i B.) Begge beholderne suger fra det samme ferdige vannet → begge får komplett næring, også når du bytter plante i én beholder senere.
 
@@ -128,6 +140,8 @@ Systemet er i praksis **passiv hydroponi** (kokos = inert, næring løst i vannb
 ## 6) 🛒 Konkret kjøpsliste (produkt + butikk + pris + lenke)
 
 Lenker går til faktiske produktsider (verifisert 17. juni). **Lager:** hyllevarer, men nettsidene viser butikk-lager dynamisk — sjekk «din butikk» (Moa/Ålesund) på produktsiden.
+
+> ✅ **Kjøpt 19. juni 2026:** #1 kokos-medium ×3 · #2 perlite · #3 Nelson Garden-næring · #6 spray (har fra før). Frø (#4–5) kjøpt på Plantasjen — se konkrete sorter øverst i dokumentet. **Kritisk gjenstår: ingenting.**
 
 | # | Vare | Produkt | Butikk | Pris | Lenke |
 |---|------|---------|--------|------|-------|

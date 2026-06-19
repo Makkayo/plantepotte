@@ -8,7 +8,7 @@ Holder styr på hva som er **bestilt → ankommet → testet** på breadboard.
 - ✅ Testet og funker
 - ⚠️ Ankommet, men problem (se notat)
 
-*Sist oppdatert: 2026-06-17 — Bestilling 3 og 4 delvis ankommet*
+*Sist oppdatert: 2026-06-19 — Bestilling 3 komplett (elektronikk-lakk ankom)*
 
 ---
 
@@ -56,7 +56,7 @@ Holder styr på hva som er **bestilt → ankommet → testet** på breadboard.
 |:------:|-----|:------:|-------|
 | 📦 | VL53L0X ToF-laser | ×3 | Kom 17. juni — «A03-VL53L0X-Zi», Estardyn GY-VL53L0XV2, 940nm I2C, 25×10.7mm. Alle 3 i separate ESD-poser |
 | 📦 | ESP32-CAM-MB (OV2640) | ×2 | Kom 17. juni — «I64-ESP32-CAM+I65-MB-DIZuo», CH340G, Micro USB. Begge sett i ESD-poser |
-| ⬜ | Elektronikk-lakk (konformell coating) | ×1 | Ikke ankommet ennå |
+| 📦 | Elektronikk-lakk (konformell coating) | ×1 | Kom 19. juni — konformell coating (SF90-type). Bestilling 3 nå komplett (laser + kamera + lakk) |
 
 ## Bestilling 4 — loddeutstyr & lek (~€54)
 
