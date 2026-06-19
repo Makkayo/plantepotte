@@ -227,7 +227,7 @@
       <div class="pt-3 border-t border-border">
         <div class="text-xs text-text-muted mb-2">Hvordan plantene har det med denne innstillingen:</div>
         <div class="space-y-1.5">
-          {#each planteHelse as { plante, status, dliOpt } (plante.id)}
+          {#each planteHelse as { plante, status, dliOpt }, i (i)}
             <div class="flex items-center gap-2 text-xs">
               <span class="text-base">{plante.emoji ?? '🌿'}</span>
               <span class="flex-1 truncate">{plante.navn}</span>
