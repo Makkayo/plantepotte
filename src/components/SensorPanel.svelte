@@ -9,6 +9,8 @@
     vannNivaProsent,
     vannKlasse,
     sensorEtikett,
+    minutterSiden,
+    OFFLINE_GRENSE_MIN,
     VANN_TOM_MM,
     VANN_FULL_MM,
   } from '../lib/utils';
@@ -42,10 +44,7 @@
 
   // «Livstegn»: ESP32 poster jevnlig — lenge siden siste avlesning = trolig
   // strøm/WiFi-trøbbel. Re-evalueres hver gang refresh() henter nytt sensor-objekt.
-  const minSidenKontakt = $derived.by(() => {
-    if (!sensor?.registrert_at) return null;
-    return Math.round((Date.now() - new Date(sensor.registrert_at).getTime()) / 60000);
-  });
+  const minSidenKontakt = $derived(minutterSiden(sensor?.registrert_at));
 
   // Kalibrering: lagre gjeldende laser-avstand som tom-/full-punkt for denne potta.
   let kalibrerer = $state<'tom' | 'full' | null>(null);
@@ -108,7 +107,7 @@
   {#if !sensor}
     <div class="text-text-muted text-sm py-4">Venter på første sensoravlesning fra ESP32…</div>
   {:else}
-    {#if minSidenKontakt !== null && minSidenKontakt > 15}
+    {#if minSidenKontakt !== null && minSidenKontakt > OFFLINE_GRENSE_MIN}
       <div class="mb-4 p-3 rounded-lg bg-sun/10 border border-sun/30 text-sun text-sm">
         ⚠ Ingen kontakt med potta på {minSidenKontakt < 120
           ? `${minSidenKontakt} min`

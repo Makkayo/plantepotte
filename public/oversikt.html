@@ -1371,7 +1371,7 @@
       <div class="infra-card">
         <div class="ic-icon">🔌</div>
         <h3>Breadboard-testing</h3>
-        <p>Breadboard-testing 9.–10. juni: <strong>ESP32</strong>, <strong>OLED</strong>, <strong>DHT22</strong>, <strong>KY-040</strong>, <strong>jordfukt ×3</strong>, <strong>buck</strong> (5,26V), <strong>LED-strip</strong> (0,94 A/potte). <strong>✅ 20. juni:</strong> MOSFET-styrt dimming, VL53L0X-laser og <strong>full integrasjon</strong> (WiFi + Supabase + appen styrer lyset) verifisert. Gjenstår: ESP32-CAM + fysisk 3D-bygg.</p>
+        <p>Breadboard-testing 9.–10. juni: <strong>ESP32</strong>, <strong>OLED</strong>, <strong>DHT22</strong>, <strong>KY-040</strong>, <strong>jordfukt ×3</strong>, <strong>buck</strong> (5,26V), <strong>LED-strip</strong> (0,94 A/potte). <strong>✅ 20. juni:</strong> MOSFET-styrt dimming, VL53L0X-laser og <strong>full integrasjon</strong> (WiFi + Supabase + appen styrer lyset) verifisert — og potta <strong>kjører selvgående på buck</strong> (lys + sensorer + app helt uten PC). Gjenstår: ESP32-CAM + fysisk 3D-bygg.</p>
         <span class="pill pill-green">● Prototype komplett + integrert live</span>
       </div>
       <div class="infra-card">
@@ -3077,7 +3077,7 @@
         <div class="phase-circle">1</div>
         <div class="phase-body">
           <h4>Fase 1 — Breadboard-prototype <span class="pill pill-green phase-tag">✅ Komplett + integrert (20. juni)</span></h4>
-          <p>✅ Komplett 20. juni: alle sensorer + <strong>MOSFET-dimming</strong> + <strong>VL53L0X-laser</strong> testet, og <strong>full integrasjon live</strong> — ESP32 sender sensordata til Supabase og appen styrer lyset (WiFi, NTP, OLED, alt). Gjenstår for potta: ESP32-CAM + fysisk 3D-bygg.</p>
+          <p>✅ Komplett 20. juni: alle sensorer + <strong>MOSFET-dimming</strong> + <strong>VL53L0X-laser</strong> testet, og <strong>full integrasjon live</strong> — ESP32 sender sensordata til Supabase og appen styrer lyset (WiFi, NTP, OLED, alt). <strong>Potta kjører selvgående på buck — lys + sensorer + app helt uten PC.</strong> Gjenstår for potta: ESP32-CAM + fysisk 3D-bygg.</p>
         </div>
       </div>
       <div class="phase-item">
@@ -3450,8 +3450,8 @@ while True:
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-solderiron"/></svg>
         <div class="comp-body">
           <h4>USB-loddebolt (×1)</h4>
-          <div class="what">Liten bærbar loddebolt. Grei til lett pin-header-lodding. Kan slite litt på store skjøter.</div>
-          <div class="spec">C200S mini, USB-C, set 2</div>
+          <div class="what">⚠ Viste seg <strong>for svak</strong> (3,7V batteri) — varmen når dårlig ut i tippen, gjorde MOSFET-/header-lodding kronglete. Skikkelig loddestasjon vurderes (se ønskeliste).</div>
+          <div class="spec">Batteri-drevet 3,7V m/display, USB-C-ladbar</div>
         </div>
         <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span><br><small style="color:#93c5fd;">Kom 17. juni</small></div>
       </div>

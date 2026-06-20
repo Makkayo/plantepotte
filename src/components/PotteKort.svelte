@@ -6,6 +6,8 @@
     vannNivaProsent,
     vannKlasse,
     antallPlasser,
+    minutterSiden,
+    OFFLINE_GRENSE_MIN,
   } from '../lib/utils';
 
   let {
@@ -27,6 +29,13 @@
 
   const harData = $derived(!!sensor);
   const sistOppdatert = $derived(formaterTidssiden(sensor?.registrert_at ?? command?.updated_at));
+
+  // «Offline»-flagg: en sensor-potte som ikke har postet på en stund er trolig
+  // uten strøm/WiFi. Synlig allerede på oversikten så man fanger det på et blikk.
+  const minSidenKontakt = $derived(minutterSiden(sensor?.registrert_at));
+  const offline = $derived(
+    potte.har_sensorer && minSidenKontakt !== null && minSidenKontakt > OFFLINE_GRENSE_MIN,
+  );
 
   const jordfuktAvg = $derived.by(() => {
     if (!sensor) return null;
@@ -60,8 +69,8 @@
     <span class="text-2xl">{potte.emoji ?? '🪴'}</span>
     <div class="flex-1 min-w-0">
       <h2 class="font-semibold text-lg leading-tight">{potte.navn}</h2>
-      <p class="text-xs text-text-muted mt-0.5">
-        {#if !potte.i_drift}<span class="text-sun">🧪 Testmodus</span> · {/if}{sistOppdatert}
+      <p class="text-xs mt-0.5 {offline ? 'text-sun' : 'text-text-muted'}">
+        {#if !potte.i_drift}<span class="text-sun">🧪 Testmodus</span> · {/if}{#if offline}<span class="font-medium">⚠ Offline</span> · {/if}{sistOppdatert}
       </p>
     </div>
     <svg

@@ -45,7 +45,7 @@
 |-----|:------:|:------:|:-----:|:------:|-------|
 | 12V 3A adapter | 1 | 0 | 1 | ✅ | Erstattes av 5A for 2 potter |
 | 12V 5A adapter | 1 | 0 | — | ⬜ | På vei (B5) |
-| Buck converter 5V (fast) | 1 | 0 | 1 | ✅ | Målt 5,26V |
+| Buck converter 5V (fast) | 1 | 1 | 0 | 🔧 | Målt 5,26V. **I bruk: gir potte1 5V fra 12V (selvgående drift 20. juni)** — 12V splittet til buck+MOSFET med en løs 3-veis Wago |
 | DC inline switch | 2 | 0 | 2 | 📦 | |
 | DC barrel jack pigtail-par | 10 par | 0 | 10 | 📦 | |
 | Multimeter UT131D | 1 | — | 1 | ✅ | Lokalt kjøpt |

@@ -74,6 +74,21 @@ export function formaterTidssiden(iso: string | null | undefined): string {
   return d.toLocaleDateString('no', { day: 'numeric', month: 'short' });
 }
 
+/**
+ * Minutter siden et ISO-tidsstempel (eller null hvis ukjent).
+ * «Livstegn» — hvor lenge siden ESP32 sist postet sensordata.
+ */
+export function minutterSiden(iso: string | null | undefined): number | null {
+  if (!iso) return null;
+  return Math.round((Date.now() - new Date(iso).getTime()) / 60000);
+}
+
+/**
+ * Grense (min) for når en potte regnes som «offline». ESP32 poster hvert 5. min
+ * (POST_INTERVALL_SEK=300), så 15 min = 3 tapte poster før vi flagger trøbbel.
+ */
+export const OFFLINE_GRENSE_MIN = 15;
+
 export function formaterDato(iso: string | null | undefined): string {
   if (!iso) return '—';
   return new Date(iso).toLocaleDateString('no', { day: 'numeric', month: 'short', year: 'numeric' });
