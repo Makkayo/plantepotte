@@ -26,9 +26,14 @@ POST_INTERVALL_SEK = 300
 AKTIVE_JORDSENSORER = [1, 2, 3]
 
 # ── Tidssone ──
-# ESP32 henter UTC fra internett. Norge = UTC+2 om sommeren, UTC+1 om vinteren.
-# ESP32 har ingen automatisk sommertid — endre dette tallet manuelt 2x i året.
-TZ_OFFSET_HOURS = 2
+# ESP32 henter UTC fra internett. Norsk lokaltid regnes ut automatisk:
+#   AUTO_SOMMERTID = True  -> firmware veksler SELV mellom CET (vinter, UTC+1) og
+#   CEST (sommer, UTC+2) etter EU-reglene (siste søndag mars/oktober). Da trenger
+#   du ALDRI røre tidssonen manuelt — anbefalt.
+# Sett False bare hvis du vil tvinge en fast offset (f.eks. potte utenfor Norge);
+# da brukes TZ_OFFSET_HOURS i stedet.
+AUTO_SOMMERTID = True
+TZ_OFFSET_HOURS = 2            # kun brukt hvis AUTO_SOMMERTID = False
 
 # ── Standardverdier (brukes før første kommando er hentet, eller hvis nett er nede) ──
 DEFAULT_INTENSITET = 70        # prosent

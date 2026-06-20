@@ -25,6 +25,11 @@ from config import (SUPABASE_URL, ANON_KEY, POTTE_ID, TZ_OFFSET_HOURS,
                     WIFI_SSID, WIFI_PASS, DEFAULT_INTENSITET,
                     DEFAULT_TIMER_ON, DEFAULT_TIMER_OFF, BRUK_WATCHDOG,
                     AKTIVE_JORDSENSORER, POST_INTERVALL_SEK)
+# Bakoverkompatibelt: gammel config.py uten AUTO_SOMMERTID -> auto (anbefalt).
+try:
+    from config import AUTO_SOMMERTID
+except ImportError:
+    AUTO_SOMMERTID = True
 import ssd1306
 import logic
 
@@ -308,8 +313,10 @@ while True:
     temp, hum, s, vann_mm = read_sensors()
 
     # 3) Skal lyset sta pa? (timer + lokal tid)
-    _, _, _, _, hh, mm, _, _ = rtc.datetime()
-    lh, lm = logic.local_hm(hh, mm, TZ_OFFSET_HOURS)
+    yr, mo, dy, _, hh, mm, _, _ = rtc.datetime()
+    # Norsk lokaltid: auto sommer/vinter-veksling (eller fast offset hvis AUTO_SOMMERTID=False).
+    tz = logic.norsk_utc_offset(yr, mo, dy, hh) if AUTO_SOMMERTID else TZ_OFFSET_HOURS
+    lh, lm = logic.local_hm(hh, mm, tz)
     now_min = lh * 60 + lm
     lyser = logic.light_should_be_on(now_min,
                                      logic.hhmm_to_min(timer_on),

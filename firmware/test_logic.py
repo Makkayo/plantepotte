@@ -5,7 +5,7 @@
 # før vi laster koden opp på ESP32-en.
 
 from logic import (hhmm_to_min, local_hm, light_should_be_on,
-                   duty_for, clamp, adjust, int_or_default)
+                   duty_for, clamp, adjust, int_or_default, norsk_utc_offset)
 
 _fails = 0
 
@@ -28,6 +28,21 @@ check("hhmm ugyldig", hhmm_to_min("xx:yy"), None)
 # ── tidssone (UTC -> norsk) ──
 check("UTC 22:00 +2 = 00:00", local_hm(22, 0, 2), (0, 0))
 check("UTC 05:30 +2 = 07:30", local_hm(5, 30, 2), (7, 30))
+
+# ── auto-sommertid (norsk UTC-offset, beregnet fra UTC-dato) ──
+# 2026: sommertid 29. mars 01:00 UTC -> 25. oktober 01:00 UTC
+check("jan = vinter (1)", norsk_utc_offset(2026, 1, 15, 12), 1)
+check("juli = sommer (2)", norsk_utc_offset(2026, 7, 1, 12), 2)
+check("des = vinter (1)", norsk_utc_offset(2026, 12, 24, 12), 1)
+check("28. mars = vinter enna", norsk_utc_offset(2026, 3, 28, 12), 1)
+check("29. mars 00 UTC = vinter", norsk_utc_offset(2026, 3, 29, 0), 1)
+check("29. mars 01 UTC = sommer", norsk_utc_offset(2026, 3, 29, 1), 2)
+check("25. okt 00 UTC = sommer", norsk_utc_offset(2026, 10, 25, 0), 2)
+check("25. okt 01 UTC = vinter", norsk_utc_offset(2026, 10, 25, 1), 1)
+# 2025: andre overgangsdatoer (30. mars / 26. okt) -> sjekker selve beregningen
+check("2025: 30. mars 01 = sommer", norsk_utc_offset(2025, 3, 30, 1), 2)
+check("2025: 26. okt 01 = vinter", norsk_utc_offset(2025, 10, 26, 1), 1)
+check("2025: 29. mars = vinter enna", norsk_utc_offset(2025, 3, 29, 12), 1)
 
 # ── lys-timer: vanlig dag 07:00-23:00 ──
 on, off = hhmm_to_min("07:00"), hhmm_to_min("23:00")

@@ -19,6 +19,31 @@ def local_hm(utc_h, utc_m, tz_offset_hours):
     return (utc_h + tz_offset_hours) % 24, utc_m
 
 
+def _ukedag(y, m, d):
+    """Ukedag for en dato (0=sondag ... 6=lordag). Sakamotos algoritme — ren
+    aritmetikk, virker likt pa CPython og MicroPython."""
+    t = (0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4)
+    if m < 3:
+        y -= 1
+    return (y + y // 4 - y // 100 + y // 400 + t[m - 1] + d) % 7
+
+
+def _siste_sondag(y, m, dager):
+    """Datoen for siste sondag i en maned med `dager` dager."""
+    return dager - _ukedag(y, m, dager)
+
+
+def norsk_utc_offset(year, month, mday, hour):
+    """Norsk UTC-offset i timer for en UTC-dato/-tid: 1 = CET (vinter), 2 = CEST
+    (sommer). EU-sommertid varer fra siste sondag i mars kl 01:00 UTC til siste
+    sondag i oktober kl 01:00 UTC — regnes ut her, sa ingen manuell halvarlig
+    endring av config trengs. (Mars og oktober har alltid 31 dager.)"""
+    start = (3, _siste_sondag(year, 3, 31), 1)
+    slutt = (10, _siste_sondag(year, 10, 31), 1)
+    naa = (month, mday, hour)
+    return 2 if start <= naa < slutt else 1
+
+
 def clamp(v, lo, hi):
     if v < lo:
         return lo
