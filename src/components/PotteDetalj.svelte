@@ -2,9 +2,10 @@
   import { onMount, onDestroy } from 'svelte';
   import { potter, pottePlanter, loadPottePlanter } from '../lib/stores';
   import { supabase } from '../lib/supabase';
-  import { blomsterkasseOppsett, antallPlasser, bakSeksjon } from '../lib/utils';
+  import { blomsterkasseOppsett, antallPlasser, bakSeksjon, vannNivaProsent } from '../lib/utils';
+  import { beregnVannTrend } from '../lib/trend';
   import type { Potte, PotteCommand, PotteSensorData, PottePlanteFull } from '../lib/database.types';
-  import SensorPanel from './SensorPanel.svelte';
+  import TilstandPanel from './TilstandPanel.svelte';
   import LysKontroll from './LysKontroll.svelte';
   import PlanteSlot from './PlanteSlot.svelte';
   import PlanteVelger from './PlanteVelger.svelte';
@@ -26,6 +27,29 @@
   let historikk = $state<PottePlanteFull[]>([]);
   let iDriftLagrer = $state(false);
   let bekreftDrift = $state(false);
+
+  // Vannstand-historikk (siste 7 dager) → trend-utregning (dager igjen, sparkline).
+  type VannRad = { registrert_at: string | null; vann_avstand_mm: number | null };
+  let vannHistorikk = $state<VannRad[]>([]);
+
+  const naaVannPct = $derived(
+    vannNivaProsent(sensor?.vann_avstand_mm, potte?.vann_tom_mm ?? undefined, potte?.vann_full_mm ?? undefined),
+  );
+  const vannTrend = $derived(
+    beregnVannTrend(vannHistorikk, naaVannPct, potte?.vann_tom_mm ?? undefined, potte?.vann_full_mm ?? undefined),
+  );
+
+  async function loadVannHistorikk() {
+    const sjuDagerSiden = new Date(Date.now() - 7 * 86_400_000).toISOString();
+    const { data } = await supabase
+      .from('potte_sensor_data')
+      .select('registrert_at, vann_avstand_mm')
+      .eq('potte_id', potteId)
+      .gte('registrert_at', sjuDagerSiden)
+      .order('registrert_at', { ascending: true })
+      .limit(2200);
+    if (data) vannHistorikk = data as VannRad[];
+  }
 
   async function refresh() {
     const [cmd, sens] = await Promise.all([
@@ -49,7 +73,7 @@
   }
 
   onMount(async () => {
-    await Promise.all([refresh(), loadPottePlanter(potteId), loadHistorikk()]);
+    await Promise.all([refresh(), loadPottePlanter(potteId), loadHistorikk(), loadVannHistorikk()]);
     timer = setInterval(refresh, 10000);
   });
 
@@ -212,6 +236,11 @@
       </div>
     </div>
 
+    <!-- Tilstand nå: hero + lys-døgn + vann + jord + klima -->
+    {#if potte.har_sensorer}
+      <TilstandPanel {potte} {sensor} {command} trend={vannTrend} />
+    {/if}
+
     <!-- Drift-status: testmodus vs ekte drift -->
     <div class="card p-4 flex items-center justify-between gap-3">
       <div class="min-w-0">
@@ -313,11 +342,6 @@
       {command}
       onLagret={refresh}
     />
-
-    <!-- Sensorer -->
-    {#if potte.har_sensorer}
-      <SensorPanel {sensor} {potte} />
-    {/if}
 
     <!-- Historikk: tidligere planter (kun samlet i drift-modus) -->
     {#if historikk.length > 0}

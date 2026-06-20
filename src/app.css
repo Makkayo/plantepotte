@@ -17,9 +17,18 @@
   }
 
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-family:
+      'Hanken Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Display-serif (Fraunces) til store tall og overskrifter — gir botanisk,
+     redaksjonelt preg som skiller appen fra «nok et mørkt dashboard». */
+  .font-display {
+    font-family: 'Fraunces', Georgia, Cambria, serif;
+    font-optical-sizing: auto;
+    letter-spacing: -0.01em;
   }
 
   button {
@@ -143,4 +152,51 @@
 /* Time picker — make it look consistent */
 input[type='time'] {
   color-scheme: dark;
+}
+
+/* ====================== Levende datavisualisering ====================== */
+
+/* Lys-døgnring: den opplyste buen «tegnes inn» ved innlasting.
+   --arc-dash settes inline per instans (= buelengden i px). */
+@keyframes tegn-bue {
+  from {
+    stroke-dashoffset: var(--arc-dash, 0);
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.arc-anim {
+  animation: tegn-bue 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Vanntank: bølgen sklir sidelengs i en sømløs løkke (perioden = 100 i viewBox). */
+@keyframes vann-bolge {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100px);
+  }
+}
+.vann-bolge {
+  animation: vann-bolge 7s linear infinite;
+}
+.vann-bolge-2 {
+  animation: vann-bolge 11s linear infinite;
+}
+
+/* Stagger-hjelper: gi kort en stigende fade ved innlasting via --d (delay). */
+.stig {
+  animation: riseIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arc-anim,
+  .vann-bolge,
+  .vann-bolge-2,
+  .stig {
+    animation: none !important;
+  }
 }

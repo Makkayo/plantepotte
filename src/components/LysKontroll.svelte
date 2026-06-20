@@ -8,6 +8,7 @@
     vurderVannKompatibilitet,
   } from '../lib/lys';
   import { lysFamilier } from '../lib/stores';
+  import LysDognRing from './viz/LysDognRing.svelte';
 
   let {
     potteId,
@@ -195,6 +196,10 @@
 
   <!-- Intensitet -->
   <div class="space-y-4">
+    <div class="flex flex-col items-center pt-1 pb-1">
+      <LysDognRing timerOn={timer_on} timerOff={timer_off} {intensitet} dli={dliEstimat} animate={false} />
+      <p class="text-[11px] text-text-dim mt-1">Forhåndsvisning oppdateres mens du justerer</p>
+    </div>
     <div>
       <div class="flex items-center justify-between mb-2">
         <label for="intensitet" class="label">Intensitet</label>

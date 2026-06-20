@@ -25,24 +25,41 @@ export default {
         leaf: {
           DEFAULT: '#4ade80',
           dim: '#166534',
+          deep: '#0c2a1a',
           glow: '#86efac',
         },
         sun: '#fbbf24',
         sky: '#60a5fa',
         rose: '#f87171',
         violet: '#a78bfa',
+        soil: '#b08968',
       },
       fontFamily: {
-        sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'system-ui', 'sans-serif'],
+        sans: ['"Hanken Grotesk"', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'system-ui', 'sans-serif'],
+        display: ['Fraunces', 'Georgia', 'Cambria', 'serif'],
+      },
+      boxShadow: {
+        'glow-leaf': '0 0 0 1px rgba(74,222,128,0.15), 0 8px 40px -8px rgba(74,222,128,0.25)',
+        'glow-soft': '0 18px 50px -20px rgba(0,0,0,0.7)',
       },
       animation: {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'fade-in': 'fadeIn 0.3s ease-out',
+        'rise-in': 'riseIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both',
+        breathe: 'breathe 6s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {
           '0%': { opacity: '0', transform: 'translateY(4px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        riseIn: {
+          '0%': { opacity: '0', transform: 'translateY(14px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        breathe: {
+          '0%, 100%': { opacity: '0.5' },
+          '50%': { opacity: '0.95' },
         },
       },
     },
