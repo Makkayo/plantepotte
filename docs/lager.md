@@ -16,7 +16,7 @@
 | Del | Totalt | I bruk | Ledig | Status | Notat |
 |-----|:------:|:------:|:-----:|:------:|-------|
 | ESP32 32S DevKit (30-pin) | 2 | 0 | 2 | ✅ | Potte 1 + potte 2 (hjerne). MicroPython flashet |
-| ESP32-CAM-MB (OV2640) | 2 | 0 | 2 | 📦 | Potte 1 + potte 2 kamera. Arduino IDE |
+| ESP32-CAM-MB (OV2640) | 2 | 1 | 1 | ✅ | **Testet 20. juni** — opplasting til Supabase verifisert. 1 til potte1, 1 reserve/potte2. Arduino IDE |
 | ESP32 (starter kit) | 1 | 1 | 0 | 🔧 | **Brukes nå til pultlyset** (lek). Micro-USB |
 
 ## 📡 Sensorer
