@@ -55,7 +55,7 @@ Holder styr på hva som er **bestilt → ankommet → testet** på breadboard.
 | Status | Del | Antall | Notat |
 |:------:|-----|:------:|-------|
 | ✅ | VL53L0X ToF-laser | ×3 | Kom 17. juni — «A03-VL53L0X-Zi», GY-VL53L0XV2, 940nm I2C. **Testet 20. juni:** header loddet, `i2c.scan()` viser 0x29+0x3C, `vl53l0x.py`-driver leser stabil avstand (mm) — community-driver verifisert mot ekte sensor ✅. 1 i bruk (potte1), 2 reserve |
-| 📦 | ESP32-CAM-MB (OV2640) | ×2 | Kom 17. juni — «I64-ESP32-CAM+I65-MB-DIZuo», CH340G, Micro USB. Begge sett i ESD-poser |
+| ✅ | ESP32-CAM-MB (OV2640) | ×2 | Kom 17. juni — «I64-ESP32-CAM+I65-MB-DIZuo», CH340G, Micro USB. **Testet 20. juni:** flashet i Arduino IDE, full kjede verifisert — WiFi → bilde → opplasting til Supabase Storage (`HTTP 200`) → dyp søvn, stabilt over flere kjøringer inkl. 59 KB-foto. 1 i bruk (potte1), 1 reserve |
 | 📦 | Elektronikk-lakk (konformell coating) | ×1 | Kom 19. juni — konformell coating (SF90-type). Bestilling 3 nå komplett (laser + kamera + lakk) |
 
 ## Bestilling 4 — loddeutstyr & lek (~€54)

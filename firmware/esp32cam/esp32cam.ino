@@ -21,7 +21,9 @@
 #include "esp_camera.h"
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
+#include <HTTPClient.h>
 #include "time.h"
+#include "esp_sntp.h"      // for a stoppe NTP for opplasting (unngar UDP-krasj)
 
 // WiFi-navn og passord ligger i secrets.h (gitignored — skal ALDRI hit).
 // Første gang: kopier secrets.example.h -> secrets.h og fyll inn der.
@@ -125,44 +127,78 @@ bool cameraInit() {
   return true;
 }
 
-String timestampName() {
-  // Filnavn: potte1/20260606-143000.jpg  (faller tilbake til millis hvis NTP feiler)
+// Teller som overlever dyp sovn (lagres i RTC-minnet) — gir unike filnavn
+// selv om NTP skulle feile, sa to bilder aldri kolliderer.
+RTC_DATA_ATTR uint32_t bootteller = 0;
+
+// Synk klokka EN gang, rett etter WiFi og FOR all annen nett-trafikk.
+// Stopper SNTP etterpa: ellers fortsetter NTP a sende UDP i bakgrunnen og
+// kolliderer med DNS-oppslaget mot Supabase -> udp_new_ip_type-krasj.
+// RTC-klokka gar videre selv om SNTP stoppes, sa tiden beholdes.
+void syncTimeOnce() {
   configTime(0, 0, "pool.ntp.org", "time.nist.gov");
   struct tm t;
+  if (getLocalTime(&t, 8000)) {
+    Serial.println("NTP-tid satt");
+  } else {
+    Serial.println("NTP feilet — bruker teller i filnavn");
+  }
+  esp_sntp_stop();         // VIKTIG: ingen NTP-UDP under opplastingen
+}
+
+String buildName() {
+  // Filnavn: potte1/20260606-143000.jpg, eller potte1/img-<teller>.jpg hvis
+  // klokka ikke ble satt. Kaller IKKE nett (configTime) — leser bare RTC-klokka.
+  struct tm t;
   char buf[40];
-  if (getLocalTime(&t, 5000)) {
+  if (getLocalTime(&t, 0)) {
     strftime(buf, sizeof(buf), "%Y%m%d-%H%M%S", &t);
   } else {
-    snprintf(buf, sizeof(buf), "boot-%lu", (unsigned long)millis());
+    snprintf(buf, sizeof(buf), "img-%lu", (unsigned long)bootteller);
   }
   return String(POTTE_ID) + "/" + String(buf) + ".jpg";
 }
 
+// Liten Stream-innpakning rundt kamera-bufferet. ESP32 sin TLS sender maks
+// en TLS-pakke per write — sender vi hele bildet i ett kall, feiler det med
+// HTTP -3 nar bildet er storre enn pakkestorrelsen. Som Stream deler
+// HTTPClient bildet i ~1,4 KB-biter som hver far plass i en TLS-pakke.
+class BufStream : public Stream {
+  const uint8_t* _buf;
+  size_t _len, _pos;
+public:
+  BufStream(const uint8_t* b, size_t l) : _buf(b), _len(l), _pos(0) {}
+  int available() override { return (int)(_len - _pos); }
+  int read() override { return _pos < _len ? _buf[_pos++] : -1; }
+  int peek() override { return _pos < _len ? _buf[_pos] : -1; }
+  size_t write(uint8_t) override { return 0; }   // kun lesing
+};
+
 bool uploadImage(camera_fb_t* fb, const String& path) {
-  WiFiClientSecure client;
-  client.setInsecure();              // enkel TLS uten sertifikat-validering
+  WiFiClientSecure tls;
+  tls.setInsecure();                 // enkel TLS uten sertifikat-validering
+
+  HTTPClient http;
+  String url = String("https://") + SUPABASE_HOST
+               + "/storage/v1/object/" + BUCKET + "/" + path;
+
+  Serial.printf("Fri heap for opplasting: %u bytes\n", ESP.getFreeHeap());
   Serial.print("Kobler til Supabase ...");
-  if (!client.connect(SUPABASE_HOST, 443)) {
-    Serial.println(" feilet");
+  if (!http.begin(tls, url)) {
+    Serial.println(" begin feilet");
     return false;
   }
-  String url = "/storage/v1/object/" + String(BUCKET) + "/" + path;
+  http.setTimeout(20000);            // TLS + opplasting kan ta tid
+  http.addHeader("apikey", ANON_KEY);
+  http.addHeader("Authorization", String("Bearer ") + ANON_KEY);
+  http.addHeader("Content-Type", "image/jpeg");
 
-  client.printf("POST %s HTTP/1.1\r\n", url.c_str());
-  client.printf("Host: %s\r\n", SUPABASE_HOST);
-  client.printf("apikey: %s\r\n", ANON_KEY);
-  client.printf("Authorization: Bearer %s\r\n", ANON_KEY);
-  client.println("Content-Type: image/jpeg");
-  client.printf("Content-Length: %u\r\n", fb->len);
-  client.println("Connection: close");
-  client.println();
-  client.write(fb->buf, fb->len);
+  BufStream body(fb->buf, fb->len);
+  int code = http.sendRequest("POST", &body, fb->len);
+  Serial.println(" HTTP " + String(code));
+  http.end();
 
-  // Les statuslinje
-  String status = client.readStringUntil('\n');
-  Serial.println("Svar: " + status);
-  client.stop();
-  return status.indexOf("200") > 0 || status.indexOf("201") > 0;
+  return code == 200 || code == 201;
 }
 
 void deepSleepMinutes(int minutes) {
@@ -175,8 +211,17 @@ void setup() {
   Serial.begin(115200);
   delay(300);
 
-  if (!cameraInit()) { deepSleepMinutes(RETRY_MIN); }
+  // WiFi FORST, mens kameraet enna er av: da slipper vi at kameraet
+  // overflyter buffere (FB-OVF) og trekker strom/CPU under WiFi-oppkoblingen
+  // — det gjorde WiFi ustabil og stjal minne fra TLS-opplastingen.
+  bootteller++;
   if (!wifiConnect()) { deepSleepMinutes(RETRY_MIN); }
+
+  // Klokka synkes EN gang her, og SNTP stoppes — sa det aldri kjorer to
+  // nett-kall (NTP-UDP + Supabase-DNS) samtidig under opplastingen.
+  syncTimeOnce();
+
+  if (!cameraInit())  { deepSleepMinutes(RETRY_MIN); }
 
   // Kast de forste rammene (auto-eksponering trenger a stabilisere seg)
   for (int i = 0; i < 3; i++) {
@@ -191,7 +236,7 @@ void setup() {
     deepSleepMinutes(RETRY_MIN);
   }
 
-  String path = timestampName();
+  String path = buildName();
   Serial.println("Laster opp: " + path + "  (" + String(fb->len) + " bytes)");
   bool ok = uploadImage(fb, path);
   esp_camera_fb_return(fb);
