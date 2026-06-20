@@ -8,7 +8,7 @@ Holder styr på hva som er **bestilt → ankommet → testet** på breadboard.
 - ✅ Testet og funker
 - ⚠️ Ankommet, men problem (se notat)
 
-*Sist oppdatert: 2026-06-19 — Bestilling 3 komplett (elektronikk-lakk ankom)*
+*Sist oppdatert: 2026-06-20 — MOSFET-dimming + VL53L0X-laser testet på breadboard; full integrasjon (WiFi+Supabase+app) live*
 
 ---
 
@@ -17,7 +17,7 @@ Holder styr på hva som er **bestilt → ankommet → testet** på breadboard.
 | Status | Del | Antall | Notat |
 |:------:|-----|:------:|-------|
 | ✅ | ESP32 32S DevKit (30-pin) | ×2 | Kom 9. juni — MicroPython v1.28.0 flashet, testet 9. juni |
-| ⚠️ | LR7843/FR120N MOSFET-modul | ×4 | Kom 9. juni — **BYGGESETT**: bart kort + løse skrueklemmer som MÅ loddes på (grønn 2-v = PWM/GND, blå 3-v = +/LOAD/−). Opto-isolert. 3-pins header som fulgte med passer IKKE (5mm vs 2,54mm) → reserve. **Venter på loddebolt (best. 4) før bruk** |
+| ✅ | LR7843/FR120N MOSFET-modul | ×4 | Kom 9. juni — BYGGESETT (løse skrueklemmer loddes på; grønn 2-v PWM/GND, blå 3-v +/LOAD/−, opto-isolert). **3 loddet + ESP32-styrt PWM-dimming av 12V-stripa verifisert 20. juni** ✅. **4. modul = SKRAP** (grønn 2-pin smeltet under lodding — hull + skrue ødelagt). → 3 gode (trenger bare 2) |
 | ✅ | LED-strip phyto 12V 5050 (5m) | ×1 | **Tent 10. juni** — 3×40cm parallell lyser jevnt rødt/blått ✅. Målt **0,36 A/40cm-stripe**, 0,94 A for 3 striper (én potte). «4:1» phyto-ratio bekreftet |
 | ✅ | 12V 3A adapter | ×1 | Testet 10. juni — gir 12V (målt). 5.5×2.1mm. **5A-oppgradering planlagt** for 2 potter |
 | 📦 | DC barrel jack pigtail-par | ×1 | Kom 9. juni — «10 Pairs 12V DC Power Connector» |
@@ -54,7 +54,7 @@ Holder styr på hva som er **bestilt → ankommet → testet** på breadboard.
 
 | Status | Del | Antall | Notat |
 |:------:|-----|:------:|-------|
-| 📦 | VL53L0X ToF-laser | ×3 | Kom 17. juni — «A03-VL53L0X-Zi», Estardyn GY-VL53L0XV2, 940nm I2C, 25×10.7mm. Alle 3 i separate ESD-poser |
+| ✅ | VL53L0X ToF-laser | ×3 | Kom 17. juni — «A03-VL53L0X-Zi», GY-VL53L0XV2, 940nm I2C. **Testet 20. juni:** header loddet, `i2c.scan()` viser 0x29+0x3C, `vl53l0x.py`-driver leser stabil avstand (mm) — community-driver verifisert mot ekte sensor ✅. 1 i bruk (potte1), 2 reserve |
 | 📦 | ESP32-CAM-MB (OV2640) | ×2 | Kom 17. juni — «I64-ESP32-CAM+I65-MB-DIZuo», CH340G, Micro USB. Begge sett i ESD-poser |
 | 📦 | Elektronikk-lakk (konformell coating) | ×1 | Kom 19. juni — konformell coating (SF90-type). Bestilling 3 nå komplett (laser + kamera + lakk) |
 

@@ -1371,8 +1371,8 @@
       <div class="infra-card">
         <div class="ic-icon">🔌</div>
         <h3>Breadboard-testing</h3>
-        <p>Breadboard-testing 9.–10. juni: <strong>ESP32</strong> (MicroPython), <strong>OLED</strong>, <strong>DHT22</strong>, <strong>KY-040</strong>, <strong>alle 3 jordfukt</strong> (kalibrert: tørr ~3190 / våt ~1140), <strong>buck</strong> (5,26V) og <strong>LED-strip tent</strong> (0,94 A/potte). Gjenstår: MOSFET-styrt lys (venter loddebolt — modulen er et byggesett), <strong>full main.py + WiFi + Supabase</strong> (ikke blokkert), laser + kamera (i posten).</p>
-        <span class="pill pill-green">● 7 moduler + buck + LED testet</span>
+        <p>Breadboard-testing 9.–10. juni: <strong>ESP32</strong>, <strong>OLED</strong>, <strong>DHT22</strong>, <strong>KY-040</strong>, <strong>jordfukt ×3</strong>, <strong>buck</strong> (5,26V), <strong>LED-strip</strong> (0,94 A/potte). <strong>✅ 20. juni:</strong> MOSFET-styrt dimming, VL53L0X-laser og <strong>full integrasjon</strong> (WiFi + Supabase + appen styrer lyset) verifisert. Gjenstår: ESP32-CAM + fysisk 3D-bygg.</p>
+        <span class="pill pill-green">● Prototype komplett + integrert live</span>
       </div>
       <div class="infra-card">
         <div class="ic-icon">📐</div>
@@ -1430,9 +1430,9 @@
         <div class="comp-body">
           <h4>MOSFET (LR7843/FR120N) — lysbryter</h4>
           <div class="what">Elektronisk bryter. ESP32 sender et lavt signal (PWM, GPIO26), MOSFET slår på/av 12V til LED-stripen. Opto-isolert. ⚠️ Er et <strong>byggesett</strong>: grønn 2-v (PWM/GND) + blå 3-v (+/LOAD/−) skrueklemme MÅ loddes på. Medfølgende 3-pins header passer ikke (reserve).</div>
-          <div class="spec">Opto-isolert modul, logic-level · ×4 stk · venter loddebolt</div>
+          <div class="spec">Opto-isolert modul, logic-level · ×4 stk · 3 loddet, 1 skrap (grønn 2-pin smeltet)</div>
         </div>
-        <div class="comp-status"><span class="pill pill-blue">📦 Byggesett — loddes</span></div>
+        <div class="comp-status"><span class="pill pill-green">✅ Testet 20. juni</span><br><small style="color:var(--green);">3 loddet — PWM-dimming OK</small></div>
       </div>
 
       <div class="comp-card" id="komp-adapter">
@@ -1690,7 +1690,7 @@
           <div class="what">Peker rett ned i en berolings-brønn mot en 3D-printet flottør. Måler avstanden (mm) til vannflaten — appen regner ut % per potte. Henger i topp-konstruksjonen, så tanken løftes fritt ut. Erstatter XKC-Y25.</div>
           <div class="spec">Time-of-Flight laser 940nm, I2C (deler buss med OLED), 3.3V · adresse 0x29 · ×3</div>
         </div>
-        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+        <div class="comp-status"><span class="pill pill-green">✅ Testet 20. juni</span><br><small style="color:var(--green);">i2c.scan 0x29 OK — driver leser mm</small></div>
       </div>
 
       <div class="comp-card" id="komp-cam">
@@ -1700,7 +1700,7 @@
           <div class="what">Eget kort (ESP32-CAM-MB) som tar bilder av plantene og laster opp til Supabase Storage over WiFi. Ingen datakabel til hoved-ESP32 — snakker kun via skyen.</div>
           <div class="spec">OV2640 vidvinkel · 5V fra buck · programmeres i Arduino IDE (ikke MicroPython) · ×2</div>
         </div>
-        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span><br><small style="color:#93c5fd;">Kom 17. juni — ikke testet ennå</small></div>
       </div>
 
       <div class="comp-card">
@@ -1710,7 +1710,7 @@
           <div class="what">Beskyttende isolasjonslakk på elektronikken mot fukt. Lurt nær vann og fuktig jord.</div>
           <div class="spec">100ml PCB insulating varnish — pensles på loddepunkter/kort, IKKE på kontakter/laserlinse</div>
         </div>
-        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span><br><small style="color:#93c5fd;">Kom 19. juni — ikke testet ennå</small></div>
       </div>
     </div>
 
@@ -1756,7 +1756,7 @@
             Erstattet av: 3M dobbeltsidig tape i bestilling 2
           </div>
         </div>
-        <div class="comp-status"><span class="pill pill-green">Bestilt</span></div>
+        <div class="comp-status"><span class="pill pill-green">Dekket</span></div>
       </div>
 
       <div class="comp-card">
@@ -1850,7 +1850,7 @@
           <li><strong style="color:var(--text);">Motstand-sortiment + 5mm LED</strong> — pulldown-auto-deteksjon, indikator-LED-test på GPIO26, lek</li>
           <li><strong style="color:var(--text);">6-i-1 elektrisk presisjonsskrutrekker</strong> (N20, USB-C-ladbar, magnetiske bits) — til elektronikk-skruing</li>
         </ul>
-        <p style="color:var(--dim); margin:0; font-size:0.83rem;">Loddeutstyr, laser og kamera ligger allerede i Bestilling 3 &amp; 4 (i posten).</p>
+        <p style="color:var(--dim); margin:0; font-size:0.83rem;">Loddeutstyr, laser og kamera er allerede ankommet (Bestilling 3 &amp; 4, kom 17.–19. juni).</p>
       </div>
 
       <div class="comp-group-title" style="grid-column:1/-1;">🛒 Bestilling 6 — montering &amp; kabling (~€23, bestilt 11. juni)</div>
@@ -3039,15 +3039,15 @@
       <div class="check done">
         <div class="check-box">✓</div>
         <div class="check-content">
-          <h4>Hardware ankommet (bestilling 1 + 2)</h4>
-          <p>Begge AliExpress-pakkene komplett ankommet 6.–9. juni. Bestilling 3 (laser + kamera), 4 (loddeutstyr) og 5 (påfyll + semi-permanent) er i posten. Status per del: <code>docs/mottaksliste.md</code>.</p>
+          <h4>Hardware ankommet (bestilling 1–4)</h4>
+          <p>Bestilling 1 + 2 ankommet 6.–9. juni. Bestilling 3 (laser + kamera) og 4 (loddeutstyr + lek) ankommet 17.–19. juni. Gjenstår i posten: Bestilling 5 (påfyll + semi-permanent) og 6 (montering). Status per del: <code>docs/mottaksliste.md</code>.</p>
         </div>
       </div>
-      <div class="check waiting">
-        <div class="check-box">→</div>
+      <div class="check done">
+        <div class="check-box">✓</div>
         <div class="check-content">
-          <h4>Følg byggetrinnene over (0–7) — godt i gang</h4>
-          <p>Testet 9.–10. juni: ESP32, OLED, DHT22, KY-040, jordfukt ×3 (kalibrert), buck (5,26V), LED-strip tent direkte på 12V (0,94 A/potte). Neste: full <code>main.py</code> + WiFi + Supabase end-to-end (ikke blokkert), MOSFET-lys når loddebolt kommer.</p>
+          <h4>Breadboard-prototype komplett + integrert live (20. juni)</h4>
+          <p>Alle sensorer testet (ESP32, OLED, DHT22, KY-040, jordfukt ×3), <strong>MOSFET-styrt dimming</strong> og <strong>VL53L0X-laser</strong> verifisert, og <strong>full <code>main.py</code> + WiFi + Supabase live</strong> — appen viser sensordata og styrer lyset. Neste: ESP32-CAM + fysisk 3D-bygg.</p>
         </div>
       </div>
       <div class="check done">
@@ -3076,8 +3076,8 @@
       <div class="phase-item current">
         <div class="phase-circle">1</div>
         <div class="phase-body">
-          <h4>Fase 1 — Breadboard-prototype <span class="pill pill-green phase-tag">Pågår — mye testet 9.–10. juni</span></h4>
-          <p>Verifisert på breadboard: ESP32 (MicroPython), OLED, DHT22, KY-040, <strong>alle 3 jordfukt</strong> (kalibrert tørr ~3190 / våt ~1140), <strong>buck</strong> (fast 5V, målt 5,26V) og <strong>LED-strip tent direkte på 12V</strong> (0,94 A/potte). Gjenstår: ESP32-styrt lys via MOSFET (modulen er et byggesett — venter loddebolt), <strong>full main.py + WiFi + Supabase end-to-end</strong> (ikke blokkert — trenger bare WiFi i config.py), laser + kamera (i posten).</p>
+          <h4>Fase 1 — Breadboard-prototype <span class="pill pill-green phase-tag">✅ Komplett + integrert (20. juni)</span></h4>
+          <p>✅ Komplett 20. juni: alle sensorer + <strong>MOSFET-dimming</strong> + <strong>VL53L0X-laser</strong> testet, og <strong>full integrasjon live</strong> — ESP32 sender sensordata til Supabase og appen styrer lyset (WiFi, NTP, OLED, alt). Gjenstår for potta: ESP32-CAM + fysisk 3D-bygg.</p>
         </div>
       </div>
       <div class="phase-item">
@@ -3433,7 +3433,7 @@ while True:
           <div class="what">Holder ledninger/kort mens du jobber. Fleksible armer med klyper.</div>
           <div class="spec">Soldering station, 3 fleksible armer + holder</div>
         </div>
-        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span><br><small style="color:#93c5fd;">Kom 17. juni</small></div>
       </div>
 
       <div class="comp-card">
@@ -3443,7 +3443,7 @@ while True:
           <div class="what">Magnetfot + 360° fleksible armer — kan plasseres på loddematta. Utfyller den faste holderen.</div>
           <div class="spec">Rafford magnetic base, 4 armer (no box)</div>
         </div>
-        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span><br><small style="color:#93c5fd;">Kom 17. juni</small></div>
       </div>
 
       <div class="comp-card">
@@ -3453,7 +3453,7 @@ while True:
           <div class="what">Liten bærbar loddebolt. Grei til lett pin-header-lodding. Kan slite litt på store skjøter.</div>
           <div class="spec">C200S mini, USB-C, set 2</div>
         </div>
-        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span><br><small style="color:#93c5fd;">Kom 17. juni</small></div>
       </div>
 
       <div class="comp-card">
@@ -3463,7 +3463,7 @@ while True:
           <div class="what">Rosin-core (flux inni). Tips: 60/40 blyholdig er lettest for nybegynner.</div>
           <div class="spec">0.8mm, 100g, rosin core</div>
         </div>
-        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span><br><small style="color:#93c5fd;">Kom 17. juni</small></div>
       </div>
 
       <div class="comp-card">
@@ -3473,7 +3473,7 @@ while True:
           <div class="what">Kobberfletning som suger opp loddetinn — for å fikse feillodding.</div>
           <div class="spec">1.0–4.0mm, 1.5m, desoldering mesh braid</div>
         </div>
-        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span><br><small style="color:#93c5fd;">Kom 17. juni</small></div>
       </div>
 
       <div class="comp-card">
@@ -3483,7 +3483,7 @@ while True:
           <div class="what">Varmebestandig, antistatisk matte som beskytter bordet. Magnetiske rom for smådeler.</div>
           <div class="spec">S160, 30×45cm, 932°F heat resistant</div>
         </div>
-        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span><br><small style="color:#93c5fd;">Kom 17. juni</small></div>
       </div>
 
       <div class="comp-card">
@@ -3493,7 +3493,7 @@ while True:
           <div class="what">Øvings-sett for å leke deg med ESP32 uten å risikere prosjekt-brettene. Brukes til pultlyset!</div>
           <div class="spec">ESP32-32S WiFi-modul + komponenter</div>
         </div>
-        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span><br><small style="color:#93c5fd;">Kom 17. juni</small></div>
       </div>
 
       <div class="comp-card">
@@ -3503,7 +3503,7 @@ while True:
           <div class="what">Små servomotorer. Rene leker nå, men kan bli nyttige senere (servo-luke / auto-lys-idé).</div>
           <div class="spec">9g metal gear, MG90S</div>
         </div>
-        <div class="comp-status"><span class="pill pill-yellow">Bestilt</span></div>
+        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span><br><small style="color:#93c5fd;">Kom 17. juni</small></div>
       </div>
 
       <div class="comp-card">

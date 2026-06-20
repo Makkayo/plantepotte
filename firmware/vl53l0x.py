@@ -1,6 +1,8 @@
 # vl53l0x.py — MicroPython-driver for VL53L0X ToF-laser avstandssensor.
 # Returnerer avstand i millimeter via .read().
 #
+# ✅ VERIFISERT mot ekte sensor 20. juni 2026 (i2c.scan viser 0x29, .read() gir stabil mm).
+#
 # ┌─────────────────────────────────────────────────────────────────────┐
 # │  VERIFISER NAR HARDWARE KOMMER.                                       │
 # │  Dette er standard community-driveren (ST sin init-sekvens). Den kan  │

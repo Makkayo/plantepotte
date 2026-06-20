@@ -5,7 +5,7 @@ Når noe bestilles → flyttes til `mottaksliste.md`. Når det ankommer → inn 
 
 **Prioritet:** 🔴 trengs snart · 🟡 fint å ha · 🟢 nice-to-have / framtid
 
-*Sist oppdatert: 2026-06-17*
+*Sist oppdatert: 2026-06-20*
 
 ---
 
@@ -22,6 +22,12 @@ Når noe bestilles → flyttes til `mottaksliste.md`. Når det ankommer → inn 
 | Pri | Del | Hvorfor | Ca. pris |
 |:---:|-----|---------|---------|
 | 🟡 | **ESP32 DevKit (30-pin) ×2** | Lek/eksperiment + reserve. Alle nåværende ESP32-er er øremerket (2 potte-hjerner, 2 kamera, 1 i pultlyset) → ingen ledig til nye sideprosjekt. Billig forsikring hvis ett ryker under lodding/læring | ~€4/stk |
+
+## 🔧 Verktøy
+
+| Pri | Del | Hvorfor | Ca. pris |
+|:---:|-----|---------|---------|
+| 🟡 | **Skikkelig loddestasjon** (temp-styrt, ~48–60W) | Batteri-USB-bolten (3,7V) er for svak — varmen når ikke tippen, gjorde MOSFET-/header-lodding unødig kronglete (20. juni). Markus lener mot **Jula 60W digital ~499 kr**; alt. Luxorparts Pro 60W (Kjell, 1199 kr) el. Pinecil V2 (trenger 65W USB-C-lader). Venter litt — fant én tipp som funker så vidt | ~500 kr |
 
 ## 🌱 Plantepotte (hardware)
 

@@ -7,7 +7,7 @@
 
 **Status-koder:** ✅ på lager · 📦 ankommet (ikke testet) · ⬜ bestilt, ikke ankommet · 🔧 i bruk · 🔋 reserve
 
-*Sist oppdatert: 2026-06-19*
+*Sist oppdatert: 2026-06-20*
 
 ---
 
@@ -23,7 +23,7 @@
 
 | Del | Totalt | I bruk | Ledig | Status | Notat |
 |-----|:------:|:------:|:-----:|:------:|-------|
-| VL53L0X ToF-laser | 3 | 0 | 3 | 📦 | Potte1 vann + potte2 vann + reserve/auto-lys |
+| VL53L0X ToF-laser | 3 | 1 | 2 | ✅ | **Testet 20. juni** (driver verifisert). 1 i bruk (potte1), 2 reserve |
 | Jordfuktsensor v2.0 | 3 | 0 | 3 | ✅ | Kalibrert. +10 til på vei (B5) → 13 totalt |
 | OLED SSD1306 0.96" | 1 | 0 | 1 | ✅ | |
 | DHT22 (AM2302) | 1 | 0 | 1 | ✅ | |
@@ -36,7 +36,7 @@
 |-----|:------:|:------:|:-----:|:------:|-------|
 | LED-strip phyto 12V 5050 | 5 m | ~1,2 m (test) | ~3,8 m | ✅ | Vekstlyset. 0,36 A/40cm målt |
 | WS2812B RGB-strip 5V | 1 m (30 LED) | 1 m | 0 | 🔧 | **Pultlyset** (lek, IKKE vekstlys) |
-| LR7843/FR120N MOSFET | 4 | 0 | 4 | ✅/📦 | **1 ferdig loddet 17. juni** (klemmer på, klar til bruk). 3 fortsatt byggesett. Til 12V-stripe |
+| LR7843/FR120N MOSFET | 4 | 1 | 2 | ✅ | **3 loddet + dimming testet 20. juni.** 1 i bruk (potte1), 2 gode i reserve. **4. = skrap** (grønn 2-pin smeltet) |
 | LED clip connector 8mm | 5 | 0 | 5 | 📦 | +5 til på vei (B5) |
 
 ## ⚡ Kraft & kabling
@@ -71,7 +71,7 @@
 
 | Del | Totalt | Status | Notat |
 |-----|:------:|:------:|-------|
-| USB-loddebolt (USB-C ladbar) | 1 | 📦 | Lad før bruk. Spisser: bruk **B (bevel)**. ~350°C |
+| USB-loddebolt (3,7V batteri) | 1 | ⚠️ | **For svak** — varmen når dårlig ut i tippen, gjorde lodding kronglete. Funker så vidt med én bestemt tipp. Loddestasjon vurderes (se ønskeliste) |
 | Tredje hånd (alligator-klips) | 1 | 📦 | |
 | Magnetisk tredje hånd (gooseneck) | 1 | 📦 | |
 | Silikon-loddematte S160 | 1 | 📦 | |
