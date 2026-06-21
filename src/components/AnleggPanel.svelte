@@ -334,8 +334,21 @@
     </div>
   {/if}
 
-  <!-- Vekstlys -->
-  <div class="card px-[15px] py-3.5 stig" style="--d: 60ms">
+  <!-- Vekstlys — hele kortet åpner lys-arket; toggle stopper propagering -->
+  <div
+    class="card px-[15px] py-3.5 stig cursor-pointer hover:brightness-[1.06] transition-[filter] duration-200"
+    style="--d: 60ms"
+    role="button"
+    tabindex="0"
+    onclick={() => (aapent = { type: 'lys' })}
+    onkeydown={(e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        aapent = { type: 'lys' };
+      }
+    }}
+    aria-label="Åpne lysinnstillinger"
+  >
     <div class="flex items-center justify-between mb-3">
       <div>
         <div class="text-[13px] font-semibold">Vekstlys</div>
@@ -347,7 +360,10 @@
         class="w-11 h-[25px] rounded-full p-[3px] flex items-center transition-all duration-200 disabled:opacity-50 {lysPaa
           ? 'bg-leaf justify-end'
           : 'bg-border justify-start'}"
-        onclick={toggleLys}
+        onclick={(e) => {
+          e.stopPropagation();
+          toggleLys();
+        }}
         disabled={lysLagrer}
         role="switch"
         aria-checked={lysPaa}
@@ -356,28 +372,26 @@
         <span class="w-[19px] h-[19px] rounded-full bg-bg block shadow"></span>
       </button>
     </div>
-    <button class="w-full text-left" onclick={() => (aapent = { type: 'lys' })} aria-label="Åpne lysinnstillinger">
-      <div class="flex items-center gap-2.5">
-        <span class="font-mono text-[9.5px] text-text-dim">{command?.timer_on ?? '–'}</span>
+    <div class="flex items-center gap-2.5">
+      <span class="font-mono text-[9.5px] text-text-dim">{command?.timer_on ?? '–'}</span>
+      <div
+        class="relative flex-1 h-[14px] rounded-[7px] bg-surface-raised border border-border overflow-hidden transition-opacity duration-200"
+        style="opacity:{lysPaa ? 1 : 0.3}"
+      >
         <div
-          class="relative flex-1 h-[14px] rounded-[7px] bg-surface-raised border border-border overflow-hidden transition-opacity duration-200"
-          style="opacity:{lysPaa ? 1 : 0.3}"
-        >
+          class="absolute left-0 top-0 bottom-0 rounded-l-[6px]"
+          style="width:{lysNaaPct}%; background:linear-gradient(90deg,rgba(74,222,128,0.2),rgba(74,222,128,0.5))"
+        ></div>
+        {#if iLysVindu}
           <div
-            class="absolute left-0 top-0 bottom-0 rounded-l-[6px]"
-            style="width:{lysNaaPct}%; background:linear-gradient(90deg,rgba(74,222,128,0.2),rgba(74,222,128,0.5))"
+            class="absolute top-1/2 w-[11px] h-[11px] rounded-full bg-leaf breathe-dot"
+            style="left:{lysNaaPct}%; transform:translate(-50%,-50%); box-shadow:0 0 0 3px rgba(74,222,128,0.18),0 0 9px rgba(74,222,128,0.7)"
           ></div>
-          {#if iLysVindu}
-            <div
-              class="absolute top-1/2 w-[11px] h-[11px] rounded-full bg-leaf breathe-dot"
-              style="left:{lysNaaPct}%; transform:translate(-50%,-50%); box-shadow:0 0 0 3px rgba(74,222,128,0.18),0 0 9px rgba(74,222,128,0.7)"
-            ></div>
-          {/if}
-        </div>
-        <span class="font-mono text-[9.5px] text-text-dim">{command?.timer_off ?? '–'}</span>
+        {/if}
       </div>
-      <div class="text-[11px] text-text-muted mt-2">{lysCaption}</div>
-    </button>
+      <span class="font-mono text-[9.5px] text-text-dim">{command?.timer_off ?? '–'}</span>
+    </div>
+    <div class="text-[11px] text-text-muted mt-2">{lysCaption}</div>
   </div>
 
   <!-- Vannreservoar -->
@@ -504,8 +518,10 @@
     </div>
 
     <div class="flex gap-2.5 mt-5">
-      <button class="btn-secondary flex-1" onclick={() => { lukk(); onAddPlante(f.seksjon); }}>Bytt plante</button>
-      <button class="btn-danger flex-1" onclick={() => { lukk(); onFjernPlante(f.pottePlanteId); }}>Fjern</button>
+      <!-- Les f-feltene FØR lukk(): `f` er en reaktiv {@const}; etter at lukk()
+           setter aapent=null, vil `f` re-evalueres til null og kaste TypeError. -->
+      <button class="btn-secondary flex-1" onclick={() => { const s = f.seksjon; lukk(); onAddPlante(s); }}>Bytt plante</button>
+      <button class="btn-danger flex-1" onclick={() => { const id = f.pottePlanteId; lukk(); onFjernPlante(id); }}>Fjern</button>
     </div>
     <button class="btn-secondary w-full mt-2.5" onclick={lukk}>Lukk</button>
 
