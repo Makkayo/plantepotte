@@ -188,6 +188,13 @@
               1,
             )} mol/m²/d
           </div>
+          {#if anbefalt.forlenget}
+            <div class="text-text-dim text-[11px] mt-1 leading-snug">
+              Lystiden er forlenget til {anbefalt.timer} t fordi 100 % intensitet ikke
+              når DLI-målet ({anbefalt.dliMaal.toFixed(0)}) på vanlig dagslengde — vi
+              kompenserer svakt lys med lengre dag (mørke-vindu beholdt).
+            </div>
+          {/if}
         </div>
         <button class="btn-secondary text-xs !py-1.5" onclick={applisRanbefalt}>Bruk anbefaling</button>
       </div>

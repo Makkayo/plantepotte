@@ -137,40 +137,80 @@ function forklarAvvik(planter: Plante[]): string[] {
   return linjer;
 }
 
+/**
+ * Maks anbefalt fotoperiode (timer). Vi forlenger aldri forbi dette — det holder
+ * et mørke-vindu på ≥6 t, som plantene trenger for respirasjon/døgnrytme.
+ */
+export const MAKS_FOTOPERIODE = 18;
+
 /** Beregn anbefalt felles innstilling for et sett planter. */
 export interface AnbefaltInnstilling {
   intensitet: number;
   timer: number;
   timer_on: string;
   timer_off: string;
+  /** DLI som faktisk oppnås med anbefalt intensitet + timer. */
   dli: number;
+  /** Plantenes ønskede DLI (median-optimum) — målet vi sikter mot. */
+  dliMaal: number;
+  /**
+   * True når lystiden er forlenget UTOVER biologisk optimum fordi 100 %
+   * intensitet ikke rakk opp til DLI-målet. Da kompenserer vi svakt lys med
+   * tid — den eneste DLI-spaken som er igjen når intensiteten står i taket.
+   */
+  forlenget: boolean;
 }
 
 export function anbefaltInnstilling(planter: Plante[]): AnbefaltInnstilling {
   if (planter.length === 0) {
-    return { intensitet: 70, timer: 14, timer_on: '07:00', timer_off: '21:00', dli: beregnDli(70, 14) };
+    return {
+      intensitet: 70,
+      timer: 14,
+      timer_on: '07:00',
+      timer_off: '21:00',
+      dli: beregnDli(70, 14),
+      dliMaal: beregnDli(70, 14),
+      forlenget: false,
+    };
   }
 
-  // Bruk medianen av optimale DLI-verdier — robust mot utliggere
+  // Median av optimale DLI- og timer-verdier — robust mot utliggere.
   const dliVerdier = planter
     .map((p) => p.dli_optimal ?? null)
     .filter((x): x is number => x !== null)
     .sort((a, b) => a - b);
   const targetDli = dliVerdier.length > 0 ? medianAv(dliVerdier) : 14;
 
-  // Bruk median av optimale timer
   const timerVerdier = planter
     .map((p) => p.timer_optimal ?? null)
     .filter((x): x is number => x !== null)
     .sort((a, b) => a - b);
-  const targetTimer = Math.round(timerVerdier.length > 0 ? medianAv(timerVerdier) : 14);
+  const biologiskTimer = Math.round(timerVerdier.length > 0 ? medianAv(timerVerdier) : 14);
 
-  let intensitet = intensitetForDli(targetDli, targetTimer);
-  intensitet = Math.max(20, Math.min(100, intensitet));
+  // Hvor mye intensitet trengs for målet på biologisk dagslengde?
+  const noedvendigIntensitet = intensitetForDli(targetDli, biologiskTimer);
 
-  // Symmetrisk dag rundt 14:00
-  const start = 14 - targetTimer / 2;
-  const stopp = 14 + targetTimer / 2;
+  let intensitet: number;
+  let timer: number;
+  let forlenget = false;
+
+  if (noedvendigIntensitet <= 100) {
+    // Lyset er sterkt nok — bruk biologisk optimum.
+    intensitet = Math.max(20, noedvendigIntensitet);
+    timer = biologiskTimer;
+  } else {
+    // Lyset rekker ikke opp på vanlig dagslengde → kjør 100 % og FORLENG dagen
+    // (eneste DLI-spak igjen) opptil maks fotoperiode for å lukke gapet.
+    intensitet = 100;
+    const dliPerTime = beregnDli(100, 1); // DLI tilført per time ved full styrke
+    const timerForMaal = Math.ceil(targetDli / dliPerTime);
+    timer = Math.min(MAKS_FOTOPERIODE, Math.max(biologiskTimer, timerForMaal));
+    forlenget = timer > biologiskTimer;
+  }
+
+  // Symmetrisk dag rundt 14:00.
+  const start = 14 - timer / 2;
+  const stopp = 14 + timer / 2;
   const fmt = (h: number) => {
     const justert = ((Math.round(h * 60) % (24 * 60)) + 24 * 60) % (24 * 60);
     const t = Math.floor(justert / 60);
@@ -180,10 +220,12 @@ export function anbefaltInnstilling(planter: Plante[]): AnbefaltInnstilling {
 
   return {
     intensitet,
-    timer: targetTimer,
+    timer,
     timer_on: fmt(start),
     timer_off: fmt(stopp),
-    dli: beregnDli(intensitet, targetTimer),
+    dli: beregnDli(intensitet, timer),
+    dliMaal: targetDli,
+    forlenget,
   };
 }
 
