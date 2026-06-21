@@ -1,10 +1,11 @@
 <script lang="ts">
   /**
    * «Anlegget» — hovedstatus-seksjonen i potte-detaljen (design-handoff juni 2026).
-   * Viser riggen live: vekstlys (toggle + lysbjelke), vannreservoar med flottør,
-   * og pottene som oktagoner der fukten stiger nedenfra. Trykk på et felt eller
-   * tanken → bunn-ark med detaljer/handlinger.
+   * Viser riggen live: klima-stripe, vekstlys (toggle + tidslinje), vannreservoar
+   * med flottør, og pottene som oktagoner der fukten stiger nedenfra. Trykk på et
+   * felt / tanken / LUKE-merket / vekstlys-kortet → bunn-ark med detaljer/handlinger.
    */
+  import { onMount, onDestroy } from 'svelte';
   import { supabase } from '../lib/supabase';
   import { potter } from '../lib/stores';
   import {
@@ -12,9 +13,6 @@
     vannNivaProsent,
     fuktStatus,
     jordSparkline,
-    minutterSiden,
-    formaterTidssiden,
-    OFFLINE_GRENSE_MIN,
     VANN_TOM_MM,
     VANN_FULL_MM,
     foranSeksjon,
@@ -22,14 +20,33 @@
     type PotteOppsett,
   } from '../lib/utils';
   import { beregnDli } from '../lib/lys';
-  import type { Plante, Potte, PotteCommand, PotteSensorData, PottePlanteFull } from '../lib/database.types';
+  import type {
+    Plante,
+    Potte,
+    PotteCommand,
+    PotteSensorData,
+    PottePlanteFull,
+  } from '../lib/database.types';
   import type { VannTrend } from '../lib/trend';
   import PotteViz from './Potte.svelte';
   import VannFlottor from './viz/VannFlottor.svelte';
+  import LysSheet from './LysSheet.svelte';
   import Sheet from './Sheet.svelte';
 
-  type SensorRad = { registrert_at: string | null; jord1: number | null; jord2: number | null; jord3: number | null; jord4: number | null };
-  type FeltData = { seksjon: number; slotLabel: string; plante: Plante | null; fukt: number | null };
+  type SensorRad = {
+    registrert_at: string | null;
+    jord1: number | null;
+    jord2: number | null;
+    jord3: number | null;
+    jord4: number | null;
+  };
+  type FeltData = {
+    seksjon: number;
+    slotLabel: string;
+    rolle: 'foran' | 'bak' | 'hel';
+    plante: Plante | null;
+    fukt: number | null;
+  };
 
   let {
     potte,
@@ -37,6 +54,7 @@
     command,
     trend,
     oppsett,
+    planter,
     pottePlanter,
     sensorHistorikk,
     onAddPlante,
@@ -50,6 +68,7 @@
     command: PotteCommand | null;
     trend: VannTrend;
     oppsett: PotteOppsett[];
+    planter: Plante[];
     pottePlanter: PottePlanteFull[];
     sensorHistorikk: SensorRad[];
     onAddPlante: (seksjon: number) => void;
@@ -59,10 +78,13 @@
     onCommandLagret: () => void;
   } = $props();
 
-  // ---------- tilkobling + klima ----------
-  const minSiden = $derived(minutterSiden(sensor?.registrert_at));
-  const offline = $derived(minSiden !== null && minSiden > OFFLINE_GRENSE_MIN);
-  const sist = $derived(formaterTidssiden(sensor?.registrert_at));
+  // ---------- klokke (driver tidslinje + sol-bue) ----------
+  let now = $state(new Date());
+  let nowTimer: ReturnType<typeof setInterval> | undefined;
+  onMount(() => {
+    nowTimer = setInterval(() => (now = new Date()), 60_000);
+  });
+  onDestroy(() => clearInterval(nowTimer));
 
   // ---------- jord-verdier per seksjon ----------
   function jordRaa(seksjon: number): number | null {
@@ -77,18 +99,26 @@
           const front = foranSeksjon(po.potteNr - 1);
           const back = bakSeksjon(po.potteNr - 1);
           const pp = pottePlanter.find((p) => p.seksjon === front);
-          const verdier = [jordfuktProsent(jordRaa(front)), jordfuktProsent(jordRaa(back))].filter(
-            (x): x is number => x !== null,
-          );
+          const verdier = [
+            jordfuktProsent(jordRaa(front)),
+            jordfuktProsent(jordRaa(back)),
+          ].filter((x): x is number => x !== null);
           const fukt = verdier.length
             ? Math.round(verdier.reduce((a, b) => a + b, 0) / verdier.length)
             : null;
-          return { seksjon: plass.seksjon, slotLabel: 'Hele potta', plante: pp?.plante ?? null, fukt };
+          return {
+            seksjon: plass.seksjon,
+            slotLabel: 'Hele potta',
+            rolle: 'hel' as const,
+            plante: pp?.plante ?? null,
+            fukt,
+          };
         }
         const pp = pottePlanter.find((p) => p.seksjon === plass.seksjon);
         return {
           seksjon: plass.seksjon,
           slotLabel: plass.etikett,
+          rolle: plass.rolle,
           plante: pp?.plante ?? null,
           fukt: jordfuktProsent(jordRaa(plass.seksjon)),
         };
@@ -98,13 +128,9 @@
   );
 
   // ---------- vekstlys ----------
-  function timerLengde(c: PotteCommand): number {
-    const p = (s: string) => {
-      const [h, m] = s.split(':').map(Number);
-      return (h ?? 0) + (m ?? 0) / 60;
-    };
-    const d = ((p(c.timer_off) - p(c.timer_on)) % 24 + 24) % 24;
-    return d === 0 && c.timer_on !== c.timer_off ? 24 : d;
+  function tMin(s: string): number {
+    const [h, m] = s.split(':').map(Number);
+    return (h ?? 0) * 60 + (m ?? 0);
   }
 
   let lysLagrer = $state(false);
@@ -114,13 +140,29 @@
   });
 
   const lysPaa = $derived(!!command && command.intensitet > 0);
-  const lysDli = $derived(command ? beregnDli(command.intensitet, timerLengde(command)) : 0);
-  const lysMeta = $derived(
-    !command
-      ? 'Ikke satt'
-      : lysPaa
-        ? `${Math.round(timerLengde(command))} t lys · ${lysDli.toFixed(1).replace('.', ',')} DLI`
-        : 'Av',
+
+  const lysVarighet = $derived.by(() => {
+    if (!command) return 0;
+    const d = ((tMin(command.timer_off) - tMin(command.timer_on)) % 1440 + 1440) % 1440;
+    return d === 0 && command.timer_on !== command.timer_off ? 1440 : d;
+  });
+  const lysRel = $derived(
+    command ? ((now.getHours() * 60 + now.getMinutes() - tMin(command.timer_on)) % 1440 + 1440) % 1440 : 0,
+  );
+  const iLysVindu = $derived(lysPaa && lysVarighet > 0 && lysRel <= lysVarighet);
+  const lysNaaPct = $derived(iLysVindu ? (lysRel / lysVarighet) * 100 : 0);
+
+  function fmtVar(min: number): string {
+    const h = Math.floor(min / 60);
+    const m = Math.round(min % 60);
+    return m ? `${h} t ${m} min` : `${h} t`;
+  }
+  const lysCaption = $derived(
+    !command || !lysPaa
+      ? 'Slått av'
+      : iLysVindu
+        ? `Lyser nå · av om ${fmtVar(lysVarighet - lysRel)}`
+        : `Av nå · slår på ${command.timer_on}`,
   );
 
   async function toggleLys() {
@@ -143,8 +185,13 @@
 
   // ---------- vann ----------
   const vannPct = $derived(
-    vannNivaProsent(sensor?.vann_avstand_mm, potte.vann_tom_mm ?? undefined, potte.vann_full_mm ?? undefined),
+    vannNivaProsent(
+      sensor?.vann_avstand_mm,
+      potte.vann_tom_mm ?? undefined,
+      potte.vann_full_mm ?? undefined,
+    ),
   );
+  const forbrukMaks = $derived(Math.max(0.1, ...(trend.dagligForbruk.length ? trend.dagligForbruk : [0.1])));
 
   // ---------- bunn-ark ----------
   type Aapent =
@@ -160,7 +207,8 @@
         hist: number[];
         notater: string | null;
       }
-    | { type: 'vann' };
+    | { type: 'vann' }
+    | { type: 'lys' };
   let aapent = $state<Aapent>(null);
   let notatRediger = $state(false);
   let notatTekst = $state('');
@@ -252,21 +300,37 @@
 </script>
 
 <div class="flex flex-col gap-3">
-  <!-- Tilkobling + klima -->
-  {#if potte.har_sensorer}
-    <div class="flex items-center justify-between text-[11px] font-mono">
-      <span class="inline-flex items-center gap-2 {offline ? 'text-sun' : 'text-text-muted'}">
-        <span
-          class="w-[7px] h-[7px] rounded-full {offline ? 'bg-sun' : 'bg-leaf'}"
-          style="box-shadow: 0 0 0 3px {offline ? 'rgba(251,191,36,0.16)' : 'rgba(74,222,128,0.16)'}"
-        ></span>
-        {offline ? `Ingen kontakt · ${sist}` : 'Tilkoblet'}
-      </span>
-      {#if sensor && (sensor.temperatur !== null || sensor.luftfuktighet !== null)}
-        <span class="text-text-muted tabular-nums">
-          {sensor.temperatur?.toFixed(1).replace('.', ',') ?? '–'}° · {sensor.luftfuktighet?.toFixed(0) ?? '–'}%
-        </span>
-      {/if}
+  <!-- Klima-stripe -->
+  {#if potte.har_sensorer && sensor && (sensor.temperatur !== null || sensor.luftfuktighet !== null)}
+    <div class="flex gap-2.5 stig" style="--d: 30ms">
+      <div class="flex-1 flex items-center gap-[11px] card !rounded-[14px] px-3.5 py-[11px]">
+        <div
+          class="w-8 h-8 rounded-[9px] flex items-center justify-center shrink-0"
+          style="background:rgba(232,112,42,0.14)"
+        >
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#f0935a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0Z"/></svg>
+        </div>
+        <div>
+          <div class="label !text-[10.5px] !tracking-[0.05em]">Temp</div>
+          <div class="font-display text-[21px] font-semibold leading-tight">
+            {sensor.temperatur?.toFixed(1).replace('.', ',') ?? '–'}°
+          </div>
+        </div>
+      </div>
+      <div class="flex-1 flex items-center gap-[11px] card !rounded-[14px] px-3.5 py-[11px]">
+        <div
+          class="w-8 h-8 rounded-[9px] flex items-center justify-center shrink-0"
+          style="background:rgba(59,130,196,0.14)"
+        >
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#6aa9e0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5S5 13 5 15a7 7 0 0 0 7 7Z"/></svg>
+        </div>
+        <div>
+          <div class="label !text-[10.5px] !tracking-[0.05em]">Luftfukt</div>
+          <div class="font-display text-[21px] font-semibold leading-tight">
+            {sensor.luftfuktighet?.toFixed(0) ?? '–'}%
+          </div>
+        </div>
+      </div>
     </div>
   {/if}
 
@@ -275,7 +339,9 @@
     <div class="flex items-center justify-between mb-3">
       <div>
         <div class="text-[13px] font-semibold">Vekstlys</div>
-        <div class="font-mono text-[10.5px] text-text-muted mt-0.5">{lysMeta}</div>
+        <div class="font-mono text-[10.5px] text-text-muted mt-0.5">
+          {command ? `${command.timer_on} – ${command.timer_off}` : 'Ikke satt'}
+        </div>
       </div>
       <button
         class="w-11 h-[25px] rounded-full p-[3px] flex items-center transition-all duration-200 disabled:opacity-50 {lysPaa
@@ -290,18 +356,28 @@
         <span class="w-[19px] h-[19px] rounded-full bg-bg block shadow"></span>
       </button>
     </div>
-    <div class="flex items-center gap-2.5">
-      <span class="font-mono text-[9.5px] text-text-dim">07</span>
-      <div
-        class="flex-1 h-[13px] rounded-[7px] bg-surface-raised border border-border flex items-center justify-around px-1.5 transition-opacity duration-200"
-        style="opacity: {lysPaa ? 1 : 0.25}"
-      >
-        {#each Array.from({ length: 12 }) as _, i (i)}
-          <span class="w-1 h-1 rounded-full bg-leaf-glow"></span>
-        {/each}
+    <button class="w-full text-left" onclick={() => (aapent = { type: 'lys' })} aria-label="Åpne lysinnstillinger">
+      <div class="flex items-center gap-2.5">
+        <span class="font-mono text-[9.5px] text-text-dim">{command?.timer_on ?? '–'}</span>
+        <div
+          class="relative flex-1 h-[14px] rounded-[7px] bg-surface-raised border border-border overflow-hidden transition-opacity duration-200"
+          style="opacity:{lysPaa ? 1 : 0.3}"
+        >
+          <div
+            class="absolute left-0 top-0 bottom-0 rounded-l-[6px]"
+            style="width:{lysNaaPct}%; background:linear-gradient(90deg,rgba(74,222,128,0.2),rgba(74,222,128,0.5))"
+          ></div>
+          {#if iLysVindu}
+            <div
+              class="absolute top-1/2 w-[11px] h-[11px] rounded-full bg-leaf breathe-dot"
+              style="left:{lysNaaPct}%; transform:translate(-50%,-50%); box-shadow:0 0 0 3px rgba(74,222,128,0.18),0 0 9px rgba(74,222,128,0.7)"
+            ></div>
+          {/if}
+        </div>
+        <span class="font-mono text-[9.5px] text-text-dim">{command?.timer_off ?? '–'}</span>
       </div>
-      <span class="font-mono text-[9.5px] text-text-dim">23</span>
-    </div>
+      <div class="text-[11px] text-text-muted mt-2">{lysCaption}</div>
+    </button>
   </div>
 
   <!-- Vannreservoar -->
@@ -312,23 +388,56 @@
   {/if}
 
   <!-- Pottene -->
-  <div class="stig" style="--d: 180ms">
-    <div class="flex items-baseline justify-between mb-3">
-      <div class="text-[13px] font-semibold">Pottene</div>
-      <div class="font-mono text-[11px] text-text-dim">trykk på et felt</div>
+  {#if potte.har_sensorer}
+    <div class="stig" style="--d: 180ms">
+      <div class="flex items-baseline justify-between mb-3">
+        <div class="text-[13px] font-semibold">Pottene</div>
+        <div class="font-mono text-[11px] text-text-dim">trykk på et felt</div>
+      </div>
+      <div class="relative">
+        <div class="flex gap-10 items-start">
+          {#each pots as p (p.potteNr)}
+            <PotteViz
+              navn={p.navn}
+              delt={p.delt}
+              felt={p.felt}
+              onToggleSkille={() => onToggleSkille(p.potteNr - 1, !p.delt)}
+              onFelt={feltTrykk}
+            />
+          {/each}
+        </div>
+        {#if pots.length > 1}
+          <div
+            class="absolute left-1/2 top-[34px] bottom-0 w-10 -translate-x-1/2 flex flex-col items-center justify-end pointer-events-none"
+          >
+            <div
+              class="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[14px]"
+              style="border-left:1px solid rgba(255,228,184,0.14); border-right:1px solid rgba(255,228,184,0.14); background:linear-gradient(180deg,rgba(111,90,66,0.25),rgba(56,43,28,0.25))"
+            ></div>
+            <button
+              class="relative mb-2 flex flex-col items-center gap-1 pointer-events-auto active:brightness-125"
+              onclick={() => (aapent = { type: 'vann' })}
+              aria-label="Åpne vannreservoar (luke)"
+            >
+              <div
+                class="flex items-center justify-center w-[30px] h-[26px] rounded-[7px]"
+                style="background:#0d1320; border:1px solid #60a5fa; box-shadow:0 0 0 2px rgba(11,13,18,0.92),0 0 14px rgba(96,165,250,0.6)"
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="#7cc0ff" stroke="none"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/></svg>
+              </div>
+              <span class="font-mono text-[8px] font-semibold tracking-[0.08em]" style="color:#9ecbff">LUKE</span>
+            </button>
+          </div>
+        {/if}
+      </div>
+      {#if pots.length > 1}
+        <div class="flex items-center justify-center gap-1.5 mt-3 font-mono text-[10px] text-text-dim">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="#60a5fa" stroke="none"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/></svg>
+          Luka sitter mellom pottene, på fronten
+        </div>
+      {/if}
     </div>
-    <div class="flex gap-3.5 items-start">
-      {#each pots as p (p.potteNr)}
-        <PotteViz
-          navn={p.navn}
-          delt={p.delt}
-          felt={p.felt}
-          onToggleSkille={() => onToggleSkille(p.potteNr - 1, !p.delt)}
-          onFelt={feltTrykk}
-        />
-      {/each}
-    </div>
-  </div>
+  {/if}
 </div>
 
 <!-- Felt-detalj -->
@@ -358,6 +467,13 @@
         {#each f.hist as h, i (i)}
           <div class="flex-1 rounded-t-[3px] bg-[#323a52]" style="height: {Math.max(4, h)}%"></div>
         {/each}
+      </div>
+    </div>
+
+    <div class="flex items-start gap-2.5 mt-5 p-3 rounded-xl bg-bg-subtle border border-border">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 mt-px"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/></svg>
+      <div class="text-[12px] text-text-muted leading-snug">
+        Selvvannet via veke fra reservoaret. Fukten styres ikke per felt — fyll reservoaret når det er lavt.
       </div>
     </div>
 
@@ -420,6 +536,26 @@
       </div>
     </div>
 
+    {#if trend.sistFyltAt}
+      <div class="mt-3.5 text-[12px] text-text-muted">
+        Sist fylt {trend.sistFyltAt.toLocaleDateString('nb-NO', { day: 'numeric', month: 'short' })}.
+      </div>
+    {/if}
+
+    {#if trend.dagligForbruk.length > 0}
+      <div class="mt-[18px]">
+        <div class="flex items-baseline justify-between mb-2.5">
+          <span class="text-[11px] text-text-muted">Forbruk siste 7 dager</span>
+          <span class="font-mono text-[10px] text-text-dim">liter/dag</span>
+        </div>
+        <div class="flex items-end gap-1.5 h-[50px]">
+          {#each trend.dagligForbruk as d, i (i)}
+            <div class="flex-1 rounded-t-[3px]" style="height:{Math.max(4, (d / forbrukMaks) * 100)}%; background:#3b82c4; opacity:0.85"></div>
+          {/each}
+        </div>
+      </div>
+    {/if}
+
     {#if sensor?.vann_avstand_mm != null}
       <div class="flex gap-2.5 mt-5">
         <button class="btn-primary flex-1" disabled={kalibrerer !== null} onclick={() => settKalibrering('full')}>
@@ -443,5 +579,18 @@
     {:else}
       <button class="btn-secondary w-full mt-5" onclick={lukk}>Lukk</button>
     {/if}
+  {/if}
+</Sheet>
+
+<!-- Vekstlys-detalj -->
+<Sheet open={aapent?.type === 'lys'} onClose={lukk}>
+  {#if aapent?.type === 'lys'}
+    <LysSheet
+      potteId={potte.potte_id}
+      {planter}
+      {command}
+      {now}
+      onLagret={onCommandLagret}
+    />
   {/if}
 </Sheet>

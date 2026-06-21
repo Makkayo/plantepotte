@@ -2,11 +2,16 @@
   import { onMount, onDestroy } from 'svelte';
   import { potter, pottePlanter, loadPottePlanter } from '../lib/stores';
   import { supabase } from '../lib/supabase';
-  import { blomsterkasseOppsett, bakSeksjon, vannNivaProsent } from '../lib/utils';
+  import {
+    blomsterkasseOppsett,
+    bakSeksjon,
+    vannNivaProsent,
+    minutterSiden,
+    OFFLINE_GRENSE_MIN,
+  } from '../lib/utils';
   import { beregnVannTrend } from '../lib/trend';
   import type { Potte, PotteCommand, PotteSensorData, PottePlanteFull } from '../lib/database.types';
   import AnleggPanel from './AnleggPanel.svelte';
-  import LysKontroll from './LysKontroll.svelte';
   import PlanteVelger from './PlanteVelger.svelte';
 
   type View = { name: 'oversikt' } | { name: 'potte'; potteId: string } | { name: 'katalog' };
@@ -43,6 +48,11 @@
   const vannTrend = $derived(
     beregnVannTrend(sensorHistorikk, naaVannPct, potte?.vann_tom_mm ?? undefined, potte?.vann_full_mm ?? undefined),
   );
+
+  const detaljOffline = $derived.by(() => {
+    const m = minutterSiden(sensor?.registrert_at);
+    return m !== null && m > OFFLINE_GRENSE_MIN;
+  });
 
   async function loadSensorHistorikk() {
     const sjuDagerSiden = new Date(Date.now() - 7 * 86_400_000).toISOString();
@@ -218,25 +228,28 @@
 {#if !potte}
   <div class="text-text-muted text-sm">Blomsterkasse ikke funnet.</div>
 {:else}
-  <div class="flex flex-col gap-6">
-    <!-- Tilbake-knapp + tittel -->
-    <div class="flex items-center gap-3">
-      <button
-        class="btn-ghost !px-2 !py-2 -ml-2"
-        onclick={() => onNavigate({ name: 'oversikt' })}
-        aria-label="Tilbake"
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-      </button>
-      <div>
-        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight flex items-center gap-2">
-          <span>{potte.emoji ?? '🪴'}</span>
-          {potte.navn}
-        </h1>
-        {#if potte.notater}
-          <p class="text-text-muted text-sm mt-0.5">{potte.notater}</p>
-        {/if}
+  <div class="max-w-[430px] mx-auto w-full flex flex-col gap-5">
+    <!-- Header: tilbake + kassenavn + tilkoblet-dot -->
+    <div class="flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <button
+          class="w-[34px] h-[34px] rounded-[10px] card flex items-center justify-center shrink-0 hover:brightness-125 transition-all"
+          onclick={() => onNavigate({ name: 'oversikt' })}
+          aria-label="Tilbake"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <h1 class="font-display text-[22px] font-semibold leading-none truncate">{potte.navn}</h1>
       </div>
+      {#if potte.har_sensorer}
+        <span class="inline-flex items-center gap-1.5 font-mono text-[11px] shrink-0 {detaljOffline ? 'text-sun' : 'text-text-muted'}">
+          <span
+            class="w-[7px] h-[7px] rounded-full {detaljOffline ? 'bg-sun' : 'bg-leaf'}"
+            style="box-shadow:0 0 0 3px {detaljOffline ? 'rgba(251,191,36,0.16)' : 'rgba(74,222,128,0.16)'}"
+          ></span>
+          {detaljOffline ? 'Frakoblet' : 'Tilkoblet'}
+        </span>
+      {/if}
     </div>
 
     <!-- Anlegget: vekstlys + vannreservoar + pottene (oktagoner) -->
@@ -246,6 +259,7 @@
       {command}
       trend={vannTrend}
       {oppsett}
+      planter={planter.map((p) => p.plante)}
       pottePlanter={planter}
       {sensorHistorikk}
       onAddPlante={apneVelger}
@@ -289,14 +303,6 @@
               : 'Sett i drift →'}
       </button>
     </div>
-
-    <!-- Lyskontroll med kompatibilitet -->
-    <LysKontroll
-      {potteId}
-      planter={planter.map((p) => p.plante)}
-      {command}
-      onLagret={refresh}
-    />
 
     <!-- Historikk: tidligere planter (kun samlet i drift-modus) -->
     {#if historikk.length > 0}

@@ -206,12 +206,27 @@ input[type='time'] {
   animation: flott-bob 4.5s ease-in-out infinite;
 }
 
+/* Tidslinje-nå-dot: myk puls (matcher mockens pp-breathe). */
+@keyframes breathe-dot {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.breathe-dot {
+  animation: breathe-dot 2.6s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .arc-anim,
   .vann-bolge,
   .vann-bolge-2,
   .stig,
-  .flott-bob {
+  .flott-bob,
+  .breathe-dot {
     animation: none !important;
   }
 }

@@ -10,6 +10,7 @@
   type FeltData = {
     seksjon: number;
     slotLabel: string;
+    rolle: 'foran' | 'bak' | 'hel';
     plante: Plante | null;
     fukt: number | null;
   };
@@ -52,11 +53,11 @@
     style="background:#3b4264; clip-path:polygon(15px 0,calc(100% - 15px) 0,100% 15px,100% calc(100% - 15px),calc(100% - 15px) 100%,15px 100%,0 calc(100% - 15px),0 15px)"
   >
     <div
-      class="flex flex-col gap-[1.5px] h-[206px]"
+      class="flex flex-col gap-[1.5px] h-[232px]"
       style="background:#2a3045; clip-path:polygon(14px 0,calc(100% - 14px) 0,100% 14px,100% calc(100% - 14px),calc(100% - 14px) 100%,14px 100%,0 calc(100% - 14px),0 14px)"
     >
       {#each felt as f (f.seksjon)}
-        <Felt plante={f.plante} slotLabel={f.slotLabel} fukt={f.fukt} onClick={() => onFelt(f.seksjon)} />
+        <Felt plante={f.plante} rolle={f.rolle} fukt={f.fukt} onClick={() => onFelt(f.seksjon)} />
       {/each}
     </div>
   </div>

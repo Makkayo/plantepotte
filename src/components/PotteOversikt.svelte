@@ -53,12 +53,12 @@
   onDestroy(() => clearInterval(timer));
 </script>
 
-<div class="flex flex-col gap-6">
-  <div class="flex items-end justify-between">
-    <div>
-      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">Mine blomsterkasser</h1>
-      <p class="text-text-muted text-sm mt-1">Oversikt over alle blomsterkasser og deres status</p>
-    </div>
+<div class="max-w-[430px] mx-auto w-full flex flex-col gap-3.5">
+  <div class="mb-1">
+    <h1 class="font-display text-[25px] font-semibold leading-tight tracking-tight">Mine blomsterkasser</h1>
+    <p class="font-mono text-[11px] text-text-muted mt-1.5">
+      {$potter.length} {$potter.length === 1 ? 'blomsterkasse' : 'blomsterkasser'}
+    </p>
   </div>
 
   {#if $potter.length === 0}
@@ -67,16 +67,14 @@
       <p>Ingen blomsterkasser registrert ennå</p>
     </div>
   {:else}
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
-      {#each $potter as p (p.id)}
-        <PotteKort
-          potte={p}
-          command={commands[p.potte_id]}
-          sensor={sensors[p.potte_id]}
-          planter={$pottePlanter[p.potte_id] ?? []}
-          onClick={() => onNavigate({ name: 'potte', potteId: p.potte_id })}
-        />
-      {/each}
-    </div>
+    {#each $potter as p (p.id)}
+      <PotteKort
+        potte={p}
+        command={commands[p.potte_id]}
+        sensor={sensors[p.potte_id]}
+        planter={$pottePlanter[p.potte_id] ?? []}
+        onClick={() => onNavigate({ name: 'potte', potteId: p.potte_id })}
+      />
+    {/each}
   {/if}
 </div>

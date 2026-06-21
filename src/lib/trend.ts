@@ -35,6 +35,10 @@ export interface VannTrend {
   literIgjen: number;
   /** Liter forbrukt per døgn (null hvis ikke synkende). */
   literPerDag: number | null;
+  /** Tidspunkt for siste detekterte påfylling (hopp > 12 pp). null = ingen i vinduet. */
+  sistFyltAt: Date | null;
+  /** Liter forbrukt per døgn, eldste→nyeste, opptil 7 verdier. Tom = for lite data. */
+  dagligForbruk: number[];
   /** Nedsamplet kronologisk serie til sparkline. */
   sparkline: VannPunkt[];
 }
@@ -108,17 +112,24 @@ export function beregnVannTrend(
       dagerIgjen: null,
       literIgjen: literFra(naaPct),
       literPerDag: null,
+      sistFyltAt: null,
+      dagligForbruk: dagligForbruk(punkter),
       sparkline: nedsample(punkter, 48),
     };
   }
 
   // Finn siste påfylling: et hopp opp > 12 prosentpoeng mellom to nabopunkter.
   let start = 0;
+  let sistFyltAt: Date | null = null;
   for (let i = 1; i < punkter.length; i++) {
     const naa = punkter[i]!;
     const forrige = punkter[i - 1]!;
-    if (naa.pct - forrige.pct > 12) start = i;
+    if (naa.pct - forrige.pct > 12) {
+      start = i;
+      sistFyltAt = new Date(naa.t);
+    }
   }
+  const forbrukSerie = dagligForbruk(punkter);
   const segment = punkter.slice(start);
   const forste = segment[0]!;
   const sisteP = segment[segment.length - 1]!;
@@ -138,6 +149,32 @@ export function beregnVannTrend(
     dagerIgjen: dagerIgjen === null ? null : Math.round(dagerIgjen * 10) / 10,
     literIgjen: literFra(grunnPct),
     literPerDag,
+    sistFyltAt,
+    dagligForbruk: forbrukSerie,
     sparkline: nedsample(punkter, 48),
   };
+}
+
+/**
+ * Liter forbrukt per døgn de siste `antallDager` dagene (eldste→nyeste).
+ * Per døgn: max(0, nivå ved døgnstart − nivå ved døgnslutt) × tankliter.
+ * Påfyll-døgn (nivået stiger) gir ~0. Døgn med < 2 punkter settes 0 så grafen
+ * alltid har faste stolper. Tom serie hvis under 2 punkter totalt.
+ */
+export function dagligForbruk(punkter: VannPunkt[], antallDager = 7): number[] {
+  if (punkter.length < 2) return [];
+  const naa = Date.now();
+  const ut: number[] = [];
+  for (let d = antallDager - 1; d >= 0; d--) {
+    const fra = naa - (d + 1) * 86_400_000;
+    const til = naa - d * 86_400_000;
+    const iDognet = punkter.filter((p) => p.t >= fra && p.t < til).sort((a, b) => a.t - b.t);
+    if (iDognet.length < 2) {
+      ut.push(0);
+      continue;
+    }
+    const forbrukPct = Math.max(0, iDognet[0]!.pct - iDognet[iDognet.length - 1]!.pct);
+    ut.push(Math.round(TANK_LITER * (forbrukPct / 100) * 100) / 100);
+  }
+  return ut;
 }

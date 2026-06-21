@@ -4,7 +4,7 @@
     formaterTidssiden,
     jordfuktProsent,
     vannNivaProsent,
-    vannKlasse,
+    fuktStatus,
     antallPlasser,
     minutterSiden,
     OFFLINE_GRENSE_MIN,
@@ -31,20 +31,20 @@
   const sistOppdatert = $derived(formaterTidssiden(sensor?.registrert_at ?? command?.updated_at));
 
   // «Offline»-flagg: en sensor-potte som ikke har postet på en stund er trolig
-  // uten strøm/WiFi. Synlig allerede på oversikten så man fanger det på et blikk.
+  // uten strøm/WiFi.
   const minSidenKontakt = $derived(minutterSiden(sensor?.registrert_at));
   const offline = $derived(
     potte.har_sensorer && minSidenKontakt !== null && minSidenKontakt > OFFLINE_GRENSE_MIN,
   );
 
-  const jordfuktAvg = $derived.by(() => {
-    if (!sensor) return null;
-    const verdier = [sensor.jord1, sensor.jord2, sensor.jord3, sensor.jord4]
+  const jordVerdier = $derived.by(() => {
+    if (!sensor) return [] as number[];
+    return [sensor.jord1, sensor.jord2, sensor.jord3, sensor.jord4]
       .map((r) => jordfuktProsent(r))
       .filter((x): x is number => x !== null);
-    if (verdier.length === 0) return null;
-    return Math.round(verdier.reduce((a, b) => a + b, 0) / verdier.length);
   });
+  const jordLavest = $derived(jordVerdier.length ? Math.min(...jordVerdier) : null);
+  const torreFelt = $derived(jordVerdier.filter((v) => v < 35).length);
 
   const vannStatus = $derived.by(() => {
     if (!sensor) return null;
@@ -53,95 +53,100 @@
       potte.vann_tom_mm ?? undefined,
       potte.vann_full_mm ?? undefined,
     );
-    if (pct === null) return null;
-    const kl = vannKlasse(pct);
-    const farge = kl === 'lav' ? 'text-rose' : kl === 'full' ? 'text-sky' : 'text-leaf';
-    const dot = kl === 'lav' ? 'bg-rose' : kl === 'full' ? 'bg-sky' : 'bg-leaf';
-    return { tekst: `${pct} %`, farge, dot };
+    return pct === null ? null : `${pct} %`;
   });
+
+  const lysPlan = $derived(
+    command ? (command.intensitet > 0 ? `${command.timer_on}–${command.timer_off} · ${command.intensitet} %` : 'Av') : 'Ikke satt',
+  );
 </script>
 
 <button
-  class="card p-5 text-left hover:border-border-strong hover:bg-surface-hover transition-all duration-200 group"
+  class="card p-4 text-left w-full hover:brightness-[1.07] transition-all duration-200 stig"
   onclick={onClick}
 >
-  <div class="flex items-start gap-3 mb-4">
-    <span class="text-2xl">{potte.emoji ?? '🪴'}</span>
-    <div class="flex-1 min-w-0">
-      <h2 class="font-semibold text-lg leading-tight">{potte.navn}</h2>
-      <p class="text-xs mt-0.5 {offline ? 'text-sun' : 'text-text-muted'}">
-        {#if !potte.i_drift}<span class="text-sun">🧪 Testmodus</span> · {/if}{#if offline}<span class="font-medium">⚠ Offline</span> · {/if}{sistOppdatert}
-      </p>
+  <!-- Rad 1: ikon + navn + chevron -->
+  <div class="flex items-center justify-between gap-2.5">
+    <div class="flex items-center gap-[11px] min-w-0">
+      <div
+        class="w-[38px] h-[38px] rounded-[11px] flex items-center justify-center shrink-0 text-xl"
+        style="background:rgba(74,222,128,0.1); border:1px solid rgba(74,222,128,0.2)"
+      >
+        {potte.emoji ?? '🌿'}
+      </div>
+      <div class="font-display text-[18px] font-semibold leading-tight truncate">{potte.navn}</div>
     </div>
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      class="text-text-dim group-hover:text-text-muted group-hover:translate-x-0.5 transition-all"
-    >
-      <polyline points="9 18 15 12 9 6"></polyline>
-    </svg>
+    <span class="text-text-dim text-[22px] font-light leading-none shrink-0" aria-hidden="true">›</span>
   </div>
 
-  <!-- Planter -->
-  <div class="flex flex-wrap gap-1.5 mb-4 min-h-[28px]">
-    {#each planter as pp (pp.id)}
-      <span class="chip border-border bg-surface-raised text-text">
-        <span>{pp.plante.emoji ?? '🌿'}</span>
-        <span>{pp.plante.navn}</span>
+  <!-- Rad 2: status + badges -->
+  <div class="flex items-center gap-3 mt-2.5 flex-wrap">
+    {#if !potte.i_drift}
+      <span class="inline-flex items-center font-mono text-[10.5px] text-sun">🧪 Testmodus</span>
+    {/if}
+    {#if potte.har_sensorer}
+      <span class="inline-flex items-center gap-1.5 font-mono text-[10.5px] {offline ? 'text-sun' : 'text-text-muted'}">
+        <span class="w-[7px] h-[7px] rounded-full {offline ? 'bg-sun' : 'bg-leaf'}"></span>
+        {offline ? 'Frakoblet' : 'Tilkoblet'}
       </span>
-    {/each}
-    {#if ledig > 0}
-      <span class="chip border-dashed border-border text-text-dim">+{ledig} ledig</span>
+      {#if torreFelt > 0}
+        <span
+          class="inline-flex items-center px-2 py-0.5 rounded-full font-mono text-[10px]"
+          style="background:rgba(248,113,113,0.12); border:1px solid rgba(248,113,113,0.32); color:#fca5a5"
+        >
+          {torreFelt} felt trenger vann
+        </span>
+      {/if}
+    {:else}
+      <span class="font-mono text-[10.5px] text-text-dim">{sistOppdatert}</span>
     {/if}
   </div>
 
-  <!-- Sensor-strip -->
+  <!-- Rad 3: plante-chips -->
+  {#if planter.length > 0 || ledig > 0}
+    <div class="flex flex-wrap gap-[7px] mt-3">
+      {#each planter as pp (pp.id)}
+        <span class="inline-flex items-center gap-1.5 px-[11px] py-[5px] rounded-full bg-surface-raised border border-border text-[11.5px]">
+          <span class="w-1.5 h-1.5 rounded-full bg-leaf"></span>{pp.plante.navn}
+        </span>
+      {/each}
+      {#if ledig > 0}
+        <span class="inline-flex items-center px-3 py-[5px] rounded-full border border-dashed border-border-strong text-[11.5px] text-text-muted">+{ledig} ledig</span>
+      {/if}
+    </div>
+  {/if}
+
+  <!-- Rad 4: mikro-stats / uten sensorer -->
   {#if potte.har_sensorer}
+    <div class="h-px bg-border my-[13px]"></div>
     {#if harData}
-      <div class="grid grid-cols-3 gap-3 pt-4 border-t border-border">
-        <div>
-          <div class="text-xs text-text-muted mb-0.5">Temp</div>
-          <div class="text-lg font-semibold">
-            {sensor?.temperatur?.toFixed(1) ?? '—'}<span class="text-xs text-text-muted ml-0.5"
-              >°C</span
-            >
+      <div class="flex gap-2">
+        <div class="flex-1">
+          <div class="label !text-[9.5px] !tracking-[0.05em]">Temp</div>
+          <div class="font-display text-[19px] font-semibold mt-0.5">{sensor?.temperatur?.toFixed(1).replace('.', ',') ?? '—'}°</div>
+        </div>
+        <div class="flex-1">
+          <div class="label !text-[9.5px] !tracking-[0.05em]">Jord, lavest</div>
+          <div class="font-display text-[19px] font-semibold mt-0.5" style="color:{jordLavest !== null ? fuktStatus(jordLavest).farge : '#e6e9f2'}">
+            {jordLavest ?? '—'}{#if jordLavest !== null}%{/if}
           </div>
         </div>
-        <div>
-          <div class="text-xs text-text-muted mb-0.5">Jord</div>
-          <div class="text-lg font-semibold">
-            {jordfuktAvg ?? '—'}<span class="text-xs text-text-muted ml-0.5">%</span>
-          </div>
-        </div>
-        <div>
-          <div class="text-xs text-text-muted mb-0.5">Vann</div>
-          <div class="flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full {vannStatus?.dot ?? 'bg-border'}"></span>
-            <span class="text-sm font-medium {vannStatus?.farge ?? 'text-text-muted'}">
-              {vannStatus?.tekst ?? '—'}
-            </span>
-          </div>
+        <div class="flex-1">
+          <div class="label !text-[9.5px] !tracking-[0.05em]">Vann</div>
+          <div class="font-display text-[19px] font-semibold mt-0.5 text-sky">{vannStatus ?? '—'}</div>
         </div>
       </div>
     {:else}
-      <div class="pt-4 border-t border-border text-xs text-text-dim">Venter på første sensoravlesning…</div>
+      <div class="text-xs text-text-dim">Venter på første sensoravlesning…</div>
     {/if}
   {:else}
-    <div class="pt-4 border-t border-border text-xs text-text-dim">Uten sensorer — kun lyskontroll</div>
+    <div class="h-px bg-border my-[13px]"></div>
+    <div class="text-[12px] text-text-muted">Uten sensorer — kun lyskontroll</div>
   {/if}
 
-  {#if command}
-    <div class="mt-3 flex items-center gap-2 text-xs text-text-muted">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-      <span>{command.intensitet}%</span>
-      <span class="text-text-dim">•</span>
-      <span>{command.timer_on}–{command.timer_off}</span>
-    </div>
-  {/if}
+  <!-- Rad 5: lysplan -->
+  <div class="flex items-center gap-[7px] mt-3 font-mono text-[11px] text-text-muted">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#d4a017" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    {lysPlan}
+  </div>
 </button>
