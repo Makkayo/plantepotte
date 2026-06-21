@@ -29,6 +29,49 @@ export function jordfuktKlasse(pct: number | null): 'dry' | 'ok' | 'wet' | 'unkn
 }
 
 /**
+ * Fukt-status for «Anlegget»-visningen (oktagon-feltene + detalj-arket).
+ * Terskler etter design-handoffen: ≥55 frisk, 35–54 begynner å tørke, <35 tørr.
+ * Returnerer hex (brukes i inline-stiler for jord-gradient/prikk/tall) + tekst.
+ */
+export function fuktStatus(pct: number | null): {
+  farge: string;
+  tekst: string;
+  klasse: 'frisk' | 'tørker' | 'tørr' | 'unknown';
+} {
+  if (pct === null) return { farge: '#5a6376', tekst: 'Ukjent', klasse: 'unknown' };
+  if (pct >= 55) return { farge: '#4ade80', tekst: pct >= 70 ? 'Frisk og fuktig' : 'Fin fukt', klasse: 'frisk' };
+  if (pct >= 35) return { farge: '#fbbf24', tekst: 'Begynner å tørke', klasse: 'tørker' };
+  return { farge: '#f87171', tekst: 'Trenger vann', klasse: 'tørr' };
+}
+
+/**
+ * Bygg en 7-dagers jordfukt-sparkline (7 verdier i %) fra sensorhistorikk for
+ * én seksjon. Bøtter på døgn; tomme døgn hopper vi over og fyller med naboverdi.
+ */
+export function jordSparkline(
+  historikk: { registrert_at: string | null; verdi: number | null }[],
+): number[] {
+  const naa = Date.now();
+  const dager: (number | null)[] = [];
+  for (let d = 6; d >= 0; d--) {
+    const fra = naa - (d + 1) * 86_400_000;
+    const til = naa - d * 86_400_000;
+    const iBotte = historikk
+      .filter((h) => h.registrert_at && h.verdi !== null)
+      .filter((h) => {
+        const t = new Date(h.registrert_at as string).getTime();
+        return t >= fra && t < til;
+      })
+      .map((h) => h.verdi as number);
+    dager.push(iBotte.length ? Math.round(iBotte.reduce((a, b) => a + b, 0) / iBotte.length) : null);
+  }
+  // Fyll tomme døgn med nærmeste kjente verdi så stolpene ikke kollapser.
+  const kjent = dager.filter((x): x is number => x !== null);
+  const fallback = kjent.length ? Math.round(kjent.reduce((a, b) => a + b, 0) / kjent.length) : 0;
+  return dager.map((x) => x ?? fallback);
+}
+
+/**
  * Vannstand fra VL53L0X-laser.
  *
  * Laseren peker rett ned mot en flytende flottør i berolings-brønnen.

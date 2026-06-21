@@ -2,12 +2,11 @@
   import { onMount, onDestroy } from 'svelte';
   import { potter, pottePlanter, loadPottePlanter } from '../lib/stores';
   import { supabase } from '../lib/supabase';
-  import { blomsterkasseOppsett, antallPlasser, bakSeksjon, vannNivaProsent } from '../lib/utils';
+  import { blomsterkasseOppsett, bakSeksjon, vannNivaProsent } from '../lib/utils';
   import { beregnVannTrend } from '../lib/trend';
   import type { Potte, PotteCommand, PotteSensorData, PottePlanteFull } from '../lib/database.types';
-  import TilstandPanel from './TilstandPanel.svelte';
+  import AnleggPanel from './AnleggPanel.svelte';
   import LysKontroll from './LysKontroll.svelte';
-  import PlanteSlot from './PlanteSlot.svelte';
   import PlanteVelger from './PlanteVelger.svelte';
 
   type View = { name: 'oversikt' } | { name: 'potte'; potteId: string } | { name: 'katalog' };
@@ -22,33 +21,39 @@
   let sensor = $state<PotteSensorData | null>(null);
   let velgerSeksjon = $state<number | null>(null);
   let skilleveggFeil = $state<string | null>(null);
-  let lagrerSkillevegg = $state<number | null>(null);
   let timer: ReturnType<typeof setInterval> | undefined;
   let historikk = $state<PottePlanteFull[]>([]);
   let iDriftLagrer = $state(false);
   let bekreftDrift = $state(false);
 
-  // Vannstand-historikk (siste 7 dager) → trend-utregning (dager igjen, sparkline).
-  type VannRad = { registrert_at: string | null; vann_avstand_mm: number | null };
-  let vannHistorikk = $state<VannRad[]>([]);
+  // Sensorhistorikk (siste 7 dager) → vanntrend + jordfukt-sparkline per felt.
+  type SensorRad = {
+    registrert_at: string | null;
+    vann_avstand_mm: number | null;
+    jord1: number | null;
+    jord2: number | null;
+    jord3: number | null;
+    jord4: number | null;
+  };
+  let sensorHistorikk = $state<SensorRad[]>([]);
 
   const naaVannPct = $derived(
     vannNivaProsent(sensor?.vann_avstand_mm, potte?.vann_tom_mm ?? undefined, potte?.vann_full_mm ?? undefined),
   );
   const vannTrend = $derived(
-    beregnVannTrend(vannHistorikk, naaVannPct, potte?.vann_tom_mm ?? undefined, potte?.vann_full_mm ?? undefined),
+    beregnVannTrend(sensorHistorikk, naaVannPct, potte?.vann_tom_mm ?? undefined, potte?.vann_full_mm ?? undefined),
   );
 
-  async function loadVannHistorikk() {
+  async function loadSensorHistorikk() {
     const sjuDagerSiden = new Date(Date.now() - 7 * 86_400_000).toISOString();
     const { data } = await supabase
       .from('potte_sensor_data')
-      .select('registrert_at, vann_avstand_mm')
+      .select('registrert_at, vann_avstand_mm, jord1, jord2, jord3, jord4')
       .eq('potte_id', potteId)
       .gte('registrert_at', sjuDagerSiden)
       .order('registrert_at', { ascending: true })
       .limit(2200);
-    if (data) vannHistorikk = data as VannRad[];
+    if (data) sensorHistorikk = data as SensorRad[];
   }
 
   async function refresh() {
@@ -73,7 +78,7 @@
   }
 
   onMount(async () => {
-    await Promise.all([refresh(), loadPottePlanter(potteId), loadHistorikk(), loadVannHistorikk()]);
+    await Promise.all([refresh(), loadPottePlanter(potteId), loadHistorikk(), loadSensorHistorikk()]);
     timer = setInterval(refresh, 10000);
   });
 
@@ -200,7 +205,6 @@
     }
     const ny = [...kasse.skillevegger];
     ny[potteIdx] = nyDelt;
-    lagrerSkillevegg = potteIdx;
     const { error } = await supabase.from('potter').update({ skillevegger: ny }).eq('id', kasse.id);
     if (!error) {
       potter.update((liste) => liste.map((p) => (p.id === kasse.id ? { ...p, skillevegger: ny } : p)));
@@ -208,7 +212,6 @@
       console.error('Lagring av skillevegg feilet:', error);
       skilleveggFeil = 'Kunne ikke lagre — prøv igjen (sjekk at du er innlogget).';
     }
-    lagrerSkillevegg = null;
   }
 </script>
 
@@ -236,9 +239,26 @@
       </div>
     </div>
 
-    <!-- Tilstand nå: hero + lys-døgn + vann + jord + klima -->
-    {#if potte.har_sensorer}
-      <TilstandPanel {potte} {sensor} {command} trend={vannTrend} />
+    <!-- Anlegget: vekstlys + vannreservoar + pottene (oktagoner) -->
+    <AnleggPanel
+      {potte}
+      {sensor}
+      {command}
+      trend={vannTrend}
+      {oppsett}
+      pottePlanter={planter}
+      {sensorHistorikk}
+      onAddPlante={apneVelger}
+      onFjernPlante={fjernPlante}
+      onToggleSkille={settSkillevegg}
+      onLagreNotat={lagreNotat}
+      onCommandLagret={refresh}
+    />
+
+    {#if skilleveggFeil}
+      <div class="p-3 rounded-lg bg-rose/10 border border-rose/30 text-rose text-sm">
+        {skilleveggFeil}
+      </div>
     {/if}
 
     <!-- Drift-status: testmodus vs ekte drift -->
@@ -269,71 +289,6 @@
               : 'Sett i drift →'}
       </button>
     </div>
-
-    <!-- Planter: 2 potter (beholdere), hver med valgfri skillevegg (foran/bak) -->
-    <section class="card p-5">
-      <div class="flex items-end justify-between mb-4">
-        <div>
-          <h2 class="font-semibold text-lg">Planter</h2>
-          <p class="text-text-muted text-xs mt-0.5">
-            {planter.length} av {antallPlasser(potte.skillevegger)} planteplasser i bruk
-          </p>
-        </div>
-      </div>
-
-      {#if skilleveggFeil}
-        <div class="mb-4 p-3 rounded-lg bg-rose/10 border border-rose/30 text-rose text-sm">
-          {skilleveggFeil}
-        </div>
-      {/if}
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {#each oppsett as po (po.potteNr)}
-          <div class="rounded-xl border border-border p-3">
-            <!-- Potte-header med skillevegg-bryter -->
-            <div class="flex items-center justify-between mb-3">
-              <span class="font-medium text-sm">Potte {po.potteNr}</span>
-              <button
-                class="text-[11px] px-2.5 py-1 rounded-md border transition-colors disabled:opacity-50 {po.delt
-                  ? 'border-leaf/40 bg-leaf/10 text-leaf'
-                  : 'border-border text-text-muted hover:text-text hover:border-border-strong'}"
-                disabled={lagrerSkillevegg === po.potteNr - 1}
-                onclick={() => settSkillevegg(po.potteNr - 1, !po.delt)}
-                aria-pressed={po.delt}
-                title={po.delt
-                  ? 'Fjern skilleveggen (slå sammen til én plass)'
-                  : 'Sett inn skillevegg (del i foran/bak)'}
-              >
-                {po.delt ? '✓ Skillevegg' : 'Ingen skillevegg'}
-              </button>
-            </div>
-
-            <!-- Planteplasser: 1 (hel) eller 2 (foran/bak) med skillevegg-strek imellom -->
-            <div class="flex items-stretch gap-2">
-              {#each po.plasser as plass, i (plass.seksjon)}
-                {#if i > 0}
-                  <div class="w-[3px] self-stretch bg-border rounded-full my-1" aria-hidden="true"></div>
-                {/if}
-                {@const eksisterende = planter.find((pp) => pp.seksjon === plass.seksjon)}
-                <div class="flex-1 min-w-0">
-                  <PlanteSlot
-                    etikett={plass.etikett}
-                    plante={eksisterende?.plante ?? null}
-                    pottePlanteId={eksisterende?.id ?? null}
-                    plantetAt={eksisterende?.plantet_at ?? null}
-                    notater={eksisterende?.notater ?? null}
-                    iDrift={potte.i_drift}
-                    onLeggTil={() => apneVelger(plass.seksjon)}
-                    onFjern={(id) => fjernPlante(id)}
-                    onNotat={(id, tekst) => lagreNotat(id, tekst)}
-                  />
-                </div>
-              {/each}
-            </div>
-          </div>
-        {/each}
-      </div>
-    </section>
 
     <!-- Lyskontroll med kompatibilitet -->
     <LysKontroll

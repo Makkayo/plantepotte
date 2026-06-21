@@ -37,6 +37,7 @@ export default {
       fontFamily: {
         sans: ['"Hanken Grotesk"', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'system-ui', 'sans-serif'],
         display: ['Fraunces', 'Georgia', 'Cambria', 'serif'],
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
       boxShadow: {
         'glow-leaf': '0 0 0 1px rgba(74,222,128,0.15), 0 8px 40px -8px rgba(74,222,128,0.25)',

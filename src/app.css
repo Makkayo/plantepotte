@@ -192,11 +192,26 @@ input[type='time'] {
   animation-delay: var(--d, 0ms);
 }
 
+/* Flottør som duver mykt på vannflaten i reservoar-tanken. */
+@keyframes flott-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+.flott-bob {
+  animation: flott-bob 4.5s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .arc-anim,
   .vann-bolge,
   .vann-bolge-2,
-  .stig {
+  .stig,
+  .flott-bob {
     animation: none !important;
   }
 }
