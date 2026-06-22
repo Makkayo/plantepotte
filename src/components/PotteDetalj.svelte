@@ -14,8 +14,7 @@
   import AnleggPanel from './AnleggPanel.svelte';
   import PlanteVelger from './PlanteVelger.svelte';
 
-  type View = { name: 'oversikt' } | { name: 'potte'; potteId: string } | { name: 'katalog' };
-  let { potteId, onNavigate }: { potteId: string; onNavigate: (v: View) => void } = $props();
+  let { potteId }: { potteId: string } = $props();
 
   const potte = $derived($potter.find((p) => p.potte_id === potteId));
   const planter = $derived($pottePlanter[potteId] ?? []);
@@ -234,7 +233,7 @@
       <div class="flex items-center gap-2.5 min-w-0">
         <button
           class="w-[34px] h-[34px] rounded-[10px] card flex items-center justify-center shrink-0 hover:brightness-125 transition-all"
-          onclick={() => onNavigate({ name: 'oversikt' })}
+          onclick={() => window.history.back()}
           aria-label="Tilbake"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>

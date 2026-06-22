@@ -11,9 +11,15 @@
    *    som helst, mens innhold som scroller får pan-y og dras via topp-sonen.
    */
   import type { Snippet } from 'svelte';
+  import { overlayOpened } from '../lib/overlayBack';
 
   let { open, onClose, children }: { open: boolean; onClose: () => void; children?: Snippet } =
     $props();
+
+  // Maskinvare-/nettleser-tilbake lukker arket (registreres mens det er åpent).
+  $effect(() => {
+    if (open) return overlayOpened(onClose);
+  });
 
   const redusert =
     typeof window !== 'undefined' &&
@@ -118,8 +124,8 @@
     role="presentation"
   ></div>
   <div
-    class="fixed inset-x-0 bottom-0 z-50 mx-auto w-full max-w-[430px] bg-surface border-t border-border rounded-t-[22px] shadow-2xl flex flex-col max-h-[85vh]"
-    style="transform: translateY({ty}); transition:{sheetTransition}"
+    class="fixed bottom-0 left-1/2 z-50 w-[calc(100%-1.5rem)] max-w-[414px] bg-surface border border-border rounded-t-[22px] shadow-2xl flex flex-col max-h-[85vh]"
+    style="transform: translate(-50%, {ty}); transition:{sheetTransition}"
     role="dialog"
     aria-modal="true"
     tabindex="-1"

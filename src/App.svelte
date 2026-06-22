@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { user } from './lib/stores';
   import { loadReferenceData } from './lib/stores';
+  import { handleOverlayBack } from './lib/overlayBack';
   import Login from './components/Login.svelte';
   import Shell from './components/Shell.svelte';
 
@@ -25,38 +26,58 @@
     }
   });
 
+  function viewToHash(v: View): string {
+    return v.name === 'oversikt'
+      ? '#/'
+      : v.name === 'katalog'
+        ? '#/katalog'
+        : v.name === 'dyrking'
+          ? '#/dyrking'
+          : `#/potte/${v.potteId}`;
+  }
+  function hashToView(): View {
+    const h = window.location.hash.replace(/^#\/?/, '');
+    if (!h || h === 'oversikt') return { name: 'oversikt' };
+    if (h === 'katalog') return { name: 'katalog' };
+    if (h === 'dyrking') return { name: 'dyrking' };
+    if (h.startsWith('potte/')) return { name: 'potte', potteId: h.slice(6) };
+    return { name: 'oversikt' };
+  }
+  function sameView(a: View, b: View): boolean {
+    if (a.name !== b.name) return false;
+    if (a.name === 'potte' && b.name === 'potte') return a.potteId === b.potteId;
+    return true;
+  }
+
+  // Forover-navigasjon: legg en ny history-oppføring (maskinvare-tilbake ↩).
   function navigate(view: View) {
+    if (sameView(view, currentView)) return;
+    window.history.pushState({}, '', window.location.pathname + viewToHash(view));
     currentView = view;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   onMount(() => {
-    // Hash routing for shareable URLs (kept simple — single-level)
-    const fromHash = () => {
-      const h = window.location.hash.replace(/^#\/?/, '');
-      if (!h || h === 'oversikt') return navigate({ name: 'oversikt' });
-      if (h === 'katalog') return navigate({ name: 'katalog' });
-      if (h === 'dyrking') return navigate({ name: 'dyrking' });
-      if (h.startsWith('potte/')) return navigate({ name: 'potte', potteId: h.slice(6) });
-    };
-    fromHash();
-    window.addEventListener('hashchange', fromHash);
-    return () => window.removeEventListener('hashchange', fromHash);
-  });
-
-  $effect(() => {
-    const view = currentView;
-    const hash =
-      view.name === 'oversikt'
-        ? ''
-        : view.name === 'katalog'
-          ? '#/katalog'
-          : view.name === 'dyrking'
-            ? '#/dyrking'
-            : `#/potte/${view.potteId}`;
-    if (window.location.hash !== hash) {
-      history.replaceState(null, '', window.location.pathname + (hash || ''));
+    const initial = hashToView();
+    // Sørg for en oversikt-base å gå tilbake til ved direkte dyplenke,
+    // slik at tilbake aldri «hopper rett ut» av en detalj-/katalog-side.
+    if (initial.name !== 'oversikt') {
+      window.history.replaceState({}, '', window.location.pathname + '#/');
+      window.history.pushState({}, '', window.location.pathname + viewToHash(initial));
     }
+    currentView = initial;
+
+    const onPop = () => {
+      // Tilbake lukker først et åpent overlegg (ark/modal); ellers naviger.
+      if (handleOverlayBack()) return;
+      const v = hashToView();
+      if (!sameView(v, currentView)) {
+        currentView = v;
+        window.scrollTo({ top: 0 });
+      }
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
   });
 </script>
 

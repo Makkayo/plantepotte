@@ -21,7 +21,7 @@
     {#if view.name === 'oversikt'}
       <PotteOversikt {onNavigate} />
     {:else if view.name === 'potte'}
-      <PotteDetalj potteId={view.potteId} {onNavigate} />
+      <PotteDetalj potteId={view.potteId} />
     {:else if view.name === 'katalog'}
       <PlanteKatalog {onNavigate} />
     {:else if view.name === 'dyrking'}

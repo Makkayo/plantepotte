@@ -1,6 +1,7 @@
 <script lang="ts">
   import { supabase } from '../lib/supabase';
   import { user } from '../lib/stores';
+  import { overlayOpened } from '../lib/overlayBack';
 
   type View =
     | { name: 'oversikt' }
@@ -14,6 +15,11 @@
   }
 
   let bekreftLoggUt = $state(false);
+
+  // Maskinvare-/nettleser-tilbake lukker logg-ut-bekreftelsen.
+  $effect(() => {
+    if (bekreftLoggUt) return overlayOpened(() => (bekreftLoggUt = false));
+  });
 
   // «Kasser» dekker både oversikten og en åpnet blomsterkasse-detalj.
   const kasserAktiv = $derived(active === 'oversikt' || active === 'potte');

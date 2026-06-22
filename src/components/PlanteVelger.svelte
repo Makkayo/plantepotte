@@ -1,5 +1,7 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { planter, lysFamilier } from '../lib/stores';
+  import { overlayOpened } from '../lib/overlayBack';
   import type { Plante, LysFamilieId, PlanteKategori } from '../lib/database.types';
   import { vurderLysKompatibilitet, vurderVannKompatibilitet, vekeEgnetFarge } from '../lib/lys';
 
@@ -64,6 +66,9 @@
     }
     return liste;
   });
+
+  // Maskinvare-/nettleser-tilbake lukker velgeren.
+  onMount(() => overlayOpened(onLukk));
 
   function lukk(e?: KeyboardEvent) {
     if (e && e.key !== 'Escape') return;

@@ -1,12 +1,17 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import type { Plante } from '../lib/database.types';
   import { lysFamilier } from '../lib/stores';
+  import { overlayOpened } from '../lib/overlayBack';
   import { vekeEgnetTekst, vekeEgnetFarge, vannBehovTekst } from '../lib/lys';
 
   let { plante, onLukk }: { plante: Plante; onLukk: () => void } = $props();
 
   const familie = $derived($lysFamilier.find((f) => f.id === plante.lys_familie));
   let bildeFeilet = $state(false);
+
+  // Maskinvare-/nettleser-tilbake lukker detalj-modalen.
+  onMount(() => overlayOpened(onLukk));
 
   function lukk(e?: KeyboardEvent) {
     if (e && e.key !== 'Escape') return;
