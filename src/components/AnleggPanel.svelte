@@ -31,6 +31,7 @@
   import PotteViz from './Potte.svelte';
   import LysSheet from './LysSheet.svelte';
   import SolBue from './viz/SolBue.svelte';
+  import VannTank from './viz/VannTank.svelte';
   import Sheet from './Sheet.svelte';
 
   type SensorRad = {
@@ -191,7 +192,6 @@
       potte.vann_full_mm ?? undefined,
     ),
   );
-  const vannFyll = $derived(vannPct ?? 0); // 0–100, klampet til tank-høyden
   const forbrukMaks = $derived(Math.max(0.1, ...(trend.dagligForbruk.length ? trend.dagligForbruk : [0.1])));
   let visKalibrering = $state(false); // kalibrering er skjult bak en svak knapp i vann-arket
 
@@ -426,35 +426,7 @@
             onclick={() => (aapent = { type: 'vann' })}
             aria-label="Vannreservoar {vannPct ?? '–'} prosent — trykk for detaljer og påfylling"
           >
-            <div
-              class="relative w-full h-full rounded-[11px] overflow-hidden border border-border-strong"
-              style="background:rgba(255,255,255,0.03)"
-            >
-              <!-- laser-strek ned til overflaten -->
-              <div class="absolute top-1.5 bottom-0 left-1/2 -translate-x-1/2 border-l border-dashed border-sky/30"></div>
-              <!-- vannfyll fra bunn -->
-              <div
-                class="absolute inset-x-0 bottom-0 transition-[height] duration-700"
-                style="height:{vannFyll}%; background:linear-gradient(180deg,#7cc0ff,#3b82c4)"
-              ></div>
-              <!-- glass-glis -->
-              <div class="absolute top-2 left-1 w-[3px] h-[55%] rounded bg-white/[0.06]"></div>
-              <!-- flottør på overflaten (synker med nivået) -->
-              {#if vannPct !== null}
-                <div
-                  class="absolute left-1/2 transition-[bottom] duration-700"
-                  style="bottom:{vannFyll}%; transform:translate(-50%,50%)"
-                >
-                  <div class="flott-bob w-[18px] h-2 rounded-[4px]" style="background:#eef2f8; box-shadow:0 2px 0 #9fb0c8"></div>
-                </div>
-              {/if}
-              <!-- %-avlesning -->
-              <div
-                class="absolute bottom-1.5 left-1/2 -translate-x-1/2 px-1 py-0.5 rounded bg-black/40 font-mono text-[9px] font-semibold text-white whitespace-nowrap"
-              >
-                {vannPct ?? '–'}%
-              </div>
-            </div>
+            <VannTank pct={vannPct} />
           </button>
         {/if}
       </div>

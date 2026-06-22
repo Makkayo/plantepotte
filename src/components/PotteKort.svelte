@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { Potte, PotteCommand, PotteSensorData, PottePlanteFull } from '../lib/database.types';
   import {
-    formaterTidssiden,
     jordfuktProsent,
     vannNivaProsent,
     fuktStatus,
@@ -9,6 +8,9 @@
     minutterSiden,
     OFFLINE_GRENSE_MIN,
   } from '../lib/utils';
+  import { beregnDli } from '../lib/lys';
+  import SolBue from './viz/SolBue.svelte';
+  import VannTank from './viz/VannTank.svelte';
 
   let {
     potte,
@@ -28,10 +30,8 @@
   const ledig = $derived(antallPlasser(potte.skillevegger) - fyltSeksjoner);
 
   const harData = $derived(!!sensor);
-  const sistOppdatert = $derived(formaterTidssiden(sensor?.registrert_at ?? command?.updated_at));
 
-  // «Offline»-flagg: en sensor-potte som ikke har postet på en stund er trolig
-  // uten strøm/WiFi.
+  // «Offline»-flagg: en sensor-potte som ikke har postet på en stund.
   const minSidenKontakt = $derived(minutterSiden(sensor?.registrert_at));
   const offline = $derived(
     potte.har_sensorer && minSidenKontakt !== null && minSidenKontakt > OFFLINE_GRENSE_MIN,
@@ -46,19 +46,27 @@
   const jordLavest = $derived(jordVerdier.length ? Math.min(...jordVerdier) : null);
   const torreFelt = $derived(jordVerdier.filter((v) => v < 35).length);
 
-  const vannStatus = $derived.by(() => {
+  const vannPct = $derived.by(() => {
     if (!sensor) return null;
-    const pct = vannNivaProsent(
+    return vannNivaProsent(
       sensor.vann_avstand_mm,
       potte.vann_tom_mm ?? undefined,
       potte.vann_full_mm ?? undefined,
     );
-    return pct === null ? null : `${pct} %`;
   });
 
-  const lysPlan = $derived(
-    command ? (command.intensitet > 0 ? `${command.timer_on}–${command.timer_off} · ${command.intensitet} %` : 'Av') : 'Ikke satt',
-  );
+  // Lys (samme språk som detaljens vekstlys-kort)
+  function timerLengde(on: string, off: string): number {
+    const p = (s: string) => {
+      const [h, m] = s.split(':').map(Number);
+      return (h ?? 0) + (m ?? 0) / 60;
+    };
+    const d = (((p(off) - p(on)) % 24) + 24) % 24;
+    return d === 0 && on !== off ? 24 : d;
+  }
+  const lysT = $derived(command ? timerLengde(command.timer_on, command.timer_off) : 0);
+  const lysDli = $derived(beregnDli(command?.intensitet ?? 0, lysT));
+  const lysPaa = $derived(!!command && command.intensitet > 0);
 </script>
 
 <button
@@ -97,8 +105,6 @@
           {torreFelt} felt trenger vann
         </span>
       {/if}
-    {:else}
-      <span class="font-mono text-[10.5px] text-text-dim">{sistOppdatert}</span>
     {/if}
   </div>
 
@@ -116,37 +122,69 @@
     </div>
   {/if}
 
-  <!-- Rad 4: mikro-stats / uten sensorer -->
+  <!-- Lys: mini sol-bue + intensitet/DLI -->
+  <div class="flex items-center gap-3 pt-3.5 mt-3.5 border-t border-border">
+    <div class="w-[112px] shrink-0" style="opacity:{lysPaa ? 1 : 0.4}">
+      <SolBue timerOn={command?.timer_on ?? '07:00'} timerOff={command?.timer_off ?? '23:00'} />
+    </div>
+    <div class="min-w-0">
+      <div class="font-display text-xl font-semibold leading-none">
+        {command?.intensitet ?? 0}<span class="text-xs text-text-muted ml-0.5">%</span>
+      </div>
+      <div class="font-mono text-[10px] text-text-muted mt-1">
+        {lysDli.toFixed(1).replace('.', ',')} DLI · lys
+      </div>
+    </div>
+  </div>
+
+  <!-- Sensorer: vanntank + jord-«våt front» + klima -->
   {#if potte.har_sensorer}
-    <div class="h-px bg-border my-[13px]"></div>
     {#if harData}
-      <div class="flex gap-2">
-        <div class="flex-1">
-          <div class="label !text-[9.5px] !tracking-[0.05em]">Temp</div>
-          <div class="font-display text-[19px] font-semibold mt-0.5">{sensor?.temperatur?.toFixed(1).replace('.', ',') ?? '—'}°</div>
-        </div>
-        <div class="flex-1">
-          <div class="label !text-[9.5px] !tracking-[0.05em]">Jord, lavest</div>
-          <div class="font-display text-[19px] font-semibold mt-0.5" style="color:{jordLavest !== null ? fuktStatus(jordLavest).farge : '#e6e9f2'}">
-            {jordLavest ?? '—'}{#if jordLavest !== null}%{/if}
+      <div class="flex items-center gap-4 pt-3 mt-3 border-t border-border">
+        <div class="flex items-center gap-2">
+          <div class="w-4 h-11 shrink-0"><VannTank pct={vannPct} visLaser={false} visProsent={false} /></div>
+          <div>
+            <div class="font-display text-base font-semibold leading-none text-sky">
+              {vannPct ?? '–'}<span class="text-[11px]">%</span>
+            </div>
+            <div class="font-mono text-[9px] text-text-dim mt-0.5">vann</div>
           </div>
         </div>
-        <div class="flex-1">
-          <div class="label !text-[9.5px] !tracking-[0.05em]">Vann</div>
-          <div class="font-display text-[19px] font-semibold mt-0.5 text-sky">{vannStatus ?? '—'}</div>
+        <div class="flex items-center gap-2">
+          <div
+            class="w-4 h-11 shrink-0 relative rounded-[8px] overflow-hidden border border-[#3b4264]"
+            style="background:linear-gradient(180deg,#6e573f,#473829)"
+          >
+            {#if jordLavest !== null}
+              <div
+                class="absolute inset-x-0 bottom-0"
+                style="height:{jordLavest}%; background:linear-gradient(180deg,#2f5a4a,#173430); border-top:2px solid rgba(134,239,172,0.22)"
+              ></div>
+            {/if}
+          </div>
+          <div>
+            <div
+              class="font-display text-base font-semibold leading-none"
+              style="color:{jordLavest !== null ? fuktStatus(jordLavest).farge : '#e6e9f2'}"
+            >
+              {jordLavest ?? '–'}<span class="text-[11px]">%</span>
+            </div>
+            <div class="font-mono text-[9px] text-text-dim mt-0.5">jord</div>
+          </div>
+        </div>
+        <div class="ml-auto text-right">
+          <div class="font-display text-base font-semibold leading-none">
+            {sensor?.temperatur?.toFixed(1).replace('.', ',') ?? '–'}°
+          </div>
+          <div class="font-mono text-[9px] text-text-dim mt-0.5">
+            {sensor?.luftfuktighet?.toFixed(0) ?? '–'}% luft
+          </div>
         </div>
       </div>
     {:else}
-      <div class="text-xs text-text-dim">Venter på første sensoravlesning…</div>
+      <div class="pt-3 mt-3 border-t border-border text-xs text-text-dim">Venter på første sensoravlesning…</div>
     {/if}
   {:else}
-    <div class="h-px bg-border my-[13px]"></div>
-    <div class="text-[12px] text-text-muted">Uten sensorer — kun lyskontroll</div>
+    <div class="pt-3 mt-3 border-t border-border text-[12px] text-text-muted">Uten sensorer — kun lyskontroll</div>
   {/if}
-
-  <!-- Rad 5: lysplan -->
-  <div class="flex items-center gap-[7px] mt-3 font-mono text-[11px] text-text-muted">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#d4a017" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-    {lysPlan}
-  </div>
 </button>
