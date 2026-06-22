@@ -11,11 +11,13 @@
     plante,
     rolle,
     fukt,
+    harSensor = true,
     onClick,
   }: {
     plante: Plante | null;
     rolle: 'foran' | 'bak' | 'hel';
     fukt: number | null;
+    harSensor?: boolean;
     onClick: () => void;
   } = $props();
 
@@ -39,32 +41,38 @@
   >
 
   {#if plante}
-    <div
-      class="absolute left-0 right-0 bottom-0 transition-[height] duration-700"
-      style="height: {fyllH}%; background: linear-gradient(180deg, #2f5a4a, #173430); border-top: 2px solid rgba(134,239,172,0.22)"
-    ></div>
+    {#if harSensor}
+      <div
+        class="absolute left-0 right-0 bottom-0 transition-[height] duration-700"
+        style="height: {fyllH}%; background: linear-gradient(180deg, #2f5a4a, #173430); border-top: 2px solid rgba(134,239,172,0.22)"
+      ></div>
 
-    <div
-      class="absolute w-[3px] rounded-[2px]"
-      style="right:13px; top:13px; height:42%; background:#cdd6e6"
-    ></div>
-    <div
-      class="absolute w-3 h-3 rounded-full"
-      style="right:8.5px; top:calc(13px + 42%); transform:translateY(-50%); box-shadow:0 0 0 4px rgba(255,255,255,0.05); background:{status.farge}"
-    ></div>
+      <div
+        class="absolute w-[3px] rounded-[2px]"
+        style="right:13px; top:13px; height:42%; background:#cdd6e6"
+      ></div>
+      <div
+        class="absolute w-3 h-3 rounded-full"
+        style="right:8.5px; top:calc(13px + 42%); transform:translateY(-50%); box-shadow:0 0 0 4px rgba(255,255,255,0.05); background:{status.farge}"
+      ></div>
+    {/if}
 
-    <div class="absolute left-3 top-[31px]" style="right:30px">
+    <div class="absolute left-3 top-[31px]" style="right:{harSensor ? '30px' : '12px'}">
       <div class="text-[13px] font-semibold leading-[1.05] truncate" style="color:#f3f5fa">
         {plante.navn}
       </div>
     </div>
 
-    <div
-      class="absolute left-3 bottom-[9px] font-display font-semibold leading-none tabular-nums"
-      style="color:{status.farge}; font-size:{rolle === 'hel' ? 27 : 25}px"
-    >
-      {fukt ?? '—'}{#if fukt !== null}<span class="text-base">%</span>{/if}
-    </div>
+    {#if harSensor}
+      <div
+        class="absolute left-3 bottom-[9px] font-display font-semibold leading-none tabular-nums"
+        style="color:{status.farge}; font-size:{rolle === 'hel' ? 27 : 25}px"
+      >
+        {fukt ?? '—'}{#if fukt !== null}<span class="text-base">%</span>{/if}
+      </div>
+    {:else}
+      <div class="absolute left-3 bottom-[10px] font-mono text-[9px] text-[#aeb6c8]">trykk for å endre</div>
+    {/if}
   {:else}
     <div class="absolute inset-0 flex flex-col items-center justify-center text-text-dim gap-0.5">
       <span class="text-2xl leading-none">+</span>

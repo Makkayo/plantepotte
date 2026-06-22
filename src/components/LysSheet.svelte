@@ -12,6 +12,7 @@
     vurderLysKompatibilitet,
     vurderVannKompatibilitet,
   } from '../lib/lys';
+  import { visFeil, visOk } from '../lib/toast';
   import SolBue from './viz/SolBue.svelte';
 
   let {
@@ -89,7 +90,12 @@
       { onConflict: 'potte_id' },
     );
     lagrer = false;
-    if (!error) onLagret();
+    if (error) {
+      visFeil('Kunne ikke lagre lysinnstillingen.');
+    } else {
+      visOk('Lysinnstilling lagret — potta henter innen 5 sek');
+      onLagret();
+    }
   }
 
   const statusBadge: Record<string, string> = {

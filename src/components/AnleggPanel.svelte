@@ -20,6 +20,7 @@
     type PotteOppsett,
   } from '../lib/utils';
   import { beregnDli } from '../lib/lys';
+  import { visFeil, visOk } from '../lib/toast';
   import type {
     Plante,
     Potte,
@@ -181,7 +182,8 @@
       { onConflict: 'potte_id' },
     );
     lysLagrer = false;
-    if (!error) onCommandLagret();
+    if (error) visFeil('Kunne ikke endre lyset — prøv igjen.');
+    else onCommandLagret();
   }
 
   // ---------- vann ----------
@@ -293,6 +295,7 @@
     const { error } = await supabase.from('potter').update(oppdatering).eq('id', potte.id);
     if (!error) {
       potter.update((liste) => liste.map((p) => (p.id === potte.id ? { ...p, ...oppdatering } : p)));
+      visOk(type === 'tom' ? 'Tom-nivå kalibrert' : 'Fullt-nivå kalibrert');
     } else {
       console.error('Kalibrering feilet:', error);
       kalibreringsFeil = 'Lagring feilet — prøv igjen (sjekk at du er innlogget).';
@@ -398,26 +401,28 @@
     <div class="text-center text-[11px] text-text-muted mt-1.5">{lysCaption}</div>
   </div>
 
-  <!-- Pottene (vannreservoaret tegnes som tanken i midten — eget kort fjernet) -->
-  {#if potte.har_sensorer}
-    <div class="stig" style="--d: 180ms">
-      <div class="flex items-baseline justify-between mb-3">
-        <div class="text-[13px] font-semibold">Pottene</div>
-        <div class="font-mono text-[11px] text-text-dim">trykk på et felt</div>
+  <!-- Pottene (vannreservoaret tegnes som tanken i midten — eget kort fjernet).
+       Vises også uten sensorer: da kan man fortsatt administrere planter, bare
+       uten fukt-/vann-data. -->
+  <div class="stig" style="--d: 180ms">
+    <div class="flex items-baseline justify-between mb-3">
+      <div class="text-[13px] font-semibold">Pottene</div>
+      <div class="font-mono text-[11px] text-text-dim">trykk på et felt</div>
+    </div>
+    <div class="relative">
+      <div class="flex gap-11 items-start">
+        {#each pots as p (p.potteNr)}
+          <PotteViz
+            navn={p.navn}
+            delt={p.delt}
+            felt={p.felt}
+            harSensor={potte.har_sensorer}
+            onToggleSkille={() => onToggleSkille(p.potteNr - 1, !p.delt)}
+            onFelt={feltTrykk}
+          />
+        {/each}
       </div>
-      <div class="relative">
-        <div class="flex gap-11 items-start">
-          {#each pots as p (p.potteNr)}
-            <PotteViz
-              navn={p.navn}
-              delt={p.delt}
-              felt={p.felt}
-              onToggleSkille={() => onToggleSkille(p.potteNr - 1, !p.delt)}
-              onFelt={feltTrykk}
-            />
-          {/each}
-        </div>
-        {#if pots.length > 1}
+      {#if pots.length > 1 && potte.har_sensorer}
           <!-- Felles vannreservoar tegnet som en vertikal tank i midten: fyller
                fra bunn (topp = 100 %, bunn = 0 %), flottør på overflaten, % nede.
                Trykk åpner vann-arket. -->
@@ -430,15 +435,14 @@
           </button>
         {/if}
       </div>
-      {#if pots.length > 1}
+      {#if pots.length > 1 && potte.har_sensorer}
         <div class="flex items-center justify-center gap-1.5 mt-3 font-mono text-[10px] text-text-dim">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="#60a5fa" stroke="none"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/></svg>
           Trykk på tanken i midten for vann og påfylling
         </div>
       {/if}
     </div>
-  {/if}
-</div>
+  </div>
 
 <!-- Felt-detalj -->
 <Sheet open={aapent?.type === 'felt'} onClose={lukk}>

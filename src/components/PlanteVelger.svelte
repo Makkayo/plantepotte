@@ -94,7 +94,7 @@
     <!-- Header -->
     <div class="p-5 border-b border-border flex items-center gap-4">
       <div class="flex-1">
-        <h2 class="font-bold text-lg">Velg plante til {plassLabel}</h2>
+        <h2 class="font-display text-lg font-semibold">Velg plante til {plassLabel}</h2>
         <p class="text-text-muted text-xs mt-0.5">
           {filtrert.length} planter passer dine valg
         </p>

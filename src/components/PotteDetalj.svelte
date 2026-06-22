@@ -10,9 +10,11 @@
     OFFLINE_GRENSE_MIN,
   } from '../lib/utils';
   import { beregnVannTrend } from '../lib/trend';
+  import { visFeil } from '../lib/toast';
   import type { Potte, PotteCommand, PotteSensorData, PottePlanteFull } from '../lib/database.types';
   import AnleggPanel from './AnleggPanel.svelte';
   import PlanteVelger from './PlanteVelger.svelte';
+  import Veksttidslinje from './Veksttidslinje.svelte';
 
   let { potteId }: { potteId: string } = $props();
 
@@ -104,19 +106,28 @@
 
   async function fjernPlante(pottePlanteId: string) {
     // I drift: myk-slett (behold for historikk). I testmodus: slett helt.
-    if (potte?.i_drift) {
-      await supabase
-        .from('potte_planter')
-        .update({ fjernet_at: new Date().toISOString() })
-        .eq('id', pottePlanteId);
-    } else {
-      await supabase.from('potte_planter').delete().eq('id', pottePlanteId);
+    const { error } = potte?.i_drift
+      ? await supabase
+          .from('potte_planter')
+          .update({ fjernet_at: new Date().toISOString() })
+          .eq('id', pottePlanteId)
+      : await supabase.from('potte_planter').delete().eq('id', pottePlanteId);
+    if (error) {
+      visFeil('Kunne ikke fjerne planten — prøv igjen.');
+      return;
     }
     await Promise.all([loadPottePlanter(potteId), loadHistorikk()]);
   }
 
   async function lagreNotat(pottePlanteId: string, tekst: string) {
-    await supabase.from('potte_planter').update({ notater: tekst || null }).eq('id', pottePlanteId);
+    const { error } = await supabase
+      .from('potte_planter')
+      .update({ notater: tekst || null })
+      .eq('id', pottePlanteId);
+    if (error) {
+      visFeil('Kunne ikke lagre notatet.');
+      return;
+    }
     await loadPottePlanter(potteId);
   }
 
@@ -138,6 +149,7 @@
       potter.update((liste) => liste.map((p) => (p.id === kasse.id ? { ...p, i_drift: ny } : p)));
     } else {
       console.error('Lagring av i_drift feilet:', error);
+      visFeil('Kunne ikke endre drift-status.');
     }
     iDriftLagrer = false;
   }
@@ -196,8 +208,14 @@
         await supabase.from('potte_planter').delete().eq('id', eksisterende.id);
       }
     }
-    await supabase.from('potte_planter').insert({ potte_id: potteId, plante_id: planteId, seksjon });
+    const { error } = await supabase
+      .from('potte_planter')
+      .insert({ potte_id: potteId, plante_id: planteId, seksjon });
     velgerSeksjon = null;
+    if (error) {
+      visFeil('Kunne ikke legge til planten — prøv igjen.');
+      return;
+    }
     await Promise.all([loadPottePlanter(potteId), loadHistorikk()]);
   }
 
@@ -303,10 +321,13 @@
       </button>
     </div>
 
+    <!-- Veksttidslinje: kamerabilder fra Storage -->
+    <Veksttidslinje {potteId} />
+
     <!-- Historikk: tidligere planter (kun samlet i drift-modus) -->
     {#if historikk.length > 0}
       <section class="card p-5">
-        <h2 class="font-semibold text-lg">Historikk</h2>
+        <h2 class="font-display text-lg font-semibold">Historikk</h2>
         <p class="text-text-muted text-xs mt-0.5 mb-4">Planter som har stått i denne kassa tidligere.</p>
         <div class="space-y-2.5">
           {#each historikk as h (h.id)}

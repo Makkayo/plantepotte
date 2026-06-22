@@ -33,7 +33,7 @@
   <div class="card p-8 sm:p-10 w-full max-w-md animate-fade-in">
     <div class="flex items-center gap-3 mb-1">
       <span class="text-3xl">🌱</span>
-      <h1 class="text-2xl font-bold tracking-tight">Plantepotte</h1>
+      <h1 class="font-display text-2xl font-semibold tracking-tight">Plantepotte</h1>
     </div>
     <p class="text-text-muted text-sm mb-8">Logg inn for å styre pottene</p>
 

@@ -11,9 +11,11 @@
 
   let commands = $state<Record<string, PotteCommand>>({});
   let sensors = $state<Record<string, PotteSensorData>>({});
+  let now = $state(new Date()); // driver sol-buen i kortene
   let timer: ReturnType<typeof setInterval> | undefined;
 
   async function refresh() {
+    now = new Date();
     // Nyeste avlesning hentes PER potte (limit 1 hver). En felles
     // «siste 50 rader»-spørring ville latt en aktiv potte skvise en
     // offline potte helt ut av lista etter noen timer — da så det ut som
@@ -73,6 +75,7 @@
         command={commands[p.potte_id]}
         sensor={sensors[p.potte_id]}
         planter={$pottePlanter[p.potte_id] ?? []}
+        {now}
         onClick={() => onNavigate({ name: 'potte', potteId: p.potte_id })}
       />
     {/each}

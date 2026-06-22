@@ -32,7 +32,7 @@
       onclick={() => onNavigate({ name: 'oversikt' })}
     >
       <span class="text-xl">🌱</span>
-      <span class="font-semibold tracking-tight">Plantepotte</span>
+      <span class="font-display text-[17px] font-semibold tracking-tight">Plantepotte</span>
     </button>
 
     <!-- Desktop-nav -->

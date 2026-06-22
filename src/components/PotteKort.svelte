@@ -17,12 +17,14 @@
     command,
     sensor,
     planter,
+    now = new Date(),
     onClick,
   }: {
     potte: Potte;
     command: PotteCommand | undefined;
     sensor: PotteSensorData | undefined;
     planter: PottePlanteFull[];
+    now?: Date;
     onClick: () => void;
   } = $props();
 
@@ -125,7 +127,7 @@
   <!-- Lys: mini sol-bue + intensitet/DLI -->
   <div class="flex items-center gap-3 pt-3.5 mt-3.5 border-t border-border">
     <div class="w-[112px] shrink-0" style="opacity:{lysPaa ? 1 : 0.4}">
-      <SolBue timerOn={command?.timer_on ?? '07:00'} timerOff={command?.timer_off ?? '23:00'} />
+      <SolBue timerOn={command?.timer_on ?? '07:00'} timerOff={command?.timer_off ?? '23:00'} {now} />
     </div>
     <div class="min-w-0">
       <div class="font-display text-xl font-semibold leading-none">

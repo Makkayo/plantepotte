@@ -5,6 +5,7 @@
   import { handleOverlayBack } from './lib/overlayBack';
   import Login from './components/Login.svelte';
   import Shell from './components/Shell.svelte';
+  import Toaster from './components/Toaster.svelte';
 
   type View =
     | { name: 'oversikt' }
@@ -90,3 +91,5 @@
 {:else}
   <Shell view={currentView} onNavigate={navigate} />
 {/if}
+
+<Toaster />

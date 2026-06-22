@@ -45,7 +45,7 @@
         </button>
       </div>
       <div class="p-5 border-b border-border">
-        <h2 class="text-xl font-bold leading-tight">{plante.navn}</h2>
+        <h2 class="font-display text-xl font-semibold leading-tight">{plante.navn}</h2>
         {#if plante.vitenskapelig}
           <p class="text-sm italic text-text-muted mt-0.5">{plante.vitenskapelig}</p>
         {/if}
@@ -54,7 +54,7 @@
       <div class="p-5 border-b border-border flex items-center gap-4">
         <span class="text-4xl">{plante.emoji ?? '🌿'}</span>
         <div class="flex-1">
-          <h2 class="text-xl font-bold leading-tight">{plante.navn}</h2>
+          <h2 class="font-display text-xl font-semibold leading-tight">{plante.navn}</h2>
           {#if plante.vitenskapelig}
             <p class="text-sm italic text-text-muted mt-0.5">{plante.vitenskapelig}</p>
           {/if}
@@ -75,7 +75,7 @@
         {#if plante.dli_optimal}
           <div class="card-raised p-3">
             <div class="text-xs text-text-muted mb-1">DLI optimal</div>
-            <div class="text-xl font-bold">{plante.dli_optimal}</div>
+            <div class="font-display text-xl font-semibold">{plante.dli_optimal}</div>
             <div class="text-[10px] text-text-dim">mol/m²/d</div>
             {#if plante.dli_min && plante.dli_maks}
               <div class="text-[10px] text-text-dim mt-0.5">
@@ -87,21 +87,21 @@
         {#if plante.timer_optimal}
           <div class="card-raised p-3">
             <div class="text-xs text-text-muted mb-1">Lys-timer</div>
-            <div class="text-xl font-bold">{plante.timer_optimal}</div>
+            <div class="font-display text-xl font-semibold">{plante.timer_optimal}</div>
             <div class="text-[10px] text-text-dim">timer/dag</div>
           </div>
         {/if}
         {#if plante.intensitet_optimal}
           <div class="card-raised p-3">
             <div class="text-xs text-text-muted mb-1">Intensitet</div>
-            <div class="text-xl font-bold">{plante.intensitet_optimal}%</div>
+            <div class="font-display text-xl font-semibold">{plante.intensitet_optimal}%</div>
             <div class="text-[10px] text-text-dim">av LED max</div>
           </div>
         {/if}
         {#if plante.dager_til_hosting}
           <div class="card-raised p-3">
             <div class="text-xs text-text-muted mb-1">Til høsting</div>
-            <div class="text-xl font-bold">{plante.dager_til_hosting}</div>
+            <div class="font-display text-xl font-semibold">{plante.dager_til_hosting}</div>
             <div class="text-[10px] text-text-dim">dager</div>
           </div>
         {/if}

@@ -79,15 +79,15 @@
 
 <div class="flex flex-col gap-6">
   <div>
-    <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">Dyrking</h1>
-    <p class="text-text-muted text-sm mt-1">
-      Handleliste og dyrketips for urter + salat i den selvvannende veke-potta.
+    <h1 class="font-display text-[25px] sm:text-3xl font-semibold tracking-tight">Dyrking</h1>
+    <p class="font-mono text-[11px] text-text-muted mt-1.5">
+      Handleliste og dyrketips for veke-potta
     </p>
   </div>
 
   <!-- Minimums-handleliste -->
   <div class="card p-4 sm:p-5">
-    <h2 class="font-semibold flex items-center gap-2">
+    <h2 class="font-display text-[17px] font-semibold flex items-center gap-2">
       <span>✅</span> Kom-i-gang-liste
     </h2>
     <p class="text-text-dim text-xs mt-1">Kjøp for å komme i gang — ~300–450 kr. Huk av mens du handler.</p>
@@ -127,7 +127,7 @@
 
   <!-- Frø-utvalg -->
   <div class="card p-4 sm:p-5">
-    <h2 class="font-semibold flex items-center gap-2"><span>🌱</span> Anbefalt frø-utvalg</h2>
+    <h2 class="font-display text-[17px] font-semibold flex items-center gap-2"><span>🌱</span> Anbefalt frø-utvalg</h2>
     <p class="text-text-dim text-xs mt-1">Lettstelt, rask og tåler veke-fukt. Start med 4–6 sorter, reså etter hvert.</p>
 
     <div class="mt-3 p-3 rounded-lg bg-surface-raised border border-border">
@@ -186,7 +186,7 @@
 
   <!-- Dyrkemedium -->
   <div class="card p-4 sm:p-5">
-    <h2 class="font-semibold flex items-center gap-2"><span>🪴</span> Dyrkemedium</h2>
+    <h2 class="font-display text-[17px] font-semibold flex items-center gap-2"><span>🪴</span> Dyrkemedium</h2>
     <div class="mt-3 p-3 rounded-lg bg-leaf/10 border border-leaf/25">
       <div class="text-sm font-medium text-leaf">✅ Valgt: torvfri kokos-jord + perlite, to-fase næring</div>
       <p class="text-sm text-text-muted mt-1">
@@ -207,7 +207,7 @@
 
   <!-- Næring -->
   <div class="card p-4 sm:p-5">
-    <h2 class="font-semibold flex items-center gap-2"><span>💧</span> Næring</h2>
+    <h2 class="font-display text-[17px] font-semibold flex items-center gap-2"><span>💧</span> Næring</h2>
     <p class="text-sm text-text-muted mt-2">
       Passiv hydroponi → bruk en <strong>komplett hydroponisk</strong> næring (mineral, ikke organisk
       — organisk grumser i et stille vannbad). Anbefalt: <strong>Nelson Garden Hydroponisk næring
@@ -237,7 +237,7 @@
 
   <!-- Oppstart & veke-tips -->
   <div class="card p-4 sm:p-5">
-    <h2 class="font-semibold flex items-center gap-2"><span>🌱</span> Oppstart & veke-tips</h2>
+    <h2 class="font-display text-[17px] font-semibold flex items-center gap-2"><span>🌱</span> Oppstart & veke-tips</h2>
     <ul class="mt-2 flex flex-col gap-2 text-sm text-text-muted">
       <li><strong>Topp-vann første uka</strong> til røttene «kobler seg» til veka — slutt så og la veka ta over.</li>
       <li><strong>Veke 2,5–5 cm opp i mediet</strong>, helt ned til bunnen av vannbadet. Flere veker = jevnere fukt for bladgrønt.</li>
@@ -249,7 +249,7 @@
 
   <!-- Hvor handle -->
   <div class="card p-4 sm:p-5">
-    <h2 class="font-semibold flex items-center gap-2"><span>🏪</span> Hvor handle</h2>
+    <h2 class="font-display text-[17px] font-semibold flex items-center gap-2"><span>🏪</span> Hvor handle</h2>
     <div class="mt-3 flex flex-col gap-2">
       {#each butikker as b (b.navn)}
         <div class="card-raised p-3">

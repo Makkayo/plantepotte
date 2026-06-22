@@ -48,9 +48,9 @@
 
 <div class="flex flex-col gap-6">
   <div>
-    <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">Plantekatalog</h1>
-    <p class="text-text-muted text-sm mt-1">
-      {$planter.length} planter med dokumenterte krav fra forskning og dyrkingsguider
+    <h1 class="font-display text-[25px] sm:text-3xl font-semibold tracking-tight">Plantekatalog</h1>
+    <p class="font-mono text-[11px] text-text-muted mt-1.5">
+      {$planter.length} planter · dokumenterte krav fra forskning
     </p>
   </div>
 

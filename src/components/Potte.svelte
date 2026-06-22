@@ -19,6 +19,7 @@
     navn,
     delt,
     felt,
+    harSensor = true,
     lagrer = false,
     onToggleSkille,
     onFelt,
@@ -26,6 +27,7 @@
     navn: string;
     delt: boolean;
     felt: FeltData[];
+    harSensor?: boolean;
     lagrer?: boolean;
     onToggleSkille: () => void;
     onFelt: (seksjon: number) => void;
@@ -57,7 +59,7 @@
       style="background:#2a3045; clip-path:polygon(14px 0,calc(100% - 14px) 0,100% 14px,100% calc(100% - 14px),calc(100% - 14px) 100%,14px 100%,0 calc(100% - 14px),0 14px)"
     >
       {#each felt as f (f.seksjon)}
-        <Felt plante={f.plante} rolle={f.rolle} fukt={f.fukt} onClick={() => onFelt(f.seksjon)} />
+        <Felt plante={f.plante} rolle={f.rolle} fukt={f.fukt} {harSensor} onClick={() => onFelt(f.seksjon)} />
       {/each}
     </div>
   </div>
