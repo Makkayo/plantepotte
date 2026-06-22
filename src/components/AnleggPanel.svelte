@@ -30,6 +30,7 @@
   import type { VannTrend } from '../lib/trend';
   import PotteViz from './Potte.svelte';
   import LysSheet from './LysSheet.svelte';
+  import SolBue from './viz/SolBue.svelte';
   import Sheet from './Sheet.svelte';
 
   type SensorRad = {
@@ -149,7 +150,7 @@
     command ? ((now.getHours() * 60 + now.getMinutes() - tMin(command.timer_on)) % 1440 + 1440) % 1440 : 0,
   );
   const iLysVindu = $derived(lysPaa && lysVarighet > 0 && lysRel <= lysVarighet);
-  const lysNaaPct = $derived(iLysVindu ? (lysRel / lysVarighet) * 100 : 0);
+  const lysDli = $derived(beregnDli(command?.intensitet ?? 0, lysVarighet / 60));
 
   function fmtVar(min: number): string {
     const h = Math.floor(min / 60);
@@ -352,7 +353,7 @@
     }}
     aria-label="Åpne lysinnstillinger"
   >
-    <div class="flex items-center justify-between mb-3">
+    <div class="flex items-center justify-between">
       <div>
         <div class="text-[13px] font-semibold">Vekstlys</div>
         <div class="font-mono text-[10.5px] text-text-muted mt-0.5">
@@ -375,26 +376,26 @@
         <span class="w-[19px] h-[19px] rounded-full bg-bg block shadow"></span>
       </button>
     </div>
-    <div class="flex items-center gap-2.5">
-      <span class="font-mono text-[9.5px] text-text-dim">{command?.timer_on ?? '–'}</span>
-      <div
-        class="relative flex-1 h-[14px] rounded-[7px] bg-surface-raised border border-border overflow-hidden transition-opacity duration-200"
-        style="opacity:{lysPaa ? 1 : 0.3}"
-      >
-        <div
-          class="absolute left-0 top-0 bottom-0 rounded-l-[6px]"
-          style="width:{lysNaaPct}%; background:linear-gradient(90deg,rgba(74,222,128,0.2),rgba(74,222,128,0.5))"
-        ></div>
-        {#if iLysVindu}
-          <div
-            class="absolute top-1/2 w-[11px] h-[11px] rounded-full bg-leaf breathe-dot"
-            style="left:{lysNaaPct}%; transform:translate(-50%,-50%); box-shadow:0 0 0 3px rgba(74,222,128,0.18),0 0 9px rgba(74,222,128,0.7)"
-          ></div>
-        {/if}
+
+    <!-- Sol-bue + intensitet/DLI — samme visuelle språk som tank/potter -->
+    <div class="mt-1.5" style="opacity:{lysPaa ? 1 : 0.45}; transition:opacity 0.2s">
+      <div class="max-w-[215px] mx-auto">
+        <SolBue
+          timerOn={command?.timer_on ?? '07:00'}
+          timerOff={command?.timer_off ?? '23:00'}
+          {now}
+        />
       </div>
-      <span class="font-mono text-[9.5px] text-text-dim">{command?.timer_off ?? '–'}</span>
+      <div class="flex items-baseline justify-center gap-3 mt-0.5">
+        <span class="font-display text-[26px] font-semibold leading-none">
+          {command?.intensitet ?? 0}<span class="text-sm font-normal text-text-muted">%</span>
+        </span>
+        <span class="font-mono text-[11px] text-text-muted">
+          {lysDli.toFixed(1).replace('.', ',')} DLI
+        </span>
+      </div>
     </div>
-    <div class="text-[11px] text-text-muted mt-2">{lysCaption}</div>
+    <div class="text-center text-[11px] text-text-muted mt-1.5">{lysCaption}</div>
   </div>
 
   <!-- Pottene (vannreservoaret tegnes som tanken i midten — eget kort fjernet) -->
