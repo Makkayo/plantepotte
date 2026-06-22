@@ -29,7 +29,6 @@
   } from '../lib/database.types';
   import type { VannTrend } from '../lib/trend';
   import PotteViz from './Potte.svelte';
-  import VannFlottor from './viz/VannFlottor.svelte';
   import LysSheet from './LysSheet.svelte';
   import Sheet from './Sheet.svelte';
 
@@ -191,7 +190,9 @@
       potte.vann_full_mm ?? undefined,
     ),
   );
+  const vannFyll = $derived(vannPct ?? 0); // 0–100, klampet til tank-høyden
   const forbrukMaks = $derived(Math.max(0.1, ...(trend.dagligForbruk.length ? trend.dagligForbruk : [0.1])));
+  let visKalibrering = $state(false); // kalibrering er skjult bak en svak knapp i vann-arket
 
   // ---------- bunn-ark ----------
   type Aapent =
@@ -215,6 +216,8 @@
   const lukk = () => {
     aapent = null;
     notatRediger = false;
+    visKalibrering = false;
+    kalibreringsFeil = null;
   };
 
   function startNotat(naa: string | null) {
@@ -394,14 +397,7 @@
     <div class="text-[11px] text-text-muted mt-2">{lysCaption}</div>
   </div>
 
-  <!-- Vannreservoar -->
-  {#if potte.har_sensorer}
-    <div class="stig" style="--d: 120ms">
-      <VannFlottor pct={vannPct} {trend} onClick={() => (aapent = { type: 'vann' })} />
-    </div>
-  {/if}
-
-  <!-- Pottene -->
+  <!-- Pottene (vannreservoaret tegnes som tanken i midten — eget kort fjernet) -->
   {#if potte.har_sensorer}
     <div class="stig" style="--d: 180ms">
       <div class="flex items-baseline justify-between mb-3">
@@ -409,7 +405,7 @@
         <div class="font-mono text-[11px] text-text-dim">trykk på et felt</div>
       </div>
       <div class="relative">
-        <div class="flex gap-10 items-start">
+        <div class="flex gap-11 items-start">
           {#each pots as p (p.potteNr)}
             <PotteViz
               navn={p.navn}
@@ -421,33 +417,50 @@
           {/each}
         </div>
         {#if pots.length > 1}
-          <div
-            class="absolute left-1/2 top-[34px] bottom-0 w-10 -translate-x-1/2 flex flex-col items-center justify-end pointer-events-none"
+          <!-- Felles vannreservoar tegnet som en vertikal tank i midten: fyller
+               fra bunn (topp = 100 %, bunn = 0 %), flottør på overflaten, % nede.
+               Trykk åpner vann-arket. -->
+          <button
+            class="absolute left-1/2 top-[34px] bottom-0 -translate-x-1/2 w-[30px] active:brightness-110 transition-[filter]"
+            onclick={() => (aapent = { type: 'vann' })}
+            aria-label="Vannreservoar {vannPct ?? '–'} prosent — trykk for detaljer og påfylling"
           >
             <div
-              class="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[14px]"
-              style="border-left:1px solid rgba(255,228,184,0.14); border-right:1px solid rgba(255,228,184,0.14); background:linear-gradient(180deg,rgba(111,90,66,0.25),rgba(56,43,28,0.25))"
-            ></div>
-            <button
-              class="relative mb-2 flex flex-col items-center gap-1 pointer-events-auto active:brightness-125"
-              onclick={() => (aapent = { type: 'vann' })}
-              aria-label="Åpne vannreservoar (luke)"
+              class="relative w-full h-full rounded-[11px] overflow-hidden border border-border-strong"
+              style="background:rgba(255,255,255,0.03)"
             >
+              <!-- laser-strek ned til overflaten -->
+              <div class="absolute top-1.5 bottom-0 left-1/2 -translate-x-1/2 border-l border-dashed border-sky/30"></div>
+              <!-- vannfyll fra bunn -->
               <div
-                class="flex items-center justify-center w-[30px] h-[26px] rounded-[7px]"
-                style="background:#0d1320; border:1px solid #60a5fa; box-shadow:0 0 0 2px rgba(11,13,18,0.92),0 0 14px rgba(96,165,250,0.6)"
+                class="absolute inset-x-0 bottom-0 transition-[height] duration-700"
+                style="height:{vannFyll}%; background:linear-gradient(180deg,#7cc0ff,#3b82c4)"
+              ></div>
+              <!-- glass-glis -->
+              <div class="absolute top-2 left-1 w-[3px] h-[55%] rounded bg-white/[0.06]"></div>
+              <!-- flottør på overflaten (synker med nivået) -->
+              {#if vannPct !== null}
+                <div
+                  class="absolute left-1/2 transition-[bottom] duration-700"
+                  style="bottom:{vannFyll}%; transform:translate(-50%,50%)"
+                >
+                  <div class="flott-bob w-[18px] h-2 rounded-[4px]" style="background:#eef2f8; box-shadow:0 2px 0 #9fb0c8"></div>
+                </div>
+              {/if}
+              <!-- %-avlesning -->
+              <div
+                class="absolute bottom-1.5 left-1/2 -translate-x-1/2 px-1 py-0.5 rounded bg-black/40 font-mono text-[9px] font-semibold text-white whitespace-nowrap"
               >
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="#7cc0ff" stroke="none"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/></svg>
+                {vannPct ?? '–'}%
               </div>
-              <span class="font-mono text-[8px] font-semibold tracking-[0.08em]" style="color:#9ecbff">LUKE</span>
-            </button>
-          </div>
+            </div>
+          </button>
         {/if}
       </div>
       {#if pots.length > 1}
         <div class="flex items-center justify-center gap-1.5 mt-3 font-mono text-[10px] text-text-dim">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="#60a5fa" stroke="none"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/></svg>
-          Luka sitter mellom pottene, på fronten
+          Trykk på tanken i midten for vann og påfylling
         </div>
       {/if}
     </div>
@@ -572,28 +585,46 @@
       </div>
     {/if}
 
+    <button class="btn-secondary w-full mt-5" onclick={lukk}>Lukk</button>
+
     {#if sensor?.vann_avstand_mm != null}
-      <div class="flex gap-2.5 mt-5">
-        <button class="btn-primary flex-1" disabled={kalibrerer !== null} onclick={() => settKalibrering('full')}>
-          {kalibrerer === 'full' ? 'Lagrer…' : 'Marker som fylt'}
+      <div class="text-center mt-3">
+        <button
+          class="text-[11px] text-text-dim hover:text-text-muted transition-colors"
+          onclick={() => (visKalibrering = !visKalibrering)}
+        >
+          {visKalibrering ? 'Skjul kalibrering' : 'Kalibrer sensor'}
         </button>
-        <button class="btn-secondary flex-1" onclick={lukk}>Lukk</button>
       </div>
-      <button
-        class="w-full mt-2.5 text-[11px] text-text-dim hover:text-text-muted transition-colors"
-        disabled={kalibrerer !== null}
-        onclick={() => settKalibrering('tom')}
-      >
-        {kalibrerer === 'tom' ? 'Lagrer…' : 'Tanken er tom nå (kalibrer bunn-nivå)'}
-      </button>
-      <div class="mt-2 font-mono text-[10px] text-text-dim text-center tabular-nums">
-        Avlest {sensor.vann_avstand_mm} mm · tom {potte.vann_tom_mm ?? `${VANN_TOM_MM}*`} · full {potte.vann_full_mm ?? `${VANN_FULL_MM}*`}
-      </div>
-      {#if kalibreringsFeil}
-        <div class="mt-2 p-2 rounded-md bg-rose/10 border border-rose/30 text-rose text-[11px]">{kalibreringsFeil}</div>
+      {#if visKalibrering}
+        <div class="mt-2 p-3 rounded-xl bg-bg-subtle border border-border">
+          <p class="text-[11px] text-text-muted leading-snug mb-2.5">
+            Nivået vises automatisk når du fyller. Kalibrer kun ved oppsett, eller hvis prosenten er feil: fyll eller tøm tanken helt, og lås nivået her.
+          </p>
+          <div class="flex gap-2.5">
+            <button
+              class="btn-secondary flex-1 !py-2 text-xs"
+              disabled={kalibrerer !== null}
+              onclick={() => settKalibrering('full')}
+            >
+              {kalibrerer === 'full' ? 'Lagrer…' : 'Sett som fullt nå'}
+            </button>
+            <button
+              class="btn-secondary flex-1 !py-2 text-xs"
+              disabled={kalibrerer !== null}
+              onclick={() => settKalibrering('tom')}
+            >
+              {kalibrerer === 'tom' ? 'Lagrer…' : 'Sett som tomt nå'}
+            </button>
+          </div>
+          <div class="mt-2.5 font-mono text-[10px] text-text-dim text-center tabular-nums">
+            Avlest {sensor.vann_avstand_mm} mm · tom {potte.vann_tom_mm ?? `${VANN_TOM_MM}*`} · full {potte.vann_full_mm ?? `${VANN_FULL_MM}*`}
+          </div>
+          {#if kalibreringsFeil}
+            <div class="mt-2 p-2 rounded-md bg-rose/10 border border-rose/30 text-rose text-[11px]">{kalibreringsFeil}</div>
+          {/if}
+        </div>
       {/if}
-    {:else}
-      <button class="btn-secondary w-full mt-5" onclick={lukk}>Lukk</button>
     {/if}
   {/if}
 </Sheet>
