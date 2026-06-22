@@ -2,9 +2,13 @@
   /**
    * Gjenbrukbart bunn-ark (bottom sheet). Sklir opp fra bunnen over et halv-
    * gjennomsiktig bakteppe (bakgrunnen synes fortsatt). Lukkes ved: trykk på
-   * bakteppet, Escape, ELLER ved å dra NEDOVER hvor som helst på arket (så lenge
-   * innholdet er scrollet til toppen — ellers scroller man). Høyt innhold (maks
-   * 85vh) scroller internt. Brukes av alle ark i appen.
+   * bakteppet, Escape, eller ved å DRA NEDOVER.
+   *
+   * Touch-detalj som er lett å trå feil på: nettleseren «kaprer» vertikal touch
+   * som scroll med mindre elementet har `touch-action: none`. Derfor:
+   *  - en stor topp dra-sone med touch-action:none (virker alltid),
+   *  - innhold som IKKE trenger scroll får også touch-action:none → dra hvor
+   *    som helst, mens innhold som scroller får pan-y og dras via topp-sonen.
    */
   import type { Snippet } from 'svelte';
 
@@ -19,18 +23,21 @@
   let down = $state(true); // skjøvet ned (lukket posisjon)
   let dragY = $state(0); // dra-offset i px (kun nedover)
   let dragging = $state(false); // aktiv lukk-dra
-  let armed = false; // peker er nede, vurderer scroll vs. dra
+  let armed = false; // peker er nede, vurderer dra
   let startY = 0;
   let scrollEl = $state<HTMLElement>();
-  const LUKKE_GRENSE = 90; // px dratt ned før vi lukker
+  let kanScrolle = $state(false);
+  const LUKKE_GRENSE = 80; // px dratt ned før vi lukker
 
   $effect(() => {
     if (open) {
       render = true;
-      // to rAF: garanter at lukket-posisjon (100%) males FØR vi glir opp.
       requestAnimationFrame(() =>
         requestAnimationFrame(() => {
-          if (open) down = false;
+          if (open) {
+            down = false;
+            maalScroll();
+          }
         }),
       );
     } else {
@@ -40,11 +47,24 @@
     }
   });
 
-  function onDown(e: PointerEvent) {
-    // Start på en kontroll (slider/knapp/input) → la kontrollen få interaksjonen.
-    if ((e.target as HTMLElement).closest?.('input,button,textarea,select,a,label')) {
-      armed = false;
-      return;
+  function maalScroll() {
+    if (scrollEl) kanScrolle = scrollEl.scrollHeight - scrollEl.clientHeight > 2;
+  }
+
+  function onDown(e: PointerEvent, fraHandtak: boolean) {
+    if (!fraHandtak) {
+      const t = e.target as HTMLElement;
+      // start på en kontroll → la kontrollen få interaksjonen
+      if (t.closest?.('input,button,textarea,select,a,label')) {
+        armed = false;
+        return;
+      }
+      maalScroll();
+      // scrollbart innhold som ikke er på toppen → la det scrolle
+      if (kanScrolle && (scrollEl?.scrollTop ?? 0) > 0) {
+        armed = false;
+        return;
+      }
     }
     armed = true;
     dragging = false;
@@ -55,16 +75,15 @@
     if (!armed) return;
     const dy = e.clientY - startY;
     if (!dragging) {
-      const vedTopp = (scrollEl?.scrollTop ?? 0) <= 0;
-      if (dy > 4 && vedTopp) {
-        dragging = true; // dra nedover fra toppen = lukk-dra
+      if (dy > 4) {
+        dragging = true;
         try {
           (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
         } catch {
           /* ignorer */
         }
-      } else if (dy < -2 || !vedTopp) {
-        armed = false; // dette er en scroll, ikke en lukk-dra
+      } else if (dy < -2) {
+        armed = false; // beveger oppover → ikke en lukk-dra
         return;
       } else {
         return;
@@ -77,7 +96,7 @@
     if (!dragging) return;
     dragging = false;
     if (dragY > LUKKE_GRENSE) onClose();
-    dragY = 0; // snap tilbake (eller overstyres av down=true ved lukking)
+    dragY = 0;
   }
   function onKey(e: KeyboardEvent) {
     if (e.key === 'Escape') onClose();
@@ -89,7 +108,7 @@
   );
 </script>
 
-<svelte:window onkeydown={onKey} />
+<svelte:window onkeydown={onKey} onresize={maalScroll} />
 
 {#if render}
   <div
@@ -100,23 +119,44 @@
   ></div>
   <div
     class="fixed inset-x-0 bottom-0 z-50 mx-auto w-full max-w-[430px] bg-surface border-t border-border rounded-t-[22px] shadow-2xl flex flex-col max-h-[85vh]"
-    style="transform: translateY({ty}); transition:{sheetTransition}; touch-action:none"
+    style="transform: translateY({ty}); transition:{sheetTransition}"
     role="dialog"
     aria-modal="true"
     tabindex="-1"
-    onpointerdown={onDown}
-    onpointermove={onMove}
-    onpointerup={onUp}
-    onpointercancel={onUp}
-    onlostpointercapture={onUp}
   >
-    <div class="shrink-0 pt-3 pb-2 flex justify-center cursor-grab active:cursor-grabbing select-none">
-      <div class="w-[38px] h-1 rounded-full bg-border-strong" aria-hidden="true"></div>
+    <!-- Stor dra-sone (touch-action:none gjør at touch-drag faktisk virker) -->
+    <div
+      class="shrink-0 flex items-center justify-center cursor-grab active:cursor-grabbing select-none"
+      style="height:46px; touch-action:none"
+      role="button"
+      tabindex="0"
+      aria-label="Dra ned for å lukke"
+      onpointerdown={(e) => onDown(e, true)}
+      onpointermove={onMove}
+      onpointerup={onUp}
+      onpointercancel={onUp}
+      onlostpointercapture={onUp}
+      onkeydown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClose();
+        }
+      }}
+    >
+      <div class="w-10 h-1.5 rounded-full bg-border-strong" aria-hidden="true"></div>
     </div>
+    <!-- Innhold (scroller når det er høyt; ellers dragbart i hele flaten) -->
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
     <div
       bind:this={scrollEl}
       class="flex-1 min-h-0 overflow-y-auto overscroll-contain px-6"
-      style="touch-action:pan-y; padding-bottom: calc(1.75rem + env(safe-area-inset-bottom))"
+      style="touch-action:{kanScrolle ? 'pan-y' : 'none'}; padding-bottom: calc(1.75rem + env(safe-area-inset-bottom))"
+      onpointerdown={(e) => onDown(e, false)}
+      onpointermove={onMove}
+      onpointerup={onUp}
+      onpointercancel={onUp}
+      onlostpointercapture={onUp}
+      onscroll={maalScroll}
     >
       {@render children?.()}
     </div>
