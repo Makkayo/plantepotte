@@ -15,6 +15,8 @@
   import AnleggPanel from './AnleggPanel.svelte';
   import PlanteVelger from './PlanteVelger.svelte';
   import Veksttidslinje from './Veksttidslinje.svelte';
+  import Sheet from './Sheet.svelte';
+  import KasseInnstillinger from './KasseInnstillinger.svelte';
 
   let { potteId }: { potteId: string } = $props();
 
@@ -31,6 +33,7 @@
   let historikk = $state<PottePlanteFull[]>([]);
   let iDriftLagrer = $state(false);
   let bekreftDrift = $state(false);
+  let visInnstillinger = $state(false);
 
   // Sensorhistorikk (siste 7 dager) → vanntrend + jordfukt-sparkline per felt.
   type SensorRad = {
@@ -258,15 +261,24 @@
         </button>
         <h1 class="font-display text-[22px] font-semibold leading-none truncate">{potte.navn}</h1>
       </div>
-      {#if potte.har_sensorer}
-        <span class="inline-flex items-center gap-1.5 font-mono text-[11px] shrink-0 {detaljOffline ? 'text-sun' : 'text-text-muted'}">
-          <span
-            class="w-[7px] h-[7px] rounded-full {detaljOffline ? 'bg-sun' : 'bg-leaf'}"
-            style="box-shadow:0 0 0 3px {detaljOffline ? 'rgba(251,191,36,0.16)' : 'rgba(74,222,128,0.16)'}"
-          ></span>
-          {detaljOffline ? 'Frakoblet' : 'Tilkoblet'}
-        </span>
-      {/if}
+      <div class="flex items-center gap-3 shrink-0">
+        {#if potte.har_sensorer}
+          <span class="inline-flex items-center gap-1.5 font-mono text-[11px] {detaljOffline ? 'text-sun' : 'text-text-muted'}">
+            <span
+              class="w-[7px] h-[7px] rounded-full {detaljOffline ? 'bg-sun' : 'bg-leaf'}"
+              style="box-shadow:0 0 0 3px {detaljOffline ? 'rgba(251,191,36,0.16)' : 'rgba(74,222,128,0.16)'}"
+            ></span>
+            {detaljOffline ? 'Frakoblet' : 'Tilkoblet'}
+          </span>
+        {/if}
+        <button
+          class="w-[34px] h-[34px] rounded-[10px] card flex items-center justify-center hover:brightness-125 transition-all text-text-muted"
+          onclick={() => (visInnstillinger = true)}
+          aria-label="Innstillinger for kassa"
+        >
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+        </button>
+      </div>
     </div>
 
     <!-- Anlegget: vekstlys + vannreservoar + pottene (oktagoner) -->
@@ -353,4 +365,17 @@
       onValgt={planteValgt}
     />
   {/if}
+
+  <Sheet open={visInnstillinger} onClose={() => (visInnstillinger = false)}>
+    {#if visInnstillinger && potte}
+      <KasseInnstillinger
+        kasse={potte}
+        onLukk={() => (visInnstillinger = false)}
+        onLagret={() => {
+          // Slettet kasse → gå tilbake til oversikten.
+          if (!$potter.find((p) => p.potte_id === potteId)) window.history.back();
+        }}
+      />
+    {/if}
+  </Sheet>
 {/if}
