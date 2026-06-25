@@ -5,7 +5,8 @@
 # før vi laster koden opp på ESP32-en.
 
 from logic import (hhmm_to_min, local_hm, light_should_be_on,
-                   duty_for, clamp, adjust, int_or_default, norsk_utc_offset)
+                   duty_for, clamp, adjust, int_or_default, norsk_utc_offset,
+                   ramp_factor)
 
 _fails = 0
 
@@ -72,6 +73,21 @@ check("sopple -> default", int_or_default("xyz", 70), 70)
 check("adjust +5", adjust(80, 5), 85)
 check("adjust klamp 100", adjust(98, 5), 100)
 check("adjust klamp 0", adjust(2, -5), 0)
+
+# ── myk overgang (soloppgang/solnedgang), vindu 07:00-23:00, ramp 30 min ──
+r_on, r_off = hhmm_to_min("07:00"), hhmm_to_min("23:00")
+check("ramp 07:00 = 0 (akkurat pa)", ramp_factor(420, r_on, r_off, 30), 0.0)
+check("ramp 07:15 = halv", ramp_factor(435, r_on, r_off, 30), 0.5)
+check("ramp 07:30 = full", ramp_factor(450, r_on, r_off, 30), 1.0)
+check("ramp 12:00 = full", ramp_factor(720, r_on, r_off, 30), 1.0)
+check("ramp 22:45 = halv (mot slutten)", ramp_factor(1365, r_on, r_off, 30), 0.5)
+check("ramp 23:00 = 0 (av-grense)", ramp_factor(1380, r_on, r_off, 30), 0.0)
+check("ramp 06:00 = 0 (utenfor)", ramp_factor(360, r_on, r_off, 30), 0.0)
+check("ramp_min 0 = full i vinduet", ramp_factor(720, r_on, r_off, 0), 1.0)
+# Krysser midnatt 20:00-06:00
+m_on, m_off = hhmm_to_min("20:00"), hhmm_to_min("06:00")
+check("ramp natt 20:15 = halv", ramp_factor(1215, m_on, m_off, 30), 0.5)
+check("ramp natt 00:00 = full", ramp_factor(0, m_on, m_off, 30), 1.0)
 
 print("-" * 44)
 if _fails == 0:

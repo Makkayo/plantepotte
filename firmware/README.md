@@ -66,6 +66,9 @@ ESP32  ──poster hvert 5. min*──►  potte_sensor_data  ──►  Web-ap
 - **KY-040:** vri = ±5 % lokalt, trykk = tilbake til appens verdi. En ny
   innstilling fra appen nullstiller lokal justering.
 - **Lys-timer** støtter at av-tid er før på-tid (krysser midnatt).
+- **Myk soloppgang/-nedgang (valgfritt):** `MYK_OVERGANG_MIN` i `config.py` toner
+  lysstyrken opp/ned over så mange minutter ved vindus-kantene. `0` = av (hardt
+  på/av, standard). Påvirker bare LED-en — timer og DLI er uendret.
 
 ## Viktige notater
 
@@ -84,4 +87,7 @@ ESP32  ──poster hvert 5. min*──►  potte_sensor_data  ──►  Web-ap
 - 🔌 Bucken er **fast 5V** (KIS3R33S-type, kan ikke stilles — målt 5,26V ✅).
   Verifiser likevel ~5V med multimeter før ESP32 kobles til første gang, og
   koble fra VIN før du programmerer via USB-C.
-- 🌍 `TZ_OFFSET_HOURS` i `config.py`: 2 om sommeren, 1 om vinteren (endre 2× i året).
+- 🌍 **Tidssone går av seg selv:** `AUTO_SOMMERTID = True` (standard) lar firmwaren
+  veksle mellom CET (vinter) og CEST (sommer) etter EU-reglene — du trenger
+  **aldri** endre noe manuelt. `TZ_OFFSET_HOURS` brukes kun hvis du setter
+  `AUTO_SOMMERTID = False` (f.eks. en potte utenfor Norge).

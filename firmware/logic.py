@@ -88,3 +88,29 @@ def duty_for(intensitet, light_on, max_duty=1023):
 def adjust(intensitet, delta, lo=0, hi=100):
     """Encoder-justering av lysstyrke, med klamping innenfor 0-100."""
     return clamp(intensitet + delta, lo, hi)
+
+
+def ramp_factor(now_min, on_min, off_min, ramp_min):
+    """Myk overgang (soloppgang/solnedgang) ved kantene av lys-vinduet.
+
+    Returnerer en skalering 0..1 av lysstyrken:
+      - 0.0  utenfor lys-vinduet, og helt i kanten (lyset akkurat pa/av)
+      - stiger lineaert til 1.0 over de forste `ramp_min` minuttene
+      - synker symmetrisk de siste `ramp_min` minuttene
+    ramp_min <= 0 gir 1.0 i HELE vinduet = uendret hardt av/pa. Stotter at
+    vinduet krysser midnatt (off < on). Alle tider er minutter siden midnatt.
+    """
+    if not light_should_be_on(now_min, on_min, off_min):
+        return 0.0
+    if ramp_min <= 0:
+        return 1.0
+    into = (now_min - on_min) % 1440        # minutter siden lyset gikk pa
+    total = (off_min - on_min) % 1440        # vinduets lengde
+    if total == 0:
+        total = 1440
+    until = total - into                     # minutter til lyset gar av
+    edge = into if into < until else until   # avstand til naermeste kant
+    if edge >= ramp_min:
+        return 1.0
+    f = edge / float(ramp_min)
+    return f if f > 0.0 else 0.0

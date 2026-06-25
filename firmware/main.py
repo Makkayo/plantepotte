@@ -30,6 +30,11 @@ try:
     from config import AUTO_SOMMERTID
 except ImportError:
     AUTO_SOMMERTID = True
+# Bakoverkompatibelt: gammel config.py uten MYK_OVERGANG_MIN -> 0 (hardt av/pa).
+try:
+    from config import MYK_OVERGANG_MIN
+except ImportError:
+    MYK_OVERGANG_MIN = 0
 import ssd1306
 import logic
 
@@ -318,10 +323,16 @@ while True:
     tz = logic.norsk_utc_offset(yr, mo, dy, hh) if AUTO_SOMMERTID else TZ_OFFSET_HOURS
     lh, lm = logic.local_hm(hh, mm, tz)
     now_min = lh * 60 + lm
-    lyser = logic.light_should_be_on(now_min,
-                                     logic.hhmm_to_min(timer_on),
-                                     logic.hhmm_to_min(timer_off))
-    _apply_duty()
+    on_min = logic.hhmm_to_min(timer_on)
+    off_min = logic.hhmm_to_min(timer_off)
+    lyser = logic.light_should_be_on(now_min, on_min, off_min)
+    # Myk overgang: ton lysstyrken opp/ned mot vindus-kantene hvis aktivert
+    # (MYK_OVERGANG_MIN > 0). =0 -> hardt av/pa via _apply_duty() som for.
+    if MYK_OVERGANG_MIN > 0:
+        f = logic.ramp_factor(now_min, on_min, off_min, MYK_OVERGANG_MIN)
+        led.duty(logic.duty_for(int(intensitet * f), lyser))
+    else:
+        _apply_duty()
 
     # 4) Skjerm
     show(temp, hum, s, vann_mm, intensitet, lyser, wifi_ok)

@@ -40,6 +40,13 @@ DEFAULT_INTENSITET = 70        # prosent
 DEFAULT_TIMER_ON = "07:00"
 DEFAULT_TIMER_OFF = "23:00"
 
+# ── Myk overgang (soloppgang/solnedgang) ──
+# Minutter lysstyrken bruker på å tone OPP når lyset slår seg på, og NED før det
+# slår seg av. 0 = av (hardt på/av, som før — standard). Prøv f.eks. 20 for en
+# myk 20-minutters soloppgang/-nedgang. Påvirker bare LED-en; timer og DLI er
+# uendret. (Krever firmware med ramp_factor — logic.py fra juni 2026 eller nyere.)
+MYK_OVERGANG_MIN = 0
+
 # ── Vaktbikkje (watchdog) ──
 # True  = ESP32 restarter seg selv automatisk hvis programmet henger i over
 #         2 minutter (f.eks. et nettverkskall som aldri svarer). Skal være

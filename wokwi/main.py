@@ -1,8 +1,10 @@
 # Plantepotte — Wokwi-simulator (med lys-timer)
 #
-# Bruker SAMME logic.py som den ekte firmwaren (firmware/), så lys-timeren du
-# ser her er nøyaktig den som kjører på potta. Wokwi har ingen WiFi/Supabase,
-# så vi simulerer to ting:
+# wokwi/logic.py er en VERBATIM kopi av firmware/logic.py (Wokwi laster filer fra
+# denne mappa). Kilden er firmware/logic.py — rediger DER og kopier hit; CI
+# (`diff firmware/logic.py wokwi/logic.py`) feiler hvis de kommer ut av synk.
+# Slik er lys-timeren du ser her nøyaktig den som kjører på potta. Wokwi har
+# ingen WiFi/Supabase, så vi simulerer to ting:
 #   • en RASK klokke — et helt døgn på ca. 25 sek — så du SER lyset slå seg
 #     på kl 07:00 og av kl 23:00
 #   • "kommandoen" fra appen (intensitet 70 %, timer 07:00–23:00)
