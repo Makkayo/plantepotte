@@ -1,5 +1,14 @@
 import { describe, it, expect } from 'vitest';
-import { beregnDli, intensitetForDli, anbefaltInnstilling, MAKS_FOTOPERIODE } from './lys';
+import {
+  beregnDli,
+  intensitetForDli,
+  anbefaltInnstilling,
+  MAKS_FOTOPERIODE,
+  vurderLysKompatibilitet,
+  vurderVannKompatibilitet,
+  familieAvstand,
+  vannAvstand,
+} from './lys';
 import type { Plante } from './database.types';
 
 /** Minimal Plante-fabrikk for tester — sett bare feltene testen bryr seg om. */
@@ -92,5 +101,92 @@ describe('anbefaltInnstilling — fotoperiode-kompensasjon', () => {
     expect(d.intensitet).toBe(70);
     expect(d.timer).toBe(14);
     expect(d.forlenget).toBe(false);
+  });
+
+  it('lager et gyldig lys-vindu sentrert rundt 14:00', () => {
+    const hhmm = /^([01]\d|2[0-3]):[0-5]\d$/;
+    // Standard (14 t): 07:00–21:00.
+    const d = anbefaltInnstilling([]);
+    expect(d.timer_on).toBe('07:00');
+    expect(d.timer_off).toBe('21:00');
+    // Lang fotoperiode (18 t): 05:00–23:00 — fortsatt gyldige HH:MM.
+    const lang = anbefaltInnstilling([mkPlante({ dli_optimal: 40, timer_optimal: 16 })]);
+    expect(lang.timer_on).toMatch(hhmm);
+    expect(lang.timer_off).toMatch(hhmm);
+    expect(lang.timer_on).toBe('05:00');
+    expect(lang.timer_off).toBe('23:00');
+  });
+});
+
+describe('familieAvstand', () => {
+  it('måler avstand langs lys-aksen (lavt → høyt DLI)', () => {
+    expect(familieAvstand('standard-urter', 'standard-urter')).toBe(0);
+    expect(familieAvstand('salat-blader', 'standard-urter')).toBe(1); // naboer
+    expect(familieAvstand('mikrogront', 'solhungrige')).toBe(4); // ytterpunktene
+  });
+});
+
+describe('vurderLysKompatibilitet', () => {
+  const p = (fam: Plante['lys_familie']) => mkPlante({ lys_familie: fam });
+
+  it('tomt/én plante → perfekt', () => {
+    expect(vurderLysKompatibilitet([]).niva).toBe('perfekt');
+    expect(vurderLysKompatibilitet([p('standard-urter')]).niva).toBe('perfekt');
+  });
+  it('samme familie → perfekt', () => {
+    expect(vurderLysKompatibilitet([p('salat-blader'), p('salat-blader')]).niva).toBe('perfekt');
+  });
+  it('nabofamilier → god', () => {
+    expect(vurderLysKompatibilitet([p('salat-blader'), p('standard-urter')]).niva).toBe('god');
+  });
+  it('to steg unna → risikabel', () => {
+    expect(vurderLysKompatibilitet([p('mikrogront'), p('salat-blader')]).niva).toBe('risikabel');
+  });
+  it('ytterpunkter → inkompatibel', () => {
+    expect(vurderLysKompatibilitet([p('mikrogront'), p('solhungrige')]).niva).toBe('inkompatibel');
+  });
+});
+
+describe('vannAvstand', () => {
+  it('måler avstand langs vann-aksen', () => {
+    expect(vannAvstand('medium', 'medium')).toBe(0);
+    expect(vannAvstand('lav', 'hoy')).toBe(2);
+  });
+});
+
+describe('vurderVannKompatibilitet', () => {
+  it('≤1 plante → ok', () => {
+    expect(vurderVannKompatibilitet([]).niva).toBe('ok');
+    expect(vurderVannKompatibilitet([mkPlante({})]).niva).toBe('ok');
+  });
+  it('samme vannbehov + veke-egnet → ok', () => {
+    const planter = [
+      mkPlante({ vann_behov: 'medium', veke_egnet: 'bra' }),
+      mkPlante({ vann_behov: 'medium', veke_egnet: 'utmerket' }),
+    ];
+    expect(vurderVannKompatibilitet(planter).niva).toBe('ok');
+  });
+  it('nabo-vannbehov (medium↔høy) → forsiktig', () => {
+    const planter = [
+      mkPlante({ vann_behov: 'medium', veke_egnet: 'bra' }),
+      mkPlante({ vann_behov: 'hoy', veke_egnet: 'bra' }),
+    ];
+    expect(vurderVannKompatibilitet(planter).niva).toBe('forsiktig');
+  });
+  it('lav vs høy vannbehov → inkompatibel', () => {
+    const planter = [
+      mkPlante({ vann_behov: 'lav', veke_egnet: 'bra' }),
+      mkPlante({ vann_behov: 'hoy', veke_egnet: 'bra' }),
+    ];
+    expect(vurderVannKompatibilitet(planter).niva).toBe('inkompatibel');
+  });
+  it('en «ikke anbefalt»-plante → inkompatibel, med forklaring', () => {
+    const planter = [
+      mkPlante({ navn: 'Sukkulent', vann_behov: 'medium', veke_egnet: 'ikke_anbefalt' }),
+      mkPlante({ vann_behov: 'medium', veke_egnet: 'bra' }),
+    ];
+    const r = vurderVannKompatibilitet(planter);
+    expect(r.niva).toBe('inkompatibel');
+    expect(r.detaljer.join(' ')).toMatch(/Sukkulent/);
   });
 });

@@ -23,14 +23,22 @@ export function jordfuktProsent(
 
 export function jordfuktKlasse(pct: number | null): 'dry' | 'ok' | 'wet' | 'unknown' {
   if (pct === null) return 'unknown';
-  if (pct < 30) return 'dry';
+  if (pct < TORR_GRENSE) return 'dry'; // samme grense som fuktStatus / PotteKort / advarsler
   if (pct > 85) return 'wet';
   return 'ok';
 }
 
 /**
+ * Jordfukt-terskler (i %). ÉN sannhet — brukes av fuktStatus, jordfuktKlasse,
+ * PotteKort («N felt trenger vann») og oversiktens advarsler, så «tørr» betyr
+ * det samme overalt. Endrer du grensa her, flytter den seg konsistent i hele appen.
+ */
+export const TORR_GRENSE = 35; // < dette = trenger vann (rød)
+export const FRISK_GRENSE = 55; // ≥ dette = fin fukt (grønn)
+
+/**
  * Fukt-status for «Anlegget»-visningen (oktagon-feltene + detalj-arket).
- * Terskler etter design-handoffen: ≥55 frisk, 35–54 begynner å tørke, <35 tørr.
+ * Terskler: ≥55 frisk, 35–54 begynner å tørke, <35 tørr.
  * Returnerer hex (brukes i inline-stiler for jord-gradient/prikk/tall) + tekst.
  */
 export function fuktStatus(pct: number | null): {
@@ -39,14 +47,18 @@ export function fuktStatus(pct: number | null): {
   klasse: 'frisk' | 'tørker' | 'tørr' | 'unknown';
 } {
   if (pct === null) return { farge: '#5a6376', tekst: 'Ukjent', klasse: 'unknown' };
-  if (pct >= 55) return { farge: '#4ade80', tekst: pct >= 70 ? 'Frisk og fuktig' : 'Fin fukt', klasse: 'frisk' };
-  if (pct >= 35) return { farge: '#fbbf24', tekst: 'Begynner å tørke', klasse: 'tørker' };
+  if (pct >= FRISK_GRENSE) return { farge: '#4ade80', tekst: pct >= 70 ? 'Frisk og fuktig' : 'Fin fukt', klasse: 'frisk' };
+  if (pct >= TORR_GRENSE) return { farge: '#fbbf24', tekst: 'Begynner å tørke', klasse: 'tørker' };
   return { farge: '#f87171', tekst: 'Trenger vann', klasse: 'tørr' };
 }
 
 /**
  * Bygg en 7-dagers jordfukt-sparkline (7 verdier i %) fra sensorhistorikk for
- * én seksjon. Bøtter på døgn; tomme døgn hopper vi over og fyller med naboverdi.
+ * én seksjon. Bøtter på døgn (døgn-snitt). Tomme døgn fylles med nærmeste KJENTE
+ * verdi (carry-forward): et hull betyr «ingen ny måling», ikke «fukten falt til
+ * snittet» — så linja holder seg jevn i stedet for å sprette mot gjennomsnittet.
+ * Ledende tomme døgn (før første måling) får første kjente verdi (back-fill).
+ * Helt tom historikk → alle 0.
  */
 export function jordSparkline(
   historikk: { registrert_at: string | null; verdi: number | null }[],
@@ -65,10 +77,13 @@ export function jordSparkline(
       .map((h) => h.verdi as number);
     dager.push(iBotte.length ? Math.round(iBotte.reduce((a, b) => a + b, 0) / iBotte.length) : null);
   }
-  // Fyll tomme døgn med nærmeste kjente verdi så stolpene ikke kollapser.
-  const kjent = dager.filter((x): x is number => x !== null);
-  const fallback = kjent.length ? Math.round(kjent.reduce((a, b) => a + b, 0) / kjent.length) : 0;
-  return dager.map((x) => x ?? fallback);
+  // Carry-forward: hold forrige kjente verdi over tomme døgn. Ledende hull får
+  // første kjente verdi som startpunkt så de ikke kollapser til 0.
+  let forrige = dager.find((x): x is number => x !== null) ?? 0;
+  return dager.map((x) => {
+    if (x !== null) forrige = x;
+    return forrige;
+  });
 }
 
 /**
