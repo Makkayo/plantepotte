@@ -20,6 +20,8 @@
     type PotteOppsett,
   } from '../lib/utils';
   import { beregnDli } from '../lib/lys';
+  import { hhmmTilMin, lysVarighetMin } from '../lib/tid';
+  import { beregnVpd } from '../lib/klima';
   import { visFeil, visOk } from '../lib/toast';
   import type {
     Plante,
@@ -130,11 +132,6 @@
   );
 
   // ---------- vekstlys ----------
-  function tMin(s: string): number {
-    const [h, m] = s.split(':').map(Number);
-    return (h ?? 0) * 60 + (m ?? 0);
-  }
-
   let lysLagrer = $state(false);
   let sisteIntensitet = $state(100);
   $effect(() => {
@@ -143,13 +140,9 @@
 
   const lysPaa = $derived(!!command && command.intensitet > 0);
 
-  const lysVarighet = $derived.by(() => {
-    if (!command) return 0;
-    const d = ((tMin(command.timer_off) - tMin(command.timer_on)) % 1440 + 1440) % 1440;
-    return d === 0 && command.timer_on !== command.timer_off ? 1440 : d;
-  });
+  const lysVarighet = $derived(command ? lysVarighetMin(command.timer_on, command.timer_off) : 0);
   const lysRel = $derived(
-    command ? ((now.getHours() * 60 + now.getMinutes() - tMin(command.timer_on)) % 1440 + 1440) % 1440 : 0,
+    command ? ((now.getHours() * 60 + now.getMinutes() - hhmmTilMin(command.timer_on)) % 1440 + 1440) % 1440 : 0,
   );
   const iLysVindu = $derived(lysPaa && lysVarighet > 0 && lysRel <= lysVarighet);
   const lysDli = $derived(beregnDli(command?.intensitet ?? 0, lysVarighet / 60));
@@ -196,6 +189,9 @@
   );
   const forbrukMaks = $derived(Math.max(0.1, ...(trend.dagligForbruk.length ? trend.dagligForbruk : [0.1])));
   let visKalibrering = $state(false); // kalibrering er skjult bak en svak knapp i vann-arket
+
+  // Luft-VPD fra temp + RH — vises som en slank stripe under temp/luftfukt.
+  const vpd = $derived(beregnVpd(sensor?.temperatur, sensor?.luftfuktighet));
 
   // ---------- bunn-ark ----------
   type Aapent =
@@ -339,6 +335,19 @@
         </div>
       </div>
     </div>
+    {#if vpd.kpa !== null}
+      <div
+        class="flex items-center gap-2 px-3 py-2 rounded-[12px] bg-bg-subtle border border-border stig"
+        style="--d: 45ms"
+        title="VPD = hvor tørst lufta gjør plantene (temp + luftfuktighet)"
+      >
+        <span class="w-2 h-2 rounded-full shrink-0" style="background:{vpd.farge}"></span>
+        <span class="font-mono text-[10.5px] text-text-muted">
+          VPD {vpd.kpa.toFixed(2).replace('.', ',')} kPa
+        </span>
+        <span class="text-[11px] text-right ml-auto" style="color:{vpd.farge}">{vpd.tekst}</span>
+      </div>
+    {/if}
   {/if}
 
   <!-- Vekstlys — hele kortet åpner lys-arket; toggle stopper propagering -->

@@ -8,6 +8,7 @@
     jordfuktProsent,
     minutterSiden,
     OFFLINE_GRENSE_MIN,
+    TORR_GRENSE,
   } from '../lib/utils';
   import type { PotteCommand, PotteSensorData } from '../lib/database.types';
   import PotteKort from './PotteKort.svelte';
@@ -88,7 +89,7 @@
       const jord = [s.jord1, s.jord2, s.jord3, s.jord4]
         .map((r) => jordfuktProsent(r))
         .filter((x): x is number => x !== null);
-      if (jord.length && Math.min(...jord) < 35) {
+      if (jord.length && Math.min(...jord) < TORR_GRENSE) {
         ut.push({ potteId: p.potte_id, navn: p.navn, melding: 'Jord tørr — trenger vann', alvor: 'hoy' });
       }
     }

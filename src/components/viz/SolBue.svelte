@@ -5,22 +5,16 @@
    * design-handoff): sunFrac=elapsed/varighet (0=lys på, 1=lys av),
    * angle=(1−sunFrac)·π, x=128+96·cos(angle), y=124−96·sin(angle).
    */
+  import { hhmmTilMin, lysVarighetMin } from '../../lib/tid';
+
   let {
     timerOn,
     timerOff,
     now = new Date(),
   }: { timerOn: string; timerOff: string; now?: Date } = $props();
 
-  function min(s: string): number {
-    const [h, m] = s.split(':').map(Number);
-    return (h ?? 0) * 60 + (m ?? 0);
-  }
-  const aMin = $derived(min(timerOn));
-  const varighet = $derived.by(() => {
-    let d = min(timerOff) - aMin;
-    if (d <= 0) d += 1440;
-    return d;
-  });
+  const aMin = $derived(hhmmTilMin(timerOn));
+  const varighet = $derived(lysVarighetMin(timerOn, timerOff));
   const nowMin = $derived(now.getHours() * 60 + now.getMinutes());
   const rel = $derived.by(() => {
     let r = nowMin - aMin;

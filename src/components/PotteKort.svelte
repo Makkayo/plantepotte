@@ -7,8 +7,10 @@
     antallPlasser,
     minutterSiden,
     OFFLINE_GRENSE_MIN,
+    TORR_GRENSE,
   } from '../lib/utils';
   import { beregnDli } from '../lib/lys';
+  import { lysVarighetTimer } from '../lib/tid';
   import SolBue from './viz/SolBue.svelte';
   import VannTank from './viz/VannTank.svelte';
 
@@ -46,7 +48,7 @@
       .filter((x): x is number => x !== null);
   });
   const jordLavest = $derived(jordVerdier.length ? Math.min(...jordVerdier) : null);
-  const torreFelt = $derived(jordVerdier.filter((v) => v < 35).length);
+  const torreFelt = $derived(jordVerdier.filter((v) => v < TORR_GRENSE).length);
 
   const vannPct = $derived.by(() => {
     if (!sensor) return null;
@@ -58,15 +60,7 @@
   });
 
   // Lys (samme språk som detaljens vekstlys-kort)
-  function timerLengde(on: string, off: string): number {
-    const p = (s: string) => {
-      const [h, m] = s.split(':').map(Number);
-      return (h ?? 0) + (m ?? 0) / 60;
-    };
-    const d = (((p(off) - p(on)) % 24) + 24) % 24;
-    return d === 0 && on !== off ? 24 : d;
-  }
-  const lysT = $derived(command ? timerLengde(command.timer_on, command.timer_off) : 0);
+  const lysT = $derived(command ? lysVarighetTimer(command.timer_on, command.timer_off) : 0);
   const lysDli = $derived(beregnDli(command?.intensitet ?? 0, lysT));
   const lysPaa = $derived(!!command && command.intensitet > 0);
 </script>

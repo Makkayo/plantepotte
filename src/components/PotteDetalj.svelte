@@ -6,10 +6,14 @@
     blomsterkasseOppsett,
     bakSeksjon,
     vannNivaProsent,
+    jordfuktProsent,
+    sensorEtikett,
     minutterSiden,
     OFFLINE_GRENSE_MIN,
   } from '../lib/utils';
   import { beregnVannTrend } from '../lib/trend';
+  import { kasseNaering } from '../lib/naering';
+  import { probeHelse, vekeHelse } from '../lib/diagnose';
   import { visFeil } from '../lib/toast';
   import type { Potte, PotteCommand, PotteSensorData, PottePlanteFull } from '../lib/database.types';
   import AnleggPanel from './AnleggPanel.svelte';
@@ -57,6 +61,42 @@
     const m = minutterSiden(sensor?.registrert_at);
     return m !== null && m > OFFLINE_GRENSE_MIN;
   });
+
+  // To-fase næring: kun i ekte drift (testmodus teller ikke plantedato).
+  const naering = $derived(potte?.i_drift ? kasseNaering(planter.map((p) => p.plantet_at)) : null);
+
+  // Maskinvare-diagnose fra 7-dagers historikken (løs/død probe + veke-kontakt).
+  const probeFunn = $derived.by(() => {
+    if (!potte?.har_sensorer) return [] as { label: string; melding: string }[];
+    const ut: { label: string; melding: string }[] = [];
+    for (let kanal = 1; kanal <= 4; kanal++) {
+      const punkter = sensorHistorikk.map((r) => ({
+        t: new Date(r.registrert_at ?? 0).getTime(),
+        raw: [r.jord1, r.jord2, r.jord3, r.jord4][kanal - 1] ?? null,
+      }));
+      const f = probeHelse(punkter);
+      if (f.melding && (f.status === 'frakoblet' || f.status === 'fastlast')) {
+        ut.push({ label: sensorEtikett(kanal, potte.skillevegger), melding: f.melding });
+      }
+    }
+    return ut;
+  });
+
+  const vekeFunn = $derived.by(() => {
+    if (!potte?.har_sensorer) return { advar: false, melding: null as string | null };
+    const jordSerie = sensorHistorikk.map((r) => {
+      const verdier = [r.jord1, r.jord2, r.jord3, r.jord4]
+        .map((x) => jordfuktProsent(x))
+        .filter((x): x is number => x !== null);
+      return {
+        t: new Date(r.registrert_at ?? 0).getTime(),
+        pct: verdier.length ? verdier.reduce((a, b) => a + b, 0) / verdier.length : NaN,
+      };
+    });
+    return vekeHelse(jordSerie, vannTrend.sistFyltAt);
+  });
+
+  const harDiagnose = $derived(probeFunn.length > 0 || vekeFunn.advar);
 
   async function loadSensorHistorikk() {
     const sjuDagerSiden = new Date(Date.now() - 7 * 86_400_000).toISOString();
@@ -301,6 +341,39 @@
     {#if skilleveggFeil}
       <div class="p-3 rounded-lg bg-rose/10 border border-rose/30 text-rose text-sm">
         {skilleveggFeil}
+      </div>
+    {/if}
+
+    <!-- Maskinvare-sjekk: løs/død jordprobe eller veke uten kontakt -->
+    {#if harDiagnose}
+      <div class="card p-4 border-sun/30 bg-sun/[0.06]">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-base">🔧</span>
+          <h2 class="font-display text-sm font-semibold">Maskinvare-sjekk</h2>
+        </div>
+        <ul class="space-y-1.5">
+          {#each probeFunn as f (f.label)}
+            <li class="text-xs text-text-muted leading-snug">
+              <span class="text-text font-medium">{f.label}:</span> {f.melding}
+            </li>
+          {/each}
+          {#if vekeFunn.advar}
+            <li class="text-xs text-text-muted leading-snug">
+              <span class="text-text font-medium">Veke:</span> {vekeFunn.melding}
+            </li>
+          {/if}
+        </ul>
+      </div>
+    {/if}
+
+    <!-- To-fase næring: minner om overgangen fra rent vann til næring -->
+    {#if naering}
+      <div class="card p-4 flex items-start gap-3 {naering.handlingNaa ? 'border-leaf/40' : ''}">
+        <span class="text-xl shrink-0">{naering.handlingNaa ? '🧪' : '🌱'}</span>
+        <div class="min-w-0">
+          <div class="font-medium text-sm {naering.handlingNaa ? 'text-leaf-glow' : ''}">{naering.tittel}</div>
+          <p class="text-text-muted text-xs mt-0.5 leading-snug">{naering.melding}</p>
+        </div>
       </div>
     {/if}
 

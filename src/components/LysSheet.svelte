@@ -12,6 +12,8 @@
     vurderLysKompatibilitet,
     vurderVannKompatibilitet,
   } from '../lib/lys';
+  import { lysVarighetTimer } from '../lib/tid';
+  import { lysEnergi } from '../lib/energi';
   import { visFeil, visOk } from '../lib/toast';
   import SolBue from './viz/SolBue.svelte';
 
@@ -44,15 +46,9 @@
     }
   });
 
-  const beregnetTimer = $derived.by(() => {
-    const [hOn, mOn] = timer_on.split(':').map(Number);
-    const [hOff, mOff] = timer_off.split(':').map(Number);
-    if (hOn === undefined || mOn === undefined || hOff === undefined || mOff === undefined) return 0;
-    let diff = hOff * 60 + mOff - (hOn * 60 + mOn);
-    if (diff <= 0) diff += 24 * 60;
-    return Math.round((diff / 60) * 10) / 10;
-  });
+  const beregnetTimer = $derived(Math.round(lysVarighetTimer(timer_on, timer_off) * 10) / 10);
   const dliEstimat = $derived(beregnDli(intensitet, beregnetTimer));
+  const energi = $derived(lysEnergi(intensitet, beregnetTimer));
   const anbefalt = $derived(anbefaltInnstilling(planter));
   const lysRapport = $derived(vurderLysKompatibilitet(planter));
   const vannRapport = $derived(vurderVannKompatibilitet(planter));
@@ -169,6 +165,12 @@
     <input type="time" bind:value={timer_off} class="input font-mono" />
   </div>
 </div>
+
+<!-- Strømoverslag, grunnet i målt LED-effekt (0,94 A × 12 V). Ærlig estimat. -->
+<p class="mt-3 text-center font-mono text-[10.5px] text-text-dim">
+  ⚡ ≈ {energi.kwhPerManed.toFixed(1).replace('.', ',')} kWh/mnd · ~{energi.krPerManed} kr
+  <span class="opacity-70">(ved 1,50 kr/kWh)</span>
+</p>
 
 {#if planter.length > 0}
   <div
