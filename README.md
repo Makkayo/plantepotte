@@ -24,9 +24,15 @@ npm install
 npm run dev      # dev-server på http://localhost:5173
 npm run build    # produksjonsbygg til dist/
 npm run preview  # preview av produksjonsbygg
+npm run check    # svelte-check (typer)
+npm run test     # vitest (app-logikk: lys, kalibrering, oppsett, vanntrend)
 ```
 
-Node 20+ kreves (`.nvmrc` setter dette).
+Node 20+ kreves (`.nvmrc` setter dette). Firmware-logikken testes separat med
+`python firmware/test_logic.py` (ingen hardware nødvendig).
+
+> ⚠️ Ikke oppgrader `vitest` forbi `^2` — v4 drar inn `rolldown`/native-bindinger
+> som Cloudflares build-image ikke svelger, og deploy blir rød.
 
 ## Database (Supabase)
 
@@ -34,8 +40,8 @@ Node 20+ kreves (`.nvmrc` setter dette).
 |--------|------|
 | `lys_familier` | 5 lys-grupper (skygge-tolerante → solhungrige) |
 | `planter` | Katalog med 44 planter — DLI, timer, vann, veke-egnethet, kilder |
-| `potter` | Fysiske potter (potte_id, antall seksjoner, sensorer) |
-| `potte_planter` | Mange-til-mange: hvilke planter er i hvilken seksjon |
+| `potter` | Blomsterkasser (potte_id, `skillevegger` bool[] per potte, sensorer, drift-status) |
+| `potte_planter` | Mange-til-mange: hvilke planter er i hvilken planteplass (myk-sletting via `fjernet_at`) |
 | `potte_commands` | Lys-innstillinger som ESP32 leser hvert 5. sek |
 | `potte_sensor_data` | Sensoravlesninger fra ESP32 — `jord1`–`jord4` (rå ADC, inntil 4 sensorer) + `vann_avstand_mm` (rå mm fra VL53L0X-laser) |
 
@@ -52,13 +58,16 @@ konfigureres med:
 - **Build output directory:** `dist`
 - **Node version (env var `NODE_VERSION`):** `20`
 
-## Status (10. juni 2026)
+## Status (juni 2026)
 
-- ✅ Backend ferdig — 44 planter med dokumenterte DLI-krav
-- ✅ Ny Svelte-app med plante-katalog, kompatibilitets-advarsler og lyskontroll
-- ✅ Komplett flashbar firmware i `firmware/` (watchdog, NTP-resynk, 4 jordfukt-plasser, 18 logikk-tester)
-- ✅ Breadboard-testet: ESP32, OLED, DHT22, KY-040, jordfukt ×3 (kalibrert), buck (fast 5V, målt 5,26V), LED-strip tent (0,94 A/potte målt)
-- 🟡 Neste: `main.py` + WiFi + Supabase end-to-end; MOSFET-lys venter på loddebolt (modulen er et byggesett)
-- 🟡 Bestilling 3 (laser + kamera), 4 (loddeutstyr) og 5 (påfyll) i posten — se `docs/mottaksliste.md`
-- 🟡 Multi-user-arkitektur forberedt (owner_id-felt klart), ikke aktivert
+- ✅ Backend ferdig — 44 planter med dokumenterte DLI-krav, ekte plantebilder, så-/stell-/høste-instrukser
+- ✅ Mobil-først PWA (installerbar) — blomsterkasse-oversikt, «Anlegget»-detalj (vekstlys, vannreservoar, oktagon-potter), plante-katalog, dyrkeguide og vekst-tidslinje
+- ✅ Innsikt-motorer: VPD (luftklima), to-fase nærings-påminnelse, maskinvare-diagnose (løs/død jordprobe + veke-kontakt), strømoverslag for lyset
+- ✅ Komplett flashbar firmware i `firmware/` (watchdog, NTP-resynk + auto-sommertid, valgfri myk soloppgang/-nedgang, 4 jordfukt-plasser, **44 logikk-tester** på PC)
+- ✅ **99 enhetstester (Vitest)** for app-logikken: lys/DLI, vann- og jordfukt-kalibrering, blomsterkasse-oppsett, vanntrend, VPD, næringsfase, diagnose
+- ✅ CI (GitHub Actions) speiler Cloudflare-bygget og vokter at Wokwi-koden holdes i synk med firmwaren
+- ✅ **Full integrasjon live (20. juni):** ESP32 kjører selvgående på buck — WiFi + NTP + Supabase, alle sensorer i appen, appen styrer lyset. MOSFET-PWM-dimming og VL53L0X-laser verifisert på ekte hardware
+- 🟡 Neste: ESP32-CAM (kamera → vekst-tidslinje) + 3D-print og montering av potte 1
+- 🔴 Før potta eksponeres utenfor eget nett: lås `potte_commands`-skriving til innlogget eier (se prosjekt-skillen, «Sikkerhet før live»)
+- 🟡 Multi-user-arkitektur forberedt (`owner_id`-felt klart), ikke aktivert
 - ⬜ Sammenslåing med Matplanlegger (egen fase senere)

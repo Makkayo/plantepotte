@@ -1,0 +1,41 @@
+name: CI
+
+# Speiler Cloudflare Pages-bygget (Node 20) + kjører alle tester FØR en push til
+# main rekker å bli en rød deploy. Fanger bl.a. dep-feller (som vitest 4 +
+# rolldown) der `npm run build` ryker på Cloudflare uten å feile lokalt.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  web:
+    name: Web-app (typer, tester, bygg)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20' # = NODE_VERSION på Cloudflare Pages
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run check
+      - run: npm run test
+      - run: npm run build
+
+  firmware:
+    name: Firmware-logikk (CPython)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      # logic.py importerer ingenting fra `machine`/`network`, så den kjører på
+      # vanlig CPython — samme logikk som ESP32 bruker for lys-timer/tidssone.
+      - run: python firmware/test_logic.py
+      # Wokwi-simulatoren laster sin egen kopi av logic.py — sørg for at den er
+      # identisk med firmwaren, ellers tester simulatoren noe annet enn potta.
+      - name: Wokwi-kopi av logic.py er i synk med firmware
+        run: diff firmware/logic.py wokwi/logic.py
