@@ -12,7 +12,8 @@
   } from '../lib/utils';
   import { kasseNaering } from '../lib/naering';
   import { mestAktuelleHosting, HOSTE_NUDGE_DAGER } from '../lib/hosting';
-  import type { PotteCommand, PotteSensorData } from '../lib/database.types';
+  import { simStore, hentSim, simSensor, simPlantetAt } from '../lib/simulering';
+  import type { Potte, PotteCommand, PotteSensorData, PottePlanteFull } from '../lib/database.types';
   import PotteKort from './PotteKort.svelte';
   import Sheet from './Sheet.svelte';
   import KasseInnstillinger from './KasseInnstillinger.svelte';
@@ -67,22 +68,45 @@
   });
   onDestroy(() => clearInterval(timer));
 
+  // Testmodus-simulator: samme «effektiv»-mønster som PotteDetalj, nå per kort
+  // i oversikten — så en simulert kasse forhåndsviser IKKE bare i detaljen, men
+  // også kortet og handlingsfeeden under, konsistent med det Markus ser inne.
+  interface Kasse {
+    potte: Potte;
+    effektivPotte: Potte;
+    effektivSensor: PotteSensorData | undefined;
+    effektivePlanter: PottePlanteFull[];
+  }
+  const kasser = $derived.by((): Kasse[] =>
+    $potter.map((p) => {
+      const sim = hentSim($simStore, p.potte_id);
+      const simAktiv = sim.aktiv && !p.i_drift;
+      const planterListe = $pottePlanter[p.potte_id] ?? [];
+      return {
+        potte: p,
+        effektivPotte: simAktiv ? { ...p, i_drift: true, har_sensorer: true } : p,
+        effektivSensor: simAktiv ? simSensor(sim, p) : sensors[p.potte_id],
+        effektivePlanter: simAktiv
+          ? planterListe.map((pp) => ({ ...pp, plantet_at: simPlantetAt(sim) }))
+          : planterListe,
+      };
+    }),
+  );
+
   // Handlingsfeed: problemer (rød/gul) OG gjøremål/gode nyheter (næring, høsting).
   // Sensorvarsler = mest alvorlige én per kasse; næring/høsting kommer i tillegg.
   type Alvor = 'hoy' | 'mid' | 'gjøremål' | 'positiv';
   const varsler = $derived.by(() => {
     const ut: { potteId: string; navn: string; melding: string; alvor: Alvor; ikon: string }[] = [];
-    for (const p of $potter) {
-      const planterListe = $pottePlanter[p.potte_id] ?? [];
-
+    for (const { potte: p, effektivPotte, effektivSensor, effektivePlanter } of kasser) {
       // 1) Sensor-varsler (kun kasser med sensorer): frakoblet → lavt vann → tørr jord.
-      if (p.har_sensorer) {
-        const s = sensors[p.potte_id];
+      if (effektivPotte.har_sensorer) {
+        const s = effektivSensor;
         const min = minutterSiden(s?.registrert_at);
         if (min !== null && min > OFFLINE_GRENSE_MIN) {
           ut.push({ potteId: p.potte_id, navn: p.navn, melding: 'Frakoblet — sjekk strøm og WiFi', alvor: 'mid', ikon: '⚠️' });
         } else if (s) {
-          const vann = vannNivaProsent(s.vann_avstand_mm, p.vann_tom_mm ?? undefined, p.vann_full_mm ?? undefined);
+          const vann = vannNivaProsent(s.vann_avstand_mm, effektivPotte.vann_tom_mm ?? undefined, effektivPotte.vann_full_mm ?? undefined);
           const jord = [s.jord1, s.jord2, s.jord3, s.jord4]
             .map((r) => jordfuktProsent(r))
             .filter((x): x is number => x !== null);
@@ -94,14 +118,15 @@
         }
       }
 
-      // 2) Gjøremål/gode nyheter (uavhengig av sensorer, kun i drift):
-      if (p.i_drift && planterListe.length > 0) {
-        const n = kasseNaering(planterListe.map((pp) => pp.plantet_at));
+      // 2) Gjøremål/gode nyheter (uavhengig av sensorer, kun i drift — ekte
+      // eller simulert):
+      if (effektivPotte.i_drift && effektivePlanter.length > 0) {
+        const n = kasseNaering(effektivePlanter.map((pp) => pp.plantet_at));
         if (n?.handlingNaa) {
           ut.push({ potteId: p.potte_id, navn: p.navn, melding: 'På tide å starte næring i badet', alvor: 'gjøremål', ikon: '🧪' });
         }
         const h = mestAktuelleHosting(
-          planterListe.map((pp) => ({
+          effektivePlanter.map((pp) => ({
             navn: pp.plante.navn,
             plantet_at: pp.plantet_at,
             dager_til_hosting: pp.plante.dager_til_hosting,
@@ -173,14 +198,14 @@
     <!-- Mobil: én kolonne (uendret). Desktop: kortene i et 2-kolonners grid så
          den brede skjermen faktisk brukes i stedet for døde sidemarger. -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 items-start">
-      {#each $potter as p (p.id)}
+      {#each kasser as k (k.potte.id)}
         <PotteKort
-          potte={p}
-          command={commands[p.potte_id]}
-          sensor={sensors[p.potte_id]}
-          planter={$pottePlanter[p.potte_id] ?? []}
+          potte={k.effektivPotte}
+          command={commands[k.potte.potte_id]}
+          sensor={k.effektivSensor}
+          planter={k.effektivePlanter}
           {now}
-          onClick={() => onNavigate({ name: 'potte', potteId: p.potte_id })}
+          onClick={() => onNavigate({ name: 'potte', potteId: k.potte.potte_id })}
         />
       {/each}
     </div>
