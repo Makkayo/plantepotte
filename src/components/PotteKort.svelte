@@ -6,6 +6,7 @@
     fuktStatus,
     antallPlasser,
     minutterSiden,
+    formaterTidssiden,
     OFFLINE_GRENSE_MIN,
     TORR_GRENSE,
   } from '../lib/utils';
@@ -91,9 +92,9 @@
     {#if potte.har_sensorer}
       <span class="inline-flex items-center gap-1.5 font-mono text-[10.5px] {offline ? 'text-sun' : 'text-text-muted'}">
         <span class="w-[7px] h-[7px] rounded-full {offline ? 'bg-sun' : 'bg-leaf'}"></span>
-        {offline ? 'Frakoblet' : 'Tilkoblet'}
+        {offline ? `Frakoblet · sist sett ${formaterTidssiden(sensor?.registrert_at)}` : 'Tilkoblet'}
       </span>
-      {#if torreFelt > 0}
+      {#if torreFelt > 0 && !offline}
         <span
           class="inline-flex items-center px-2 py-0.5 rounded-full font-mono text-[10px]"
           style="background:rgba(248,113,113,0.12); border:1px solid rgba(248,113,113,0.32); color:#fca5a5"
@@ -136,7 +137,9 @@
   <!-- Sensorer: vanntank + jord-«våt front» + klima -->
   {#if potte.har_sensorer}
     {#if harData}
-      <div class="flex items-center gap-4 pt-3 mt-3 border-t border-border">
+      <!-- Frakoblet: tallene er siste kjente avlesning og kan være timer gamle —
+           demp dem så de ikke leses som live. Status-pillen sier «sist sett …». -->
+      <div class="flex items-center gap-4 pt-3 mt-3 border-t border-border transition-opacity" class:opacity-40={offline}>
         <div class="flex items-center gap-2">
           <div class="w-4 h-11 shrink-0"><VannTank pct={vannPct} visLaser={false} visProsent={false} /></div>
           <div>

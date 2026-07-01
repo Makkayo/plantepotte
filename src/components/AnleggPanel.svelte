@@ -13,6 +13,9 @@
     vannNivaProsent,
     fuktStatus,
     jordSparkline,
+    minutterSiden,
+    formaterTidssiden,
+    OFFLINE_GRENSE_MIN,
     VANN_TOM_MM,
     VANN_FULL_MM,
     foranSeksjon,
@@ -193,6 +196,14 @@
   // Luft-VPD fra temp + RH — vises som en slank stripe under temp/luftfukt.
   const vpd = $derived(beregnVpd(sensor?.temperatur, sensor?.luftfuktighet));
 
+  // Frakoblet: siste avlesning er gammel. Da dempes de sensor-drevne visualene
+  // og en stripe forklarer at tallene kan være utdaterte — ellers ser en 3 t
+  // gammel «100 % vann» ut som live sannhet.
+  const offline = $derived.by(() => {
+    const m = minutterSiden(sensor?.registrert_at);
+    return !!potte.har_sensorer && m !== null && m > OFFLINE_GRENSE_MIN;
+  });
+
   // ---------- bunn-ark ----------
   type Aapent =
     | null
@@ -303,9 +314,19 @@
 </script>
 
 <div class="flex flex-col gap-3">
+  <!-- Frakoblet-stripe: tallene under er siste kjente avlesning, ikke live -->
+  {#if offline}
+    <div class="flex items-center gap-2 px-3 py-2 rounded-[12px] bg-sun/[0.08] border border-sun/25 stig" style="--d: 15ms">
+      <span class="w-2 h-2 rounded-full bg-sun shrink-0"></span>
+      <span class="text-[11.5px] text-sun leading-snug">
+        Frakoblet · sist avlest {formaterTidssiden(sensor?.registrert_at)}. Tallene under kan være utdaterte.
+      </span>
+    </div>
+  {/if}
+
   <!-- Klima-stripe -->
   {#if potte.har_sensorer && sensor && (sensor.temperatur !== null || sensor.luftfuktighet !== null)}
-    <div class="flex gap-2.5 stig" style="--d: 30ms">
+    <div class="flex gap-2.5 stig transition-opacity" class:opacity-50={offline} style="--d: 30ms">
       <div class="flex-1 flex items-center gap-[11px] card !rounded-[14px] px-3.5 py-[11px]">
         <div
           class="w-8 h-8 rounded-[9px] flex items-center justify-center shrink-0"
@@ -337,7 +358,8 @@
     </div>
     {#if vpd.kpa !== null}
       <div
-        class="flex items-center gap-2 px-3 py-2 rounded-[12px] bg-bg-subtle border border-border stig"
+        class="flex items-center gap-2 px-3 py-2 rounded-[12px] bg-bg-subtle border border-border stig transition-opacity"
+        class:opacity-50={offline}
         style="--d: 45ms"
         title="VPD = hvor tørst lufta gjør plantene (temp + luftfuktighet)"
       >
@@ -436,7 +458,8 @@
                fra bunn (topp = 100 %, bunn = 0 %), flottør på overflaten, % nede.
                Trykk åpner vann-arket. -->
           <button
-            class="absolute left-1/2 top-[34px] bottom-0 -translate-x-1/2 w-[30px] active:brightness-110 transition-[filter]"
+            class="absolute left-1/2 top-[34px] bottom-0 -translate-x-1/2 w-[30px] active:brightness-110 transition-opacity"
+            class:opacity-50={offline}
             onclick={() => (aapent = { type: 'vann' })}
             aria-label="Vannreservoar {vannPct ?? '–'} prosent — trykk for detaljer og påfylling"
           >
