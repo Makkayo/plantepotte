@@ -21,6 +21,13 @@ describe('beregnVpd', () => {
     expect(v.sone).toBe('tort');
   });
 
+  it('regner varmt/moderat inneklima som «litt tørt», ikke stress', () => {
+    // 26 °C / 50 % ≈ 1,68 kPa — i et veke-system er dette gult, ikke rødt.
+    const v = beregnVpd(26, 50);
+    expect(v.kpa).toBeCloseTo(1.68, 1);
+    expect(v.sone).toBe('litt-tort');
+  });
+
   it('flagger svært fuktig luft (mugg-risiko)', () => {
     const v = beregnVpd(20, 95);
     expect(v.kpa).toBeLessThan(0.4);

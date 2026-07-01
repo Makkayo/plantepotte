@@ -33,9 +33,12 @@ export function metningstrykk(tempC: number): number {
 
 /**
  * Beregn luft-VPD + sone fra temperatur og relativ luftfuktighet.
- * Sonene er valgt for bladgrønnsaker/urter i vegetativ vekst:
- *   <0,4 for fuktig (sopp/mugg-risiko) · 0,4–1,2 ideelt · 1,2–1,6 litt tørt ·
- *   >1,6 for tørt (transpirasjons-stress).
+ * Sonene er valgt for bladgrønnsaker/urter i vegetativ vekst, og bevisst litt
+ * romsligere enn lærebok-tabellene fordi dette er et VEKE-system: røttene har
+ * alltid vann, så plantene kan transpirere fritt og tåler høyere VPD uten
+ * stress enn jord-dyrkede planter (der tørr jord + tørr luft rammer sammen).
+ *   <0,4 fuktig (sopp/mugg-risiko) · 0,4–1,3 ideelt · 1,3–1,8 litt tørt ·
+ *   >1,8 tørt (reell transpirasjons-stress).
  */
 export function beregnVpd(
   tempC: number | null | undefined,
@@ -55,11 +58,11 @@ export function beregnVpd(
     sone = 'fuktig';
     tekst = 'Lufta er fuktig — luft litt for å unngå mugg';
     farge = '#60a5fa';
-  } else if (kpa <= 1.2) {
+  } else if (kpa <= 1.3) {
     sone = 'ideelt';
     tekst = 'Ideell luft for vekst';
     farge = '#4ade80';
-  } else if (kpa <= 1.6) {
+  } else if (kpa <= 1.8) {
     sone = 'litt-tort';
     tekst = 'Lufta er i tørreste laget';
     farge = '#fbbf24';

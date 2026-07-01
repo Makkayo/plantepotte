@@ -97,7 +97,7 @@
   });
 </script>
 
-<div class="max-w-[430px] mx-auto w-full flex flex-col gap-3.5">
+<div class="max-w-[430px] md:max-w-4xl mx-auto w-full flex flex-col gap-3.5">
   <div class="mb-1">
     <h1 class="font-display text-[25px] font-semibold leading-tight tracking-tight">Mine blomsterkasser</h1>
     <p class="font-mono text-[11px] text-text-muted mt-1.5">
@@ -133,16 +133,20 @@
       <p>Ingen blomsterkasser registrert ennå</p>
     </div>
   {:else}
-    {#each $potter as p (p.id)}
-      <PotteKort
-        potte={p}
-        command={commands[p.potte_id]}
-        sensor={sensors[p.potte_id]}
-        planter={$pottePlanter[p.potte_id] ?? []}
-        {now}
-        onClick={() => onNavigate({ name: 'potte', potteId: p.potte_id })}
-      />
-    {/each}
+    <!-- Mobil: én kolonne (uendret). Desktop: kortene i et 2-kolonners grid så
+         den brede skjermen faktisk brukes i stedet for døde sidemarger. -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 items-start">
+      {#each $potter as p (p.id)}
+        <PotteKort
+          potte={p}
+          command={commands[p.potte_id]}
+          sensor={sensors[p.potte_id]}
+          planter={$pottePlanter[p.potte_id] ?? []}
+          {now}
+          onClick={() => onNavigate({ name: 'potte', potteId: p.potte_id })}
+        />
+      {/each}
+    </div>
   {/if}
 
   <button
