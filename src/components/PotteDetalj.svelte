@@ -338,11 +338,6 @@
       </div>
     </div>
 
-    <!-- Testmodus-simulator: skru på alt selv og forhåndsvis hver funksjon -->
-    {#if !potte.i_drift}
-      <TestSimulator {potteId} />
-    {/if}
-
     <!-- Anlegget: vekstlys + vannreservoar + pottene (oktagoner).
          I sim peker alt på syntetiske «effektiv»-data. -->
     <AnleggPanel
@@ -401,35 +396,6 @@
       </div>
     {/if}
 
-    <!-- Drift-status: testmodus vs ekte drift -->
-    <div class="card p-4 flex items-center justify-between gap-3">
-      <div class="min-w-0">
-        <div class="font-medium text-sm">{potte.i_drift ? '🌱 I drift' : '🧪 Testmodus'}</div>
-        <p class="text-text-muted text-xs mt-0.5">
-          {potte.i_drift
-            ? 'Plantedato og historikk teller for ekte.'
-            : 'Lek fritt — plantedato og historikk lagres ikke før du går i drift.'}
-        </p>
-      </div>
-      <button
-        class="shrink-0 text-xs px-3 py-1.5 rounded-lg border transition-colors disabled:opacity-50 {potte.i_drift
-          ? 'border-border text-text-muted hover:text-text hover:border-border-strong'
-          : bekreftDrift
-            ? 'border-sun/50 bg-sun/10 text-sun'
-            : 'border-leaf/40 bg-leaf/10 text-leaf hover:bg-leaf/15'}"
-        disabled={iDriftLagrer}
-        onclick={klikkDrift}
-      >
-        {iDriftLagrer
-          ? 'Lagrer…'
-          : potte.i_drift
-            ? 'Sett i testmodus'
-            : bekreftDrift
-              ? 'Bekreft — nullstiller datoer'
-              : 'Sett i drift →'}
-      </button>
-    </div>
-
     <!-- Veksttidslinje: kamerabilder fra Storage. Kun for kasser med sensor-
          /kamera-rigg — en ren lys-kasse har ikke kamera og skal ikke vise en
          evig «ingen bilder ennå». -->
@@ -456,6 +422,43 @@
         </div>
       </section>
     {/if}
+
+    <!-- Drift-status + simulator: ETT felt, alltid nederst. Simulatoren er en
+         del av testmodus (samme kort), ikke et eget kort — den er skjult
+         automatisk når kassa er i drift (klikk «Sett i testmodus» viser den igjen). -->
+    <div class="card p-4">
+      <div class="flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <div class="font-medium text-sm">{potte.i_drift ? '🌱 I drift' : '🧪 Testmodus'}</div>
+          <p class="text-text-muted text-xs mt-0.5">
+            {potte.i_drift
+              ? 'Plantedato og historikk teller for ekte.'
+              : 'Lek fritt — plantedato og historikk lagres ikke før du går i drift.'}
+          </p>
+        </div>
+        <button
+          class="shrink-0 text-xs px-3 py-1.5 rounded-lg border transition-colors disabled:opacity-50 {potte.i_drift
+            ? 'border-border text-text-muted hover:text-text hover:border-border-strong'
+            : bekreftDrift
+              ? 'border-sun/50 bg-sun/10 text-sun'
+              : 'border-leaf/40 bg-leaf/10 text-leaf hover:bg-leaf/15'}"
+          disabled={iDriftLagrer}
+          onclick={klikkDrift}
+        >
+          {iDriftLagrer
+            ? 'Lagrer…'
+            : potte.i_drift
+              ? 'Sett i testmodus'
+              : bekreftDrift
+                ? 'Bekreft — nullstiller datoer'
+                : 'Sett i drift →'}
+        </button>
+      </div>
+
+      {#if !potte.i_drift}
+        <TestSimulator {potteId} />
+      {/if}
+    </div>
   </div>
 
   {#if velgerSeksjon !== null}

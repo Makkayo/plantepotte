@@ -2,7 +2,10 @@
   /**
    * Testmodus-simulator — skru på alt selv og se hver funksjon spille seg ut før
    * potta er live. Skriver KUN til localStorage (sim-store); detalj-visningen
-   * bruker syntetiske data når «Simuler data» er på. Vises kun i testmodus.
+   * bruker syntetiske data når «Simuler data» er på.
+   *
+   * Rendres INNI Testmodus-kortet i PotteDetalj (samme felt, ikke eget kort) —
+   * derfor ingen egen `card`-ramme her, bare innhold + en topp-divider.
    */
   import { simStore, hentSim, settSim, type SimState } from '../lib/simulering';
 
@@ -34,14 +37,11 @@
   const pctAv = (v: number, min: number, max: number) => ((v - min) / (max - min)) * 100;
 </script>
 
-<div class="card p-4 border-sun/25 bg-sun/[0.04]">
+<div class="pt-3.5 mt-3.5 border-t border-border">
   <div class="flex items-start justify-between gap-3">
     <div class="min-w-0">
-      <div class="flex items-center gap-2">
-        <span class="text-base">🧪</span>
-        <h2 class="font-display text-sm font-semibold">Simulator</h2>
-      </div>
-      <p class="text-text-muted text-xs mt-0.5 leading-snug">
+      <div class="text-[13px] font-medium">🧪 Simulator</div>
+      <p class="text-text-muted text-[11px] mt-0.5 leading-snug">
         Skru på alt selv og se hver funksjon før potta er live. Endrer ingenting i databasen eller på potta.
       </p>
     </div>
