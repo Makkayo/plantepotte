@@ -84,15 +84,7 @@
   </div>
   <p class="text-text-muted text-xs mt-0.5 mb-4">Bilder fra kameraet — se plantene vokse over tid.</p>
 
-  {#if laster && forhandsvisning.length === 0}
-    <div class="text-text-dim text-sm animate-pulse py-4">Henter bilder…</div>
-  {:else if feil && forhandsvisning.length === 0}
-    <div class="text-text-muted text-sm py-2">Kunne ikke hente bilder akkurat nå.</div>
-  {:else if visBilder.length === 0}
-    <div class="text-text-dim text-sm py-2">
-      Ingen bilder ennå — kameraet laster opp et par ganger om dagen.
-    </div>
-  {:else}
+  {#if visBilder.length > 0}
     <div bind:this={strip} class="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1 overscroll-x-contain">
       {#each visBilder as b (b.url)}
         <button class="shrink-0 group" onclick={() => (aapent = b)}>
@@ -109,6 +101,14 @@
     <p class="font-mono text-[10px] text-text-dim mt-1">
       {erForhVis ? 'Slik vil tidslinja se ut når kameraet laster opp' : `${visBilder.length} bilder · eldste → nyeste`}
     </p>
+  {:else if laster}
+    <div class="text-text-dim text-sm animate-pulse py-4">Henter bilder…</div>
+  {:else if feil}
+    <div class="text-text-muted text-sm py-2">Kunne ikke hente bilder akkurat nå.</div>
+  {:else}
+    <div class="text-text-dim text-sm py-2">
+      Ingen bilder ennå — kameraet laster opp et par ganger om dagen.
+    </div>
   {/if}
 </section>
 
