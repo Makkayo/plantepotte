@@ -68,13 +68,23 @@
   // Eksempel-tidslinje bygget av plantefotoene (forhåndsvis kamera-tidslinja i sim).
   const simForhandsvisning = $derived.by(() => {
     if (!simAktiv) return [] as { url: string; dato: Date }[];
-    const kilder = effektivePlanter.map((p) => p.plante.bilde_url).filter((u): u is string => !!u);
+    const kilder = planter
+      .map((p) => p.plante?.bilde_url)
+      .filter((u): u is string => !!u);
     if (kilder.length === 0) return [];
     const n = 5;
     return Array.from({ length: n }, (_, i) => ({
       url: kilder[i % kilder.length]!,
       dato: new Date(Date.now() - (n - 1 - i) * 2 * 86_400_000),
     }));
+  });
+  $effect(() => {
+    (window as unknown as Record<string, unknown>).__dbg = {
+      simAktiv,
+      planterN: planter.length,
+      medBilde: planter.filter((p) => !!p.plante?.bilde_url).length,
+      forhN: simForhandsvisning.length,
+    };
   });
 
   const naaVannPct = $derived(
