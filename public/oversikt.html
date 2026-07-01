@@ -1290,9 +1290,9 @@
 <div class="snapshot">
   <div class="snap-card">
     <div class="snap-label">📊 Framdrift</div>
-    <div class="snap-value">Fase 1 av 5</div>
-    <div class="snap-sub">Backend ferdig — venter på hardware</div>
-    <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
+    <div class="snap-value">Fase 3 av 5</div>
+    <div class="snap-sub">Prototype komplett &amp; live — nå 3D-design</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:45%"></div></div>
   </div>
   <div class="snap-card">
     <div class="snap-label">💰 Brukt så langt</div>
@@ -1301,13 +1301,13 @@
   </div>
   <div class="snap-card">
     <div class="snap-label">📦 Hardware</div>
-    <div class="snap-value">Best. 1–4 inne</div>
-    <div class="snap-sub">Laser + kamera + lodd ankommet og testet</div>
+    <div class="snap-value">Best. 1–6 inne</div>
+    <div class="snap-sub">Alt ankommet 26. juni — kun 2 småting igjen</div>
   </div>
   <div class="snap-card">
     <div class="snap-label">➡️ Gjør nå</div>
     <div class="snap-value" style="font-size:1rem;">3D-design + test-print flottør</div>
-    <div class="snap-sub">Multimeter ✓ · Thonny ✓ · pakker drypper inn</div>
+    <div class="snap-sub">Multimeter ✓ · Thonny ✓ · nesten alle deler inne</div>
   </div>
 </div>
 
@@ -1365,8 +1365,8 @@
       <div class="infra-card">
         <div class="ic-icon">📦</div>
         <h3>Hardware bestilt</h3>
-        <p><strong>Bestilling 1:</strong> 16 hovedkomponenter (~€90) — <strong style="color:var(--green);">✅ alt ankommet 9. juni</strong>.<br><strong>Bestilling 2:</strong> 12 tilbehør — Wago, silikonledning, sikring, wire stripper (~€37) — <strong style="color:var(--green);">✅ alt ankommet</strong>.<br><strong>Bestilling 3:</strong> VL53L0X-laser ×3, ESP32-CAM ×2, conformal coating (~€26) — på vei.<br><strong>Bestilling 4:</strong> loddeutstyr + lek (tredje hånd, USB-bolt, matte, servo, ESP32-kit) — på vei, ikke nødvendig for potta.</p>
-        <span class="pill pill-yellow">● Best. 1+2 inne · 3+4 på vei</span>
+        <p><strong>Bestilling 1+2:</strong> hovedkomponenter + tilbehør (~€127) — <strong style="color:var(--green);">✅ alt ankommet</strong>.<br><strong>Bestilling 3:</strong> VL53L0X-laser ×3, ESP32-CAM ×2, coating (~€26) — <strong style="color:var(--green);">✅ ankommet</strong> (laser + kamera testet 20. juni).<br><strong>Bestilling 4:</strong> loddeutstyr + lek (~€54) — <strong style="color:var(--green);">✅ ankommet</strong>.<br><strong>Bestilling 5:</strong> påfyll, perfboard, Wago, sikringer, 5A-adapter (~€38) — <strong style="color:var(--green);">📦 ankommet 26. juni</strong> (mangler kun presisjonsskrutrekker).<br><strong>Bestilling 6:</strong> heat-set insert-sett + kabelspiral (~€23) — <strong style="color:var(--green);">📦 ankommet 26. juni</strong> (mangler kun standoffs).</p>
+        <span class="pill pill-green">● Best. 1–6 inne · 2 småting igjen</span>
       </div>
       <div class="infra-card">
         <div class="ic-icon">🔌</div>
@@ -1403,7 +1403,7 @@
     <p class="section-intro"><strong>16 hovedkomponenter</strong> + <strong>12 tilbehør</strong> fra AliExpress, <strong>2 lokalkjøp</strong>, og <strong>6 ting du har fra før</strong>.</p>
 
     <div class="comp-group">
-      <div class="comp-group-title">📬 Bestilling 1 — Hovedkomponenter fra AliExpress (~€90, mest på vei)</div>
+      <div class="comp-group-title">📬 Bestilling 1 — Hovedkomponenter fra AliExpress (~€90, ✅ alt ankommet 9. juni)</div>
 
       <div class="comp-card" id="komp-esp32">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-esp32"/></svg>
@@ -1836,31 +1836,31 @@
         <div class="comp-status"><span class="pill pill-green">Klar</span></div>
       </div>
 
-      <div class="comp-group-title" style="grid-column:1/-1;">🛒 Bestilling 5 — påfyll &amp; semi-permanent bygg (~€38, bestilt 10. juni)</div>
+      <div class="comp-group-title" style="grid-column:1/-1;">🛒 Bestilling 5 — påfyll &amp; semi-permanent bygg (~€38, bestilt 10. juni · 📦 ankommet 26. juni)</div>
       <div style="grid-column:1/-1; background:#0a1218; border:1px solid #1d4ed8; border-radius:10px; padding:1rem 1.25rem; font-size:0.87rem;">
         <p style="color:var(--muted); margin:0 0 0.6rem;">Samlet etter kveldens breadboard-testing. Alt gjennomgått del-for-del mot AliExpress-screenshots (de to fellene — flux-type og rask/treg sikring — er sjekket).</p>
-        <ul style="color:var(--muted); margin:0 0 0.6rem 1.1rem; padding:0; line-height:1.7;">
-          <li><strong style="color:var(--text);">12V 5A-adapter</strong> (self-adapting 2,1/2,5mm plugg) — margin for 2 potter (3A var i snaueste laget ved 2,5 A)</li>
-          <li><strong style="color:var(--text);">Wago 221-415 (5-v) + 221-413 (3-v)</strong>, original — samle 3 takstriper + ned-kabel (PCT-211 du har er bare 2-v)</li>
-          <li><strong style="color:var(--text);">Jordfukt v2.0 10-pk</strong> → 13 totalt: 8 til 2 potter (4/potte) + 5 reserve</li>
-          <li><strong style="color:var(--text);">Silikon 2-pin 20 AWG 10m</strong>, LED-clips 8mm — kraft-runs + reserve</li>
-          <li><strong style="color:var(--text);">Sikring 5×20 slow-blow 3A + 5A</strong> (glass) — treg patron til BLX-A-holderen</li>
-          <li><strong style="color:var(--text);">Flux-penn (no-clean)</strong> — lettere lodding (IKKE syre-flux)</li>
-          <li><strong style="color:var(--text);">Perfboard double-sided 7×9 + 5×7</strong> + <strong style="color:var(--text);">pinnerader male+female</strong> — semi-permanent bygg: loddet kort med hunn-headers (moduler plugges i, kan byttes)</li>
-          <li><strong style="color:var(--text);">Motstand-sortiment + 5mm LED</strong> — pulldown-auto-deteksjon, indikator-LED-test på GPIO26, lek</li>
-          <li><strong style="color:var(--text);">6-i-1 elektrisk presisjonsskrutrekker</strong> (N20, USB-C-ladbar, magnetiske bits) — til elektronikk-skruing</li>
+        <ul style="color:var(--muted); margin:0 0 0.6rem 1.1rem; padding:0; line-height:1.7; list-style:none;">
+          <li>📦 <strong style="color:var(--text);">12V 5A-adapter</strong> (self-adapting 2,1/2,5mm plugg) — margin for 2 potter (3A var i snaueste laget ved 2,5 A)</li>
+          <li>📦 <strong style="color:var(--text);">Wago 221-415 (5-v) + 221-413 (3-v)</strong>, original — samle 3 takstriper + ned-kabel (PCT-211 du har er bare 2-v)</li>
+          <li>📦 <strong style="color:var(--text);">Jordfukt v2.0 10-pk</strong> → 13 totalt: 8 til 2 potter (4/potte) + 5 reserve</li>
+          <li>📦 <strong style="color:var(--text);">Silikon 2-pin 20 AWG 10m</strong>, LED-clips 8mm — kraft-runs + reserve</li>
+          <li>📦 <strong style="color:var(--text);">Sikring 5×20 slow-blow 3A + 5A</strong> (glass) — treg patron til BLX-A-holderen</li>
+          <li>📦 <strong style="color:var(--text);">Flux-penn (no-clean)</strong> — lettere lodding (IKKE syre-flux)</li>
+          <li>📦 <strong style="color:var(--text);">Perfboard double-sided 7×9 + 5×7</strong> + <strong style="color:var(--text);">pinnerader male+female</strong> — semi-permanent bygg: loddet kort med hunn-headers (moduler plugges i, kan byttes)</li>
+          <li>📦 <strong style="color:var(--text);">Motstand-sortiment + 5mm LED</strong> — pulldown-auto-deteksjon, indikator-LED-test på GPIO26, lek</li>
+          <li>⬜ <strong style="color:var(--text);">6-i-1 elektrisk presisjonsskrutrekker</strong> (N20, USB-C-ladbar, magnetiske bits) — til elektronikk-skruing · <em style="color:var(--yellow);">eneste B5-del som ikke kom 26. juni</em></li>
         </ul>
-        <p style="color:var(--dim); margin:0; font-size:0.83rem;">Loddeutstyr, laser og kamera er allerede ankommet (Bestilling 3 &amp; 4, kom 17.–19. juni).</p>
+        <p style="color:var(--dim); margin:0; font-size:0.83rem;">📦 = ankommet 26. juni. Hele Bestilling 5 kom da, bortsett fra presisjonsskrutrekkeren. (Bestilling 3 &amp; 4 kom 17.–19. juni.)</p>
       </div>
 
-      <div class="comp-group-title" style="grid-column:1/-1;">🛒 Bestilling 6 — montering &amp; kabling (~€23, bestilt 11. juni)</div>
+      <div class="comp-group-title" style="grid-column:1/-1;">🛒 Bestilling 6 — montering &amp; kabling (~€23, bestilt 11. juni · 📦 ankommet 26. juni)</div>
       <div style="grid-column:1/-1; background:#0a1218; border:1px solid #1d4ed8; border-radius:10px; padding:1rem 1.25rem; font-size:0.87rem;">
-        <ul style="color:var(--muted); margin:0 0 0.6rem 1.1rem; padding:0; line-height:1.7;">
-          <li><strong style="color:var(--text);">Heat-set insert + skrue-sett</strong> (M2/M2.5/M3/M4 messing, 1050 stk) — smeltes inn i 3D-printet PETG med loddebolt; gir ordentlige metallgjenger for å feste PCB-moduler nøyaktig der du vil ha dem</li>
-          <li><strong style="color:var(--text);">PCB-distansebolter / standoffs</strong> (Rafford messing, M2–M6, 14 stk) — løfter moduler opp fra overflaten og gir luft under kortene</li>
-          <li><strong style="color:var(--text);">Kabelspiral-wrap</strong> (svart fleksibel) — samler og beskytter ledningsbunter pent</li>
+        <ul style="color:var(--muted); margin:0 0 0.6rem 1.1rem; padding:0; line-height:1.7; list-style:none;">
+          <li>📦 <strong style="color:var(--text);">Heat-set insert + skrue-sett</strong> (M2/M2.5/M3/M4 messing, 1050 stk) — smeltes inn i 3D-printet PETG med loddebolt; gir ordentlige metallgjenger for å feste PCB-moduler nøyaktig der du vil ha dem</li>
+          <li>⬜ <strong style="color:var(--text);">PCB-distansebolter / standoffs</strong> (Rafford messing, M2–M6, 14 stk) — løfter moduler opp fra overflaten og gir luft under kortene · <em style="color:var(--yellow);">eneste B6-del som ikke kom 26. juni</em></li>
+          <li>📦 <strong style="color:var(--text);">Kabelspiral-wrap</strong> (svart fleksibel) — samler og beskytter ledningsbunter pent</li>
         </ul>
-        <p style="color:var(--dim); margin:0; font-size:0.83rem;">Brukes primært i fase 4 (montering av hardware i 3D-printet boks).</p>
+        <p style="color:var(--dim); margin:0; font-size:0.83rem;">📦 = ankommet 26. juni (standoffs gjenstår). Brukes primært i fase 4 (montering i 3D-printet boks).</p>
       </div>
     </div>
   </section>
@@ -3040,7 +3040,7 @@
         <div class="check-box">✓</div>
         <div class="check-content">
           <h4>Hardware ankommet (bestilling 1–4)</h4>
-          <p>Bestilling 1 + 2 ankommet 6.–9. juni. Bestilling 3 (laser + kamera) og 4 (loddeutstyr + lek) ankommet 17.–19. juni. Gjenstår i posten: Bestilling 5 (påfyll + semi-permanent) og 6 (montering). Status per del: <code>docs/mottaksliste.md</code>.</p>
+          <p>Bestilling 1 + 2 ankommet 6.–9. juni. Bestilling 3 (laser + kamera) og 4 (loddeutstyr + lek) ankommet 17.–19. juni. Bestilling 5 (påfyll + semi-permanent) og 6 (montering) ankommet 26. juni. Gjenstår i posten: kun 6-i-1 presisjonsskrutrekker (B5) + PCB-standoffs (B6). Status per del: <code>docs/mottaksliste.md</code>.</p>
         </div>
       </div>
       <div class="check done">

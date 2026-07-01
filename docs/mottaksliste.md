@@ -8,7 +8,7 @@ Holder styr på hva som er **bestilt → ankommet → testet** på breadboard.
 - ✅ Testet og funker
 - ⚠️ Ankommet, men problem (se notat)
 
-*Sist oppdatert: 2026-06-20 — MOSFET-dimming + VL53L0X-laser testet på breadboard; full integrasjon (WiFi+Supabase+app) live*
+*Sist oppdatert: 2026-06-26 — stor leveranse: Bestilling 5 + 6 nesten komplett ankommet (mangler kun presisjonsskrutrekker + standoffs)*
 
 ---
 
@@ -79,29 +79,35 @@ Samlet etter kveldens testing. AliExpress-søkeord i parentes.
 
 | Status | Del | Antall | Notat |
 |:------:|-----|:------:|-------|
-| ⬜ | 12V **5A**-adapter (self-adapting 2,1/2,5mm) | ×1 | Margin for 2 potter (`12V 5A power adapter 5.5x2.1mm EU plug`) |
-| ⬜ | Wago **221-415** (5-veis, original) | 10-pk | Samle 3 takstriper + ned-kabel til ett par |
-| ⬜ | Wago **221-413** (3-veis, original) | 10-pk | Mindre 12V-skjøter |
-| ⬜ | Jordfuktsensor v2.0 | 10-pk | → 13 totalt: 8 til 2 potter (4/potte) + 5 reserve |
-| ⬜ | Motstand-sortiment 1/4W | 600-pk | Pulldown (auto-deteksjon) + indikator-LED + lek |
-| ⬜ | 5mm LED-pakke | 100-pk | Indikator-LED-test på GPIO26 + lek |
-| ⬜ | Silikonledning **2-pin 20 AWG** | 10 m | Erstatter 22+20 AWG; kraft-runs 2 potter |
-| ⬜ | LED clip 8mm 2-pin | 5-pk | Flere strip-clips (åpnes dårlig, vil ha reserve) |
-| ⬜ | **Flux-penn** (No Clean) | ×1 | Gjør lodding mye lettere — IKKE syre-flux |
-| ⬜ | Sikring 5×20 **Slow Blow** 3A | 10-pk | Treg patron til BLX-A-holderen (3A-adapter) |
-| ⬜ | Sikring 5×20 **Slow Blow** 5A | 10-pk | Til 5A-adapteren |
-| ⬜ | Perfboard double-sided 7×9cm | 5-pk | Semi-permanent bygg (hovedkort) |
-| ⬜ | Perfboard double-sided 5×7cm | 10-pk | Lodde-øving + små kort |
-| ⬜ | Pinnerader 2,54mm (male+female) | 5 sett | Hunn-headers på perfboard → moduler plugges i |
-| ⬜ | 6-i-1 elektrisk presisjonsskrutrekker | ×1 | N20-håndtak, USB-C-ladbar, magnetiske bits (PH000/PH00/P2/Y0.6) — til elektronikk-skruing |
+| 📦 | 12V **5A**-adapter (self-adapting 2,1/2,5mm) | ×1 | **Kom 26. juni** — MODEL KDT-1250, OUTPUT 12V⎓5A, EU-plugg. Margin for 2 potter |
+| 📦 | Wago **221-415** (5-veis, original) | 10-pk | **Kom 26. juni** — ekte Wago bekreftet. Samle 3 takstriper + ned-kabel til ett par |
+| 📦 | Wago **221-413** (3-veis, original) | 10-pk | **Kom 26. juni** — ekte Wago bekreftet. Mindre 12V-skjøter |
+| 📦 | Jordfuktsensor v2.0 | 10-pk | **Kom 26. juni** — kapasitiv, korrosjonsbestandig. → 13 totalt (8 til 2 potter + 5 reserve) |
+| 📦 | Motstand-sortiment 1/4W | 600-pk | **Kom 26. juni** — 1% metallfilm, 30 verdier (10Ω–1MΩ), i sorteringsboks |
+| 📦 | 5mm LED-pakke | 100-pk | **Kom 26. juni** — assortert (rød/grønn/gul/blå/hvit), F5 rund |
+| 📦 | Silikonledning **2-pin 20 AWG** | 10 m | **Kom 26. juni** — rød+svart sammenhengende 2-pin. Kraft-runs 2 potter |
+| 📦 | LED clip 8mm 2-pin | 5-pk | **Kom 26. juni** — «strip-to-wire» 8mm 2-pin. → 10 totalt |
+| 📦 | **Flux-penn** (No Clean) | ×1 | **Kom 26. juni** — Low Solid / No Clean (IKKE syre-flux) ✅ |
+| 📦 | Sikring 5×20 **Slow Blow** 3A | 10-pk | **Kom 26. juni** — glass 5×20mm treg (T), 10 stk. Patron til BLX-A-holderen |
+| 📦 | Sikring 5×20 **Slow Blow** 5A | 10-pk | **Kom 26. juni** — glass 5×20mm treg (T), 10 stk. Til 5A-adapteren |
+| 📦 | Perfboard double-sided 7×9cm | 5-pk | **Kom 26. juni** — blå, dobbeltsidig. Semi-permanent bygg (hovedkort) |
+| 📦 | Perfboard double-sided 5×7cm | 10-pk | **Kom 26. juni** — blå, dobbeltsidig. Lodde-øving + små kort |
+| 📦 | Pinnerader 2,54mm (male+female) | 5 sett | **Kom 26. juni** — 1×40-pin, hann+hunn. Hunn-headers på perfboard |
+| ⬜ | 6-i-1 elektrisk presisjonsskrutrekker | ×1 | **IKKE i 26. juni-leveransen** — N20, USB-C-ladbar, magnetiske bits. Venter fortsatt |
 
 ## Bestilling 6 — montering & kabling (~€23, bestilt 11. juni)
 
 | Status | Del | Antall | Notat |
 |:------:|-----|:------:|-------|
-| ⬜ | Heat-set insert + skrue-sett (M2/M2.5/M3/M4 messing, 1050 stk) | ×1 | Smeltes inn i PETG med loddebolt — metallgjenger for PCB-moduler |
-| ⬜ | PCB-distansebolter / standoffs (Rafford messing, M2–M6, 14 stk) | ×1 | Løfter moduler opp fra overflaten |
-| ⬜ | Kabelspiral-wrap (svart, fleksibel) | ×1 | Kabelbeskyttelse |
+| 📦 | Heat-set insert + skrue-sett (M2/M2.5/M3/M4 messing, 1050 stk) | ×1 | **Kom 26. juni** — messing «twill knurled», hot-melt insert + skruer. Smeltes inn i PETG |
+| ⬜ | PCB-distansebolter / standoffs (Rafford messing, M2–M6, 14 stk) | ×1 | **IKKE i 26. juni-leveransen** — venter fortsatt |
+| 📦 | Kabelspiral-wrap (svart, fleksibel) | ×1 | **Kom 26. juni** — 8mm Ø, 5m, svart spiral. Kabelbeskyttelse |
+
+## Uventet / ekstra i 26. juni-leveransen
+
+| Status | Del | Antall | Notat |
+|:------:|-----|:------:|-------|
+| 📦 | Heat-set insert-tipper (loddebolt) | 4 | **Kom 26. juni** — skru-på-tipper M2–M6 til loddebolt, for å smelte heat-set inserts inn (supplement til «heat insert tool» du har fra før). Sto ikke på opprinnelig B5/B6-liste |
 
 ## Kjøp lokalt
 
