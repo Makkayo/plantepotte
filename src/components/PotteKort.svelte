@@ -24,6 +24,7 @@
     planter,
     now = new Date(),
     onClick,
+    simulert = false,
   }: {
     potte: Potte;
     command: PotteCommand | undefined;
@@ -31,6 +32,10 @@
     planter: PottePlanteFull[];
     now?: Date;
     onClick: () => void;
+    /** Kortet viser syntetiske sim-data (testmodus-simulator) — merkes tydelig
+     * så det aldri kan forveksles med ekte drift. `potte.i_drift` er «later som
+     * true» i sim, så vi trenger dette som egen kilde til sannhet for badgen. */
+    simulert?: boolean;
   } = $props();
 
   const fyltSeksjoner = $derived(planter.length);
@@ -83,7 +88,9 @@
 </script>
 
 <button
-  class="card p-4 text-left w-full hover:brightness-[1.07] transition-all duration-200 stig"
+  class="card p-4 text-left w-full hover:brightness-[1.07] transition-all duration-200 stig {simulert
+    ? '!border-sun/40 !border-dashed'
+    : ''}"
   onclick={onClick}
 >
   <!-- Rad 1: ikon + navn + chevron -->
@@ -102,7 +109,15 @@
 
   <!-- Rad 2: status + badges -->
   <div class="flex items-center gap-3 mt-2.5 flex-wrap">
-    {#if !potte.i_drift}
+    {#if simulert}
+      <span
+        class="inline-flex items-center gap-1 font-mono text-[10.5px] px-2 py-0.5 rounded-full"
+        style="background:rgba(251,191,36,0.12); border:1px solid rgba(251,191,36,0.35); color:#fbbf24"
+        title="Viser syntetiske data fra simulatoren — ikke ekte målinger"
+      >
+        🧪 Simulert forhåndsvisning
+      </span>
+    {:else if !potte.i_drift}
       <span class="inline-flex items-center font-mono text-[10.5px] text-sun">🧪 Testmodus</span>
     {/if}
     {#if potte.har_sensorer}
