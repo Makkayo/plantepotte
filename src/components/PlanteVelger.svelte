@@ -19,6 +19,7 @@
   } = $props();
 
   let sok = $state('');
+  let bildeFeilet = $state<Record<string, boolean>>({});
   let kategoriFilter = $state<PlanteKategori | 'alle'>('alle');
   // svelte-ignore state_referenced_locally
   let familieFilter = $state<LysFamilieId | 'alle' | 'kompatible'>(
@@ -177,7 +178,17 @@
               class="card-raised p-3 text-left hover:bg-surface-hover hover:border-border-strong transition-colors flex items-start gap-3"
               onclick={() => onValgt(p.id)}
             >
-              <span class="text-2xl">{p.emoji ?? '🌿'}</span>
+              {#if p.bilde_url && !bildeFeilet[p.id]}
+                <img
+                  src={p.bilde_url}
+                  alt={p.navn}
+                  loading="lazy"
+                  onerror={() => (bildeFeilet[p.id] = true)}
+                  class="w-11 h-11 rounded-lg object-cover shrink-0 bg-surface-raised"
+                />
+              {:else}
+                <span class="text-2xl">{p.emoji ?? '🌿'}</span>
+              {/if}
               <div class="flex-1 min-w-0">
                 <div class="font-medium leading-tight">{p.navn}</div>
                 {#if p.vitenskapelig}

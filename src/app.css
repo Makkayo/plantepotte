@@ -42,52 +42,92 @@
     font-family: inherit;
   }
 
-  /* Range slider styling */
+  /* ── Range slider ────────────────────────────────────────────────────
+     Native input (full keyboard + a11y) styled to the design language.
+     8px pill track, a leaf-ringed thumb that lifts on grab. The `.slider-lys`
+     modifier paints a leaf→glow FILL up to the thumb, driven by an inline
+     `--pct` (set to the value %), so the control reads as "how much light". */
   input[type='range'] {
     -webkit-appearance: none;
     appearance: none;
     background: transparent;
     cursor: pointer;
+    height: 26px; /* generous hit-area for touch */
   }
 
   input[type='range']::-webkit-slider-runnable-track {
     background: theme('colors.border.DEFAULT');
     border-radius: 999px;
-    height: 6px;
+    height: 8px;
   }
 
   input[type='range']::-moz-range-track {
     background: theme('colors.border.DEFAULT');
     border-radius: 999px;
-    height: 6px;
+    height: 8px;
   }
 
   input[type='range']::-webkit-slider-thumb {
     -webkit-appearance: none;
     background: theme('colors.leaf.DEFAULT');
-    height: 18px;
-    width: 18px;
+    height: 22px;
+    width: 22px;
     border-radius: 50%;
-    margin-top: -6px;
-    box-shadow: 0 0 0 4px theme('colors.leaf.DEFAULT / 15%');
-    transition: box-shadow 0.15s;
+    margin-top: -7px; /* (8 − 22) / 2 to centre on the 8px track */
+    border: 3px solid theme('colors.surface.DEFAULT');
+    box-shadow:
+      0 2px 6px rgba(0, 0, 0, 0.4),
+      0 0 0 4px theme('colors.leaf.DEFAULT / 15%');
+    transition:
+      box-shadow 0.15s,
+      transform 0.12s ease-out;
   }
 
   input[type='range']::-moz-range-thumb {
     background: theme('colors.leaf.DEFAULT');
-    height: 18px;
-    width: 18px;
+    height: 22px;
+    width: 22px;
     border-radius: 50%;
-    border: none;
-    box-shadow: 0 0 0 4px theme('colors.leaf.DEFAULT / 15%');
+    border: 3px solid theme('colors.surface.DEFAULT');
+    box-shadow:
+      0 2px 6px rgba(0, 0, 0, 0.4),
+      0 0 0 4px theme('colors.leaf.DEFAULT / 15%');
+  }
+
+  input[type='range']:active::-webkit-slider-thumb {
+    transform: scale(1.12);
+  }
+  input[type='range']:active::-moz-range-thumb {
+    transform: scale(1.12);
   }
 
   input[type='range']:focus {
     outline: none;
   }
+  input[type='range']:focus-visible::-webkit-slider-thumb {
+    box-shadow:
+      0 2px 6px rgba(0, 0, 0, 0.4),
+      0 0 0 6px theme('colors.leaf.DEFAULT / 30%');
+  }
+  input[type='range']:focus-visible::-moz-range-thumb {
+    box-shadow:
+      0 2px 6px rgba(0, 0, 0, 0.4),
+      0 0 0 6px theme('colors.leaf.DEFAULT / 30%');
+  }
 
-  input[type='range']:focus::-webkit-slider-thumb {
-    box-shadow: 0 0 0 6px theme('colors.leaf.DEFAULT / 25%');
+  /* Filled variant — leaf→glow up to the thumb, grey beyond. Hard stop at --pct. */
+  input[type='range'].slider-lys::-webkit-slider-runnable-track {
+    background: linear-gradient(
+      90deg,
+      theme('colors.leaf.DEFAULT') 0%,
+      theme('colors.leaf.glow') var(--pct, 0%),
+      theme('colors.border.DEFAULT') var(--pct, 0%)
+    );
+  }
+  input[type='range'].slider-lys::-moz-range-progress {
+    background: theme('colors.leaf.DEFAULT');
+    border-radius: 999px;
+    height: 8px;
   }
 }
 

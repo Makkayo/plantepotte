@@ -406,8 +406,12 @@
       </button>
     </div>
 
-    <!-- Veksttidslinje: kamerabilder fra Storage -->
-    <Veksttidslinje {potteId} />
+    <!-- Veksttidslinje: kamerabilder fra Storage. Kun for kasser med sensor-
+         /kamera-rigg — en ren lys-kasse har ikke kamera og skal ikke vise en
+         evig «ingen bilder ennå». -->
+    {#if potte.har_sensorer}
+      <Veksttidslinje {potteId} />
+    {/if}
 
     <!-- Historikk: tidligere planter (kun samlet i drift-modus) -->
     {#if historikk.length > 0}
