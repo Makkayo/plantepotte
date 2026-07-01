@@ -1,9 +1,18 @@
 import { describe, it, expect } from 'vitest';
-import { vannAvstandFraPct, jordAdcFraPct, simSensor, simHistorikk, simPlantetAt, SIM_DEFAULT } from './simulering';
+import {
+  vannAvstandFraPct,
+  jordAdcFraPct,
+  simSensor,
+  simHistorikk,
+  simPlantetAt,
+  effektivKasse,
+  SIM_DEFAULT,
+  type SimState,
+} from './simulering';
 import { vannNivaProsent, jordfuktProsent } from './utils';
 import type { Potte } from './database.types';
 
-const potte = { potte_id: 'sim1', vann_tom_mm: null, vann_full_mm: null } as Potte;
+const potte = { potte_id: 'sim1', vann_tom_mm: null, vann_full_mm: null, i_drift: false, har_sensorer: false } as Potte;
 const naa = Date.parse('2026-07-01T12:00:00Z');
 
 describe('inversjoner round-tripper med visnings-formlene', () => {
@@ -60,5 +69,45 @@ describe('simPlantetAt', () => {
     const iso = simPlantetAt({ ...SIM_DEFAULT, plantealderDager: 30 }, naa);
     const alderDager = Math.round((naa - Date.parse(iso)) / 86_400_000);
     expect(alderDager).toBe(30);
+  });
+});
+
+describe('effektivKasse', () => {
+  const plante = { plantet_at: '2020-01-01T00:00:00Z', navn: 'Test' };
+
+  it('sim av → returnerer ekte data uendret, simAktiv false', () => {
+    const map: Record<string, SimState> = { sim1: { ...SIM_DEFAULT, aktiv: false } };
+    const res = effektivKasse(potte, [plante], undefined, map);
+    expect(res.simAktiv).toBe(false);
+    expect(res.potte).toBe(potte); // samme referanse — ingen kopiering når av
+    expect(res.planter[0]!.plantet_at).toBe('2020-01-01T00:00:00Z');
+    expect(res.sensor).toBeUndefined();
+  });
+
+  it('sim på i testmodus → gate-flipper i_drift+har_sensorer og syntetiserer', () => {
+    const map: Record<string, SimState> = {
+      sim1: { ...SIM_DEFAULT, aktiv: true, plantealderDager: 40, vannPct: 55 },
+    };
+    const res = effektivKasse(potte, [plante], undefined, map);
+    expect(res.simAktiv).toBe(true);
+    expect(res.potte.i_drift).toBe(true);
+    expect(res.potte.har_sensorer).toBe(true);
+    expect(res.sensor).toBeDefined();
+    expect(vannNivaProsent(res.sensor!.vann_avstand_mm)).toBe(55);
+    const alder = Math.round((Date.now() - Date.parse(res.planter[0]!.plantet_at)) / 86_400_000);
+    expect(alder).toBe(40);
+  });
+
+  it('sim på, men kassa ER allerede i ekte drift → ignoreres (aldri overstyr ekte drift)', () => {
+    const iDrift = { ...potte, i_drift: true };
+    const map: Record<string, SimState> = { sim1: { ...SIM_DEFAULT, aktiv: true } };
+    const res = effektivKasse(iDrift, [plante], undefined, map);
+    expect(res.simAktiv).toBe(false);
+    expect(res.potte).toBe(iDrift);
+  });
+
+  it('mangler sim-state for potte-iden → oppfører seg som av (defaults)', () => {
+    const res = effektivKasse(potte, [plante], undefined, {});
+    expect(res.simAktiv).toBe(false);
   });
 });

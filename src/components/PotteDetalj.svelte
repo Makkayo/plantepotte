@@ -14,7 +14,7 @@
   import { beregnVannTrend } from '../lib/trend';
   import { kasseNaering } from '../lib/naering';
   import { probeHelse, vekeHelse } from '../lib/diagnose';
-  import { simStore, hentSim, simSensor, simHistorikk, simPlantetAt } from '../lib/simulering';
+  import { simStore, hentSim, simHistorikk, effektivKasse } from '../lib/simulering';
   import { visFeil } from '../lib/toast';
   import type { Potte, PotteCommand, PotteSensorData, PottePlanteFull } from '../lib/database.types';
   import AnleggPanel from './AnleggPanel.svelte';
@@ -53,17 +53,18 @@
   let sensorHistorikk = $state<SensorRad[]>([]);
 
   // ---- Testmodus-simulator: syntetiske data + gate-flip så ALT forhåndsvises ----
+  // effektivKasse() er DEN ENE delte implementasjonen (også brukt av
+  // PotteOversikt) — se simulering.ts for hvorfor duplisering her var risikabelt.
+  const effektiv = $derived(potte ? effektivKasse(potte, planter, sensor ?? undefined, $simStore) : null);
+  const simAktiv = $derived(effektiv?.simAktiv ?? false);
+  const effektivPotte = $derived(effektiv?.potte ?? potte);
+  const effektivSensor = $derived(effektiv?.sensor ?? sensor);
+  const effektivePlanter = $derived(effektiv?.planter ?? planter);
+  // Historikk-syntese er PotteDetalj-spesifikk (7-dagers vanntrend/sparkline
+  // finnes ikke i oversikten) — samme sim-kilde (hentSim), bare lokal bruk.
   const sim = $derived(hentSim($simStore, potteId));
-  const simAktiv = $derived(!!potte && !potte.i_drift && sim.aktiv);
-  // I sim later vi som om kassa er i drift + har sensorer, så høsting, næring,
-  // sensorkort og diagnose alle spiller på syntetiske data.
-  const effektivPotte = $derived(potte && simAktiv ? { ...potte, i_drift: true, har_sensorer: true } : potte);
-  const effektivSensor = $derived(simAktiv && potte ? simSensor(sim, potte) : sensor);
   const effektivHistorikk = $derived(
     simAktiv && potte ? (simHistorikk(sim, potte) as SensorRad[]) : sensorHistorikk,
-  );
-  const effektivePlanter = $derived(
-    simAktiv ? planter.map((p) => ({ ...p, plantet_at: simPlantetAt(sim) })) : planter,
   );
   const naaVannPct = $derived(
     vannNivaProsent(effektivSensor?.vann_avstand_mm, effektivPotte?.vann_tom_mm ?? undefined, effektivPotte?.vann_full_mm ?? undefined),

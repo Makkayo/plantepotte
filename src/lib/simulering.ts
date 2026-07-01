@@ -104,6 +104,49 @@ export function simSensor(sim: SimState, potte: Potte, naa = Date.now()): PotteS
   };
 }
 
+// ─────────────────── Delt «effektiv»-utleding (ÉN implementasjon) ───────────────────
+//
+// Både PotteDetalj (detaljvisning) og PotteOversikt (kort + handlingsfeed) må
+// gate-flippe (i_drift+har_sensorer) og injisere syntetiske data på nøyaktig
+// samme måte når simulatoren er på — ellers kan de to visningene se ULIKE ut
+// for samme kasse. Denne fantes tidligere som to nesten-like kopier, og det
+// var akkurat den type duplisering som lot «🧪 Testmodus»-badgen forsvinne
+// uten et eget «simulert»-merke på det ene stedet (fikset 1. juli). Nå er det
+// ETT sted å endre gate-flip-oppførsel.
+
+export interface EffektivKasse<P extends { plantet_at: string }> {
+  /** Original kasse hvis sim er av; ellers gate-flippet (i_drift+har_sensorer = true). */
+  potte: Potte;
+  /** Ekte siste avlesning hvis sim er av; ellers syntetisk fra sim-state. */
+  sensor: PotteSensorData | undefined;
+  /** Ekte planter hvis sim er av; ellers samme planter med syntetisk plantet_at. */
+  planter: P[];
+  /** True når denne kassa faktisk viser syntetiske data akkurat nå. */
+  simAktiv: boolean;
+}
+
+/**
+ * Bygg «effektiv» kasse-tilstand for én potte: ekte data, eller — hvis
+ * simulatoren er skrudd på for en testmodus-kasse — syntetisk forhåndsvisning.
+ * `simAktiv` MÅ brukes til å vise et eget «🧪 Simulert»-merke der resultatet
+ * rendres — gate-flippen alene ser ut som ekte drift.
+ */
+export function effektivKasse<P extends { plantet_at: string }>(
+  potte: Potte,
+  planter: P[],
+  sensor: PotteSensorData | undefined,
+  simMap: Record<string, SimState>,
+): EffektivKasse<P> {
+  const sim = hentSim(simMap, potte.potte_id);
+  const simAktiv = sim.aktiv && !potte.i_drift;
+  return {
+    potte: simAktiv ? { ...potte, i_drift: true, har_sensorer: true } : potte,
+    sensor: simAktiv ? simSensor(sim, potte) : sensor,
+    planter: simAktiv ? planter.map((p) => ({ ...p, plantet_at: simPlantetAt(sim) })) : planter,
+    simAktiv,
+  };
+}
+
 export interface SimHistorikkRad {
   registrert_at: string;
   vann_avstand_mm: number;

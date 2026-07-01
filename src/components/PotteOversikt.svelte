@@ -12,7 +12,7 @@
   } from '../lib/utils';
   import { kasseNaering } from '../lib/naering';
   import { mestAktuelleHosting, HOSTE_NUDGE_DAGER } from '../lib/hosting';
-  import { simStore, hentSim, simSensor, simPlantetAt } from '../lib/simulering';
+  import { simStore, effektivKasse } from '../lib/simulering';
   import type { Potte, PotteCommand, PotteSensorData, PottePlanteFull } from '../lib/database.types';
   import PotteKort from './PotteKort.svelte';
   import Sheet from './Sheet.svelte';
@@ -68,9 +68,10 @@
   });
   onDestroy(() => clearInterval(timer));
 
-  // Testmodus-simulator: samme «effektiv»-mønster som PotteDetalj, nå per kort
-  // i oversikten — så en simulert kasse forhåndsviser IKKE bare i detaljen, men
-  // også kortet og handlingsfeeden under, konsistent med det Markus ser inne.
+  // Testmodus-simulator: bruker DEN ENE delte effektivKasse()-implementasjonen
+  // (samme som PotteDetalj, se simulering.ts) — så en simulert kasse
+  // forhåndsviser konsistent i BÅDE kortet og handlingsfeeden under, akkurat
+  // som i detaljen. Aldri kopier denne logikken lokalt igjen.
   interface Kasse {
     potte: Potte;
     effektivPotte: Potte;
@@ -80,18 +81,8 @@
   }
   const kasser = $derived.by((): Kasse[] =>
     $potter.map((p) => {
-      const sim = hentSim($simStore, p.potte_id);
-      const simAktiv = sim.aktiv && !p.i_drift;
-      const planterListe = $pottePlanter[p.potte_id] ?? [];
-      return {
-        potte: p,
-        effektivPotte: simAktiv ? { ...p, i_drift: true, har_sensorer: true } : p,
-        effektivSensor: simAktiv ? simSensor(sim, p) : sensors[p.potte_id],
-        effektivePlanter: simAktiv
-          ? planterListe.map((pp) => ({ ...pp, plantet_at: simPlantetAt(sim) }))
-          : planterListe,
-        simAktiv,
-      };
+      const e = effektivKasse(p, $pottePlanter[p.potte_id] ?? [], sensors[p.potte_id], $simStore);
+      return { potte: p, effektivPotte: e.potte, effektivSensor: e.sensor, effektivePlanter: e.planter, simAktiv: e.simAktiv };
     }),
   );
 
