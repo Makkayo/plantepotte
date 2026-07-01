@@ -25,9 +25,13 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   const req = e.request;
   if (req.method !== 'GET') return;
-  // Navigasjoner: nett-først, fall tilbake til cachet skall når man er offline.
+  // Navigasjoner: nett-først MED no-store, fall tilbake til cachet skall når
+  // man er offline. no-store er bevisst — uten den kan nettleserens EGEN
+  // HTTP-cache (ikke SW-cachen) servere en gammel index.html (med referanse
+  // til en utdatert hashet JS-bunt) i lang tid etter en deploy, selv om denne
+  // fetch()-en «går til nettet». Oppdaget under manuell verifisering 1. juli.
   if (req.mode === 'navigate') {
-    e.respondWith(fetch(req).catch(() => caches.match('/')));
+    e.respondWith(fetch(req, { cache: 'no-store' }).catch(() => caches.match('/')));
     return;
   }
   // Øvrige GET: nett, ellers cache.
