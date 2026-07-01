@@ -12,6 +12,7 @@
   } from '../lib/utils';
   import { beregnDli } from '../lib/lys';
   import { lysVarighetTimer } from '../lib/tid';
+  import { mestAktuelleHosting } from '../lib/hosting';
   import SolBue from './viz/SolBue.svelte';
   import VannTank from './viz/VannTank.svelte';
 
@@ -59,6 +60,19 @@
       potte.vann_full_mm ?? undefined,
     );
   });
+
+  // Neste høsting (kun i drift, kun når plantene har et dager_til_hosting-anslag)
+  const hosting = $derived(
+    potte.i_drift
+      ? mestAktuelleHosting(
+          planter.map((pp) => ({
+            navn: pp.plante.navn,
+            plantet_at: pp.plantet_at,
+            dager_til_hosting: pp.plante.dager_til_hosting,
+          })),
+        )
+      : null,
+  );
 
   // Lys (samme språk som detaljens vekstlys-kort)
   const lysT = $derived(command ? lysVarighetTimer(command.timer_on, command.timer_off) : 0);
@@ -116,6 +130,22 @@
       {#if ledig > 0}
         <span class="inline-flex items-center px-3 py-[5px] rounded-full border border-dashed border-border-strong text-[11.5px] text-text-muted">+{ledig} ledig</span>
       {/if}
+    </div>
+  {/if}
+
+  <!-- Neste høsting: gjør kortet «levende» (teller ned mot spiseklart) -->
+  {#if hosting}
+    <div
+      class="mt-2.5 inline-flex items-center gap-1.5 text-[11.5px] {hosting.status.klar
+        ? 'text-leaf-glow font-medium'
+        : 'text-text-muted'}"
+    >
+      <span>🧺</span>
+      <span>
+        {hosting.status.klar
+          ? `${hosting.navn} er klar til høsting`
+          : `${hosting.navn} · ${hosting.status.tekst}`}
+      </span>
     </div>
   {/if}
 

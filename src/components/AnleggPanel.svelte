@@ -25,6 +25,7 @@
   import { beregnDli } from '../lib/lys';
   import { hhmmTilMin, lysVarighetMin } from '../lib/tid';
   import { beregnVpd } from '../lib/klima';
+  import { hostingStatus, type HostingStatus } from '../lib/hosting';
   import { visFeil, visOk } from '../lib/toast';
   import type {
     Plante,
@@ -217,6 +218,7 @@
         adc: number | null;
         hist: number[];
         notater: string | null;
+        hosting: HostingStatus | null;
       }
     | { type: 'vann' }
     | { type: 'lys' };
@@ -272,6 +274,7 @@
       adc: jordRaa(seksjon),
       hist,
       notater: pp.notater,
+      hosting: potte.i_drift ? hostingStatus(pp.plantet_at, pp.plante.dager_til_hosting) : null,
     };
     notatRediger = false;
   }
@@ -493,6 +496,22 @@
     <div class="inline-flex items-center gap-2 mt-3 px-3 py-1.5 rounded-full bg-white/[0.04] text-xs">
       <span class="w-2 h-2 rounded-full" style="background:{arkFukt?.farge}"></span>{arkFukt?.tekst}
     </div>
+
+    {#if f.hosting}
+      <!-- Høsting-nedtelling med fremdriftslinje -->
+      <div class="mt-4 flex items-center gap-3 p-3 rounded-xl bg-bg-subtle border border-border {f.hosting.klar ? 'border-leaf/40' : ''}">
+        <span class="text-xl shrink-0">🧺</span>
+        <div class="min-w-0 flex-1">
+          <div class="text-[13px] font-medium {f.hosting.klar ? 'text-leaf-glow' : ''}">{f.hosting.tekst}</div>
+          <div class="mt-1.5 h-1.5 rounded-full bg-surface-raised overflow-hidden">
+            <div class="h-full rounded-full bg-leaf transition-[width]" style="width: {f.hosting.prosent}%"></div>
+          </div>
+          <div class="font-mono text-[10px] text-text-dim mt-1">
+            dag {f.hosting.dagerPlantet} av ~{f.hosting.dagerTilHosting}
+          </div>
+        </div>
+      </div>
+    {/if}
 
     <div class="mt-5">
       <div class="flex items-baseline justify-between mb-2">

@@ -10,6 +10,8 @@
     OFFLINE_GRENSE_MIN,
     TORR_GRENSE,
   } from '../lib/utils';
+  import { kasseNaering } from '../lib/naering';
+  import { mestAktuelleHosting } from '../lib/hosting';
   import type { PotteCommand, PotteSensorData } from '../lib/database.types';
   import PotteKort from './PotteKort.svelte';
   import Sheet from './Sheet.svelte';
@@ -65,36 +67,60 @@
   });
   onDestroy(() => clearInterval(timer));
 
-  // Én advarsel per kasse (mest alvorlige): frakoblet → lavt vann → tørr jord.
+  // Handlingsfeed: problemer (rød/gul) OG gjøremål/gode nyheter (næring, høsting).
+  // Sensorvarsler = mest alvorlige én per kasse; næring/høsting kommer i tillegg.
+  type Alvor = 'hoy' | 'mid' | 'gjøremål' | 'positiv';
   const varsler = $derived.by(() => {
-    const ut: { potteId: string; navn: string; melding: string; alvor: 'hoy' | 'mid' }[] = [];
+    const ut: { potteId: string; navn: string; melding: string; alvor: Alvor; ikon: string }[] = [];
     for (const p of $potter) {
-      if (!p.har_sensorer) continue;
-      const s = sensors[p.potte_id];
-      const min = minutterSiden(s?.registrert_at);
-      if (min !== null && min > OFFLINE_GRENSE_MIN) {
-        ut.push({ potteId: p.potte_id, navn: p.navn, melding: 'Frakoblet — sjekk strøm og WiFi', alvor: 'mid' });
-        continue;
+      const planterListe = $pottePlanter[p.potte_id] ?? [];
+
+      // 1) Sensor-varsler (kun kasser med sensorer): frakoblet → lavt vann → tørr jord.
+      if (p.har_sensorer) {
+        const s = sensors[p.potte_id];
+        const min = minutterSiden(s?.registrert_at);
+        if (min !== null && min > OFFLINE_GRENSE_MIN) {
+          ut.push({ potteId: p.potte_id, navn: p.navn, melding: 'Frakoblet — sjekk strøm og WiFi', alvor: 'mid', ikon: '⚠️' });
+        } else if (s) {
+          const vann = vannNivaProsent(s.vann_avstand_mm, p.vann_tom_mm ?? undefined, p.vann_full_mm ?? undefined);
+          const jord = [s.jord1, s.jord2, s.jord3, s.jord4]
+            .map((r) => jordfuktProsent(r))
+            .filter((x): x is number => x !== null);
+          if (vann !== null && vann < 20) {
+            ut.push({ potteId: p.potte_id, navn: p.navn, melding: `Vann lavt (${vann} %) — fyll snart`, alvor: 'hoy', ikon: '💧' });
+          } else if (jord.length && Math.min(...jord) < TORR_GRENSE) {
+            ut.push({ potteId: p.potte_id, navn: p.navn, melding: 'Jord tørr — trenger vann', alvor: 'hoy', ikon: '💧' });
+          }
+        }
       }
-      if (!s) continue;
-      const vann = vannNivaProsent(
-        s.vann_avstand_mm,
-        p.vann_tom_mm ?? undefined,
-        p.vann_full_mm ?? undefined,
-      );
-      if (vann !== null && vann < 20) {
-        ut.push({ potteId: p.potte_id, navn: p.navn, melding: `Vann lavt (${vann} %) — fyll snart`, alvor: 'hoy' });
-        continue;
-      }
-      const jord = [s.jord1, s.jord2, s.jord3, s.jord4]
-        .map((r) => jordfuktProsent(r))
-        .filter((x): x is number => x !== null);
-      if (jord.length && Math.min(...jord) < TORR_GRENSE) {
-        ut.push({ potteId: p.potte_id, navn: p.navn, melding: 'Jord tørr — trenger vann', alvor: 'hoy' });
+
+      // 2) Gjøremål/gode nyheter (uavhengig av sensorer, kun i drift):
+      if (p.i_drift && planterListe.length > 0) {
+        const n = kasseNaering(planterListe.map((pp) => pp.plantet_at));
+        if (n?.handlingNaa) {
+          ut.push({ potteId: p.potte_id, navn: p.navn, melding: 'På tide å starte næring i badet', alvor: 'gjøremål', ikon: '🧪' });
+        }
+        const h = mestAktuelleHosting(
+          planterListe.map((pp) => ({
+            navn: pp.plante.navn,
+            plantet_at: pp.plantet_at,
+            dager_til_hosting: pp.plante.dager_til_hosting,
+          })),
+        );
+        if (h?.status.klar) {
+          ut.push({ potteId: p.potte_id, navn: p.navn, melding: `${h.navn} er klar til høsting`, alvor: 'positiv', ikon: '🧺' });
+        }
       }
     }
     return ut;
   });
+
+  const varselStil: Record<Alvor, string> = {
+    hoy: 'bg-rose/[0.12] border-rose/35',
+    mid: 'bg-sun/[0.12] border-sun/35',
+    gjøremål: 'bg-sun/[0.10] border-sun/30',
+    positiv: 'bg-leaf/[0.12] border-leaf/35',
+  };
 </script>
 
 <div class="max-w-[430px] md:max-w-4xl mx-auto w-full flex flex-col gap-3.5">
@@ -110,13 +136,10 @@
     <div class="flex flex-col gap-2">
       {#each varsler as v (v.potteId + v.melding)}
         <button
-          class="flex items-center gap-2.5 w-full text-left px-3.5 py-2.5 rounded-xl border transition-all hover:brightness-110 {v.alvor ===
-          'hoy'
-            ? 'bg-rose/[0.12] border-rose/35'
-            : 'bg-sun/[0.12] border-sun/35'}"
+          class="flex items-center gap-2.5 w-full text-left px-3.5 py-2.5 rounded-xl border transition-all hover:brightness-110 {varselStil[v.alvor]}"
           onclick={() => onNavigate({ name: 'potte', potteId: v.potteId })}
         >
-          <span class="text-base leading-none">{v.alvor === 'hoy' ? '💧' : '⚠️'}</span>
+          <span class="text-base leading-none">{v.ikon}</span>
           <span class="flex-1 text-sm leading-snug">
             <span class="font-semibold">{v.navn}:</span>
             <span class="text-text-muted">{v.melding}</span>
