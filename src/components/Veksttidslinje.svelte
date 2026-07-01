@@ -23,8 +23,12 @@
   let aapent = $state<Bilde | null>(null);
 
   // Ekte bilder når de finnes; ellers forhåndsvisning (testmodus-simulator).
+  // VIKTIG: kun `visBilder` leser `forhandsvisning`-prop-en, og alt annet utledes
+  // fra `visBilder`. Leste vi prop-en flere steder kunne badge + «Henter bilder»
+  // vises samtidig (prop-en er en $derived fra forelder som kan gi ulik verdi per
+  // les innen samme render). Ett les → én sannhet.
   const visBilder = $derived(bilder.length ? bilder : forhandsvisning);
-  const erForhVis = $derived(bilder.length === 0 && forhandsvisning.length > 0);
+  const erForhVis = $derived(bilder.length === 0 && visBilder.length > 0);
 
   // Maskinvare-/nettleser-tilbake lukker den forstørrede visningen.
   $effect(() => {
