@@ -22,12 +22,15 @@
   let strip = $state<HTMLElement>();
   let aapent = $state<Bilde | null>(null);
 
-  // Ekte bilder når de finnes; ellers forhåndsvisning (testmodus-simulator).
-  // VIKTIG: kun `visBilder` leser `forhandsvisning`-prop-en, og alt annet utledes
-  // fra `visBilder`. Leste vi prop-en flere steder kunne badge + «Henter bilder»
-  // vises samtidig (prop-en er en $derived fra forelder som kan gi ulik verdi per
-  // les innen samme render). Ett les → én sannhet.
-  const visBilder = $derived(bilder.length ? bilder : forhandsvisning);
+  // `forhandsvisning`-prop-en er en $derived fra forelder som kan gi ulik verdi
+  // per les innen samme render → badge + «Ingen bilder» kunne vises samtidig.
+  // Vi fryser den til en lokal $state (stabil per render) via $effect, og utleder
+  // ALT herfra. Én sannhet per render.
+  let eksempel = $state<Bilde[]>([]);
+  $effect(() => {
+    eksempel = forhandsvisning;
+  });
+  const visBilder = $derived(bilder.length ? bilder : eksempel);
   const erForhVis = $derived(bilder.length === 0 && visBilder.length > 0);
 
   // Maskinvare-/nettleser-tilbake lukker den forstørrede visningen.
