@@ -11,7 +11,7 @@
     TORR_GRENSE,
   } from '../lib/utils';
   import { kasseNaering } from '../lib/naering';
-  import { mestAktuelleHosting } from '../lib/hosting';
+  import { mestAktuelleHosting, HOSTE_NUDGE_DAGER } from '../lib/hosting';
   import type { PotteCommand, PotteSensorData } from '../lib/database.types';
   import PotteKort from './PotteKort.svelte';
   import Sheet from './Sheet.svelte';
@@ -105,10 +105,22 @@
             navn: pp.plante.navn,
             plantet_at: pp.plantet_at,
             dager_til_hosting: pp.plante.dager_til_hosting,
+            kategori: pp.plante.kategori,
           })),
         );
-        if (h?.status.klar) {
-          ut.push({ potteId: p.potte_id, navn: p.navn, melding: `${h.navn} er klar til høsting`, alvor: 'positiv', ikon: '🧺' });
+        // Nudge kun når noe NETTOPP ble høsteklar — ellers ville en kontinuerlig
+        // plante ligge som «klar!» i feeden for alltid. Etter vinduet lever
+        // høste-tilstanden videre på kortet/felt-arket, ikke i varsel-feeden.
+        if (h?.status.klar && h.status.dagerHosteklar <= HOSTE_NUDGE_DAGER) {
+          ut.push({
+            potteId: p.potte_id,
+            navn: p.navn,
+            melding: h.status.kontinuerlig
+              ? `${h.navn} er høsteklar — høst etter behov`
+              : `${h.navn} er klar til høsting`,
+            alvor: 'positiv',
+            ikon: '🧺',
+          });
         }
       }
     }

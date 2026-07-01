@@ -70,6 +70,7 @@
             navn: pp.plante.navn,
             plantet_at: pp.plantet_at,
             dager_til_hosting: pp.plante.dager_til_hosting,
+            kategori: pp.plante.kategori,
           })),
         )
       : null,
@@ -152,7 +153,12 @@
           {hosting.status.tekst}
         </span>
       </div>
-      <VekstBar prosent={hosting.status.prosent} klar={hosting.status.klar} size="mini" />
+      <VekstBar
+        prosent={hosting.status.prosent}
+        klar={hosting.status.klar}
+        pulser={hosting.status.klar && hosting.status.kontinuerlig}
+        size="mini"
+      />
     </div>
   {/if}
 

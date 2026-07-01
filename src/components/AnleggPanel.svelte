@@ -281,7 +281,9 @@
       adc: jordRaa(seksjon),
       hist,
       notater: pp.notater,
-      hosting: potte.i_drift ? hostingStatus(pp.plantet_at, pp.plante.dager_til_hosting) : null,
+      hosting: potte.i_drift
+        ? hostingStatus(pp.plantet_at, pp.plante.dager_til_hosting, pp.plante.kategori)
+        : null,
     };
     notatRediger = false;
   }
@@ -523,10 +525,21 @@
         <div class="min-w-0 flex-1">
           <div class="text-[13px] font-medium {f.hosting.klar ? 'text-leaf-glow' : ''}">{f.hosting.tekst}</div>
           <div class="mt-2">
-            <VekstBar prosent={f.hosting.prosent} klar={f.hosting.klar} size="full" />
+            <VekstBar
+              prosent={f.hosting.prosent}
+              klar={f.hosting.klar}
+              pulser={f.hosting.klar && f.hosting.kontinuerlig}
+              size="full"
+            />
           </div>
           <div class="font-mono text-[10px] text-text-dim mt-1.5">
-            dag {f.hosting.dagerPlantet} av ~{f.hosting.dagerTilHosting}
+            {#if f.hosting.klar}
+              {f.hosting.kontinuerlig
+                ? `Høsteklar i ${f.hosting.dagerHosteklar} ${f.hosting.dagerHosteklar === 1 ? 'dag' : 'dager'} · klipp litt av gangen`
+                : `Høsteklar · dag ${f.hosting.dagerPlantet}`}
+            {:else}
+              dag {f.hosting.dagerPlantet} av ~{f.hosting.dagerTilHosting} til første høst
+            {/if}
           </div>
         </div>
       </div>
