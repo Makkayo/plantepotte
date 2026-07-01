@@ -7,12 +7,14 @@
    * Rendres INNI Testmodus-kortet i PotteDetalj (samme felt, ikke eget kort) —
    * derfor ingen egen `card`-ramme her, bare innhold + en topp-divider.
    */
-  import { simStore, hentSim, settSim, type SimState } from '../lib/simulering';
+  import { simStore, hentSim, settSim, SIM_DEFAULT, type SimState } from '../lib/simulering';
 
   let { potteId }: { potteId: string } = $props();
 
   const sim = $derived(hentSim($simStore, potteId));
   const set = (patch: Partial<SimState>) => settSim(potteId, patch);
+  // Tilbake til fornuftige standardverdier (beholder simulatoren på).
+  const nullstill = () => settSim(potteId, { ...SIM_DEFAULT, aktiv: true });
 
   // Presets som treffer distinkte funksjoner på ett klikk.
   const presets: { navn: string; emoji: string; patch: Partial<SimState> }[] = [
@@ -61,7 +63,7 @@
   {#if sim.aktiv}
     <div class="mt-4 flex flex-col gap-4">
       <!-- Presets -->
-      <div class="flex flex-wrap gap-1.5">
+      <div class="flex flex-wrap items-center gap-1.5">
         {#each presets as p (p.navn)}
           <button
             class="chip border-border bg-surface-raised text-text-muted hover:bg-surface-hover hover:text-text transition-colors"
@@ -70,6 +72,13 @@
             <span>{p.emoji}</span><span>{p.navn}</span>
           </button>
         {/each}
+        <button
+          class="ml-auto text-[11px] text-text-dim hover:text-text-muted transition-colors"
+          onclick={nullstill}
+          title="Sett alle verdier tilbake til standard"
+        >
+          Nullstill
+        </button>
       </div>
 
       <!-- Sliders -->
