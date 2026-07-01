@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   jordfuktProsent,
   jordfuktKlasse,
+  feltFukter,
   fuktStatus,
   vannNivaProsent,
   vannKlasse,
@@ -66,6 +67,37 @@ describe('jordfuktKlasse', () => {
   });
   it('null → unknown', () => {
     expect(jordfuktKlasse(null)).toBe('unknown');
+  });
+});
+
+describe('feltFukter', () => {
+  // JORD_TORR=3200 → 0 %, JORD_VAT=1140 → 100 %. Midtpunkt 2170 → 50 %.
+  const MIDT = (JORD_TORR + JORD_VAT) / 2; // 50 %
+  const VAAT = JORD_VAT; // 100 %
+
+  it('delt potte: ett felt per probe (ingen snitting)', () => {
+    const ut = feltFukter([MIDT, VAAT, null, null], [true, false]);
+    expect(ut).toEqual([50, 100, null]);
+  });
+
+  it('udelt potte med to prober i samme jord: snittet, ikke to felt', () => {
+    const ut = feltFukter([MIDT, VAAT, null, null], [false, false]);
+    expect(ut).toEqual([75, null]); // (50+100)/2 — én verdi for ett felt
+  });
+
+  it('udelt potte med bare én probe: probens verdi rett gjennom', () => {
+    const ut = feltFukter([MIDT, null, null, null], [false, false]);
+    expect(ut).toEqual([50, null]);
+  });
+
+  it('antall felt følger skilleveggene', () => {
+    expect(feltFukter([MIDT, MIDT, MIDT, MIDT], [true, true])).toHaveLength(4);
+    expect(feltFukter([MIDT, MIDT, MIDT, MIDT], [false, true])).toHaveLength(3);
+    expect(feltFukter([MIDT, MIDT, MIDT, MIDT], [false, false])).toHaveLength(2);
+  });
+
+  it('ingen målinger → null per felt', () => {
+    expect(feltFukter([null, null, null, null], [true, false])).toEqual([null, null, null]);
   });
 });
 

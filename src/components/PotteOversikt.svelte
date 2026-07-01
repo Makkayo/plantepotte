@@ -5,7 +5,7 @@
   import { supabase } from '../lib/supabase';
   import {
     vannNivaProsent,
-    jordfuktProsent,
+    feltFukter,
     minutterSiden,
     OFFLINE_GRENSE_MIN,
     TORR_GRENSE,
@@ -100,9 +100,11 @@
           ut.push({ potteId: p.potte_id, navn: p.navn, melding: 'Frakoblet — sjekk strøm og WiFi', alvor: 'mid', ikon: '⚠️', simulert: simAktiv });
         } else if (s) {
           const vann = vannNivaProsent(s.vann_avstand_mm, effektivPotte.vann_tom_mm ?? undefined, effektivPotte.vann_full_mm ?? undefined);
-          const jord = [s.jord1, s.jord2, s.jord3, s.jord4]
-            .map((r) => jordfuktProsent(r))
-            .filter((x): x is number => x !== null);
+          // Per felt (snitter prober i udelt potte) — samme regel som kortet.
+          const jord = feltFukter(
+            [s.jord1, s.jord2, s.jord3, s.jord4],
+            effektivPotte.skillevegger,
+          ).filter((x): x is number => x !== null);
           if (vann !== null && vann < 20) {
             ut.push({ potteId: p.potte_id, navn: p.navn, melding: `Vann lavt (${vann} %) — fyll snart`, alvor: 'hoy', ikon: '💧', simulert: simAktiv });
           } else if (jord.length && Math.min(...jord) < TORR_GRENSE) {

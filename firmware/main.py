@@ -202,7 +202,13 @@ def post_sensors(temp, hum, s, vann_mm):
     r = None
     try:
         r = urequests.post(url, headers=post_headers, json=payload)
-        return True
+        # Sjekk HTTP-status: uten denne ble 4xx/5xx (f.eks. RLS-avslag eller
+        # skjema-mismatch) regnet som suksess — «Sensordata sendt.» uten at
+        # noe faktisk ble lagret. Nettverksfeil fanges fortsatt av except.
+        ok = 200 <= r.status_code < 300
+        if not ok:
+            print("post_sensors HTTP", r.status_code)
+        return ok
     except Exception as e:
         print("post_sensors feilet:", e)
         return False

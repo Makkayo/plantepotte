@@ -116,7 +116,13 @@
 
   const harDiagnose = $derived(probeFunn.length > 0 || vekeFunn.advar);
 
+  // Når historikken sist ble hentet — refresh() laster den på nytt hvert kvarter
+  // så vanntrend/sparkline/diagnose ikke fryses ved mount i lange økter.
+  let sistHistorikkHentet = 0;
+  const HISTORIKK_REFRESH_MS = 15 * 60_000;
+
   async function loadSensorHistorikk() {
+    sistHistorikkHentet = Date.now();
     const sjuDagerSiden = new Date(Date.now() - 7 * 86_400_000).toISOString();
     const { data } = await supabase
       .from('potte_sensor_data')
@@ -147,6 +153,9 @@
     ]);
     if (cmd.data) command = cmd.data;
     if (sens.data) sensor = sens.data;
+    if (Date.now() - sistHistorikkHentet > HISTORIKK_REFRESH_MS) {
+      loadSensorHistorikk(); // bevisst uten await — trend kan oppdatere i bakgrunnen
+    }
   }
 
   onMount(async () => {
@@ -200,11 +209,14 @@
     if (!error) {
       // Go-live: nullstill plantedato til nå for aktive planter → ren start.
       if (ny && planter.length > 0) {
-        await supabase
+        const { error: datoFeil } = await supabase
           .from('potte_planter')
           .update({ plantet_at: new Date().toISOString() })
           .eq('potte_id', potteId)
           .is('fjernet_at', null);
+        if (datoFeil) {
+          visFeil('Kassa er i drift, men plantedatoene ble ikke nullstilt — bytt modus og prøv igjen.');
+        }
         await loadPottePlanter(potteId);
       }
       potter.update((liste) => liste.map((p) => (p.id === kasse.id ? { ...p, i_drift: ny } : p)));
@@ -273,10 +285,9 @@
       .from('potte_planter')
       .insert({ potte_id: potteId, plante_id: planteId, seksjon });
     velgerSeksjon = null;
-    if (error) {
-      visFeil('Kunne ikke legge til planten — prøv igjen.');
-      return;
-    }
+    if (error) visFeil('Kunne ikke legge til planten — prøv igjen.');
+    // Reload også ved feil: den gamle planten kan alt være fjernet fra DB, og
+    // uten reload ville UI-et fortsatt vist den som om ingenting skjedde.
     await Promise.all([loadPottePlanter(potteId), loadHistorikk()]);
   }
 

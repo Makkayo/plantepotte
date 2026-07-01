@@ -41,9 +41,12 @@
   }
 
   onMount(async () => {
+    // Sorter SYNKENDE ved henting: med stigende sortering + limit ville lista
+    // låst seg til de 300 ELDSTE bildene (filnavn = tidsstempel), og nye bilder
+    // ville aldri dukket opp etter ~5 mnd. Nyeste 300 hentes, vises eldste→nyeste.
     const { data, error } = await supabase.storage.from('plantebilder').list(potteId, {
       limit: 300,
-      sortBy: { column: 'name', order: 'asc' },
+      sortBy: { column: 'name', order: 'desc' },
     });
     if (error) {
       feil = true;

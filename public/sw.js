@@ -31,7 +31,20 @@ self.addEventListener('fetch', (e) => {
   // til en utdatert hashet JS-bunt) i lang tid etter en deploy, selv om denne
   // fetch()-en «går til nettet». Oppdaget under manuell verifisering 1. juli.
   if (req.mode === 'navigate') {
-    e.respondWith(fetch(req, { cache: 'no-store' }).catch(() => caches.match('/')));
+    e.respondWith(
+      fetch(req, { cache: 'no-store' })
+        .then((res) => {
+          // Hold offline-skallet ferskt: '/' cachet ved install blir ellers
+          // stående for alltid og peker på utdaterte hashede assets etter
+          // neste deploy — offline ville vist en brukket app.
+          if (res.ok) {
+            const kopi = res.clone();
+            caches.open(CACHE).then((c) => c.put('/', kopi));
+          }
+          return res;
+        })
+        .catch(() => caches.match('/')),
+    );
     return;
   }
   // Øvrige GET: nett, ellers cache.

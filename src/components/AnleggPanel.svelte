@@ -10,6 +10,7 @@
   import { potter } from '../lib/stores';
   import {
     jordfuktProsent,
+    feltFukter,
     vannNivaProsent,
     fuktStatus,
     jordSparkline,
@@ -18,8 +19,6 @@
     OFFLINE_GRENSE_MIN,
     VANN_TOM_MM,
     VANN_FULL_MM,
-    foranSeksjon,
-    bakSeksjon,
     type PotteOppsett,
   } from '../lib/utils';
   import { beregnDli } from '../lib/lys';
@@ -104,40 +103,29 @@
     return [sensor.jord1, sensor.jord2, sensor.jord3, sensor.jord4][seksjon - 1] ?? null;
   }
 
-  const pots = $derived(
-    oppsett.map((po) => {
+  // Fukt per felt kommer fra den DELTE feltFukter() (samme som PotteKort og
+  // oversiktens varsler) — udelt potte snitter sine to prober, delt potte har
+  // én probe per felt. Flat liste i samme rekkefølge som oppsettets plasser.
+  const pots = $derived.by(() => {
+    const fukter = feltFukter(
+      sensor ? [sensor.jord1, sensor.jord2, sensor.jord3, sensor.jord4] : [],
+      oppsett.map((po) => po.delt),
+    );
+    let feltIdx = 0;
+    return oppsett.map((po) => {
       const felt: FeltData[] = po.plasser.map((plass) => {
-        if (plass.rolle === 'hel') {
-          const front = foranSeksjon(po.potteNr - 1);
-          const back = bakSeksjon(po.potteNr - 1);
-          const pp = pottePlanter.find((p) => p.seksjon === front);
-          const verdier = [
-            jordfuktProsent(jordRaa(front)),
-            jordfuktProsent(jordRaa(back)),
-          ].filter((x): x is number => x !== null);
-          const fukt = verdier.length
-            ? Math.round(verdier.reduce((a, b) => a + b, 0) / verdier.length)
-            : null;
-          return {
-            seksjon: plass.seksjon,
-            slotLabel: 'Hele potta',
-            rolle: 'hel' as const,
-            plante: pp?.plante ?? null,
-            fukt,
-          };
-        }
         const pp = pottePlanter.find((p) => p.seksjon === plass.seksjon);
         return {
           seksjon: plass.seksjon,
-          slotLabel: plass.etikett,
+          slotLabel: plass.rolle === 'hel' ? 'Hele potta' : plass.etikett,
           rolle: plass.rolle,
           plante: pp?.plante ?? null,
-          fukt: jordfuktProsent(jordRaa(plass.seksjon)),
+          fukt: fukter[feltIdx++] ?? null,
         };
       });
       return { potteNr: po.potteNr, navn: `Potte ${po.potteNr}`, delt: po.delt, felt };
-    }),
-  );
+    });
+  });
 
   // ---------- vekstlys ----------
   let lysLagrer = $state(false);

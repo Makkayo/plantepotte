@@ -92,7 +92,14 @@
   async function slett() {
     if (!kasse) return;
     lagrer = true;
-    await supabase.from('potte_planter').delete().eq('potte_id', kasse.potte_id);
+    // Rydd også kommandoer og sensordata: de har ingen FK til potter, så uten
+    // dette blir de liggende igjen — og gjenoppretter man en kasse med samme
+    // potte_id, våkner den gamle lyskommandoen og gammel sensordata «arves».
+    await Promise.all([
+      supabase.from('potte_planter').delete().eq('potte_id', kasse.potte_id),
+      supabase.from('potte_commands').delete().eq('potte_id', kasse.potte_id),
+      supabase.from('potte_sensor_data').delete().eq('potte_id', kasse.potte_id),
+    ]);
     const { error } = await supabase.from('potter').delete().eq('id', kasse.id);
     lagrer = false;
     if (error) {

@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Potte, PotteCommand, PotteSensorData, PottePlanteFull } from '../lib/database.types';
   import {
-    jordfuktProsent,
+    feltFukter,
     vannNivaProsent,
     fuktStatus,
     antallPlasser,
@@ -49,11 +49,14 @@
     potte.har_sensorer && minSidenKontakt !== null && minSidenKontakt > OFFLINE_GRENSE_MIN,
   );
 
+  // Per FELT (planteplass), ikke per probe — udelt potte med to prober snittes,
+  // så «N felt trenger vann» teller det samme som detaljens oktagoner viser.
   const jordVerdier = $derived.by(() => {
     if (!sensor) return [] as number[];
-    return [sensor.jord1, sensor.jord2, sensor.jord3, sensor.jord4]
-      .map((r) => jordfuktProsent(r))
-      .filter((x): x is number => x !== null);
+    return feltFukter(
+      [sensor.jord1, sensor.jord2, sensor.jord3, sensor.jord4],
+      potte.skillevegger,
+    ).filter((x): x is number => x !== null);
   });
   const jordLavest = $derived(jordVerdier.length ? Math.min(...jordVerdier) : null);
   const torreFelt = $derived(jordVerdier.filter((v) => v < TORR_GRENSE).length);

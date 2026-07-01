@@ -105,6 +105,12 @@
   }
 
   async function lagre() {
+    // Tomt time-felt (bruker slettet innholdet) ville lagret "" → firmware
+    // tolker det som «ingen lystid» og lyset blir bare stående av uten forklaring.
+    if (!timer_on || !timer_off) {
+      visFeil('Sett både «Lys på» og «Lys av» før du lagrer.');
+      return;
+    }
     lagrer = true;
     const { error } = await supabase.from('potte_commands').upsert(
       { potte_id: potteId, intensitet, timer_on, timer_off, updated_at: new Date().toISOString() },

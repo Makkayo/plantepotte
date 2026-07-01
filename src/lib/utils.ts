@@ -225,6 +225,32 @@ export function antallPlasser(skillevegger: boolean[]): number {
 }
 
 /**
+ * Jordfukt i % per PLANTEPLASS (felt) — ikke per probe. En delt potte har ett
+ * felt per probe; en udelt potte kan likevel ha to prober i samme jord, og da
+ * er snittet av dem feltets fukt (samme regel som detaljens oktagon-visning).
+ * Uten dette ville «N felt trenger vann» på oversikts-kortet telt PROBER og
+ * kunnet melde «2 felt» for én udelt potte. Rekkefølge: potte 1 sine felt
+ * først, så potte 2. null = ingen måling for feltet.
+ */
+export function feltFukter(
+  jordRaa: (number | null | undefined)[],
+  skillevegger: boolean[],
+): (number | null)[] {
+  const ut: (number | null)[] = [];
+  skillevegger.forEach((delt, idx) => {
+    const foran = jordfuktProsent(jordRaa[idx * 2]);
+    const bak = jordfuktProsent(jordRaa[idx * 2 + 1]);
+    if (delt) {
+      ut.push(foran, bak);
+    } else {
+      const kjente = [foran, bak].filter((x): x is number => x !== null);
+      ut.push(kjente.length ? Math.round(kjente.reduce((a, b) => a + b, 0) / kjente.length) : null);
+    }
+  });
+  return ut;
+}
+
+/**
  * Visningsetikett for en jordfuktsensor (jord1–4) ut fra kassas oppsett.
  * jordN hører til seksjon N → finn hvilken potte/rolle det er.
  */
