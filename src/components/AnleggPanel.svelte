@@ -39,6 +39,7 @@
   import LysSheet from './LysSheet.svelte';
   import SolBue from './viz/SolBue.svelte';
   import VannTank from './viz/VannTank.svelte';
+  import VekstBar from './viz/VekstBar.svelte';
   import Sheet from './Sheet.svelte';
 
   type SensorRad = {
@@ -213,6 +214,8 @@
         seksjon: number;
         pottePlanteId: string;
         plante: string;
+        bildeUrl: string | null;
+        emoji: string | null;
         slot: string;
         fukt: number | null;
         adc: number | null;
@@ -225,6 +228,7 @@
   let aapent = $state<Aapent>(null);
   let notatRediger = $state(false);
   let notatTekst = $state('');
+  let bildeFeilet = $state(false); // felt-arkets plantefoto feilet → emoji-fallback
   const lukk = () => {
     aapent = null;
     notatRediger = false;
@@ -264,11 +268,14 @@
         verdi: jordfuktProsent([r.jord1, r.jord2, r.jord3, r.jord4][seksjon - 1] ?? null),
       })),
     );
+    bildeFeilet = false;
     aapent = {
       type: 'felt',
       seksjon,
       pottePlanteId: pp.id,
       plante: pp.plante.navn,
+      bildeUrl: pp.plante.bilde_url ?? null,
+      emoji: pp.plante.emoji ?? null,
       slot,
       fukt,
       adc: jordRaa(seksjon),
@@ -484,11 +491,23 @@
   {#if aapent?.type === 'felt'}
     {@const f = aapent}
     <div class="flex items-start justify-between gap-3.5">
-      <div>
-        <div class="font-display text-[25px] font-semibold leading-[1.05]">{f.plante}</div>
-        <div class="font-mono text-[11px] text-text-muted mt-1">{f.slot} · jordfukt</div>
+      <div class="flex items-start gap-3 min-w-0">
+        {#if f.bildeUrl && !bildeFeilet}
+          <img
+            src={f.bildeUrl}
+            alt={f.plante}
+            onerror={() => (bildeFeilet = true)}
+            class="w-11 h-11 rounded-lg object-cover shrink-0 bg-surface-raised mt-0.5"
+          />
+        {:else if f.emoji}
+          <span class="text-3xl shrink-0 leading-none mt-1">{f.emoji}</span>
+        {/if}
+        <div class="min-w-0">
+          <div class="font-display text-[25px] font-semibold leading-[1.05] truncate">{f.plante}</div>
+          <div class="font-mono text-[11px] text-text-muted mt-1">{f.slot} · jordfukt</div>
+        </div>
       </div>
-      <div class="font-display text-[38px] font-semibold leading-none" style="color:{arkFukt?.farge}">
+      <div class="font-display text-[38px] font-semibold leading-none shrink-0" style="color:{arkFukt?.farge}">
         {f.fukt ?? '—'}{#if f.fukt !== null}%{/if}
       </div>
     </div>
@@ -503,10 +522,10 @@
         <span class="text-xl shrink-0">🧺</span>
         <div class="min-w-0 flex-1">
           <div class="text-[13px] font-medium {f.hosting.klar ? 'text-leaf-glow' : ''}">{f.hosting.tekst}</div>
-          <div class="mt-1.5 h-1.5 rounded-full bg-surface-raised overflow-hidden">
-            <div class="h-full rounded-full bg-leaf transition-[width]" style="width: {f.hosting.prosent}%"></div>
+          <div class="mt-2">
+            <VekstBar prosent={f.hosting.prosent} klar={f.hosting.klar} size="full" />
           </div>
-          <div class="font-mono text-[10px] text-text-dim mt-1">
+          <div class="font-mono text-[10px] text-text-dim mt-1.5">
             dag {f.hosting.dagerPlantet} av ~{f.hosting.dagerTilHosting}
           </div>
         </div>

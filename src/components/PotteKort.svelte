@@ -15,6 +15,7 @@
   import { mestAktuelleHosting } from '../lib/hosting';
   import SolBue from './viz/SolBue.svelte';
   import VannTank from './viz/VannTank.svelte';
+  import VekstBar from './viz/VekstBar.svelte';
 
   let {
     potte,
@@ -133,19 +134,25 @@
     </div>
   {/if}
 
-  <!-- Neste høsting: gjør kortet «levende» (teller ned mot spiseklart) -->
+  <!-- Neste høsting: egen seksjon med samme vekst-viz som felt-arket (cohesion) -->
   {#if hosting}
-    <div
-      class="mt-2.5 inline-flex items-center gap-1.5 text-[11.5px] {hosting.status.klar
-        ? 'text-leaf-glow font-medium'
-        : 'text-text-muted'}"
-    >
-      <span>🧺</span>
-      <span>
-        {hosting.status.klar
-          ? `${hosting.navn} er klar til høsting`
-          : `${hosting.navn} · ${hosting.status.tekst}`}
-      </span>
+    <div class="pt-3.5 mt-3.5 border-t border-border">
+      <div class="flex items-center justify-between gap-2 mb-2">
+        <span
+          class="inline-flex items-center gap-1.5 text-[11.5px] min-w-0 {hosting.status.klar
+            ? 'text-leaf-glow font-medium'
+            : 'text-text-muted'}"
+        >
+          <span class="shrink-0">🧺</span>
+          <span class="truncate">{hosting.navn}</span>
+        </span>
+        <span
+          class="font-mono text-[10px] shrink-0 {hosting.status.klar ? 'text-leaf-glow' : 'text-text-dim'}"
+        >
+          {hosting.status.tekst}
+        </span>
+      </div>
+      <VekstBar prosent={hosting.status.prosent} klar={hosting.status.klar} size="mini" />
     </div>
   {/if}
 

@@ -115,10 +115,12 @@
     return ut;
   });
 
+  // Fire tydelige betydninger: rød = problem, gul = frakoblet, blå = oppgave
+  // (næring), grønn = klar til høsting. Distinkte toner så feed-en er lesbar.
   const varselStil: Record<Alvor, string> = {
     hoy: 'bg-rose/[0.12] border-rose/35',
     mid: 'bg-sun/[0.12] border-sun/35',
-    gjøremål: 'bg-sun/[0.10] border-sun/30',
+    gjøremål: 'bg-sky/[0.12] border-sky/35',
     positiv: 'bg-leaf/[0.12] border-leaf/35',
   };
 </script>
