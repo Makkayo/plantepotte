@@ -65,28 +65,6 @@
   const effektivePlanter = $derived(
     simAktiv ? planter.map((p) => ({ ...p, plantet_at: simPlantetAt(sim) })) : planter,
   );
-  // Eksempel-tidslinje bygget av plantefotoene (forhåndsvis kamera-tidslinja i sim).
-  const simForhandsvisning = $derived.by(() => {
-    if (!simAktiv) return [] as { url: string; dato: Date }[];
-    const kilder = planter
-      .map((p) => p.plante?.bilde_url)
-      .filter((u): u is string => !!u);
-    if (kilder.length === 0) return [];
-    const n = 5;
-    return Array.from({ length: n }, (_, i) => ({
-      url: kilder[i % kilder.length]!,
-      dato: new Date(Date.now() - (n - 1 - i) * 2 * 86_400_000),
-    }));
-  });
-  $effect(() => {
-    (window as unknown as Record<string, unknown>).__dbg = {
-      simAktiv,
-      planterN: planter.length,
-      medBilde: planter.filter((p) => !!p.plante?.bilde_url).length,
-      forhN: simForhandsvisning.length,
-    };
-  });
-
   const naaVannPct = $derived(
     vannNivaProsent(effektivSensor?.vann_avstand_mm, effektivPotte?.vann_tom_mm ?? undefined, effektivPotte?.vann_full_mm ?? undefined),
   );
@@ -456,7 +434,7 @@
          /kamera-rigg — en ren lys-kasse har ikke kamera og skal ikke vise en
          evig «ingen bilder ennå». -->
     {#if effektivPotte?.har_sensorer}
-      <Veksttidslinje {potteId} forhandsvisning={simForhandsvisning} />
+      <Veksttidslinje {potteId} />
     {/if}
 
     <!-- Historikk: tidligere planter (kun samlet i drift-modus) -->

@@ -11,27 +11,13 @@
 
   type Bilde = { url: string; dato: Date };
 
-  let {
-    potteId,
-    forhandsvisning = [],
-  }: { potteId: string; forhandsvisning?: Bilde[] } = $props();
+  let { potteId }: { potteId: string } = $props();
 
   let bilder = $state<Bilde[]>([]);
   let laster = $state(true);
   let feil = $state(false);
   let strip = $state<HTMLElement>();
   let aapent = $state<Bilde | null>(null);
-
-  // `forhandsvisning`-prop-en er en $derived fra forelder som kan gi ulik verdi
-  // per les innen samme render → badge + «Ingen bilder» kunne vises samtidig.
-  // Vi fryser den til en lokal $state (stabil per render) via $effect, og utleder
-  // ALT herfra. Én sannhet per render.
-  let eksempel = $state<Bilde[]>([]);
-  $effect(() => {
-    eksempel = forhandsvisning;
-  });
-  const visBilder = $derived(bilder.length ? bilder : eksempel);
-  const erForhVis = $derived(bilder.length === 0 && visBilder.length > 0);
 
   // Maskinvare-/nettleser-tilbake lukker den forstørrede visningen.
   $effect(() => {
@@ -83,17 +69,12 @@
 </script>
 
 <section class="card p-5">
-  <div class="flex items-center gap-2 flex-wrap">
-    <h2 class="font-display text-lg font-semibold">Veksttidslinje</h2>
-    {#if erForhVis}
-      <span class="chip border-sun/30 bg-sun/[0.12] text-sun !text-[10px]">🧪 Eksempel</span>
-    {/if}
-  </div>
+  <h2 class="font-display text-lg font-semibold">Veksttidslinje</h2>
   <p class="text-text-muted text-xs mt-0.5 mb-4">Bilder fra kameraet — se plantene vokse over tid.</p>
 
-  {#if visBilder.length > 0}
+  {#if bilder.length > 0}
     <div bind:this={strip} class="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1 overscroll-x-contain">
-      {#each visBilder as b (b.url)}
+      {#each bilder as b (b.url)}
         <button class="shrink-0 group" onclick={() => (aapent = b)}>
           <img
             src={b.url}
@@ -105,9 +86,7 @@
         </button>
       {/each}
     </div>
-    <p class="font-mono text-[10px] text-text-dim mt-1">
-      {erForhVis ? 'Slik vil tidslinja se ut når kameraet laster opp' : `${visBilder.length} bilder · eldste → nyeste`}
-    </p>
+    <p class="font-mono text-[10px] text-text-dim mt-1">{bilder.length} bilder · eldste → nyeste</p>
   {:else if laster}
     <div class="text-text-dim text-sm animate-pulse py-4">Henter bilder…</div>
   {:else if feil}
