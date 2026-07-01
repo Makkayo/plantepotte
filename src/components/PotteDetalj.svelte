@@ -14,11 +14,13 @@
   import { beregnVannTrend } from '../lib/trend';
   import { kasseNaering } from '../lib/naering';
   import { probeHelse, vekeHelse } from '../lib/diagnose';
+  import { simStore, hentSim, simSensor, simHistorikk, simPlantetAt } from '../lib/simulering';
   import { visFeil } from '../lib/toast';
   import type { Potte, PotteCommand, PotteSensorData, PottePlanteFull } from '../lib/database.types';
   import AnleggPanel from './AnleggPanel.svelte';
   import PlanteVelger from './PlanteVelger.svelte';
   import Veksttidslinje from './Veksttidslinje.svelte';
+  import TestSimulator from './TestSimulator.svelte';
   import Sheet from './Sheet.svelte';
   import KasseInnstillinger from './KasseInnstillinger.svelte';
 
@@ -50,41 +52,68 @@
   };
   let sensorHistorikk = $state<SensorRad[]>([]);
 
+  // ---- Testmodus-simulator: syntetiske data + gate-flip så ALT forhåndsvises ----
+  const sim = $derived(hentSim($simStore, potteId));
+  const simAktiv = $derived(!!potte && !potte.i_drift && sim.aktiv);
+  // I sim later vi som om kassa er i drift + har sensorer, så høsting, næring,
+  // sensorkort og diagnose alle spiller på syntetiske data.
+  const effektivPotte = $derived(potte && simAktiv ? { ...potte, i_drift: true, har_sensorer: true } : potte);
+  const effektivSensor = $derived(simAktiv && potte ? simSensor(sim, potte) : sensor);
+  const effektivHistorikk = $derived(
+    simAktiv && potte ? (simHistorikk(sim, potte) as SensorRad[]) : sensorHistorikk,
+  );
+  const effektivePlanter = $derived(
+    simAktiv ? planter.map((p) => ({ ...p, plantet_at: simPlantetAt(sim) })) : planter,
+  );
+  // Eksempel-tidslinje bygget av plantefotoene (forhåndsvis kamera-tidslinja i sim).
+  const simForhandsvisning = $derived.by(() => {
+    if (!simAktiv) return [] as { url: string; dato: Date }[];
+    const kilder = effektivePlanter.map((p) => p.plante.bilde_url).filter((u): u is string => !!u);
+    if (kilder.length === 0) return [];
+    const n = 5;
+    return Array.from({ length: n }, (_, i) => ({
+      url: kilder[i % kilder.length]!,
+      dato: new Date(Date.now() - (n - 1 - i) * 2 * 86_400_000),
+    }));
+  });
+
   const naaVannPct = $derived(
-    vannNivaProsent(sensor?.vann_avstand_mm, potte?.vann_tom_mm ?? undefined, potte?.vann_full_mm ?? undefined),
+    vannNivaProsent(effektivSensor?.vann_avstand_mm, effektivPotte?.vann_tom_mm ?? undefined, effektivPotte?.vann_full_mm ?? undefined),
   );
   const vannTrend = $derived(
-    beregnVannTrend(sensorHistorikk, naaVannPct, potte?.vann_tom_mm ?? undefined, potte?.vann_full_mm ?? undefined),
+    beregnVannTrend(effektivHistorikk, naaVannPct, effektivPotte?.vann_tom_mm ?? undefined, effektivPotte?.vann_full_mm ?? undefined),
   );
 
   const detaljOffline = $derived.by(() => {
-    const m = minutterSiden(sensor?.registrert_at);
+    const m = minutterSiden(effektivSensor?.registrert_at);
     return m !== null && m > OFFLINE_GRENSE_MIN;
   });
 
-  // To-fase næring: kun i ekte drift (testmodus teller ikke plantedato).
-  const naering = $derived(potte?.i_drift ? kasseNaering(planter.map((p) => p.plantet_at)) : null);
+  // To-fase næring: i ekte drift, eller i sim-forhåndsvisning.
+  const naering = $derived(
+    effektivPotte?.i_drift ? kasseNaering(effektivePlanter.map((p) => p.plantet_at)) : null,
+  );
 
   // Maskinvare-diagnose fra 7-dagers historikken (løs/død probe + veke-kontakt).
   const probeFunn = $derived.by(() => {
-    if (!potte?.har_sensorer) return [] as { label: string; melding: string }[];
+    if (!effektivPotte?.har_sensorer) return [] as { label: string; melding: string }[];
     const ut: { label: string; melding: string }[] = [];
     for (let kanal = 1; kanal <= 4; kanal++) {
-      const punkter = sensorHistorikk.map((r) => ({
+      const punkter = effektivHistorikk.map((r) => ({
         t: new Date(r.registrert_at ?? 0).getTime(),
         raw: [r.jord1, r.jord2, r.jord3, r.jord4][kanal - 1] ?? null,
       }));
       const f = probeHelse(punkter);
       if (f.melding && (f.status === 'frakoblet' || f.status === 'fastlast')) {
-        ut.push({ label: sensorEtikett(kanal, potte.skillevegger), melding: f.melding });
+        ut.push({ label: sensorEtikett(kanal, effektivPotte.skillevegger), melding: f.melding });
       }
     }
     return ut;
   });
 
   const vekeFunn = $derived.by(() => {
-    if (!potte?.har_sensorer) return { advar: false, melding: null as string | null };
-    const jordSerie = sensorHistorikk.map((r) => {
+    if (!effektivPotte?.har_sensorer) return { advar: false, melding: null as string | null };
+    const jordSerie = effektivHistorikk.map((r) => {
       const verdier = [r.jord1, r.jord2, r.jord3, r.jord4]
         .map((x) => jordfuktProsent(x))
         .filter((x): x is number => x !== null);
@@ -302,7 +331,7 @@
         <h1 class="font-display text-[22px] font-semibold leading-none truncate">{potte.navn}</h1>
       </div>
       <div class="flex items-center gap-3 shrink-0">
-        {#if potte.har_sensorer}
+        {#if effektivPotte?.har_sensorer}
           <span class="inline-flex items-center gap-1.5 font-mono text-[11px] {detaljOffline ? 'text-sun' : 'text-text-muted'}">
             <span
               class="w-[7px] h-[7px] rounded-full {detaljOffline ? 'bg-sun' : 'bg-leaf'}"
@@ -321,21 +350,28 @@
       </div>
     </div>
 
-    <!-- Anlegget: vekstlys + vannreservoar + pottene (oktagoner) -->
+    <!-- Testmodus-simulator: skru på alt selv og forhåndsvis hver funksjon -->
+    {#if !potte.i_drift}
+      <TestSimulator {potteId} />
+    {/if}
+
+    <!-- Anlegget: vekstlys + vannreservoar + pottene (oktagoner).
+         I sim peker alt på syntetiske «effektiv»-data. -->
     <AnleggPanel
-      {potte}
-      {sensor}
+      potte={effektivPotte ?? potte}
+      sensor={effektivSensor}
       {command}
       trend={vannTrend}
       {oppsett}
-      planter={planter.map((p) => p.plante)}
-      pottePlanter={planter}
-      {sensorHistorikk}
+      planter={effektivePlanter.map((p) => p.plante)}
+      pottePlanter={effektivePlanter}
+      sensorHistorikk={effektivHistorikk}
       onAddPlante={apneVelger}
       onFjernPlante={fjernPlante}
       onToggleSkille={settSkillevegg}
       onLagreNotat={lagreNotat}
       onCommandLagret={refresh}
+      simulert={simAktiv}
     />
 
     {#if skilleveggFeil}
@@ -409,8 +445,8 @@
     <!-- Veksttidslinje: kamerabilder fra Storage. Kun for kasser med sensor-
          /kamera-rigg — en ren lys-kasse har ikke kamera og skal ikke vise en
          evig «ingen bilder ennå». -->
-    {#if potte.har_sensorer}
-      <Veksttidslinje {potteId} />
+    {#if effektivPotte?.har_sensorer}
+      <Veksttidslinje {potteId} forhandsvisning={simForhandsvisning} />
     {/if}
 
     <!-- Historikk: tidligere planter (kun samlet i drift-modus) -->

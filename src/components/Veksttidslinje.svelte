@@ -9,14 +9,22 @@
   import { supabase } from '../lib/supabase';
   import { overlayOpened } from '../lib/overlayBack';
 
-  let { potteId }: { potteId: string } = $props();
-
   type Bilde = { url: string; dato: Date };
+
+  let {
+    potteId,
+    forhandsvisning = [],
+  }: { potteId: string; forhandsvisning?: Bilde[] } = $props();
+
   let bilder = $state<Bilde[]>([]);
   let laster = $state(true);
   let feil = $state(false);
   let strip = $state<HTMLElement>();
   let aapent = $state<Bilde | null>(null);
+
+  // Ekte bilder når de finnes; ellers forhåndsvisning (testmodus-simulator).
+  const visBilder = $derived(bilder.length ? bilder : forhandsvisning);
+  const erForhVis = $derived(bilder.length === 0 && forhandsvisning.length > 0);
 
   // Maskinvare-/nettleser-tilbake lukker den forstørrede visningen.
   $effect(() => {
@@ -68,20 +76,25 @@
 </script>
 
 <section class="card p-5">
-  <h2 class="font-display text-lg font-semibold">Veksttidslinje</h2>
+  <div class="flex items-center gap-2 flex-wrap">
+    <h2 class="font-display text-lg font-semibold">Veksttidslinje</h2>
+    {#if erForhVis}
+      <span class="chip border-sun/30 bg-sun/[0.12] text-sun !text-[10px]">🧪 Eksempel</span>
+    {/if}
+  </div>
   <p class="text-text-muted text-xs mt-0.5 mb-4">Bilder fra kameraet — se plantene vokse over tid.</p>
 
-  {#if laster}
+  {#if laster && forhandsvisning.length === 0}
     <div class="text-text-dim text-sm animate-pulse py-4">Henter bilder…</div>
-  {:else if feil}
+  {:else if feil && forhandsvisning.length === 0}
     <div class="text-text-muted text-sm py-2">Kunne ikke hente bilder akkurat nå.</div>
-  {:else if bilder.length === 0}
+  {:else if visBilder.length === 0}
     <div class="text-text-dim text-sm py-2">
       Ingen bilder ennå — kameraet laster opp et par ganger om dagen.
     </div>
   {:else}
     <div bind:this={strip} class="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1 overscroll-x-contain">
-      {#each bilder as b (b.url)}
+      {#each visBilder as b (b.url)}
         <button class="shrink-0 group" onclick={() => (aapent = b)}>
           <img
             src={b.url}
@@ -93,7 +106,9 @@
         </button>
       {/each}
     </div>
-    <p class="font-mono text-[10px] text-text-dim mt-1">{bilder.length} bilder · eldste → nyeste</p>
+    <p class="font-mono text-[10px] text-text-dim mt-1">
+      {erForhVis ? 'Slik vil tidslinja se ut når kameraet laster opp' : `${visBilder.length} bilder · eldste → nyeste`}
+    </p>
   {/if}
 </section>
 

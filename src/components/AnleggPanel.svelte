@@ -71,6 +71,7 @@
     onToggleSkille,
     onLagreNotat,
     onCommandLagret,
+    simulert = false,
   }: {
     potte: Potte;
     sensor: PotteSensorData | null;
@@ -85,6 +86,8 @@
     onToggleSkille: (potteIdx: number, nyDelt: boolean) => void;
     onLagreNotat: (pottePlanteId: string, tekst: string) => void;
     onCommandLagret: () => void;
+    /** Forhåndsvisning på syntetiske data — skjul ekte-skrivende kalibrering. */
+    simulert?: boolean;
   } = $props();
 
   // ---------- klokke (driver tidslinje + sol-bue) ----------
@@ -647,7 +650,7 @@
 
     <button class="btn-secondary w-full mt-5" onclick={lukk}>Lukk</button>
 
-    {#if sensor?.vann_avstand_mm != null}
+    {#if sensor?.vann_avstand_mm != null && !simulert}
       <div class="text-center mt-3">
         <button
           class="text-[11px] text-text-dim hover:text-text-muted transition-colors"
