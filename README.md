@@ -36,6 +36,11 @@ Node 20+ kreves (`.nvmrc` setter dette). Firmware-logikken testes separat med
 
 ## Database (Supabase)
 
+Prosjektet deles med Matplanlegger — **fullt eierskaps-kart, tilgangsregler og
+konvensjoner for nye tabeller: [`docs/database-kart.md`](docs/database-kart.md)**
+(hver tabell er også merket med eier-app i tabellkommentaren i dashbordet).
+Plantepottas tabeller:
+
 | Tabell | Bruk |
 |--------|------|
 | `lys_familier` | 5 lys-grupper (skygge-tolerante → solhungrige) |
