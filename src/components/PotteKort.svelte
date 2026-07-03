@@ -23,6 +23,7 @@
     command,
     sensor,
     planter,
+    dagerIgjen = null,
     now = new Date(),
     onClick,
     simulert = false,
@@ -31,6 +32,9 @@
     command: PotteCommand | undefined;
     sensor: PotteSensorData | undefined;
     planter: PottePlanteFull[];
+    /** Trend-prognose: dager til tom tank ved dagens forbruk (fra oversiktens
+     * historikk). null = ukjent, fylles, eller for lite data. */
+    dagerIgjen?: number | null;
     now?: Date;
     onClick: () => void;
     /** Kortet viser syntetiske sim-data (testmodus-simulator) — merkes tydelig
@@ -208,7 +212,13 @@
             <div class="font-display text-base font-semibold leading-none text-sky">
               {vannPct ?? '–'}<span class="text-[11px]">%</span>
             </div>
-            <div class="font-mono text-[9px] text-text-dim mt-0.5">vann</div>
+            <div class="font-mono text-[9px] text-text-dim mt-0.5">
+              {#if dagerIgjen !== null}
+                vann · {dagerIgjen < 1 ? '<1 d' : `~${Math.round(dagerIgjen)} d`}
+              {:else}
+                vann
+              {/if}
+            </div>
           </div>
         </div>
         <div class="flex items-center gap-2">

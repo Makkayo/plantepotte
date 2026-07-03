@@ -102,7 +102,12 @@ describe('feltFukter', () => {
 });
 
 describe('fuktStatus', () => {
-  it('frisk ≥55, «frisk og fuktig» ≥70', () => {
+  it('svært vått over 85 (informativt blått, samme grense som jordfuktKlasse)', () => {
+    expect(fuktStatus(86).klasse).toBe('vaat');
+    expect(fuktStatus(100).tekst).toBe('Svært vått');
+    expect(fuktStatus(85).klasse).toBe('frisk'); // grensa selv er fortsatt frisk
+  });
+  it('frisk 55–85, «frisk og fuktig» ≥70', () => {
     expect(fuktStatus(70).klasse).toBe('frisk');
     expect(fuktStatus(70).tekst).toBe('Frisk og fuktig');
     expect(fuktStatus(FRISK_GRENSE).klasse).toBe('frisk');

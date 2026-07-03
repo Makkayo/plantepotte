@@ -4,6 +4,8 @@
   import { potter, pottePlanter, loadAllPottePlanter } from '../lib/stores';
   import { supabase } from '../lib/supabase';
   import { kasseVarsler, type VarselAlvor, type VarselHistorikkRad } from '../lib/varsler';
+  import { vannNivaProsent } from '../lib/utils';
+  import { beregnVannTrend } from '../lib/trend';
   import { ppfdMaks } from '../lib/settings';
   import { simStore, hentSim, simHistorikk, effektivKasse } from '../lib/simulering';
   import type { Potte, PotteCommand, PotteSensorData, PottePlanteFull } from '../lib/database.types';
@@ -104,12 +106,34 @@
     effektivPotte: Potte;
     effektivSensor: PotteSensorData | undefined;
     effektivePlanter: PottePlanteFull[];
+    effektivHistorikk: VarselHistorikkRad[];
+    /** Trend-prognose («holder ~X dager») til kortet. null = ukjent/fylles. */
+    dagerIgjen: number | null;
     simAktiv: boolean;
   }
   const kasser = $derived.by((): Kasse[] =>
     $potter.map((p) => {
       const e = effektivKasse(p, $pottePlanter[p.potte_id] ?? [], sensors[p.potte_id], $simStore);
-      return { potte: p, effektivPotte: e.potte, effektivSensor: e.sensor, effektivePlanter: e.planter, simAktiv: e.simAktiv };
+      // Sim-kasser får syntetisk historikk (samme kilde som detaljen) så trend-
+      // og diagnose-funksjonene også kan forhåndsvises i testmodus.
+      const hist = e.simAktiv
+        ? simHistorikk(hentSim($simStore, p.potte_id), p)
+        : historikk[p.potte_id] ?? [];
+      const vannPct = vannNivaProsent(
+        e.sensor?.vann_avstand_mm,
+        e.potte.vann_tom_mm ?? undefined,
+        e.potte.vann_full_mm ?? undefined,
+      );
+      const trend = beregnVannTrend(hist, vannPct, e.potte.vann_tom_mm ?? undefined, e.potte.vann_full_mm ?? undefined);
+      return {
+        potte: p,
+        effektivPotte: e.potte,
+        effektivSensor: e.sensor,
+        effektivePlanter: e.planter,
+        effektivHistorikk: hist,
+        dagerIgjen: trend.gyldig ? trend.dagerIgjen : null,
+        simAktiv: e.simAktiv,
+      };
     }),
   );
 
@@ -118,18 +142,13 @@
   // bare to ting: velger effektive data (sim eller ekte) og render.
   const varsler = $derived.by(() => {
     const ut: { potteId: string; navn: string; melding: string; alvor: VarselAlvor; ikon: string; simulert: boolean }[] = [];
-    for (const { potte: p, effektivPotte, effektivSensor, effektivePlanter, simAktiv } of kasser) {
-      // Sim-kasser får syntetisk historikk (samme kilde som detaljen) så trend-
-      // og overvåt-varslene også kan forhåndsvises i testmodus.
-      const hist = simAktiv
-        ? simHistorikk(hentSim($simStore, p.potte_id), p)
-        : historikk[p.potte_id] ?? [];
+    for (const { potte: p, effektivPotte, effektivSensor, effektivePlanter, effektivHistorikk, simAktiv } of kasser) {
       for (const v of kasseVarsler({
         potte: effektivPotte,
         sensor: effektivSensor,
         command: commands[p.potte_id],
         planter: effektivePlanter,
-        historikk: hist,
+        historikk: effektivHistorikk,
         ppfdMaks: $ppfdMaks,
       })) {
         ut.push({ potteId: p.potte_id, navn: p.navn, ...v, simulert: simAktiv });
@@ -195,6 +214,7 @@
           command={commands[k.potte.potte_id]}
           sensor={k.effektivSensor}
           planter={k.effektivePlanter}
+          dagerIgjen={k.dagerIgjen}
           {now}
           onClick={() => onNavigate({ name: 'potte', potteId: k.potte.potte_id })}
           simulert={k.simAktiv}

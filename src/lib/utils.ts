@@ -39,15 +39,18 @@ export const VAAT_GRENSE = 85; // > dette = svært vått (rotråte-risiko hvis d
 
 /**
  * Fukt-status for «Anlegget»-visningen (oktagon-feltene + detalj-arket).
- * Terskler: ≥55 frisk, 35–54 begynner å tørke, <35 tørr.
+ * Terskler: >85 svært vått, 55–85 frisk, 35–54 begynner å tørke, <35 tørr.
+ * «Svært vått» er informativt blått, ikke alarm-rødt: rett etter påfylling er
+ * det normalt — det er først når det VEDVARER at overvåt-diagnosen slår til.
  * Returnerer hex (brukes i inline-stiler for jord-gradient/prikk/tall) + tekst.
  */
 export function fuktStatus(pct: number | null): {
   farge: string;
   tekst: string;
-  klasse: 'frisk' | 'tørker' | 'tørr' | 'unknown';
+  klasse: 'vaat' | 'frisk' | 'tørker' | 'tørr' | 'unknown';
 } {
   if (pct === null) return { farge: '#5a6376', tekst: 'Ukjent', klasse: 'unknown' };
+  if (pct > VAAT_GRENSE) return { farge: '#60a5fa', tekst: 'Svært vått', klasse: 'vaat' };
   if (pct >= FRISK_GRENSE) return { farge: '#4ade80', tekst: pct >= 70 ? 'Frisk og fuktig' : 'Fin fukt', klasse: 'frisk' };
   if (pct >= TORR_GRENSE) return { farge: '#fbbf24', tekst: 'Begynner å tørke', klasse: 'tørker' };
   return { farge: '#f87171', tekst: 'Trenger vann', klasse: 'tørr' };

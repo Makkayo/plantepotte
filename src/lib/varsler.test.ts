@@ -290,6 +290,50 @@ describe('kasseVarsler — jord', () => {
   });
 });
 
+describe('kasseVarsler — utstyr (maskinvare-diagnose i feeden)', () => {
+  it('løfter en fastlåst probe fra historikken opp i feeden', () => {
+    // jord1 står bom stille i 3 døgn; de andre jitrer normalt.
+    const naa = Date.now();
+    const hist: VarselHistorikkRad[] = [];
+    for (let t = 76; t >= 0; t -= 2) {
+      hist.push({
+        registrert_at: new Date(naa - t * 3_600_000).toISOString(),
+        vann_avstand_mm: vannMm(70),
+        jord1: 2000,
+        jord2: 2000 + (t % 3) * 9,
+        jord3: 2000 + (t % 5) * 7,
+        jord4: 2000 + (t % 7) * 5,
+      });
+    }
+    const v = kasseVarsler(tilstand({ historikk: hist }));
+    const utstyr = v.find((x) => x.kategori === 'utstyr')!;
+    expect(utstyr.melding).toMatch(/Maskinvare: Potte 1 foran/);
+    expect(utstyr.melding).toMatch(/stille/);
+  });
+
+  it('flagger probe som leser luft mens naboen er våt', () => {
+    const naa = Date.now();
+    const hist: VarselHistorikkRad[] = [];
+    for (let t = 20; t >= 0; t--) {
+      hist.push({
+        registrert_at: new Date(naa - t * 3_600_000).toISOString(),
+        vann_avstand_mm: vannMm(70),
+        jord1: 3190 + (t % 2 === 0 ? 15 : -15), // luft-båndet
+        jord2: jordAdc(70) + (t % 2 === 0 ? 9 : -9), // våt nabo
+        jord3: null,
+        jord4: null,
+      });
+    }
+    const v = kasseVarsler(tilstand({ historikk: hist }));
+    expect(v.find((x) => x.kategori === 'utstyr')!.melding).toMatch(/luft/);
+  });
+
+  it('frisk historikk gir ingen utstyr-varsler', () => {
+    const v = kasseVarsler(tilstand({ historikk: jordHistorikk(60, 76) }));
+    expect(kategorier(v)).not.toContain('utstyr');
+  });
+});
+
 describe('kasseVarsler — klima', () => {
   it('varsler kulde', () => {
     const v = kasseVarsler(tilstand({ sensor: mkSensor({ temperatur: 6 }) }));

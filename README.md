@@ -66,7 +66,7 @@ konfigureres med:
 - ✅ Varsel-motor (`lib/varsler.ts`): hele handlingsfeeden som ren, testet logikk — frakoblet (med siste kjente krise), vann (nivå + forbruks-prognose), jord (tørr/overvåt), klima (temp + VPD), lys (gjeldende plan mot plantenes DLI-behov), næring og høsting. Maks ett varsel per kategori per kasse
 - ✅ Kalibrerbar PPFD i lys-arket: DLI-tallene bygger på din målte verdi (PAR-meter/Photone) i stedet for 200 µmol-antagelsen
 - ✅ Komplett flashbar firmware i `firmware/` (watchdog, NTP-resynk + auto-sommertid, valgfri myk soloppgang/-nedgang, 4 jordfukt-plasser, **44 logikk-tester** på PC)
-- ✅ **188 enhetstester (Vitest)** for app-logikken: lys/DLI, vann- og jordfukt-kalibrering, blomsterkasse-oppsett, vanntrend, VPD, næringsfase, diagnose, varsler
+- ✅ **192 enhetstester (Vitest)** for app-logikken: lys/DLI, vann- og jordfukt-kalibrering, blomsterkasse-oppsett, vanntrend, VPD, næringsfase, diagnose, varsler
 - ✅ CI (GitHub Actions) speiler Cloudflare-bygget og vokter at Wokwi-koden holdes i synk med firmwaren
 - ✅ **Full integrasjon live (20. juni):** ESP32 kjører selvgående på buck — WiFi + NTP + Supabase, alle sensorer i appen, appen styrer lyset. MOSFET-PWM-dimming og VL53L0X-laser verifisert på ekte hardware
 - 🟡 Neste: ESP32-CAM (kamera → vekst-tidslinje) + 3D-print og montering av potte 1

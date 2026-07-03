@@ -15,6 +15,8 @@
  * Prioritering innen aksene:
  *  - utstyr: frakoblet demper ALLE sensor-varsler (tallene er utdaterte), men
  *    tar med siste kjente krise i meldingen så den ikke forsvinner i stillhet.
+ *    Ellers løftes maskinvare-diagnosene (løs/død/luft-probe, veke-kontakt)
+ *    hit fra historikken — samme motorer som detaljens maskinvare-sjekk.
  *  - vann: akutt lavt nivå (<20 %) før trend-prognosen («holder ~X dager») —
  *    trenden gjør varselet forbruks-bevisst: høyt forbruk varsler FØR 20 %,
  *    lavt forbruk maser ikke på 19 %.
@@ -29,6 +31,7 @@ import {
   feltFukter,
   vannNivaProsent,
   jordfuktProsent,
+  sensorEtikett,
   TORR_GRENSE,
   OFFLINE_GRENSE_MIN,
 } from './utils';
@@ -38,7 +41,7 @@ import { kasseNaering } from './naering';
 import { mestAktuelleHosting, HOSTE_NUDGE_DAGER } from './hosting';
 import { beregnDli, vurderPlanteDli, ANTATT_PPFD_MAX } from './lys';
 import { lysVarighetTimer } from './tid';
-import { overvaatHelse } from './diagnose';
+import { overvaatHelse, probeHelse, luftFunn, vekeHelse } from './diagnose';
 
 /** Vann under dette (%) = akutt lavt — samme grense som vannKlasse 'lav'. */
 export const VANN_LAV_PCT = 20;
@@ -203,6 +206,49 @@ export function kasseVarsler(k: KasseTilstand): Varsel[] {
             alvor: 'mid',
             ikon: '💨',
             melding: 'Fuktig luft — luft rommet litt for å unngå mugg',
+          });
+        }
+      }
+
+      // Utstyr: maskinvare-diagnosene fra historikken (samme motorer som
+      // detaljens maskinvare-sjekk) — en løs probe skal ikke ligge og lyve i
+      // dagevis før man tilfeldigvis åpner detaljen. Ett varsel; resten står
+      // i detaljen.
+      if (k.historikk.length > 0) {
+        const kanalSerier = [0, 1, 2, 3].map((idx) =>
+          k.historikk.map((r) => ({
+            t: r.registrert_at ? new Date(r.registrert_at).getTime() : 0,
+            raw: [r.jord1, r.jord2, r.jord3, r.jord4][idx] ?? null,
+          })),
+        );
+        const funn: string[] = [];
+        kanalSerier.forEach((serie, idx) => {
+          const f = probeHelse(serie);
+          if (f.melding && (f.status === 'frakoblet' || f.status === 'fastlast')) {
+            funn.push(`${sensorEtikett(idx + 1, p.skillevegger)} ${f.melding}`);
+          }
+        });
+        for (const f of luftFunn(kanalSerier)) {
+          funn.push(`${sensorEtikett(f.kanal, p.skillevegger)} ${f.melding}`);
+        }
+        const jordSnitt = k.historikk.map((r) => {
+          const verdier = [r.jord1, r.jord2, r.jord3, r.jord4]
+            .map((x) => jordfuktProsent(x))
+            .filter((x): x is number => x !== null);
+          return {
+            t: r.registrert_at ? new Date(r.registrert_at).getTime() : 0,
+            pct: verdier.length ? verdier.reduce((a, b) => a + b, 0) / verdier.length : NaN,
+          };
+        });
+        if (vekeHelse(jordSnitt, trend.sistFyltAt).advar) {
+          funn.push('påfyllingen nådde ikke jorda — sjekk at veka når vannet');
+        }
+        if (funn.length > 0) {
+          ut.push({
+            kategori: 'utstyr',
+            alvor: 'mid',
+            ikon: '🔧',
+            melding: `Maskinvare: ${funn[0]}${funn.length > 1 ? ` (+${funn.length - 1} til — se detaljen)` : ''}`,
           });
         }
       }
