@@ -25,8 +25,26 @@
 
   const smaplante = ['Mynte (egen seksjon!)', 'Rosmarin', 'Salvie', 'Fransk estragon', 'Timian'];
 
-  // Konkret kjøpsliste (produkt + pris + lenker til flere butikker). Avkrysning huskes ikke ennå.
-  let kjopt = $state<Record<string, boolean>>({});
+  // Konkret kjøpsliste (produkt + pris + lenker til flere butikker).
+  // Avkrysningen huskes per nettleser (localStorage) — å miste lista midt i
+  // butikken fordi PWA-en ble gjenstartet er akkurat feilen den skal hindre.
+  const KJOPT_KEY = 'plantepotte:handleliste';
+  function lesKjopt(): Record<string, boolean> {
+    try {
+      const raw = localStorage.getItem(KJOPT_KEY);
+      return raw ? (JSON.parse(raw) as Record<string, boolean>) : {};
+    } catch {
+      return {};
+    }
+  }
+  let kjopt = $state<Record<string, boolean>>(lesKjopt());
+  $effect(() => {
+    try {
+      localStorage.setItem(KJOPT_KEY, JSON.stringify(kjopt));
+    } catch {
+      /* privat modus e.l. — kjør videre uten å lagre */
+    }
+  });
   const minimum = [
     {
       id: 'kokos',
