@@ -70,6 +70,6 @@ konfigureres med:
 - ✅ CI (GitHub Actions) speiler Cloudflare-bygget og vokter at Wokwi-koden holdes i synk med firmwaren
 - ✅ **Full integrasjon live (20. juni):** ESP32 kjører selvgående på buck — WiFi + NTP + Supabase, alle sensorer i appen, appen styrer lyset. MOSFET-PWM-dimming og VL53L0X-laser verifisert på ekte hardware
 - 🟡 Neste: ESP32-CAM (kamera → vekst-tidslinje) + 3D-print og montering av potte 1
-- 🔴 **Databasen er eksponert NÅ** (verifisert med Supabase security advisor 3. juli): `potte_commands` og `potte_sensor_data` har «anon all»-policy, og anon-nøkkelen ligger i den offentlige JS-bundelen — hvem som helst med app-URL-en kan styre lyset og skrive/slette sensordata. Ferdig fiks: kjør [`docs/sql/2026-07-03-rls-stramming.sql`](docs/sql/2026-07-03-rls-stramming.sql) i SQL-editoren (ingen nedetid, ESP32 upåvirket)
+- ✅ **RLS strammet 3. juli 2026** ([`docs/sql/2026-07-03-rls-stramming.sql`](docs/sql/2026-07-03-rls-stramming.sql), kjørt og verifisert med security advisor): anon-nøkkelen kan nå kun poste sensordata + lese lysplanen (det ESP32-en trenger) — all annen skriving krever innlogging. Før kunne hvem som helst med app-URL-en styre lyset. NB: ESP32 har ikke postet siden 20. juni (avslått) — første «Sensordata sendt.» etter oppstart bekrefter at insert-flyten er intakt
 - 🟡 Multi-user-arkitektur forberedt (`owner_id`-felt klart), ikke aktivert
 - ⬜ Utskilling til eget Supabase-prosjekt — retningsvalg juli 2026, se [`docs/2026-07-03-utskilling-plan.md`](docs/2026-07-03-utskilling-plan.md). (Sammenslåing med Matplanlegger er skrinlagt.)
