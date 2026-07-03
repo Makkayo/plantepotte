@@ -13,7 +13,7 @@
   } from '../lib/utils';
   import { beregnVannTrend } from '../lib/trend';
   import { kasseNaering } from '../lib/naering';
-  import { probeHelse, vekeHelse } from '../lib/diagnose';
+  import { probeHelse, vekeHelse, luftFunn, overvaatHelse } from '../lib/diagnose';
   import { simStore, hentSim, simHistorikk, effektivKasse } from '../lib/simulering';
   import { visFeil } from '../lib/toast';
   import type { Potte, PotteCommand, PotteSensorData, PottePlanteFull } from '../lib/database.types';
@@ -83,22 +83,54 @@
     effektivPotte?.i_drift ? kasseNaering(effektivePlanter.map((p) => p.plantet_at)) : null,
   );
 
-  // Maskinvare-diagnose fra 7-dagers historikken (løs/død probe + veke-kontakt).
+  // Rå ADC-serie per jordkanal fra historikken — delt av probe-, luft- og
+  // overvåt-diagnosene så de garantert ser samme data.
+  const kanalSerier = $derived.by(() =>
+    [0, 1, 2, 3].map((idx) =>
+      effektivHistorikk.map((r) => ({
+        t: new Date(r.registrert_at ?? 0).getTime(),
+        raw: [r.jord1, r.jord2, r.jord3, r.jord4][idx] ?? null,
+      })),
+    ),
+  );
+
+  // Maskinvare-diagnose fra 7-dagers historikken: løs/død probe, probe som
+  // leser luft (ute av jorda), og veke-kontakt.
   const probeFunn = $derived.by(() => {
     if (!effektivPotte?.har_sensorer) return [] as { label: string; melding: string }[];
     const ut: { label: string; melding: string }[] = [];
     for (let kanal = 1; kanal <= 4; kanal++) {
-      const punkter = effektivHistorikk.map((r) => ({
-        t: new Date(r.registrert_at ?? 0).getTime(),
-        raw: [r.jord1, r.jord2, r.jord3, r.jord4][kanal - 1] ?? null,
-      }));
-      const f = probeHelse(punkter);
+      const f = probeHelse(kanalSerier[kanal - 1]!);
       if (f.melding && (f.status === 'frakoblet' || f.status === 'fastlast')) {
         ut.push({ label: sensorEtikett(kanal, effektivPotte.skillevegger), melding: f.melding });
       }
     }
+    for (const f of luftFunn(kanalSerier)) {
+      ut.push({ label: sensorEtikett(f.kanal, effektivPotte.skillevegger), melding: f.melding });
+    }
     return ut;
   });
+
+  // Overvåt jord (per kanal): dagevis over VAAT_GRENSE = rotråte-risiko. Egen
+  // seksjon (jordhelse, ikke maskinvarefeil) — nevner utsatte planter ved navn.
+  const overvaatKanaler = $derived.by(() => {
+    if (!effektivPotte?.har_sensorer) return [] as string[];
+    const ut: string[] = [];
+    for (let kanal = 1; kanal <= 4; kanal++) {
+      const serie = kanalSerier[kanal - 1]!
+        .map((p) => ({ t: p.t, pct: jordfuktProsent(p.raw) ?? NaN }))
+        .filter((p) => Number.isFinite(p.pct));
+      if (overvaatHelse(serie).advar) {
+        ut.push(sensorEtikett(kanal, effektivPotte.skillevegger));
+      }
+    }
+    return ut;
+  });
+  const overvaatUtsatte = $derived(
+    effektivePlanter
+      .filter((p) => p.plante.veke_egnet === 'forsiktig' || p.plante.veke_egnet === 'ikke_anbefalt')
+      .map((p) => p.plante.navn),
+  );
 
   const vekeFunn = $derived.by(() => {
     if (!effektivPotte?.har_sensorer) return { advar: false, melding: null as string | null };
@@ -375,7 +407,25 @@
       </div>
     {/if}
 
-    <!-- Maskinvare-sjekk: løs/død jordprobe eller veke uten kontakt -->
+    <!-- Overvåt jord: dagevis over VAAT_GRENSE — rotråte utvikler seg stille -->
+    {#if overvaatKanaler.length > 0}
+      <div class="card p-4 border-sky/30 bg-sky/[0.06]">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-base">🫧</span>
+          <h2 class="font-display text-sm font-semibold">Svært våt jord over tid</h2>
+        </div>
+        <p class="text-xs text-text-muted leading-snug">
+          <span class="text-text font-medium">{overvaatKanaler.join(', ')}</span> har stått svært
+          vått i flere døgn. Sjekk at veka ikke overfôrer (færre/tynnere veker hjelper), og
+          se/lukt etter råte i jorda.
+          {#if overvaatUtsatte.length > 0}
+            {overvaatUtsatte.join(' og ')} tåler konstant fukt dårlig — følg ekstra med.
+          {/if}
+        </p>
+      </div>
+    {/if}
+
+    <!-- Maskinvare-sjekk: løs/død jordprobe, probe i lufta, eller veke uten kontakt -->
     {#if harDiagnose}
       <div class="card p-4 border-sun/30 bg-sun/[0.06]">
         <div class="flex items-center gap-2 mb-2">
@@ -383,7 +433,7 @@
           <h2 class="font-display text-sm font-semibold">Maskinvare-sjekk</h2>
         </div>
         <ul class="space-y-1.5">
-          {#each probeFunn as f (f.label)}
+          {#each probeFunn as f (f.label + f.melding)}
             <li class="text-xs text-text-muted leading-snug">
               <span class="text-text font-medium">{f.label}:</span> {f.melding}
             </li>

@@ -22,6 +22,7 @@
     type PotteOppsett,
   } from '../lib/utils';
   import { beregnDli } from '../lib/lys';
+  import { ppfdMaks } from '../lib/settings';
   import { hhmmTilMin, lysVarighetMin } from '../lib/tid';
   import { beregnVpd } from '../lib/klima';
   import { hostingStatus, type HostingStatus } from '../lib/hosting';
@@ -140,8 +141,10 @@
   const lysRel = $derived(
     command ? ((now.getHours() * 60 + now.getMinutes() - hhmmTilMin(command.timer_on)) % 1440 + 1440) % 1440 : 0,
   );
-  const iLysVindu = $derived(lysPaa && lysVarighet > 0 && lysRel <= lysVarighet);
-  const lysDli = $derived(beregnDli(command?.intensitet ?? 0, lysVarighet / 60));
+  // Strengt mindre enn — firmwaren bruker `on <= now < off`, så i selve
+  // av-minuttet er lyset alt slukket og vi skal ikke si «Lyser nå».
+  const iLysVindu = $derived(lysPaa && lysVarighet > 0 && lysRel < lysVarighet);
+  const lysDli = $derived(beregnDli(command?.intensitet ?? 0, lysVarighet / 60, $ppfdMaks));
 
   function fmtVar(min: number): string {
     const h = Math.floor(min / 60);

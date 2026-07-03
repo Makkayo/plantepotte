@@ -17,6 +17,14 @@ import { vannNivaProsent } from './utils';
 /** Reservoarvolum (L) — IKEA 365+ 5,2L. */
 export const TANK_LITER = 5.2;
 
+/**
+ * Hopp opp i nivå (prosentpoeng) mellom to nabopunkter som regnes som påfylling.
+ * Deles av trend-nullstillingen og døgnforbruket — «påfylling» betyr det samme
+ * begge steder. Godt over laser-jitter (±1–2 mm ≈ ±1 pp), godt under en reell
+ * kanne-påfylling.
+ */
+export const FYLL_HOPP_PP = 12;
+
 export interface VannPunkt {
   /** Tidspunkt (ms siden epoch). */
   t: number;
@@ -118,13 +126,13 @@ export function beregnVannTrend(
     };
   }
 
-  // Finn siste påfylling: et hopp opp > 12 prosentpoeng mellom to nabopunkter.
+  // Finn siste påfylling: et hopp opp > FYLL_HOPP_PP mellom to nabopunkter.
   let start = 0;
   let sistFyltAt: Date | null = null;
   for (let i = 1; i < punkter.length; i++) {
     const naa = punkter[i]!;
     const forrige = punkter[i - 1]!;
-    if (naa.pct - forrige.pct > 12) {
+    if (naa.pct - forrige.pct > FYLL_HOPP_PP) {
       start = i;
       sistFyltAt = new Date(naa.t);
     }
@@ -156,10 +164,34 @@ export function beregnVannTrend(
 }
 
 /**
+ * Reelt forbruk (prosentpoeng) i en kronologisk serie: del serien i segmenter
+ * ved hver påfylling (hopp > FYLL_HOPP_PP) og summer fallet per segment
+ * (start − slutt, klampet ≥ 0). Punkt-for-punkt-summering ville blåst opp
+ * tallet med laser-jitter; første-minus-siste ville gjemt alt forbruk på
+ * påfyllingsdager. Segment-summen unngår begge.
+ */
+function forbrukPctISerie(punkter: VannPunkt[]): number {
+  let sum = 0;
+  let segStart = punkter[0]!;
+  let forrige = punkter[0]!;
+  for (let i = 1; i < punkter.length; i++) {
+    const p = punkter[i]!;
+    if (p.pct - forrige.pct > FYLL_HOPP_PP) {
+      sum += Math.max(0, segStart.pct - forrige.pct);
+      segStart = p;
+    }
+    forrige = p;
+  }
+  sum += Math.max(0, segStart.pct - forrige.pct);
+  return sum;
+}
+
+/**
  * Liter forbrukt per døgn de siste `antallDager` dagene (eldste→nyeste).
- * Per døgn: max(0, nivå ved døgnstart − nivå ved døgnslutt) × tankliter.
- * Påfyll-døgn (nivået stiger) gir ~0. Døgn med < 2 punkter settes 0 så grafen
- * alltid har faste stolper. Tom serie hvis under 2 punkter totalt.
+ * Per døgn: forbrukPctISerie × tankliter — påfyllingsdager teller forbruket
+ * FØR og ETTER påfyllingen (i stedet for å vise ~0, som første-minus-siste
+ * gjorde). Døgn med < 2 punkter settes 0 så grafen alltid har faste stolper.
+ * Tom serie hvis under 2 punkter totalt.
  */
 export function dagligForbruk(punkter: VannPunkt[], antallDager = 7): number[] {
   if (punkter.length < 2) return [];
@@ -173,8 +205,7 @@ export function dagligForbruk(punkter: VannPunkt[], antallDager = 7): number[] {
       ut.push(0);
       continue;
     }
-    const forbrukPct = Math.max(0, iDognet[0]!.pct - iDognet[iDognet.length - 1]!.pct);
-    ut.push(Math.round(TANK_LITER * (forbrukPct / 100) * 100) / 100);
+    ut.push(Math.round(TANK_LITER * (forbrukPctISerie(iDognet) / 100) * 100) / 100);
   }
   return ut;
 }

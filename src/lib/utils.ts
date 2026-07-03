@@ -24,7 +24,7 @@ export function jordfuktProsent(
 export function jordfuktKlasse(pct: number | null): 'dry' | 'ok' | 'wet' | 'unknown' {
   if (pct === null) return 'unknown';
   if (pct < TORR_GRENSE) return 'dry'; // samme grense som fuktStatus / PotteKort / advarsler
-  if (pct > 85) return 'wet';
+  if (pct > VAAT_GRENSE) return 'wet';
   return 'ok';
 }
 
@@ -35,6 +35,7 @@ export function jordfuktKlasse(pct: number | null): 'dry' | 'ok' | 'wet' | 'unkn
  */
 export const TORR_GRENSE = 35; // < dette = trenger vann (rød)
 export const FRISK_GRENSE = 55; // ≥ dette = fin fukt (grønn)
+export const VAAT_GRENSE = 85; // > dette = svært vått (rotråte-risiko hvis det VEDVARER)
 
 /**
  * Fukt-status for «Anlegget»-visningen (oktagon-feltene + detalj-arket).

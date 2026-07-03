@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { probeHelse, vekeHelse } from './diagnose';
+import { probeHelse, vekeHelse, luftFunn, overvaatHelse, OVERVAAT_TIMER } from './diagnose';
 
 const T0 = Date.UTC(2026, 5, 20, 8, 0, 0);
 const time = 3_600_000; // 1 t
@@ -88,5 +88,71 @@ describe('vekeHelse', () => {
       { t: T0 + 14 * time, pct: 40 },
     ];
     expect(vekeHelse(ferskt, fylt).advar).toBe(false);
+  });
+});
+
+describe('luftFunn — probe ute av jorda', () => {
+  /** Serie med `n` punkter, én per time bakover fra T0+14t, rundt gitt ADC. */
+  function serie(adcRundt: number, n = 15): { t: number; raw: number | null }[] {
+    return Array.from({ length: n }, (_, i) => ({
+      t: T0 + i * time,
+      raw: adcRundt + (i % 2 === 0 ? 15 : -15), // jitrer litt (ikke fastlåst)
+    }));
+  }
+  const tom: { t: number; raw: number | null }[] = [];
+
+  it('flagger probe i luft-båndet når en annen probe er våt', () => {
+    const funn = luftFunn([serie(3190), serie(1400), tom, tom]); // kanal 2 ≈ 87 % våt
+    expect(funn).toHaveLength(1);
+    expect(funn[0]!.kanal).toBe(1);
+    expect(funn[0]!.melding).toMatch(/luft/);
+  });
+
+  it('flagger IKKE når ingen annen probe er våt (kan være ekte knusktørr jord)', () => {
+    expect(luftFunn([serie(3190), serie(3150), tom, tom])).toEqual([]);
+  });
+
+  it('flagger IKKE verdier utenfor luft-båndet', () => {
+    expect(luftFunn([serie(2500), serie(1400), tom, tom])).toEqual([]);
+  });
+
+  it('flagger IKKE på kort vindu (nettopp tatt ut for omplanting)', () => {
+    const kort = Array.from({ length: 6 }, (_, i) => ({
+      t: T0 + i * 20 * 60_000, // 6 punkter på 2 timer
+      raw: 3190,
+    }));
+    expect(luftFunn([kort, serie(1400), tom, tom])).toEqual([]);
+  });
+});
+
+describe('overvaatHelse — vedvarende svært våt jord', () => {
+  const naa = T0 + 100 * time;
+  /** Full dekning i overvåt-vinduet: punkt annenhver time, fast fukt. */
+  function vaatSerie(pct: number | ((i: number) => number)) {
+    const punkter: { t: number; pct: number }[] = [];
+    for (let t = OVERVAAT_TIMER; t >= 0; t -= 2) {
+      const i = (OVERVAAT_TIMER - t) / 2;
+      punkter.push({ t: naa - t * time, pct: typeof pct === 'function' ? pct(i) : pct });
+    }
+    return punkter;
+  }
+
+  it('advarer når jorda står over grensa hele vinduet', () => {
+    const f = overvaatHelse(vaatSerie(91), naa);
+    expect(f.advar).toBe(true);
+    expect(f.melding).toMatch(/veka/);
+  });
+
+  it('advarer IKKE når fukten dupper under grensa underveis', () => {
+    expect(overvaatHelse(vaatSerie((i) => (i === 10 ? 80 : 91)), naa).advar).toBe(false);
+  });
+
+  it('advarer IKKE uten dekning i hele vinduet (hull i dataene)', () => {
+    const bareSiste = vaatSerie(91).filter((p) => p.t > naa - 24 * time);
+    expect(overvaatHelse(bareSiste, naa).advar).toBe(false);
+  });
+
+  it('advarer IKKE på tynn serie', () => {
+    expect(overvaatHelse([{ t: naa - time, pct: 95 }], naa).advar).toBe(false);
   });
 });

@@ -11,6 +11,7 @@
     TORR_GRENSE,
   } from '../lib/utils';
   import { beregnDli } from '../lib/lys';
+  import { ppfdMaks } from '../lib/settings';
   import { lysVarighetTimer } from '../lib/tid';
   import { mestAktuelleHosting } from '../lib/hosting';
   import SolBue from './viz/SolBue.svelte';
@@ -86,7 +87,7 @@
 
   // Lys (samme språk som detaljens vekstlys-kort)
   const lysT = $derived(command ? lysVarighetTimer(command.timer_on, command.timer_off) : 0);
-  const lysDli = $derived(beregnDli(command?.intensitet ?? 0, lysT));
+  const lysDli = $derived(beregnDli(command?.intensitet ?? 0, lysT, $ppfdMaks));
   const lysPaa = $derived(!!command && command.intensitet > 0);
 </script>
 

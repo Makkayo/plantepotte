@@ -3,16 +3,9 @@
   import { get } from 'svelte/store';
   import { potter, pottePlanter, loadAllPottePlanter } from '../lib/stores';
   import { supabase } from '../lib/supabase';
-  import {
-    vannNivaProsent,
-    feltFukter,
-    minutterSiden,
-    OFFLINE_GRENSE_MIN,
-    TORR_GRENSE,
-  } from '../lib/utils';
-  import { kasseNaering } from '../lib/naering';
-  import { mestAktuelleHosting, HOSTE_NUDGE_DAGER } from '../lib/hosting';
-  import { simStore, effektivKasse } from '../lib/simulering';
+  import { kasseVarsler, type VarselAlvor, type VarselHistorikkRad } from '../lib/varsler';
+  import { ppfdMaks } from '../lib/settings';
+  import { simStore, hentSim, simHistorikk, effektivKasse } from '../lib/simulering';
   import type { Potte, PotteCommand, PotteSensorData, PottePlanteFull } from '../lib/database.types';
   import PotteKort from './PotteKort.svelte';
   import Sheet from './Sheet.svelte';
@@ -25,8 +18,39 @@
 
   let commands = $state<Record<string, PotteCommand>>({});
   let sensors = $state<Record<string, PotteSensorData>>({});
+  let historikk = $state<Record<string, VarselHistorikkRad[]>>({});
   let now = $state(new Date()); // driver sol-buen i kortene
   let timer: ReturnType<typeof setInterval> | undefined;
+
+  // Historikken (4 døgn, kun kolonnene varsel-motoren trenger) driver trend-
+  // («holder ~X dager») og overvåt-varslene i feeden. Den endrer seg sakte
+  // (én ny rad per 5 min), så vi henter den ved mount + hvert kvarter — ikke
+  // i hver 10-sekunders refresh.
+  let sistHistorikkHentet = 0;
+  const HISTORIKK_REFRESH_MS = 15 * 60_000;
+  const HISTORIKK_DOGN = 4; // trend trenger ≥6 t, overvåt 3 døgn + margin
+
+  async function loadHistorikk() {
+    sistHistorikkHentet = Date.now();
+    const fra = new Date(Date.now() - HISTORIKK_DOGN * 86_400_000).toISOString();
+    const potteListe = get(potter).filter((p) => p.har_sensorer);
+    const svar = await Promise.all(
+      potteListe.map((p) =>
+        supabase
+          .from('potte_sensor_data')
+          .select('registrert_at, vann_avstand_mm, jord1, jord2, jord3, jord4')
+          .eq('potte_id', p.potte_id)
+          .gte('registrert_at', fra)
+          .order('registrert_at', { ascending: true })
+          .limit(1300),
+      ),
+    );
+    const m: Record<string, VarselHistorikkRad[]> = {};
+    svar.forEach((res, idx) => {
+      if (res.data) m[potteListe[idx]!.potte_id] = res.data as VarselHistorikkRad[];
+    });
+    historikk = m;
+  }
 
   async function refresh() {
     now = new Date();
@@ -60,6 +84,9 @@
       if (res.data) m[potteListe[idx]!.potte_id] = res.data;
     });
     sensors = m;
+    if (Date.now() - sistHistorikkHentet > HISTORIKK_REFRESH_MS) {
+      loadHistorikk(); // bevisst uten await — feeden kan oppdatere i bakgrunnen
+    }
   }
 
   onMount(async () => {
@@ -86,63 +113,26 @@
     }),
   );
 
-  // Handlingsfeed: problemer (rød/gul) OG gjøremål/gode nyheter (næring, høsting).
-  // Sensorvarsler = mest alvorlige én per kasse; næring/høsting kommer i tillegg.
-  type Alvor = 'hoy' | 'mid' | 'gjøremål' | 'positiv';
+  // Handlingsfeed: hele regelverket bor i lib/varsler.ts (kasseVarsler) — REN,
+  // testet logikk med maks ett varsel per kategori per kasse. Komponenten gjør
+  // bare to ting: velger effektive data (sim eller ekte) og render.
   const varsler = $derived.by(() => {
-    const ut: { potteId: string; navn: string; melding: string; alvor: Alvor; ikon: string; simulert: boolean }[] = [];
+    const ut: { potteId: string; navn: string; melding: string; alvor: VarselAlvor; ikon: string; simulert: boolean }[] = [];
     for (const { potte: p, effektivPotte, effektivSensor, effektivePlanter, simAktiv } of kasser) {
-      // 1) Sensor-varsler (kun kasser med sensorer): frakoblet → lavt vann → tørr jord.
-      if (effektivPotte.har_sensorer) {
-        const s = effektivSensor;
-        const min = minutterSiden(s?.registrert_at);
-        if (min !== null && min > OFFLINE_GRENSE_MIN) {
-          ut.push({ potteId: p.potte_id, navn: p.navn, melding: 'Frakoblet — sjekk strøm og WiFi', alvor: 'mid', ikon: '⚠️', simulert: simAktiv });
-        } else if (s) {
-          const vann = vannNivaProsent(s.vann_avstand_mm, effektivPotte.vann_tom_mm ?? undefined, effektivPotte.vann_full_mm ?? undefined);
-          // Per felt (snitter prober i udelt potte) — samme regel som kortet.
-          const jord = feltFukter(
-            [s.jord1, s.jord2, s.jord3, s.jord4],
-            effektivPotte.skillevegger,
-          ).filter((x): x is number => x !== null);
-          if (vann !== null && vann < 20) {
-            ut.push({ potteId: p.potte_id, navn: p.navn, melding: `Vann lavt (${vann} %) — fyll snart`, alvor: 'hoy', ikon: '💧', simulert: simAktiv });
-          } else if (jord.length && Math.min(...jord) < TORR_GRENSE) {
-            ut.push({ potteId: p.potte_id, navn: p.navn, melding: 'Jord tørr — trenger vann', alvor: 'hoy', ikon: '💧', simulert: simAktiv });
-          }
-        }
-      }
-
-      // 2) Gjøremål/gode nyheter (uavhengig av sensorer, kun i drift — ekte
-      // eller simulert):
-      if (effektivPotte.i_drift && effektivePlanter.length > 0) {
-        const n = kasseNaering(effektivePlanter.map((pp) => pp.plantet_at));
-        if (n?.handlingNaa) {
-          ut.push({ potteId: p.potte_id, navn: p.navn, melding: 'På tide å starte næring i badet', alvor: 'gjøremål', ikon: '🧪', simulert: simAktiv });
-        }
-        const h = mestAktuelleHosting(
-          effektivePlanter.map((pp) => ({
-            navn: pp.plante.navn,
-            plantet_at: pp.plantet_at,
-            dager_til_hosting: pp.plante.dager_til_hosting,
-            kategori: pp.plante.kategori,
-          })),
-        );
-        // Nudge kun når noe NETTOPP ble høsteklar — ellers ville en kontinuerlig
-        // plante ligge som «klar!» i feeden for alltid. Etter vinduet lever
-        // høste-tilstanden videre på kortet/felt-arket, ikke i varsel-feeden.
-        if (h?.status.klar && h.status.dagerHosteklar <= HOSTE_NUDGE_DAGER) {
-          ut.push({
-            potteId: p.potte_id,
-            navn: p.navn,
-            melding: h.status.kontinuerlig
-              ? `${h.navn} er høsteklar — høst etter behov`
-              : `${h.navn} er klar til høsting`,
-            alvor: 'positiv',
-            ikon: '🧺',
-            simulert: simAktiv,
-          });
-        }
+      // Sim-kasser får syntetisk historikk (samme kilde som detaljen) så trend-
+      // og overvåt-varslene også kan forhåndsvises i testmodus.
+      const hist = simAktiv
+        ? simHistorikk(hentSim($simStore, p.potte_id), p)
+        : historikk[p.potte_id] ?? [];
+      for (const v of kasseVarsler({
+        potte: effektivPotte,
+        sensor: effektivSensor,
+        command: commands[p.potte_id],
+        planter: effektivePlanter,
+        historikk: hist,
+        ppfdMaks: $ppfdMaks,
+      })) {
+        ut.push({ potteId: p.potte_id, navn: p.navn, ...v, simulert: simAktiv });
       }
     }
     return ut;
@@ -150,7 +140,7 @@
 
   // Fire tydelige betydninger: rød = problem, gul = frakoblet, blå = oppgave
   // (næring), grønn = klar til høsting. Distinkte toner så feed-en er lesbar.
-  const varselStil: Record<Alvor, string> = {
+  const varselStil: Record<VarselAlvor, string> = {
     hoy: 'bg-rose/[0.12] border-rose/35',
     mid: 'bg-sun/[0.12] border-sun/35',
     gjøremål: 'bg-sky/[0.12] border-sky/35',

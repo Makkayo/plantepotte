@@ -30,13 +30,35 @@ describe('dagligForbruk', () => {
     expect(ut[0]).toBeCloseTo(1.04, 2);
   });
 
-  it('gir 0 på påfyll-døgn (nivået stiger)', () => {
+  it('gir 0 på påfyll-døgn uten reelt forbruk (nivået bare stiger)', () => {
     const naa = Date.now();
     const punkter: VannPunkt[] = [
       { t: naa - 0.9 * 86_400_000, pct: 30 },
       { t: naa - 0.1 * 86_400_000, pct: 95 },
     ];
     expect(dagligForbruk(punkter, 1)[0]).toBe(0);
+  });
+
+  it('teller forbruket FØR og ETTER en påfylling midt i døgnet', () => {
+    const naa = Date.now();
+    const punkter: VannPunkt[] = [
+      { t: naa - 0.9 * 86_400_000, pct: 80 },
+      { t: naa - 0.6 * 86_400_000, pct: 60 }, // −20 pp før påfyll
+      { t: naa - 0.5 * 86_400_000, pct: 95 }, // påfylling (+35 pp)
+      { t: naa - 0.1 * 86_400_000, pct: 90 }, // −5 pp etter
+    ];
+    // 25 pp av 5,2 L = 1,3 L — første-minus-siste hadde gjemt alt bak hoppet.
+    expect(dagligForbruk(punkter, 1)[0]).toBeCloseTo(1.3, 2);
+  });
+
+  it('blåser ikke opp forbruket av småjitter (segment-sum, ikke punktsum)', () => {
+    const naa = Date.now();
+    // Sikksakk ±1 pp rundt 70 → netto forbruk ~1 pp, ikke summen av alle dippene.
+    const punkter: VannPunkt[] = Array.from({ length: 20 }, (_, i) => ({
+      t: naa - (0.9 - i * 0.04) * 86_400_000,
+      pct: 70 - (i % 2) + (i === 19 ? -1 : 0),
+    }));
+    expect(dagligForbruk(punkter, 1)[0]!).toBeLessThan(0.2);
   });
 });
 

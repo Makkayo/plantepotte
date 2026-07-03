@@ -3,6 +3,7 @@ import {
   beregnDli,
   intensitetForDli,
   anbefaltInnstilling,
+  vurderPlanteDli,
   MAKS_FOTOPERIODE,
   vurderLysKompatibilitet,
   vurderVannKompatibilitet,
@@ -58,6 +59,29 @@ describe('beregnDli', () => {
   it('intensitetForDli er invers av beregnDli', () => {
     expect(intensitetForDli(9.36, 13)).toBeCloseTo(100, 0);
   });
+
+  it('kalibrert PPFD skalerer DLI lineært (målt verdi erstatter antagelsen)', () => {
+    expect(beregnDli(100, 13, 400)).toBeCloseTo(2 * beregnDli(100, 13), 5);
+    expect(intensitetForDli(9.36, 13, 400)).toBeCloseTo(50, 0);
+  });
+});
+
+describe('vurderPlanteDli — delt DLI-helse (lys-arket + varsel-feeden)', () => {
+  const p = mkPlante({ dli_min: 12, dli_optimal: 18, dli_maks: 25 });
+
+  it.each([
+    [5, 'lavt'], // < 70 % av dli_min
+    [10, 'akseptabel'], // under min, men innenfor slingring
+    [18, 'optimal'],
+    [28, 'akseptabel'], // over maks, innenfor slingring
+    [40, 'hoyt'], // > 130 % av dli_maks
+  ] as const)('DLI %d → %s', (dli, status) => {
+    expect(vurderPlanteDli([p], dli)[0]!.status).toBe(status);
+  });
+
+  it('planter uten DLI-data blir «optimal» (vi maser ikke i blinde)', () => {
+    expect(vurderPlanteDli([mkPlante({})], 0)[0]!.status).toBe('optimal');
+  });
 });
 
 describe('anbefaltInnstilling — fotoperiode-kompensasjon', () => {
@@ -86,6 +110,16 @@ describe('anbefaltInnstilling — fotoperiode-kompensasjon', () => {
     expect(c.timer).toBeLessThanOrEqual(18);
     // Ærlig: når ikke målet selv ved maks fotoperiode.
     expect(c.dli).toBeLessThan(c.dliMaal);
+  });
+
+  it('kalibrert sterkere PPFD kan gjøre forlengelse unødvendig', () => {
+    const planter = [mkPlante({ navn: 'Basilikum', dli_optimal: 18, timer_optimal: 14 })];
+    // Med antatt 200 µmol må dagen forlenges; med målt 500 µmol holder 14 t.
+    expect(anbefaltInnstilling(planter, 200).forlenget).toBe(true);
+    const sterk = anbefaltInnstilling(planter, 500);
+    expect(sterk.forlenget).toBe(false);
+    expect(sterk.timer).toBe(14);
+    expect(sterk.intensitet).toBeLessThanOrEqual(100);
   });
 
   it('forlenger IKKE når lyset er sterkt nok', () => {

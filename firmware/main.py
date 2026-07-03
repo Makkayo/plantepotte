@@ -99,12 +99,16 @@ lyser = False                         # er lyset pa akkurat na? (timer-styrt, se
 last_cmd_stamp = None
 _last_turn_ms = 0                     # debounce: tidspunkt for siste godkjente vridning
 _last_press_ms = 0                    # debounce for encoder-knappen
+_ramp_f = 1.0                         # gjeldende myk-overgang-faktor (0..1, settes i loopen)
 
 
 def _apply_duty():
     """Oppdater PWM med en gang — kalles bade fra loopen og fra interrupts,
-    sa knappen/vridninger far OYEBLIKKELIG effekt (ikke 5+ sek forsinkelse)."""
-    led.duty(logic.duty_for(intensitet, lyser))
+    sa knappen/vridninger far OYEBLIKKELIG effekt (ikke 5+ sek forsinkelse).
+    Skalerer alltid med gjeldende rampe-faktor: uten den ville en vridning
+    midt i soloppgangen hoppet til full styrke i opptil 5 sek til loopen
+    regnet ut rampa igjen."""
+    led.duty(logic.duty_for(int(intensitet * _ramp_f), lyser))
 
 
 # ── KY-040 via interrupt (mister aldri en vridning) ──
@@ -333,12 +337,11 @@ while True:
     off_min = logic.hhmm_to_min(timer_off)
     lyser = logic.light_should_be_on(now_min, on_min, off_min)
     # Myk overgang: ton lysstyrken opp/ned mot vindus-kantene hvis aktivert
-    # (MYK_OVERGANG_MIN > 0). =0 -> hardt av/pa via _apply_duty() som for.
-    if MYK_OVERGANG_MIN > 0:
-        f = logic.ramp_factor(now_min, on_min, off_min, MYK_OVERGANG_MIN)
-        led.duty(logic.duty_for(int(intensitet * f), lyser))
-    else:
-        _apply_duty()
+    # (MYK_OVERGANG_MIN > 0). =0 -> hardt av/pa (faktor 1.0). Faktoren lagres
+    # globalt sa encoder-interruptet ogsa dimmer riktig midt i en rampe.
+    _ramp_f = (logic.ramp_factor(now_min, on_min, off_min, MYK_OVERGANG_MIN)
+               if MYK_OVERGANG_MIN > 0 else 1.0)
+    _apply_duty()
 
     # 4) Skjerm
     show(temp, hum, s, vann_mm, intensitet, lyser, wifi_ok)

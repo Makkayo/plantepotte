@@ -17,6 +17,15 @@
 
 export type VpdSone = 'fuktig' | 'ideelt' | 'litt-tort' | 'tort' | 'ukjent';
 
+/**
+ * Temperatur-grenser (°C) for varsling. Valgt for det katalogen faktisk dyrker
+ * (urter/bladgrønt innendørs): basilikum tar skade under ~10 °C, og over ~32 °C
+ * stopper fotosyntesen opp / salat går i stokk. Innenfor spennet sier vi ingenting —
+ * romtemperatur trenger ikke kommentar.
+ */
+export const TEMP_KALD_GRENSE = 10;
+export const TEMP_VARM_GRENSE = 32;
+
 export interface Vpd {
   /** VPD i kPa (null hvis temp/RH mangler). */
   kpa: number | null;

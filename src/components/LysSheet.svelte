@@ -10,11 +10,13 @@
     anbefaltInnstilling,
     beregnDli,
     vurderLysKompatibilitet,
+    vurderPlanteDli,
     vurderVannKompatibilitet,
+    ANTATT_PPFD_MAX,
   } from '../lib/lys';
   import { lysVarighetTimer } from '../lib/tid';
   import { lysEnergi } from '../lib/energi';
-  import { strompris, settStrompris } from '../lib/settings';
+  import { strompris, settStrompris, ppfdMaks, settPpfdMaks } from '../lib/settings';
   import { visFeil, visOk } from '../lib/toast';
   import SolBue from './viz/SolBue.svelte';
 
@@ -48,7 +50,7 @@
   });
 
   const beregnetTimer = $derived(Math.round(lysVarighetTimer(timer_on, timer_off) * 10) / 10);
-  const dliEstimat = $derived(beregnDli(intensitet, beregnetTimer));
+  const dliEstimat = $derived(beregnDli(intensitet, beregnetTimer, $ppfdMaks));
   const energi = $derived(lysEnergi(intensitet, beregnetTimer, $strompris));
 
   // Redigerbar strømpris (kr/kWh) — lagres lokalt via settings-store.
@@ -74,7 +76,7 @@
       visFeil('Ugyldig pris — skriv f.eks. 1,50');
     }
   }
-  const anbefalt = $derived(anbefaltInnstilling(planter));
+  const anbefalt = $derived(anbefaltInnstilling(planter, $ppfdMaks));
   const lysRapport = $derived(vurderLysKompatibilitet(planter));
   const vannRapport = $derived(vurderVannKompatibilitet(planter));
   // Slank advarsel kun ved reelt problem (bevart fra gamle LysKontroll).
@@ -84,19 +86,33 @@
       vannRapport.niva !== 'ok',
   );
 
-  const planteHelse = $derived(
-    planter.map((p) => {
-      const dliMin = p.dli_min ?? p.dli_optimal ?? 0;
-      const dliOpt = p.dli_optimal ?? 0;
-      const dliMaks = p.dli_maks ?? p.dli_optimal ?? Infinity;
-      let status: 'optimal' | 'akseptabel' | 'lavt' | 'hoyt' = 'optimal';
-      if (dliEstimat < dliMin * 0.7) status = 'lavt';
-      else if (dliEstimat < dliMin) status = 'akseptabel';
-      else if (dliEstimat > dliMaks * 1.3) status = 'hoyt';
-      else if (dliEstimat > dliMaks) status = 'akseptabel';
-      return { plante: p, status, dliOpt };
-    }),
-  );
+  // Delt vurdering (lib/lys) — samme regler som oversiktens lys-varsel bruker.
+  const planteHelse = $derived(vurderPlanteDli(planter, dliEstimat));
+
+  // Redigerbar PPFD-kalibrering — grunnmuren under ALLE DLI-tall i appen.
+  // Standard 200 er et anslag; mål med PAR-meter/Photone ved bladhøyde på
+  // 100 % og lås verdien her, så regner hele appen på virkeligheten.
+  let redigererPpfd = $state(false);
+  let ppfdUtkast = $state('');
+  let ppfdInput = $state<HTMLInputElement>();
+  function apnePpfdRediger() {
+    ppfdUtkast = String($ppfdMaks);
+    redigererPpfd = true;
+  }
+  $effect(() => {
+    if (redigererPpfd && ppfdInput) {
+      ppfdInput.focus();
+      ppfdInput.select();
+    }
+  });
+  function lagrePpfd() {
+    if (settPpfdMaks(ppfdUtkast)) {
+      visOk('PPFD kalibrert — alle DLI-tall bruker nå målingen din');
+      redigererPpfd = false;
+    } else {
+      visFeil('Ugyldig verdi — skriv µmol/m²/s målt ved 100 %, f.eks. 180');
+    }
+  }
 
   function brukAnbefaling() {
     intensitet = anbefalt.intensitet;
@@ -260,6 +276,49 @@
       {$strompris.toFixed(2).replace('.', ',')} kr/kWh
       <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
     </button>
+  {/if}
+</div>
+
+<!-- PPFD-kalibrering: DLI-tallene er bare så gode som dette tallet. «antatt»
+     til brukeren måler (PAR-meter / Photone-appen) og lagrer sin egen verdi. -->
+<div
+  class="mt-2 flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 font-mono text-[10.5px] text-text-dim"
+  title="PPFD ved 100 % intensitet, målt i bladhøyde. Mål med PAR-meter eller Photone-appen og juster — alle DLI-tall i appen regnes fra denne."
+>
+  <span>☀️ DLI regnes fra</span>
+  {#if redigererPpfd}
+    <span class="inline-flex items-center gap-1.5">
+      <input
+        type="text"
+        inputmode="numeric"
+        bind:this={ppfdInput}
+        bind:value={ppfdUtkast}
+        onkeydown={(e) => {
+          if (e.key === 'Enter') lagrePpfd();
+          if (e.key === 'Escape') redigererPpfd = false;
+        }}
+        class="w-14 px-2 py-1 bg-bg-subtle border border-leaf/40 rounded text-text text-center focus:outline-none focus:ring-2 focus:ring-leaf/20"
+        aria-label="Målt PPFD ved 100 % intensitet (µmol/m²/s)"
+      />
+      <span class="text-text-dim">µmol/m²/s</span>
+      <button
+        class="inline-flex items-center justify-center w-7 h-7 rounded-md bg-leaf/15 text-leaf hover:bg-leaf/25 transition-colors"
+        onclick={lagrePpfd}
+        aria-label="Lagre PPFD"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      </button>
+    </span>
+  {:else}
+    <button
+      class="inline-flex items-center gap-1 px-2 py-1 rounded border border-border text-text-muted hover:text-text hover:border-border-strong transition-colors"
+      onclick={apnePpfdRediger}
+      aria-label="Kalibrer PPFD (målt ved 100 % intensitet)"
+    >
+      {$ppfdMaks} µmol/m²/s ved 100 %
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+    </button>
+    <span>{$ppfdMaks === ANTATT_PPFD_MAX ? '(antatt — mål og kalibrer!)' : '(din måling)'}</span>
   {/if}
 </div>
 

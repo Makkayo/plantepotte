@@ -11,25 +11,28 @@
  *  - DLI ≈ PPFD (µmol/m²/s) × timer × 3600 / 1 000 000
  *    For vår LED-strip antar vi at intensitet 100 % på vanlig avstand
  *    gir omtrent 200 µmol/m²/s ved kanopi (typisk for en 12V phyto-strip).
- *    Dette er en ANTAGELSE — kalibrér med PAR-måler hvis du har en.
+ *    Dette er en ANTAGELSE til den er målt: alle DLI-funksjonene tar derfor
+ *    PPFD som valgfri parameter, og appen sender inn brukerens kalibrerte
+ *    verdi fra settings (`ppfdMaks`) — målt med PAR-meter/Photone, se LysSheet.
  */
 
 import type { LysFamilieId, Plante, VekeEgnet, VannBehov } from './database.types';
 
-/** Antatt PPFD ved 100 % intensitet, ca. 30 cm fra LED-strip. Konservativt anslag. */
+/** Antatt PPFD ved 100 % intensitet, ca. 30 cm fra LED-strip. Konservativt anslag
+ * — brukes som standard til brukeren kalibrerer med en faktisk måling. */
 export const ANTATT_PPFD_MAX = 200;
 
-/** Beregn DLI fra intensitet (%) og timer/dag. */
-export function beregnDli(intensitetProsent: number, timer: number): number {
-  const ppfd = (intensitetProsent / 100) * ANTATT_PPFD_MAX;
+/** Beregn DLI fra intensitet (%) og timer/dag, ved gitt PPFD på full styrke. */
+export function beregnDli(intensitetProsent: number, timer: number, ppfdMax = ANTATT_PPFD_MAX): number {
+  const ppfd = (intensitetProsent / 100) * ppfdMax;
   return (ppfd * timer * 3600) / 1_000_000;
 }
 
 /** Reverse: hvilken intensitet trengs for ønsket DLI ved gitt antall timer. */
-export function intensitetForDli(dli: number, timer: number): number {
+export function intensitetForDli(dli: number, timer: number, ppfdMax = ANTATT_PPFD_MAX): number {
   if (timer <= 0) return 0;
   const ppfd = (dli * 1_000_000) / (timer * 3600);
-  return Math.round((ppfd / ANTATT_PPFD_MAX) * 100);
+  return Math.round((ppfd / ppfdMax) * 100);
 }
 
 /**
@@ -161,15 +164,15 @@ export interface AnbefaltInnstilling {
   forlenget: boolean;
 }
 
-export function anbefaltInnstilling(planter: Plante[]): AnbefaltInnstilling {
+export function anbefaltInnstilling(planter: Plante[], ppfdMax = ANTATT_PPFD_MAX): AnbefaltInnstilling {
   if (planter.length === 0) {
     return {
       intensitet: 70,
       timer: 14,
       timer_on: '07:00',
       timer_off: '21:00',
-      dli: beregnDli(70, 14),
-      dliMaal: beregnDli(70, 14),
+      dli: beregnDli(70, 14, ppfdMax),
+      dliMaal: beregnDli(70, 14, ppfdMax),
       forlenget: false,
     };
   }
@@ -188,7 +191,7 @@ export function anbefaltInnstilling(planter: Plante[]): AnbefaltInnstilling {
   const biologiskTimer = Math.round(timerVerdier.length > 0 ? medianAv(timerVerdier) : 14);
 
   // Hvor mye intensitet trengs for målet på biologisk dagslengde?
-  const noedvendigIntensitet = intensitetForDli(targetDli, biologiskTimer);
+  const noedvendigIntensitet = intensitetForDli(targetDli, biologiskTimer, ppfdMax);
 
   let intensitet: number;
   let timer: number;
@@ -202,7 +205,7 @@ export function anbefaltInnstilling(planter: Plante[]): AnbefaltInnstilling {
     // Lyset rekker ikke opp på vanlig dagslengde → kjør 100 % og FORLENG dagen
     // (eneste DLI-spak igjen) opptil maks fotoperiode for å lukke gapet.
     intensitet = 100;
-    const dliPerTime = beregnDli(100, 1); // DLI tilført per time ved full styrke
+    const dliPerTime = beregnDli(100, 1, ppfdMax); // DLI tilført per time ved full styrke
     const timerForMaal = Math.ceil(targetDli / dliPerTime);
     timer = Math.min(MAKS_FOTOPERIODE, Math.max(biologiskTimer, timerForMaal));
     forlenget = timer > biologiskTimer;
@@ -223,10 +226,43 @@ export function anbefaltInnstilling(planter: Plante[]): AnbefaltInnstilling {
     timer,
     timer_on: fmt(start),
     timer_off: fmt(stopp),
-    dli: beregnDli(intensitet, timer),
+    dli: beregnDli(intensitet, timer, ppfdMax),
     dliMaal: targetDli,
     forlenget,
   };
+}
+
+// ============= PER-PLANTE DLI-HELSE =============
+
+export type PlanteDliNivaa = 'optimal' | 'akseptabel' | 'lavt' | 'hoyt';
+
+export interface PlanteDliStatus {
+  plante: Plante;
+  status: PlanteDliNivaa;
+  dliOpt: number;
+}
+
+/**
+ * Hvor godt en gitt DLI treffer hver plantes dokumenterte behov. ÉN sannhet —
+ * brukes både av lys-arkets «Plantene med denne innstillingen» og av oversiktens
+ * varsel-feed (som flagger 'lavt'/'hoyt' på gjeldende lysplan).
+ *   lavt        < 70 % av dli_min — reelt for lite, planten vil slite
+ *   akseptabel  utenfor [min, maks], men innenfor ±30 % slingring
+ *   hoyt        > 130 % av dli_maks — bortkastet strøm + stress-risiko
+ * Planter uten DLI-data får 'optimal' (vi vet ikke bedre og maser ikke).
+ */
+export function vurderPlanteDli(planter: Plante[], dliEstimat: number): PlanteDliStatus[] {
+  return planter.map((p) => {
+    const dliMin = p.dli_min ?? p.dli_optimal ?? 0;
+    const dliOpt = p.dli_optimal ?? 0;
+    const dliMaks = p.dli_maks ?? p.dli_optimal ?? Infinity;
+    let status: PlanteDliNivaa = 'optimal';
+    if (dliEstimat < dliMin * 0.7) status = 'lavt';
+    else if (dliEstimat < dliMin) status = 'akseptabel';
+    else if (dliEstimat > dliMaks * 1.3) status = 'hoyt';
+    else if (dliEstimat > dliMaks) status = 'akseptabel';
+    return { plante: p, status, dliOpt };
+  });
 }
 
 function medianAv(sorted: number[]): number {
