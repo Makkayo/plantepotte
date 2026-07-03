@@ -80,6 +80,17 @@
     const test = [...eksisterendePlanter, p];
     return vurderLysKompatibilitet(test);
   }
+
+  /**
+   * Vann-konflikt FØR man velger: «lav»-plante i kasse med «høy»-planter (eller
+   * omvendt) er dømt til å mistrives i felles reservoar — det skal synes i
+   * lista, ikke først i lys-arket etterpå. Kun harde konflikter flagges her;
+   * veke-egnethet har alt sin egen badge per plante.
+   */
+  function previewVannKonflikt(p: Plante): boolean {
+    if (eksisterendePlanter.length === 0) return false;
+    return vurderVannKompatibilitet([...eksisterendePlanter, p]).niva === 'inkompatibel';
+  }
 </script>
 
 <svelte:window onkeydown={lukk} />
@@ -174,6 +185,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {#each filtrert as p (p.id)}
             {@const komp = eksisterendePlanter.length > 0 ? previewKompatibilitet(p) : null}
+            {@const vannKonflikt = previewVannKonflikt(p)}
             <button
               class="card-raised p-3 text-left hover:bg-surface-hover hover:border-border-strong transition-colors flex items-start gap-3"
               onclick={() => onValgt(p.id)}
@@ -220,6 +232,11 @@
                     >
                       {komp.niva === 'god' ? '✓' : komp.niva === 'risikabel' ? '⚠' : '✕'}
                       {komp.niva}
+                    </span>
+                  {/if}
+                  {#if vannKonflikt}
+                    <span class="text-[10px] text-rose" title="For ulikt vannbehov for samme veke-reservoar som de eksisterende plantene">
+                      ✕ vannbehov
                     </span>
                   {/if}
                 </div>

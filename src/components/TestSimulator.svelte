@@ -16,24 +16,29 @@
   // Tilbake til fornuftige standardverdier (beholder simulatoren på).
   const nullstill = () => settSim(potteId, { ...SIM_DEFAULT, aktiv: true });
 
-  // Presets som treffer distinkte funksjoner på ett klikk.
+  // Presets som treffer distinkte funksjoner på ett klikk — én per varsel-akse.
   const presets: { navn: string; emoji: string; patch: Partial<SimState> }[] = [
     { navn: 'Frisk & ung', emoji: '🌱', patch: { plantealderDager: 10, vannPct: 85, jordPct: 68, temp: 22, rh: 55, frakoblet: false } },
     { navn: 'Høsteklar', emoji: '🧺', patch: { plantealderDager: 60, jordPct: 62, frakoblet: false } },
     { navn: 'Tørr jord', emoji: '🏜️', patch: { jordPct: 22, frakoblet: false } },
+    { navn: 'Overvåt jord', emoji: '🫧', patch: { jordPct: 93, frakoblet: false } },
     { navn: 'Lavt vann', emoji: '💧', patch: { vannPct: 12, frakoblet: false } },
     { navn: 'Tørr luft', emoji: '🔥', patch: { temp: 26, rh: 28, frakoblet: false } },
+    { navn: 'Fuktig luft', emoji: '💨', patch: { temp: 18, rh: 90, frakoblet: false } },
+    { navn: 'Kaldt', emoji: '🥶', patch: { temp: 5, frakoblet: false } },
     { navn: 'Frakoblet', emoji: '📵', patch: { frakoblet: true } },
   ];
 
   // Slider-oppsett: [label, felt, min, max, enhet, format]
+  // Temp-spennet dekker BEGGE klima-varslene (kaldt <10°, varmt >32°) —
+  // med gammel min=10 var kuldevarselet umulig å forhåndsvise.
   type Rad = { label: string; felt: keyof SimState; min: number; max: number; enhet: string; fmt?: (v: number) => string };
   const rader: Rad[] = [
     { label: 'Plantealder', felt: 'plantealderDager', min: 0, max: 120, enhet: 'd' },
     { label: 'Vannivå', felt: 'vannPct', min: 0, max: 100, enhet: '%' },
     { label: 'Jordfukt', felt: 'jordPct', min: 0, max: 100, enhet: '%' },
-    { label: 'Temperatur', felt: 'temp', min: 10, max: 35, enhet: '°', fmt: (v) => v.toFixed(0) },
-    { label: 'Luftfuktighet', felt: 'rh', min: 20, max: 90, enhet: '%' },
+    { label: 'Temperatur', felt: 'temp', min: 2, max: 38, enhet: '°', fmt: (v) => v.toFixed(0) },
+    { label: 'Luftfuktighet', felt: 'rh', min: 20, max: 95, enhet: '%' },
   ];
 
   const pctAv = (v: number, min: number, max: number) => ((v - min) / (max - min)) * 100;

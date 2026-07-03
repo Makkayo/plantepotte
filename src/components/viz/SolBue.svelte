@@ -21,7 +21,9 @@
     if (r < 0) r += 1440;
     return r;
   });
-  const iVindu = $derived(varighet > 0 && rel <= varighet);
+  // Strengt mindre enn — firmwaren bruker `on <= now < off`, så i selve
+  // av-minuttet er lyset slukket og sola skal ned (samme kant som AnleggPanel).
+  const iVindu = $derived(varighet > 0 && rel < varighet);
   const sunFrac = $derived(iVindu ? rel / varighet : 0);
   const angle = $derived((1 - sunFrac) * Math.PI);
   const sunX = $derived((128 + 96 * Math.cos(angle)).toFixed(1));
