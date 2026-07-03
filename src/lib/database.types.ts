@@ -111,7 +111,6 @@ export interface PotteCommand {
   intensitet: number;
   timer_on: string;
   timer_off: string;
-  plantetype: string | null;
   updated_at: string | null;
   owner_id: string | null;
 }

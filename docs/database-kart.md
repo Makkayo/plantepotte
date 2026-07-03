@@ -47,12 +47,12 @@ som et dokumentert valg i stedet for glemt RLS. **TODO for Matplanlegger:**
 policyene tyder på at appen skriver anonymt (uten innlogging); når/hvis den
 får innlogging, stram på samme måte som plantepotte.
 
-### 🪦 Utgått
+### 🪦 Utgått — SLETTET 3. juli 2026
 
 | Objekt | Status |
 |---|---|
-| `planteprofiler` (5 rader) | Plantepotte **v1** — erstattet av `lys_familier` + `planter`. Kun den arkiverte v1-appen (`docs/legacy/index-v1.html`) leser den. **Kan slettes** — innholdet (5 profiler: Urter/Kaktus/Grønnsaker/Blomstrende/Tropisk) er trivielt å gjenskape. |
-| `potte_commands.plantetype` (kolonne) | v1-rest, ubrukt av dagens app/firmware. Kan droppes ved neste anledning. |
+| `planteprofiler` | ✅ Slettet (var Plantepotte v1, erstattet av `lys_familier` + `planter`; kun den arkiverte v1-appen leste den). Merk: `docs/legacy/index-v1.html` vil ikke lenger vise profiler — forventet, den er et arkiv. |
+| `potte_commands.plantetype` (kolonne) | ✅ Droppet (v1-rest, ubrukt av app og firmware). |
 
 ## Regler for alt nytt i prosjektet
 
@@ -80,4 +80,4 @@ får innlogging, stram på samme måte som plantepotte.
   (Auth → Settings) — sjekker passord mot HaveIBeenPwned ved innlogging/registrering.
 - Gratis-prosjekter **pauses etter ~7 dager uten aktivitet**: Plantepottas
   ESP32 (poll hvert 5. sek) holder prosjektet våkent; faller riggen ut i
-  ukesvis, våkner prosjektet med et klikk i dashbordet.
+  ukesvis, våkner prosjektet med et klikk i dashbordet. (MørkeZ har egen puls.)

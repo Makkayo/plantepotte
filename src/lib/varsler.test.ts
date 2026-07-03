@@ -55,7 +55,6 @@ function mkCommand(o: Partial<PotteCommand> = {}): PotteCommand {
     intensitet: 70,
     timer_on: '07:00',
     timer_off: '21:00',
-    plantetype: null,
     updated_at: null,
     owner_id: null,
     ...o,
