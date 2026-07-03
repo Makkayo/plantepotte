@@ -3,6 +3,18 @@
 *Retningsvalg 3. juli 2026: Plantepotte skilles fra Matplanlegger-prosjektet og
 får sin egen Supabase. Sammenslåing («egen fase senere» i README) er skrinlagt.*
 
+> **STATUS: PARKERT (3. juli 2026).** Forsøkt i praksis: gratis-grensen på
+> 2 aktive prosjekter er **per bruker på tvers av organisasjoner**, ikke per
+> organisasjon — en ny gratis org («Plantepotte») ble opprettet, men
+> prosjektopprettelse ble blokkert («members who have exceeded their free
+> project limits»). Kontoen har alt MørkeZ + Matplanlegger/Plantepotte.
+> Utskilling krever dermed Pro (~25 USD/mnd) eller at et eksisterende prosjekt
+> slettes/pauses — ingen av delene verdt det nå. **Sikkerhetsargumentet er
+> uansett løst**: RLS-strammingen (se `sql/2026-07-03-rls-stramming.sql`) er
+> kjørt i det delte prosjektet, så deling er trygt. Planen under beholdes i
+> tilfelle situasjonen endrer seg (Pro, ledig plass, eller Supabase endrer
+> kvotene). Den tomme «Plantepotte»-organisasjonen kan slettes eller stå.
+
 ## Hvorfor
 
 - **Egen blast-radius.** I dag deler de prosjekt: en for løs policy hos den ene
@@ -11,8 +23,9 @@ får sin egen Supabase. Sammenslåing («egen fase senere» i README) er skrinla
   Matplanleggers skriveflyt hver gang.
 - **Frihet til å rydde.** Egen database kan resettes/migreres uten frykt for å
   treffe matdata. Sensor-historikk kan få egen retention uten kompromisser.
-- **Gratis-tier holder.** Supabase free tier gir 2 aktive prosjekter — akkurat
-  nok til Matplanlegger + Plantepotte.
+- ~~**Gratis-tier holder.**~~ **Avkreftet i praksis** (se status øverst):
+  grensen på 2 aktive gratis-prosjekter gjelder per bruker på tvers av alle
+  organisasjoner, og begge plassene er brukt (MørkeZ + Matplanlegger/Plantepotte).
 
 ## Hva som flytter
 
