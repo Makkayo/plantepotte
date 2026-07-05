@@ -8,7 +8,7 @@ Holder styr på hva som er **bestilt → ankommet → testet** på breadboard.
 - ✅ Testet og funker
 - ⚠️ Ankommet, men problem (se notat)
 
-*Sist oppdatert: 2026-06-26 — stor leveranse: Bestilling 5 + 6 nesten komplett ankommet (mangler kun presisjonsskrutrekker + standoffs)*
+*Sist oppdatert: 2026-07-05 — RETTELSE: standoffs ble aldri bestilt (verifisert mot ordrehistorikk) → bestilt nå 5. juli. B5 + B6 er dermed komplett mottatt.*
 
 ---
 
@@ -93,21 +93,20 @@ Samlet etter kveldens testing. AliExpress-søkeord i parentes.
 | 📦 | Perfboard double-sided 7×9cm | 5-pk | **Kom 26. juni** — blå, dobbeltsidig. Semi-permanent bygg (hovedkort) |
 | 📦 | Perfboard double-sided 5×7cm | 10-pk | **Kom 26. juni** — blå, dobbeltsidig. Lodde-øving + små kort |
 | 📦 | Pinnerader 2,54mm (male+female) | 5 sett | **Kom 26. juni** — 1×40-pin, hann+hunn. Hunn-headers på perfboard |
-| ⬜ | 6-i-1 elektrisk presisjonsskrutrekker | ×1 | **IKKE i 26. juni-leveransen** — N20, USB-C-ladbar, magnetiske bits. Venter fortsatt |
 
 ## Bestilling 6 — montering & kabling (~€23, bestilt 11. juni)
 
 | Status | Del | Antall | Notat |
 |:------:|-----|:------:|-------|
 | 📦 | Heat-set insert + skrue-sett (M2/M2.5/M3/M4 messing, 1050 stk) | ×1 | **Kom 26. juni** — messing «twill knurled», hot-melt insert + skruer. Smeltes inn i PETG |
-| ⬜ | PCB-distansebolter / standoffs (Rafford messing, M2–M6, 14 stk) | ×1 | **IKKE i 26. juni-leveransen** — venter fortsatt |
+| ❌ | PCB-distansebolter / standoffs (Rafford messing, M2–M6, 14 stk) | ×0 | **FEILFØRING** — denne «ordren» var i virkeligheten heat-set-tuppene (Rafford, M2–M6, 14 stk, €3 — se «Uventet»-seksjonen). Ekte standoffs ble aldri bestilt; **bestilt nå 5. juli 2026** (M3 250-stk boks) |
 | 📦 | Kabelspiral-wrap (svart, fleksibel) | ×1 | **Kom 26. juni** — 8mm Ø, 5m, svart spiral. Kabelbeskyttelse |
 
 ## Uventet / ekstra i 26. juni-leveransen
 
 | Status | Del | Antall | Notat |
 |:------:|-----|:------:|-------|
-| 📦 | Heat-set insert-tipper (loddebolt) | 4 | **Kom 26. juni** — skru-på-tipper M2–M6 til loddebolt, for å smelte heat-set inserts inn (supplement til «heat insert tool» du har fra før). Sto ikke på opprinnelig B5/B6-liste |
+| ✅ | Heat-set insert-tipper (loddebolt) | 14 | **Kom 26. juni** — Rafford skru-på-tipper M2–M6, **14 stk** (€3), for å smelte heat-set inserts inn. **Dette er varen B6 feilførte som «PCB standoffs»** (samme merke/spec/pris) — ikke en egen 4-stk bonus |
 
 ## Kjøp lokalt
 

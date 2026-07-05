@@ -7,7 +7,7 @@
 
 **Status-koder:** ✅ på lager · 📦 ankommet (ikke testet) · ⬜ bestilt, ikke ankommet · 🔧 i bruk · 🔋 reserve
 
-*Sist oppdatert: 2026-06-26 — Bestilling 5 + 6 ankommet (nesten komplett)*
+*Sist oppdatert: 2026-07-05 — RETTELSE: standoffs var «spøkelses-vare» (aldri bestilt, verifisert mot ordrehistorikk) → bestilt nå. B5+B6 komplett mottatt.*
 
 ---
 
@@ -77,8 +77,7 @@
 | Silikon-loddematte S160 | 1 | 📦 | |
 | Flux-penn (No Clean) | 1 | 📦 | **Ankommet 26. juni** (B5) — Low Solid/No Clean |
 | Wire stripper Pro (3-i-1) | 1 | 📦 | |
-| 6-i-1 presisjonsskrutrekker | 1 | ⬜ | **Ikke i 26. juni-leveransen** — venter fortsatt (B5) |
-| Heat-set insert-tipper (loddebolt) | 4 | 📦 | **Ankommet 26. juni** — skru-på-tipper M2–M6 for å smelte inserts inn med loddebolt (supplement til heat insert tool). Sto ikke på B5/B6-lista |
+| Heat-set insert-tipper (loddebolt) | 14 | ✅ | **Ankommet** — Rafford skru-på-tipper M2–M6, **14 stk** (€3), for å smelte inserts inn. NB: dette er egentlig varen B6 feilførte som «PCB standoffs» (samme merke/spec/pris) — ikke en 4-stk bonus |
 
 ## 🧵 Forbruksvarer (~igjen-anslag)
 
@@ -113,7 +112,7 @@
 | Del | Totalt | Status | Notat |
 |-----|:------:|:------:|-------|
 | Heat-set insert + skrue-sett (M2–M4) | 1050 | 📦 | **Ankommet 26. juni** (B6) — messing, hot-melt |
-| PCB standoffs (M2–M6) | 14 | ⬜ | **Ikke i 26. juni-leveransen** — venter fortsatt (B6) |
+| PCB standoffs (hex, messing) | bestilles | ⬜ | Den gamle «Rafford M2–M6, 14 stk»-oppføringen var **FEIL** — det var heat-set-tuppene (se Loddeutstyr). Ekte standoffs ble aldri bestilt. **Bestilt nå 5. juli 2026** (M3 250-stk assortment-boks, AliExpress — bolter/skruer/muttere/skiver) |
 | Perfboard 7×9cm | 5 | 📦 | **Ankommet 26. juni** (B5) — blå, dobbeltsidig. Semi-permanent bygg |
 | Perfboard 5×7cm | 10 | 📦 | **Ankommet 26. juni** (B5) — blå, dobbeltsidig. Lodde-øving |
 | M4 messinginnsatser + skruer | — | ✅ | Hadde fra før |
@@ -128,9 +127,10 @@
 
 ---
 
-## ⬜ Mangler fortsatt i posten
+## Rettelse 5. juli 2026 — «spøkelses-vare» (standoffs)
 
-Stor leveranse 26. juni tok unna nesten hele B5 + B6. Kun to deler gjenstår:
+Verifisert mot ordrehistorikken på AliExpress: **standoffs ble aldri bestilt.** Notatet sa «ventet i posten», men de finnes ikke i noen ordre.
 
-- **B5:** 6-i-1 presisjonsskrutrekker
-- **B6:** PCB-distansebolter / standoffs (M2–M6, 14 stk)
+- **PCB standoffs:** aldri kjøpt. B6-oppføringen «Rafford M2–M6, 14 stk, €3» var i virkeligheten **heat-set-tuppene** (samme merke/spec/pris). Ekte standoffs **bestilt nå 5. juli** (M3 250-stk boks)
+
+→ Ingenting gjenstår faktisk «i posten» fra B5/B6; begge bestillingene er komplett mottatt.
