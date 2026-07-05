@@ -44,7 +44,7 @@ Holder styr på hva som er **bestilt → ankommet → testet** på breadboard.
 | 📦 | Lever-connectors (Wago-klone) 50stk | ×1 | Kom 9. juni — «PCT-211: 50PCS», 1-to-1 inline |
 | 📦 | Wire stripper "Pro" 3-i-1 | ×1 | Kom 9. juni — strip/cut/crimp 22-10 AWG |
 | 📦 | Heat shrink kit 580stk | ×1 | Kom 6. juni |
-| 📦 | DC inline switch | ×2 | Kom 9. juni — 2 stk vippebryter m/barrel-jack, CE/UKCA/UL |
+| ✅ | DC inline switch | ×2 | Kom 9. juni — 2 stk vippebryter m/barrel-jack, CE/UKCA/UL. **Spec verifisert 5. juli (MJJC-DC5521-304): merket 5V/12V/24V, 5A, LVD/CE** → gjenbrukes direkte i 24V-oppsettet (B7), ingen ny bryter trengs |
 | 📦 | Glass fuse holder BLX-A | ×1 | Kom 6. juni — holder(e) + glass F3AL250V (rask, patron 5×20). F3A passer holder MEN er rask → reserve |
 | 📦 | Slow-blow sikring 3A | ×1 | Kom 6. juni — keramisk T3AL250V (treg) ✅ DENNE brukes. Leaded/aksial (tråd-bein) → passer IKKE holder; kobles inline med Wago. Vurder å kjøpe 5×20 T3A patron til holder senere |
 | 📦 | 3M dobbeltsidig tape | ×1 | Kom 6. juni |

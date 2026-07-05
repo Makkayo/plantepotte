@@ -2082,7 +2082,7 @@
   <!-- ── B: Systemdiagram ── -->
   <section>
     <div class="section-title"><span class="icon">🗺️</span> Hele systemet i ett blikk</div>
-    <p class="section-intro">Hvert fargede område er en komponent. Hvert farget segment er en ledning. Klikk en kabeltype i fargenøkkelen for å fremheve kun den typen, eller hold pekeren over en boks for mer info om komponenten.</p>
+    <p class="section-intro">Hvert fargede område er en komponent. Hvert farget segment er en ledning. Klikk en kabeltype i fargenøkkelen for å fremheve kun den typen, eller hold pekeren over en boks for mer info om komponenten. <strong style="color:var(--yellow);">NB: diagrammet viser Lysvariant A (12V-stripa) — det du bygger NÅ.</strong> Hva som byttes når 24V-barene (Bestilling 7) kommer, står i egen boks under «Strømtreet» lenger ned.</p>
 
     <div class="legend" id="legend">
       <span class="legend-item" data-wire="w-12v">
@@ -2528,7 +2528,7 @@
 
   <!-- ── D: Strømtre ── -->
   <section>
-    <div class="section-title"><span class="icon">⚡</span> Strømtreet — fra vegg til chip</div>
+    <div class="section-title"><span class="icon">⚡</span> Strømtreet — fra vegg til chip <span style="font-size:0.75em; color:var(--yellow); font-weight:600;">(Lysvariant A — 12V, bygges nå)</span></div>
     <p class="section-intro">All strøm starter på 230V veggadapteren. Den splittes i to: 12V til LED-stripen, og 5V (via buck converter) til ESP32 og vannsensorene. ESP32 produserer selv 3.3V til alle de små sensorene.</p>
 
     <div class="power-tree">
@@ -2593,6 +2593,51 @@
       </div>
       <div style="margin-top:1.2rem; padding-top:1.2rem; border-top:1px solid var(--border); color:var(--muted); font-size:0.85rem;">
         <strong style="color:var(--text);">⏚ GND-skinne:</strong> Alt som har strøm må også ha GND tilbake til samme punkt. Adapter, buck, MOSFET, ESP32 og hver eneste sensor — alle GND-kabler inn på <strong>én felles rad</strong> på breadboardet.
+      </div>
+    </div>
+  </section>
+
+  <!-- ── D2: Lysvariant B — 24V (etter Bestilling 7) ── -->
+  <section>
+    <div class="section-title"><span class="icon">💡</span> Lysvariant B — 24V Samsung-barer <span style="font-size:0.75em; color:var(--blue); font-weight:600;">(Bestilling 7 — kobles når barene kommer)</span></div>
+    <p class="section-intro">Samme system, ny lys-motor. <strong>Bygg og kjør variant A (12V) først</strong> — alt av sensorer, ESP32, GPIO-pinner og logikk er HELT likt i begge variantene. Når 24V-delene ankommer byttes bare strøm-kjeden under, og i web-appen trykker du «24V-barer» i lys-arket (velgeren finnes allerede). Firmware trenger ingen endring — fortsatt PWM på GPIO26.</p>
+
+    <div class="power-tree">
+      <div class="tree-row">
+        <span class="tree-node" style="background:#3b0e0e; color:#fca5a5; border-color:#7f1d1d;">🔌 230V AC vegguttak</span>
+        <span class="tree-arrow">→</span>
+        <span class="tree-node" style="background:#1e3a5f; color:#93c5fd; border-color:#1d4ed8;" title="NY (B7): 24V 5A adapter, 5,5×2,1mm plugg — samme plugg-standard som 12V-kjeden, så switch/pigtails passer.">⚡ Adapter 24V 5A <strong>NY</strong></span>
+        <span class="tree-arrow">→</span>
+        <span class="tree-node" style="background:#1a1208; color:#fbbf24; border-color:#92400e;" title="SAMME bryter som i dag — spec verifisert 5. juli: merket 5V/12V/24V, 5A. Beholdes.">🔘 DC inline switch <em>(beholdes ✓ 24V-rated)</em></span>
+        <span class="tree-arrow">→</span>
+        <span class="tree-node" style="background:#1a1208; color:#fbbf24; border-color:#92400e;" title="Samme trege sikring: 3A holder for 1 potte på 24V (lys 2,1A + elektronikk). 5A-glassene ligger klare for 2 potter.">⚡ Slow-blow fuse 3A <em>(beholdes)</em></span>
+        <span class="tree-arrow">→</span>
+        <span class="tree-node" style="background:#1e3a5f; color:#93c5fd; border-color:#1d4ed8;">24V DC fordeling</span>
+      </div>
+      <div class="tree-row tree-indent-1">
+        <span style="color:var(--dim);">├──</span>
+        <span class="tree-node" style="background:#1e3a5f; color:#93c5fd; border-color:#1d4ed8;" title="NY (B7): FR120N-modul (100V) erstatter LR7843 (30V — for tett på 24V). Samme opto-isolerte byggesett-type, samme kobling: VIN/GND inn, SIG fra GPIO26, OUT til lys.">24V → FR120N MOSFET <strong>NY</strong></span>
+        <span class="tree-arrow">→</span>
+        <span class="tree-node" style="background:#2e1065; color:#c4b5fd; border-color:#5b21b6;">PWM GPIO26 (uendret)</span>
+        <span class="tree-arrow">→</span>
+        <span class="tree-node" style="background:#1e3a5f; color:#93c5fd; border-color:#1d4ed8;" title="NY (B7): 2× Samsung LM281B+ 24V 25W alu-barer (500mm). Konstant-spenning — plugges rett på 24V, ingen driver. Monteres på M3-standoffs m/luftspalte (termisk!).">💡 2× LM281B-barer 50W <strong>NY</strong></span>
+      </div>
+      <div class="tree-row tree-indent-1">
+        <span style="color:var(--dim);">└──</span>
+        <span class="tree-node" style="background:#1e3a5f; color:#93c5fd; border-color:#1d4ed8;" title="NY (B7): 24V→5V buck 5A (WAVGAT) erstatter den gamle faste 5V-bucken (som er 12V-inn og IKKE tåler 24V). Verifiser ~5V med multimeter FØR ESP32 kobles til!">24V → NY buck 24V→5V <strong>NY</strong></span>
+        <span class="tree-arrow">→</span>
+        <span class="tree-node" style="background:#14532d; color:#86efac; border-color:#15803d;">5V → ESP32 + ESP32-CAM (uendret)</span>
+      </div>
+      <div class="tree-row tree-indent-2">
+        <span style="color:var(--dim);">└──</span>
+        <span class="tree-node" style="background:#1e1b4b; color:#a78bfa; border-color:#5b21b6;">ESP32 3.3V → alle sensorer — ALT uendret fra variant A</span>
+      </div>
+
+      <div style="margin-top:1.2rem; padding-top:1.2rem; border-top:1px solid var(--border); color:var(--muted); font-size:0.85rem; line-height:1.7;">
+        <strong style="color:var(--text);">Byttes (3 ting):</strong> adapter 12V→24V · LR7843→FR120N · gammel buck→ny 24V→5V buck. LED-stripa pensjoneres.<br>
+        <strong style="color:var(--text);">Beholdes:</strong> inline-bryter (✓ 24V/5A-rated), treg sikring, barrel-pigtails (5,5×2,1mm overalt), all kabling 20 AWG (24V = 2,1A — <em>mindre</em> strøm enn 12V-oppsettet), ESP32, alle sensorer, all GPIO, felles GND-prinsippet.<br>
+        <strong style="color:var(--yellow);">⚠️ Ved bytte:</strong> (1) mål PPFD med Photone innen Buyer Protection; (2) verifiser ~5V ut av ny buck FØR ESP32; (3) barene på standoffs m/luftspalte + ventilasjon (blir 50–70 °C); (4) kjenn etter at rød-kanal evt. har egen inngang; (5) trykk «24V-barer» i appens lys-ark og legg inn målt PPFD.<br>
+        <strong style="color:var(--dim);">Gammelt 12V-utstyr</strong> (5A-adapter, fast-buck, LR7843, stripa) → lek-/reservelager.
       </div>
     </div>
   </section>
