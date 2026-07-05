@@ -12,11 +12,21 @@
     vurderLysKompatibilitet,
     vurderPlanteDli,
     vurderVannKompatibilitet,
-    ANTATT_PPFD_MAX,
   } from '../lib/lys';
   import { lysVarighetTimer } from '../lib/tid';
   import { lysEnergi } from '../lib/energi';
-  import { strompris, settStrompris, ppfdMaks, settPpfdMaks } from '../lib/settings';
+  import {
+    strompris,
+    settStrompris,
+    ppfdMaks,
+    settPpfdMaks,
+    lysVariant,
+    settLysVariant,
+    lysWatt,
+    ppfdStandard,
+    LYS_VARIANTER,
+    type LysVariant,
+  } from '../lib/settings';
   import { visFeil, visOk } from '../lib/toast';
   import SolBue from './viz/SolBue.svelte';
 
@@ -51,7 +61,14 @@
 
   const beregnetTimer = $derived(Math.round(lysVarighetTimer(timer_on, timer_off) * 10) / 10);
   const dliEstimat = $derived(beregnDli(intensitet, beregnetTimer, $ppfdMaks));
-  const energi = $derived(lysEnergi(intensitet, beregnetTimer, $strompris));
+  const energi = $derived(lysEnergi(intensitet, beregnetTimer, $strompris, $lysWatt));
+
+  // Lysvariant-bytte: watt + PPFD-kalibrering følger valget (lagres lokalt).
+  function velgVariant(v: LysVariant) {
+    if (v === $lysVariant) return;
+    settLysVariant(v);
+    visOk(`Lys satt til ${LYS_VARIANTER[v].navn} — husk å måle og kalibrere PPFD`);
+  }
 
   // Redigerbar strømpris (kr/kWh) — lagres lokalt via settings-store.
   let redigererPris = $state(false);
@@ -240,10 +257,29 @@
   </div>
 </div>
 
-<!-- Strømoverslag, grunnet i målt LED-effekt (0,94 A × 12 V). Ærlig estimat.
+<!-- Lysvariant: hvilken maskinvare som henger over potta akkurat nå. Riggen
+     bygges først med 12V-stripa og byttes til 24V-barene når de kommer —
+     watt (strømoverslag) og PPFD-kalibrering følger valget automatisk. -->
+<div class="mt-3.5 flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 font-mono text-[10.5px] text-text-dim">
+  <span>💡 Montert lys:</span>
+  {#each Object.keys(LYS_VARIANTER) as id (id)}
+    <button
+      class="px-2 py-1 rounded border transition-colors {$lysVariant === id
+        ? 'border-leaf/50 bg-leaf/[0.12] text-leaf-glow font-semibold'
+        : 'border-border text-text-muted hover:text-text hover:border-border-strong'}"
+      onclick={() => velgVariant(id as LysVariant)}
+      aria-pressed={$lysVariant === id}
+      aria-label="Bruk {LYS_VARIANTER[id as LysVariant].navn}"
+    >
+      {LYS_VARIANTER[id as LysVariant].kortNavn}
+    </button>
+  {/each}
+</div>
+
+<!-- Strømoverslag, grunnet i watt for aktiv lysvariant. Ærlig estimat.
      Prisen er redigerbar (lagres lokalt) fordi norsk spot + nettleie svinger. -->
-<div class="mt-3 flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 font-mono text-[10.5px] text-text-dim">
-  <span>⚡ ≈ {energi.kwhPerManed.toFixed(1).replace('.', ',')} kWh/mnd · ~{energi.krPerManed} kr/mnd</span>
+<div class="mt-2 flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 font-mono text-[10.5px] text-text-dim">
+  <span>⚡ {$lysWatt} W · ≈ {energi.kwhPerManed.toFixed(1).replace('.', ',')} kWh/mnd · ~{energi.krPerManed} kr/mnd</span>
   {#if redigererPris}
     <span class="inline-flex items-center gap-1.5">
       <input
@@ -318,7 +354,7 @@
       {$ppfdMaks} µmol/m²/s ved 100 %
       <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
     </button>
-    <span>{$ppfdMaks === ANTATT_PPFD_MAX ? '(antatt — mål og kalibrer!)' : '(din måling)'}</span>
+    <span>{$ppfdMaks === $ppfdStandard ? '(antatt — mål og kalibrer!)' : '(din måling)'}</span>
   {/if}
 </div>
 

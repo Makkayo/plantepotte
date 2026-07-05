@@ -11,7 +11,11 @@
  * strømprisen svinger), men gir en god følelse av «hva koster lyset i måneden».
  */
 
-/** Målt LED-effekt per potte ved 100 % intensitet (0,94 A × 12 V). */
+/**
+ * Målt LED-effekt ved 100 % for det OPPRINNELIGE oppsettet (3×40 cm strip,
+ * 0,94 A × 12 V). Beholdes som standard-parameter; appen sender inn watt for
+ * aktiv lysvariant fra settings (12V-strip doblet = 22,6 W, 24V-barer = 50 W).
+ */
 export const LED_WATT_100 = 11.3;
 
 /** Grov standard strømpris inkl. nettleie (kr/kWh). Juster — norsk spot svinger. */
@@ -31,15 +35,17 @@ export interface LysEnergi {
  * @param intensitetProsent 0–100 (klampes)
  * @param timerPerDag       lengden på lys-vinduet (timer)
  * @param prisKrKwh         strømpris (kr/kWh), standard STROMPRIS_KR_KWH
+ * @param wattVed100        LED-effekt (W) ved 100 % — fra aktiv lysvariant
  */
 export function lysEnergi(
   intensitetProsent: number,
   timerPerDag: number,
   prisKrKwh: number = STROMPRIS_KR_KWH,
+  wattVed100: number = LED_WATT_100,
 ): LysEnergi {
   const i = Math.max(0, Math.min(100, intensitetProsent)) / 100;
   const timer = Math.max(0, timerPerDag);
-  const wattSnitt = LED_WATT_100 * i;
+  const wattSnitt = Math.max(0, wattVed100) * i;
   const kwhPerDag = (wattSnitt * timer) / 1000;
   const kwhPerManed = kwhPerDag * 30;
   return {

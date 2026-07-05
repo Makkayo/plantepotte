@@ -23,15 +23,15 @@ Bytt fra svak magenta 12V phyto-strip → **hvite 24V Samsung LM281B-barer.**
 
 **Valgt lys:** 2× **DC24V 25W Samsung LM281B+ 500 mm stive alu-barer** (50 W totalt; 3000K+5000K hvit + 660nm rød + IR/UV).
 
-**Handlekurv (AliExpress, ~502 kr m/frakt):**
-| Del | Pris | Merknad |
-|-----|------|---------|
-| 2× Samsung 24V-barer 50W (KQO) | 141,69 kr | Selve lyset |
-| 24V 5A adapter EU (SuperMall) | 147,15 kr | Plugg **5,5×2,1 mm bekreftet** (matcher eksisterende) |
-| FR120N MOSFET 100V (TZT) | 4,05 kr | Bryter (bytter LR7843 30V) |
-| 24V→5V buck 2-pk (WAVGAT) | 16,31 kr | Ny 5V-kilde (gammel buck er 12V-inn) |
-| M3 standoff-boks 250-stk (Hundred Years) | 74,20 kr | Bar-montering + perfboard |
-| *(+ 1× ESP32 32D Type-C KIT A, Choice/gratis frakt)* | 69,15 kr | Lek/reserve, ikke potte-hjerne |
+**Handlekurv (AliExpress — endelig, verifisert mot skjermbilde 5. juli: subtotal 481,01 + frakt 90,13 = 571,14 kr):**
+| Del | Antall | Pris | Merknad |
+|-----|:---:|------|---------|
+| Samsung 24V-barer 50W 2-pk (KQO) | 1 | 141,69 kr | Selve lyset (2 barer i pakken) |
+| 24V 5A adapter EU (SuperMall) | 1 | 147,15 kr | Plugg **5,5×2,1 mm bekreftet** (matcher eksisterende) |
+| FR120N MOSFET 100V 9.4A (TZT) | **4** | 4,05 kr/stk | Bryter (bytter LR7843 30V) — 4 stk = potte 1 + potte 2 + 2 reserve/lek |
+| 24V/12V→5V **5A** buck 25W (WAVGAT) | **2** | 16,31 kr/stk | Ny 5V-kilde (gammel buck er 12V-inn). 5A ut = rikelig over 1,5A-kravet ✓ |
+| M3 standoff-boks 250-stk (Hundred Years) | 1 | 74,20 kr | Bar-montering + perfboard |
+| ESP32 32D Type-C KIT A (Choice) | 1 | 69,15 kr | Lek/reserve, ikke potte-hjerne |
 
 Alt annet til montering **eies** (silikonledning 20 AWG, Wago, 3A/5A slow-blow-sikring + BLX-A-holder, barrel-pigtail, inline-switch, heat shrink, heat-set inserts + M3-skruer). ⚠️ **Ikke betalt** — Markus sjekker ut selv.
 
@@ -74,6 +74,25 @@ Alt annet til montering **eies** (silikonledning 20 AWG, Wago, 3A/5A slow-blow-s
 1. **Senk lysbjelken** mot plantene (stolpene er høydejusterbare, Wago tar slacken).
 2. **Hvite/reflekterende innervegger** (print PETG hvitt, eller mylar-folie — ~90–95 % refleksjon vs ~80 % hvit PETG). *Utsatt av Markus til han ser om det trengs.*
 3. **Bruk plantene som måler:** strekker seg/bleke = mer lys; kompakte/stive = nok. Følg de første 1–2 ukene.
+
+---
+
+## 8. Fable-gjennomgang 5. juli — svar på de åpne spørsmålene
+
+**Hovedkonklusjon: KJØP KURVEN som den står.** Ingen av de 8 spørsmålene endret beslutningen. Detaljer:
+
+1. **Reell ytelse billige LM281B-barer:** Bildet fra uavhengige kilder er todelt — kvalitets-armaturer med ekte LM281B måler godt (2,7–2,9 µmol/J, og en Apogee MQ-500-måling av et LM281B-panel viste 387–482 PPFD), MEN billige AliExpress/Amazon-kloner bruker ofte lavere bins (~150 lm/W → reelt ~1,4–2,0 µmol/J). **1,8 som planleggingstall er riktig konservativt.** Selv i verste fall (~1,4) gir 2 barer ~150–190 PPFD reelt = 5–6× dagens ~30 og nok til bladvekster. Nedsiden er bundet; Photone-måling innen Buyer Protection står som mitigering.
+2. **1 eller 2 barer? → 2 (bekreftet med regnestykke).** Footprint 0,45×0,535 m = 0,24 m². 2 barer @1,8 = 90 µmol/s → ~225–260 PPFD reelt (60–70 % treffer flaten uten reflekterende vegger) = midt i salat-optimum 250–350. **1 bar = ~110–130 PPFD** — funker, men under optimum, og gir NULL margin hvis barene reelt leverer lavere bin. 2 barer er samtidig sikringen mot spec-inflasjon. Prisdifferansen (~70 kr) er ikke verdt risikoen.
+3. **Plassering:** barene langs 535mm-retningen, ca. ¼ og ¾ inn på 450mm-bredden (~112 mm fra hver kant, ~225 mm mellomrom) → jevnest dekning. Hengehøyde 10–15 cm over kanopiet; med metning ~600 PPFD er svi-risiko null selv på 10 cm.
+4. **Spektrum:** 3000K+5000K hvit + 660nm er riktig — blåandelen i det hvite hindrer strekking, rød løfter yield. 2×IR + 2×UV er neglisjerbart (langt under 20 µmol far-red-grensen). Ikke bytt.
+5. **Alternativer:** DC-kravet (ESP32/MOSFET-PWM) eliminerer nesten alt forbrukermarkedet — Barrina/Monios T5 og quantum boards er 230V. Eneste ferdige 24V DC-alternativ funnet er Procyon 2.0 (24W, 2,5 µmol/J) til ~10× prisen. **LM281B-barene ER sweet-spot'en i DC-lavvolt-klassen.**
+6. **Counterfeit:** kan ikke verifiseres fra listing — selger-anmeldelser + Photone-måling (hvitt lys = ±20–30 PAR nøyaktig) innen Buyer Protection er riktig og eneste realistiske mitigering. Allerede planlagt.
+7. **Termisk — eneste reelle aksjonpunkt:** 25 W per slank 500mm-profil uten finner blir varm (anslagsvis 50–70 °C i fri luft); PETG mykner ~80 °C. **Fase 3-krav til topp-designet:** (a) barene på 8–10 mm standoffs (luftspalte bak — standoffs er i kurven), (b) ventilasjonsåpninger i toppen over/rundt barene (hex-mønsteret finnes alt som formspråk), (c) ikke PETG i direkte kontakt med bar-baksiden, (d) kjenn/mål temperatur etter 1 t drift første gang.
+8. **Fotoperiode/energi:** med reelt ~200–250 PPFD → DLI-mål 14–17 nås på **14–16 t ved 100 %** — 18-timers-kompensasjonen trengs ikke lenger. Energi: 50 W × 15 t ≈ 0,75 kWh/dag ≈ ~25–30 kr/mnd (mot ~5–6 kr for gamle stripa) — synlig, men greit. Husk: (a) legg målt PPFD inn i appen (lys-arket), (b) `energi.ts` bruker målt 12V-effekt — oppdater etter byttet.
+
+**Kurv-notater (uendret fra forrige gjennomgang):** standoff-boksen (74 kr) er fortsatt svakeste verdi-linje men OK som lager; buck-en må sjekkes for ≥1,5 A ved mottak; sjekk om barene har separat rød-inngang + medfølgende ledninger.
+
+**Ekstra kilder (Fable-runden):** [THCFarmer LM281B-måling (Apogee MQ-500)](https://www.thcfarmer.com/threads/samsung-lm281b-vs-samsung-301b.128438/) · [Trimleaf — kjøpsguide/knockoff-advarsel](https://trimleaf.com/blogs/guides/pay-attention-to-these-things-when-buying-led-grow-lights) · [Happy Leaf Procyon 2.0 (24V DC-alternativ)](https://happyleafledgrowlights.com/products/procyon-2-0-full-spectrum-led-grow-lights) · [LED Grow Lights Depot — passiv kjøling](https://www.ledgrowlightsdepot.com/blogs/blog/led-grow-light-cooling-and-heat-dispersion-tips)
 
 ---
 

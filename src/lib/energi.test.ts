@@ -32,4 +32,14 @@ describe('lysEnergi', () => {
     const dyr = lysEnergi(100, 16, 3);
     expect(dyr.krPerManed).toBeGreaterThan(billig.krPerManed);
   });
+
+  it('bruker watt for aktiv lysvariant (24V-barer = 50 W)', () => {
+    const strip = lysEnergi(100, 15, 1.5, 22.6);
+    const bar = lysEnergi(100, 15, 1.5, 50);
+    expect(bar.wattSnitt).toBe(50);
+    expect(bar.kwhPerDag).toBeCloseTo(0.75, 3);
+    expect(bar.kwhPerManed).toBeGreaterThan(strip.kwhPerManed);
+    // Negativ watt er alltid feil-input → klampes til 0, ikke negativ kostnad.
+    expect(lysEnergi(100, 15, 1.5, -5).kwhPerManed).toBe(0);
+  });
 });
