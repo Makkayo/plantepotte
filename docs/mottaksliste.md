@@ -8,7 +8,7 @@ Holder styr på hva som er **bestilt → ankommet → testet** på breadboard.
 - ✅ Testet og funker
 - ⚠️ Ankommet, men problem (se notat)
 
-*Sist oppdatert: 2026-07-05 — Bestilling 7 (lys-oppgradering 24V, ~571 kr) BESTILT. Også: standoffs-rettelsen (aldri bestilt i B6 → inngår nå i B7); B5 + B6 er komplett mottatt.*
+*Sist oppdatert: 2026-07-05 — Bestilling 7 (lys-oppgradering 24V + 2 ESP32, 795,72 kr inkl. mva) BESTILT & BETALT (7 del-ordrer). Også: standoffs-rettelsen (aldri bestilt i B6 → inngår i B7); B5 + B6 er komplett mottatt.*
 
 ---
 
@@ -102,18 +102,19 @@ Samlet etter kveldens testing. AliExpress-søkeord i parentes.
 | ❌ | PCB-distansebolter / standoffs (Rafford messing, M2–M6, 14 stk) | ×0 | **FEILFØRING** — denne «ordren» var i virkeligheten heat-set-tuppene (Rafford, M2–M6, 14 stk, €3 — se «Uventet»-seksjonen). Ekte standoffs ble aldri bestilt; **inngår nå i Bestilling 7** (M3 250-stk boks) |
 | 📦 | Kabelspiral-wrap (svart, fleksibel) | ×1 | **Kom 26. juni** — 8mm Ø, 5m, svart spiral. Kabelbeskyttelse |
 
-## Bestilling 7 — lys-oppgradering 24V + reserve (571,14 kr inkl. frakt, bestilt 5. juli)
+## Bestilling 7 — lys-oppgradering 24V + reserve (BETALT 5. juli, **795,72 kr** inkl. mva+frakt)
 
-Vekstlys-byttet: magenta 12V-strip → hvite 24V Samsung LM281B-barer (~10× lys, fikser kamera-magenta). Uavhengig verifisert 5. juli (research-doc `2026-07-05-vekstlys-research-oppdrag.md`). Subtotal 481,01 + frakt 90,13.
+Vekstlys-byttet: magenta 12V-strip → hvite 24V Samsung LM281B-barer (~10× lys, fikser kamera-magenta). Uavhengig verifisert 5. juli (research-doc `2026-07-05-vekstlys-research-oppdrag.md`). 7 varer / 7 del-ordrer: subtotal 546,36 + frakt 90,13 + mva 159,23 = **795,72 kr**. Leveringene kommer SPREDT (12. juli–13. aug) — **barene kommer FØRST**: de kan Photone-måles direkte på 24V-adapteren (uten MOSFET, alltid-på) mens FR120N er i posten.
 
 | Status | Del | Antall | Notat |
 |:------:|-----|:------:|-------|
-| ⬜ | Samsung LM281B+ 24V 25W alu-bar 500×30mm, 2-pk (KQO Official Store) | ×1 (2 barer) | 141,69 kr. Selve lyset — 50 W totalt, 3000K+5000K hvit + 660nm rød. **Ved mottak:** sjekk ledninger/kontakt + om rød-kanal har separat inngang (da skal den også til 24V). **Mål PPFD med Photone (papir-diffusor) innen Buyer Protection — skal vise ~150–250** |
-| ⬜ | 24V 5A adapter, EU-plugg (SuperMall Store) | ×1 | 147,15 kr. Ny felles skinne (barer + buck). Plugg 5,5×2,1mm bekreftet — matcher B1-pigtails + inline-bryter |
-| ⬜ | FR120N MOSFET-modul 100V 9.4A, opto-isolert (TZT teng Official) | ×4 | 4,05 kr/stk. Bytter LR7843 (30V for tett på 24V). 4 stk = potte 1 + potte 2 + 2 reserve. Samme byggesett-type som B1 → skrueklemmer må loddes |
-| ⬜ | 24V/12V→5V **5A** buck 25W (WAVGAT Official) | ×2 | 16,31 kr/stk. Ny 5V-kilde (gammel buck er 12V-inn, tåler ikke 24V). 5A ut = rikelig for ESP32+CAM. Én per potte. **Verifiser ~5V med multimeter FØR ESP32** |
-| ⬜ | M3 standoff-boks messing, 250 stk (Hundred Years Store) | ×1 | 74,20 kr. Bar-montering m/luftspalte (termisk!) + perfboard. Erstatter B6-feilføringen |
-| ⬜ | ESP32-32D Type-C **KIT A** (38-pin + GPIO-breakout) (NEVER GIVE UP Store) | ×1 | 69,15 kr. **Lek/reserve — IKKE potte-hjerne** (38-pin ≠ 30-pin footprint; potte-kort skal fortsatt være 30-pin WROOM-32D) |
+| ⬜ | Samsung LM281B+ 24V 25W alu-bar 500×30mm, 2-pk (KQO Official Store) | ×1 (2 barer) | 141,69 kr · ordre `3074999822034751` · **levering 12.–21. juli (først!)**. Selve lyset — 50 W totalt, 3000K+5000K hvit + 660nm rød. **Ved mottak:** sjekk ledninger/kontakt + om rød-kanal har separat inngang (da skal den også til 24V). **Mål PPFD med Photone (papir-diffusor) innen Buyer Protection — skal vise ~150–250.** Kan testes rett på 24V-adapteren før FR120N kommer |
+| ⬜ | 24V 5A adapter, EU-plugg (SuperMall Store) | ×1 | 147,15 kr · ordre `3074999822114751`. Ny felles skinne (barer + buck). Plugg 5,5×2,1mm bekreftet — matcher B1-pigtails + inline-bryter (✓ 24V/5A-rated) |
+| ⬜ | FR120N MOSFET-modul 100V 9.4A, opto-isolert (TZT teng Official) | ×4 | 4,05 kr/stk · ordre `3074999822094751` · **levering ~13. aug (sist)**. Bytter LR7843 (30V for tett på 24V). 4 stk = potte 1 + potte 2 + 2 reserve. Samme byggesett-type som B1 → skrueklemmer må loddes |
+| ⬜ | 24V/12V→5V **5A** buck 25W (WAVGAT Official) | ×2 | 16,31 kr/stk · ordre `3074999822154751` · levering ~30. juli. Ny 5V-kilde (gammel buck er 12V-inn, tåler ikke 24V). 5A ut = rikelig for ESP32+CAM. Én per potte. **Verifiser ~5V med multimeter FØR ESP32** |
+| ⬜ | M3 standoff-boks messing, 250 stk (Hundred Years Store) | ×1 | 74,20 kr · ordre `3074999822054751`. Bar-montering m/luftspalte (termisk!) + perfboard. Erstatter B6-feilføringen |
+| ⬜ | ESP32-32D Type-C **KIT A** (38-pin + GPIO-breakout) (NEVER GIVE UP Store) | ×1 | 69,15 kr · ordre `3074999822134751`. **Lek/reserve — IKKE potte-hjerne** (38-pin ≠ 30-pin footprint) |
+| ⬜ | ESP-WROOM-32 **30-pin Type-C** «one set» m/skrueklemme-breakout (BodyWell Store) | ×1 | 65,35 kr · ordre `3074999822074751`. **POTTE 2-HJERNE/RESERVE ✓** — verifisert mot produktbilde: 15 pinner/side (ingen D2/D3/CMD), Type-C, PCB-antenne = samme footprint/pinout som B1-kortene. Lukker 30-pin-ønsket fra ønskelista. NB: USB-chip trolig CH340 (B1 = CP2102) — kan trenge driver første gang, ellers identisk i bruk |
 
 ## Uventet / ekstra i 26. juni-leveransen
 

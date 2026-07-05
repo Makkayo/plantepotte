@@ -21,7 +21,7 @@ Når noe bestilles → flyttes til `mottaksliste.md`. Når det ankommer → inn 
 
 | Pri | Del | Hvorfor | Ca. pris |
 |:---:|-----|---------|---------|
-| 🟡 | **ESP32 DevKit — 30-pin, WROOM-32D, Type-C, CP2102** (samme type som eksisterende) | Trenger flere generelt (potte 2 + lek + reserve). ⚠️ **Velg variant «30S Type-C»** = plain 30-pin, PCB-antenne (= B1-kortet). IKKE «32U … KIT A» (38-pin + ekstern IPEX-antenne) og IKKE «32D … KIT A» (38-pin + skrueklemme-breakout) — 38-pin har annen footprint/pinout enn 30-pin → bryter identisk potte 1/2. Kjennetegn på riktig: ingen antenneledning i bildet, 15 pinner/side, ingen ekstra D2/D3/CMD nederst, uten KIT. (38-pin+KIT er OK til ren lek.) (På denne listinga var multipakke **dyrere** per stk, ikke billigere → kjøp 1 om gangen.) **5. juli:** 1× «32D Type-C KIT A» (38-pin) BESTILT i B7 til **lek/reserve** — 30-pin-ønsket for potte-hjerner står fortsatt åpent | ~70 kr/stk |
+| ✅ | ~~**ESP32 DevKit — 30-pin, Type-C** (samme type som eksisterende)~~ **BESTILT i B7 (5. juli)** | **LUKKET:** BodyWell «ESP-WROOM-32 one set» (65,35 kr) — verifisert 30-pin (15 pinner/side, ingen D2/D3/CMD), Type-C, PCB-antenne + skrueklemme-breakout → gyldig potte 2-hjerne. (KIT A-en i samme ordre er 38-pin = kun lek.) **Til fremtidige kjøp, husk fella:** riktig = ingen antenneledning i bildet, 15 pinner/side, ingen ekstra D2/D3/CMD nederst; «ESP32-S»/«DevKitC»-listinger er OFTE 38-pin micro-USB | — |
 
 ## 🔧 Verktøy
 
@@ -29,7 +29,7 @@ Når noe bestilles → flyttes til `mottaksliste.md`. Når det ankommer → inn 
 
 ## 🌱 Plantepotte (hardware)
 
-**✅ Lys-oppgradering (24V hvite Samsung-barer) BESTILT 5. juli 2026** → flyttet til `mottaksliste.md` **Bestilling 7** (571,14 kr inkl. frakt: barer ×2, 24V 5A-adapter, FR120N ×4, 24V→5V buck ×2, M3 standoffs, + ESP32 KIT A til lek). Gjenstående *arbeid* (ikke kjøp): re-designe lysbjelken i 3D for to stive barer (fase 3) + Photone-måling ved mottak.
+**✅ Lys-oppgradering (24V hvite Samsung-barer) BESTILT & BETALT 5. juli 2026** → flyttet til `mottaksliste.md` **Bestilling 7** (795,72 kr inkl. mva+frakt, 7 varer: barer ×2, 24V 5A-adapter, FR120N ×4, 24V→5V buck ×2, M3 standoffs, ESP32 KIT A (lek) + ESP32 30-pin Type-C (potte 2-reserve)). Gjenstående *arbeid* (ikke kjøp): re-designe lysbjelken i 3D for to stive barer (fase 3) + Photone-måling ved mottak.
 
 *(ingen åpne hardware-ønsker for potta akkurat nå)*
 

@@ -23,15 +23,18 @@ Bytt fra svak magenta 12V phyto-strip → **hvite 24V Samsung LM281B-barer.**
 
 **Valgt lys:** 2× **DC24V 25W Samsung LM281B+ 500 mm stive alu-barer** (50 W totalt; 3000K+5000K hvit + 660nm rød + IR/UV).
 
-**Handlekurv (AliExpress — ✅ BESTILT 5. juli 2026, ført som Bestilling 7 i `mottaksliste.md`. Verifisert mot skjermbilde: subtotal 481,01 + frakt 90,13 = 571,14 kr):**
+**Endelig ordre (AliExpress — ✅ BESTILT & BETALT 5. juli 2026, ført som Bestilling 7 i `mottaksliste.md`. Subtotal 546,36 + frakt 90,13 + mva 159,23 = 795,72 kr, 7 del-ordrer):**
 | Del | Antall | Pris | Merknad |
 |-----|:---:|------|---------|
-| Samsung 24V-barer 50W 2-pk (KQO) | 1 | 141,69 kr | Selve lyset (2 barer i pakken) |
+| Samsung 24V-barer 50W 2-pk (KQO) | 1 | 141,69 kr | Selve lyset (2 barer i pakken). Levering 12.–21. juli — FØRST |
 | 24V 5A adapter EU (SuperMall) | 1 | 147,15 kr | Plugg **5,5×2,1 mm bekreftet** (matcher eksisterende) |
-| FR120N MOSFET 100V 9.4A (TZT) | **4** | 4,05 kr/stk | Bryter (bytter LR7843 30V) — 4 stk = potte 1 + potte 2 + 2 reserve/lek |
-| 24V/12V→5V **5A** buck 25W (WAVGAT) | **2** | 16,31 kr/stk | Ny 5V-kilde (gammel buck er 12V-inn). 5A ut = rikelig over 1,5A-kravet ✓ |
+| FR120N MOSFET 100V 9.4A (TZT) | **4** | 4,05 kr/stk | Bryter (bytter LR7843 30V) — 4 stk = potte 1 + potte 2 + 2 reserve/lek. Levering ~13. aug — SIST |
+| 24V/12V→5V **5A** buck 25W (WAVGAT) | **2** | 16,31 kr/stk | Ny 5V-kilde (gammel buck er 12V-inn). 5A ut = rikelig over 1,5A-kravet ✓. Levering ~30. juli |
 | M3 standoff-boks 250-stk (Hundred Years) | 1 | 74,20 kr | Bar-montering + perfboard |
-| ESP32 32D Type-C KIT A (Choice) | 1 | 69,15 kr | Lek/reserve, ikke potte-hjerne |
+| ESP32 32D Type-C KIT A (NEVER GIVE UP) | 1 | 69,15 kr | Lek/reserve (38-pin), ikke potte-hjerne |
+| ESP-WROOM-32 30-pin Type-C «one set» (BodyWell) | 1 | 65,35 kr | **Potte 2-hjerne/reserve ✓** — verifisert 30-pin + Type-C + PCB-antenne fra produktbilde. Lukker ønskeliste-punktet |
+
+**Merk leveringsrekkefølgen:** barene kommer først (12.–21. juli), FR120N sist (~13. aug) → **Photone-mål barene rett på 24V-adapteren (uten MOSFET, alltid-på)** innen Buyer Protection uten å vente på bryteren.
 
 Alt annet til montering **eies** (silikonledning 20 AWG, Wago, 3A/5A slow-blow-sikring + BLX-A-holder, barrel-pigtail, inline-switch, heat shrink, heat-set inserts + M3-skruer). ⚠️ **Ikke betalt** — Markus sjekker ut selv.
 
