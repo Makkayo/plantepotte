@@ -66,7 +66,7 @@ Alt annet til montering **eies** (silikonledning 20 AWG, Wago, 3A/5A slow-blow-s
 5. **Bedre/billigere alternativ i samme skala-klasse** som DIY-miljøet faktisk anbefaler (Barrina/Sunblaster T5 LED-rør? Samsung LM301-strip-kits? mini quantum board? ferdig hvit bar m/ekte µmol-spec)? Hittil-konklusjon: LM281B-bar = sweet-spot, men verifiser mot reelle brukererfaringer.
 6. **Counterfeit-håndtering:** hvordan gjenkjenne ekte Samsung-dioder / hvilke AliExpress-selgere er til å stole på for LM281B-barer?
 7. **Termisk:** 25 W alu-bar passivt montert i en semi-lukket 3D-printet kasse-topp (PETG) — nok kjøling, eller trengs ventilasjon / spesifisert luftspalte bak baren?
-8. **Fotoperiode-strategi:** app-en forlenger allerede dagen når intensitet ikke rekker DLI (opptil 18 t). Med sterkere barer — hva er beste kombinasjon av PPFD × timer for disse vekstene (energi vs vekst), og bør `ANTATT_PPFD_MAX` i `lys.ts` settes til målt verdi?
+8. **Fotoperiode-strategi:** app-en forlenger allerede dagen når intensitet ikke rekker DLI (opptil 18 t), og PPFD er nå **kalibrerbar** i appen (Fable 3. juli — legg inn målt verdi i `settings.ts`/lys-arket, erstatter 200 µmol-antagelsen). Med sterkere barer — hva er beste kombinasjon av PPFD × timer for disse vekstene (energi vs vekst)?
 
 ---
 
