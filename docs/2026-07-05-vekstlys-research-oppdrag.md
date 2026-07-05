@@ -23,7 +23,7 @@ Bytt fra svak magenta 12V phyto-strip → **hvite 24V Samsung LM281B-barer.**
 
 **Valgt lys:** 2× **DC24V 25W Samsung LM281B+ 500 mm stive alu-barer** (50 W totalt; 3000K+5000K hvit + 660nm rød + IR/UV).
 
-**Handlekurv (AliExpress — endelig, verifisert mot skjermbilde 5. juli: subtotal 481,01 + frakt 90,13 = 571,14 kr):**
+**Handlekurv (AliExpress — ✅ BESTILT 5. juli 2026, ført som Bestilling 7 i `mottaksliste.md`. Verifisert mot skjermbilde: subtotal 481,01 + frakt 90,13 = 571,14 kr):**
 | Del | Antall | Pris | Merknad |
 |-----|:---:|------|---------|
 | Samsung 24V-barer 50W 2-pk (KQO) | 1 | 141,69 kr | Selve lyset (2 barer i pakken) |

@@ -8,7 +8,7 @@ Holder styr på hva som er **bestilt → ankommet → testet** på breadboard.
 - ✅ Testet og funker
 - ⚠️ Ankommet, men problem (se notat)
 
-*Sist oppdatert: 2026-07-05 — RETTELSE: standoffs ble aldri bestilt (verifisert mot ordrehistorikk) → bestilt nå 5. juli. B5 + B6 er dermed komplett mottatt.*
+*Sist oppdatert: 2026-07-05 — Bestilling 7 (lys-oppgradering 24V, ~571 kr) BESTILT. Også: standoffs-rettelsen (aldri bestilt i B6 → inngår nå i B7); B5 + B6 er komplett mottatt.*
 
 ---
 
@@ -99,8 +99,21 @@ Samlet etter kveldens testing. AliExpress-søkeord i parentes.
 | Status | Del | Antall | Notat |
 |:------:|-----|:------:|-------|
 | 📦 | Heat-set insert + skrue-sett (M2/M2.5/M3/M4 messing, 1050 stk) | ×1 | **Kom 26. juni** — messing «twill knurled», hot-melt insert + skruer. Smeltes inn i PETG |
-| ❌ | PCB-distansebolter / standoffs (Rafford messing, M2–M6, 14 stk) | ×0 | **FEILFØRING** — denne «ordren» var i virkeligheten heat-set-tuppene (Rafford, M2–M6, 14 stk, €3 — se «Uventet»-seksjonen). Ekte standoffs ble aldri bestilt; **bestilt nå 5. juli 2026** (M3 250-stk boks) |
+| ❌ | PCB-distansebolter / standoffs (Rafford messing, M2–M6, 14 stk) | ×0 | **FEILFØRING** — denne «ordren» var i virkeligheten heat-set-tuppene (Rafford, M2–M6, 14 stk, €3 — se «Uventet»-seksjonen). Ekte standoffs ble aldri bestilt; **inngår nå i Bestilling 7** (M3 250-stk boks) |
 | 📦 | Kabelspiral-wrap (svart, fleksibel) | ×1 | **Kom 26. juni** — 8mm Ø, 5m, svart spiral. Kabelbeskyttelse |
+
+## Bestilling 7 — lys-oppgradering 24V + reserve (571,14 kr inkl. frakt, bestilt 5. juli)
+
+Vekstlys-byttet: magenta 12V-strip → hvite 24V Samsung LM281B-barer (~10× lys, fikser kamera-magenta). Uavhengig verifisert 5. juli (research-doc `2026-07-05-vekstlys-research-oppdrag.md`). Subtotal 481,01 + frakt 90,13.
+
+| Status | Del | Antall | Notat |
+|:------:|-----|:------:|-------|
+| ⬜ | Samsung LM281B+ 24V 25W alu-bar 500×30mm, 2-pk (KQO Official Store) | ×1 (2 barer) | 141,69 kr. Selve lyset — 50 W totalt, 3000K+5000K hvit + 660nm rød. **Ved mottak:** sjekk ledninger/kontakt + om rød-kanal har separat inngang (da skal den også til 24V). **Mål PPFD med Photone (papir-diffusor) innen Buyer Protection — skal vise ~150–250** |
+| ⬜ | 24V 5A adapter, EU-plugg (SuperMall Store) | ×1 | 147,15 kr. Ny felles skinne (barer + buck). Plugg 5,5×2,1mm bekreftet — matcher B1-pigtails + inline-bryter |
+| ⬜ | FR120N MOSFET-modul 100V 9.4A, opto-isolert (TZT teng Official) | ×4 | 4,05 kr/stk. Bytter LR7843 (30V for tett på 24V). 4 stk = potte 1 + potte 2 + 2 reserve. Samme byggesett-type som B1 → skrueklemmer må loddes |
+| ⬜ | 24V/12V→5V **5A** buck 25W (WAVGAT Official) | ×2 | 16,31 kr/stk. Ny 5V-kilde (gammel buck er 12V-inn, tåler ikke 24V). 5A ut = rikelig for ESP32+CAM. Én per potte. **Verifiser ~5V med multimeter FØR ESP32** |
+| ⬜ | M3 standoff-boks messing, 250 stk (Hundred Years Store) | ×1 | 74,20 kr. Bar-montering m/luftspalte (termisk!) + perfboard. Erstatter B6-feilføringen |
+| ⬜ | ESP32-32D Type-C **KIT A** (38-pin + GPIO-breakout) (NEVER GIVE UP Store) | ×1 | 69,15 kr. **Lek/reserve — IKKE potte-hjerne** (38-pin ≠ 30-pin footprint; potte-kort skal fortsatt være 30-pin WROOM-32D) |
 
 ## Uventet / ekstra i 26. juni-leveransen
 

@@ -1859,7 +1859,21 @@
           <li>✅ <strong style="color:var(--text);">Heat-set insert-tupper</strong> (Rafford, M2–M6, 14 stk) — skru-på-tupper til loddebolt for å smelte inserts inn i PETG · <em style="color:var(--yellow);">RETTELSE 5. juli: dette er varen som var feilført som «PCB standoffs» (samme merke/spec/pris). Ekte standoffs ble aldri bestilt — nå bestilt (M3-boks)</em></li>
           <li>📦 <strong style="color:var(--text);">Kabelspiral-wrap</strong> (svart fleksibel) — samler og beskytter ledningsbunter pent</li>
         </ul>
-        <p style="color:var(--dim); margin:0; font-size:0.83rem;">📦 = ankommet 26. juni → B6 komplett (rettelse 5. juli: «standoffs»-linjen var egentlig heat-set-tuppene; ekte standoffs bestilt nå). Brukes primært i fase 4 (montering i 3D-printet boks).</p>
+        <p style="color:var(--dim); margin:0; font-size:0.83rem;">📦 = ankommet 26. juni → B6 komplett (rettelse 5. juli: «standoffs»-linjen var egentlig heat-set-tuppene; ekte standoffs bestilt i B7). Brukes primært i fase 4 (montering i 3D-printet boks).</p>
+      </div>
+
+      <div class="comp-group-title" style="grid-column:1/-1;">🛒 Bestilling 7 — lys-oppgradering 24V (571 kr inkl. frakt, bestilt 5. juli)</div>
+      <div style="grid-column:1/-1; background:#0a1218; border:1px solid #1d4ed8; border-radius:10px; padding:1rem 1.25rem; font-size:0.87rem;">
+        <p style="color:var(--muted); margin:0 0 0.6rem;">Vekstlys-byttet: den svake magenta 12V-stripa pensjoneres og erstattes av <strong style="color:var(--text);">hvite 24V Samsung LM281B-barer</strong> (~10× lys, hvit fikser kamera-magenta). Uavhengig verifisert 5. juli. Riggen bygges først med 12V-stripa; barene byttes inn når de kommer — appen har velger for begge lysvariantene.</p>
+        <ul style="color:var(--muted); margin:0 0 0.6rem 1.1rem; padding:0; line-height:1.7; list-style:none;">
+          <li><span class="pill pill-yellow">Bestilt</span> <strong style="color:var(--text);">Samsung LM281B+ 24V 25W alu-bar 500mm ×2</strong> (50 W) — konstant-spenning, plugges rett i 24V. Photone-måling innen Buyer Protection ved mottak!</li>
+          <li><span class="pill pill-yellow">Bestilt</span> <strong style="color:var(--text);">24V 5A-adapter</strong> (EU, 5,5×2,1mm — matcher pigtails + inline-bryter) — ny felles skinne for barer + buck</li>
+          <li><span class="pill pill-yellow">Bestilt</span> <strong style="color:var(--text);">FR120N MOSFET-modul 100V ×4</strong> — bytter LR7843 (30V for tett på 24V); potte 1 + 2 + reserve</li>
+          <li><span class="pill pill-yellow">Bestilt</span> <strong style="color:var(--text);">24V→5V buck 5A ×2</strong> — ny 5V-kilde (gammel buck er 12V-inn); én per potte</li>
+          <li><span class="pill pill-yellow">Bestilt</span> <strong style="color:var(--text);">M3 standoff-boks 250 stk</strong> — bar-montering m/luftspalte (termisk) + perfboard; erstatter B6-feilføringen</li>
+          <li><span class="pill pill-yellow">Bestilt</span> <strong style="color:var(--text);">ESP32-32D Type-C KIT A</strong> (38-pin + breakout) — lek/reserve, IKKE potte-hjerne (potte-kort = 30-pin)</li>
+        </ul>
+        <p style="color:var(--dim); margin:0; font-size:0.83rem;">Gammelt 12V-utstyr (5A-adapter fra B5 + fast-5V-buck) blir reserve til lek-prosjekter. Gjenstående arbeid: re-designe lysbjelken i 3D for to stive barer (fase 3).</p>
       </div>
     </div>
   </section>
@@ -1946,10 +1960,26 @@
             <td style="text-align:right; color:var(--blue);">~€23</td>
           </tr>
 
+          <tr class="step-header"><td colspan="3">💡 Lys-oppgradering 24V (Bestilling 7, bestilt 5. juli)</td></tr>
+          <tr>
+            <td>Nytt vekstlys</td>
+            <td>Samsung LM281B+ 24V-barer ×2 (50 W), 24V 5A-adapter, FR120N 100V ×4, 24V→5V buck ×2, M3 standoffs 250-boks</td>
+            <td style="text-align:right;">~€43</td>
+          </tr>
+          <tr>
+            <td>Lek/reserve</td>
+            <td>ESP32-32D Type-C KIT A (38-pin + breakout)</td>
+            <td style="text-align:right;">~€6</td>
+          </tr>
+          <tr style="background:#0a1218; font-weight:600;">
+            <td colspan="2" style="color:var(--blue);">Sum Bestilling 7 (571 kr inkl. frakt)</td>
+            <td style="text-align:right; color:var(--blue);">~€49</td>
+          </tr>
+
           <tr class="step-header"><td colspan="3">Σ Totalt</td></tr>
           <tr style="font-weight:700; font-size:1.02em;">
-            <td colspan="2">Alt inkl. frakt (~€3)</td>
-            <td style="text-align:right;">~€271</td>
+            <td colspan="2">Alt inkl. frakt</td>
+            <td style="text-align:right;">~€320</td>
           </tr>
         </tbody>
       </table>
@@ -3034,7 +3064,7 @@
         <div class="check-box">✓</div>
         <div class="check-content">
           <h4>Hardware ankommet (bestilling 1–4)</h4>
-          <p>Bestilling 1 + 2 ankommet 6.–9. juni. Bestilling 3 (laser + kamera) og 4 (loddeutstyr + lek) ankommet 17.–19. juni. Bestilling 5 (påfyll + semi-permanent) og 6 (montering) ankommet 26. juni — begge komplett. Rettelse 5. juli: «PCB-standoffs (B6)» var aldri bestilt (verifisert mot ordrehistorikk); «standoffs» var egentlig heat-set-tuppene → ekte standoffs bestilt nå. Ingenting gjenstår i posten. Status per del: <code>docs/mottaksliste.md</code>.</p>
+          <p>Bestilling 1 + 2 ankommet 6.–9. juni. Bestilling 3 (laser + kamera) og 4 (loddeutstyr + lek) ankommet 17.–19. juni. Bestilling 5 (påfyll + semi-permanent) og 6 (montering) ankommet 26. juni — begge komplett. Rettelse 5. juli: «PCB-standoffs (B6)» var aldri bestilt; standoffs inngår i stedet i <strong>Bestilling 7 (lys-oppgradering 24V, bestilt 5. juli, 571 kr)</strong> — 2× Samsung LM281B-barer, 24V-adapter, FR120N ×4, buck ×2, standoffs + ESP32 til lek. Den venter nå i posten. Status per del: <code>docs/mottaksliste.md</code>.</p>
         </div>
       </div>
       <div class="check done">

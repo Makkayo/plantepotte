@@ -21,7 +21,7 @@ Når noe bestilles → flyttes til `mottaksliste.md`. Når det ankommer → inn 
 
 | Pri | Del | Hvorfor | Ca. pris |
 |:---:|-----|---------|---------|
-| 🟡 | **ESP32 DevKit — 30-pin, WROOM-32D, Type-C, CP2102** (samme type som eksisterende) | Trenger flere generelt (potte 2 + lek + reserve). ⚠️ **Velg variant «30S Type-C»** = plain 30-pin, PCB-antenne (= B1-kortet). IKKE «32U … KIT A» (38-pin + ekstern IPEX-antenne) og IKKE «32D … KIT A» (38-pin + skrueklemme-breakout) — 38-pin har annen footprint/pinout enn 30-pin → bryter identisk potte 1/2. Kjennetegn på riktig: ingen antenneledning i bildet, 15 pinner/side, ingen ekstra D2/D3/CMD nederst, uten KIT. (38-pin+KIT er OK til ren lek.) (På denne listinga var multipakke **dyrere** per stk, ikke billigere → kjøp 1 om gangen.) **Status 5. juli:** 1× «32D Type-C KIT A» (38-pin, Choice/gratis frakt, NEVER GIVE UP Store) i handlekurv — bevisst valgt til **lek/reserve** (30-pin-anbefalingen gjelder fortsatt for potte-hjerner) | ~70 kr/stk |
+| 🟡 | **ESP32 DevKit — 30-pin, WROOM-32D, Type-C, CP2102** (samme type som eksisterende) | Trenger flere generelt (potte 2 + lek + reserve). ⚠️ **Velg variant «30S Type-C»** = plain 30-pin, PCB-antenne (= B1-kortet). IKKE «32U … KIT A» (38-pin + ekstern IPEX-antenne) og IKKE «32D … KIT A» (38-pin + skrueklemme-breakout) — 38-pin har annen footprint/pinout enn 30-pin → bryter identisk potte 1/2. Kjennetegn på riktig: ingen antenneledning i bildet, 15 pinner/side, ingen ekstra D2/D3/CMD nederst, uten KIT. (38-pin+KIT er OK til ren lek.) (På denne listinga var multipakke **dyrere** per stk, ikke billigere → kjøp 1 om gangen.) **5. juli:** 1× «32D Type-C KIT A» (38-pin) BESTILT i B7 til **lek/reserve** — 30-pin-ønsket for potte-hjerner står fortsatt åpent | ~70 kr/stk |
 
 ## 🔧 Verktøy
 
@@ -29,17 +29,9 @@ Når noe bestilles → flyttes til `mottaksliste.md`. Når det ankommer → inn 
 
 ## 🌱 Plantepotte (hardware)
 
-**Lys-oppgradering (24V hvite Samsung-barer) — planlagt kurv, IKKE bestilt (per 5. juli 2026).** Uavhengig gjennomgått og verifisert sunn/riktig 5. juli (se «Vekstlys» i skill-en). ⚠️ Ikke betalt — Markus sjekker ut selv.
+**✅ Lys-oppgradering (24V hvite Samsung-barer) BESTILT 5. juli 2026** → flyttet til `mottaksliste.md` **Bestilling 7** (571,14 kr inkl. frakt: barer ×2, 24V 5A-adapter, FR120N ×4, 24V→5V buck ×2, M3 standoffs, + ESP32 KIT A til lek). Gjenstående *arbeid* (ikke kjøp): re-designe lysbjelken i 3D for to stive barer (fase 3) + Photone-måling ved mottak.
 
-| Pri | Del | Hvorfor | Ca. pris |
-|:---:|-----|---------|---------|
-| 🟡 | **2× Samsung LM281B+ 24V 25W alu-bar (500mm)** | Erstatter svak magenta 12V-strip → ~10× lys, hvit fikser kamera-magenta. Konstant-spenning (plugg rett i 24V) | 141,69 kr |
-| 🟡 | **24V 5A adapter (EU, CE)** | Én skinne til bar+buck; dimensjonert for 2 potter. Velg god kvalitet (24/7 nær vann) | 147,15 kr |
-| 🟡 | **FR120N MOSFET-modul (100V, opto-isolert)** | Bytter LR7843 (30V for tett på 24V). Samme modul-type du alt bruker | 4,05 kr |
-| 🟡 | **24V→5V buck 2-pk (synkron, ≥1,5 A)** | Ny 5V-kilde (gammel buck er 12V-inn, tåler ikke 24V) | 16,31 kr |
-| 🟢 | **M3 standoff-sett** | Bar-montering m/luftspalte + perfboard. 250-boks er lager-bygging — mindre/billigere sett holder | ~74 kr (billigere finnes) |
-
-> Kurven er **komplett for lys-oppgraderingen** — alt annet (silikonledning, Wago, 3A/5A slow-blow-sikring, barrel-jack pigtail, inline-switch, heat shrink, heat-set inserts) eies. Eneste gjenstående *arbeid*: re-designe lysbjelken i 3D for to stive barer (fase 3), + sjekk om baren har separat rød-inngang.
+*(ingen åpne hardware-ønsker for potta akkurat nå)*
 
 ## 🪴 Dyrking (jord/frø/utstyr)
 
