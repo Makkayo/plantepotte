@@ -9,6 +9,7 @@
 > - **Web-app:** er skrevet om til **Svelte 5 + TypeScript + Vite** (ikke lenger vanilla én-fil `index.html` som beskrevet nederst).
 > - **Auto-justerende lys** (stepper + lead screw) er en utforsket fremtidsidé — se skillen.
 > - **Fysisk design** nederst beskriver et eldre "3 deler"-konsept; gjeldende 3D-modell er base + 4 stolper + tak (se skillen).
+> - **Database-seksjonen:** `planteprofiler`-tabellen og `plantetype`-kolonnen ble fjernet fra databasen 3. juli 2026 (v1-rester), og RLS-policyene vist som «anon all» er strammet inn (anon: kun SELECT på `potte_commands`, kun INSERT på `potte_sensor_data`). Gjeldende skjema og eierskap: `docs/database-kart.md` + skillen.
 >
 > ✅ **Vannmåling er nå oppdatert i dette dokumentet:** XKC-Y25 er erstattet av **VL53L0X ToF-laser + 3D-printet flottør** i en berolings-brønn, og datafeltet er `vann_avstand_mm` (rå mm fra laser til flottør). XKC-Y25 ×4 er reserve. GPIO-tabell, koblingsdiagram, SQL og datakontrakt under reflekterer laseren (firmware-koden ligger i `firmware/`, ikke her).
 
