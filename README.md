@@ -75,6 +75,7 @@ konfigureres med:
 - ✅ CI (GitHub Actions) speiler Cloudflare-bygget og vokter at Wokwi-koden holdes i synk med firmwaren
 - ✅ **Full integrasjon live (20. juni):** ESP32 kjører selvgående på buck — WiFi + NTP + Supabase, alle sensorer i appen, appen styrer lyset. MOSFET-PWM-dimming og VL53L0X-laser verifisert på ekte hardware
 - 🟡 Neste: ESP32-CAM (kamera → vekst-tidslinje) + 3D-print og montering av potte 1
+- 💡 **Lys-beslutning (25. juli):** potte 1 bygges som **24V fra start** — 12V-mellomsteget droppet, og `bar24` er nå standard lysvariant i appen. 12V-stripa er reserve (bench-strøm under bygging, evt. lys i en senere kasse)
 - 📦 **Hardware (25. juli):** Bestilling 7 (24V lys-oppgradering) delvis mottatt — 24V 5A-adapter, M3-standoffs og begge ESP32-kortene er på lager; Samsung-barene er underveis, buck ×2 og FR120N ×4 gjenstår. Detaljer: [`docs/mottaksliste.md`](docs/mottaksliste.md). ⚠️ 24V-adapteren har samme plugg som 12V-adapterne — ikke koble 24V før ny buck + FR120N er på plass
 - ✅ **RLS strammet 3. juli 2026** ([`docs/sql/2026-07-03-rls-stramming.sql`](docs/sql/2026-07-03-rls-stramming.sql), kjørt og verifisert med security advisor): anon-nøkkelen kan nå kun poste sensordata + lese lysplanen (det ESP32-en trenger) — all annen skriving krever innlogging. Før kunne hvem som helst med app-URL-en styre lyset. NB: ESP32 har ikke postet siden 20. juni (avslått) — første «Sensordata sendt.» etter oppstart bekrefter at insert-flyten er intakt
 - 🟡 Multi-user-arkitektur forberedt (`owner_id`-felt klart), ikke aktivert

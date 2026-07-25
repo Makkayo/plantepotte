@@ -3,10 +3,11 @@
  *
  *  - Strømprisen som lys-strømoverslaget bruker. Personlig, svinger med spot +
  *    nettleie, og hører ikke hjemme per kasse — lagres globalt per nettleser.
- *  - Lysvariant: hvilken lys-maskinvare som henger over potta. Riggen bygges
- *    først med 12V-stripa som eies, og byttes til 24V Samsung-barene når de
- *    kommer (bestilt juli 2026). Watt (strømoverslag) og PPFD-kalibrering
- *    følger varianten, så byttet er ett trykk i lys-arket.
+ *  - Lysvariant: hvilken lys-maskinvare som henger over potta. Potte 1 bygges
+ *    med 24V Samsung-barene fra første stund (avgjort 25. juli 2026) — derfor
+ *    er `bar24` standard. Den gamle 12V-stripa er beholdt som variant fordi
+ *    den eies og kan bli lys i en senere kasse. Watt (strømoverslag) og
+ *    PPFD-kalibrering følger varianten, så et bytte er ett trykk i lys-arket.
  *  - Målt PPFD ved 100 % intensitet, per lysvariant. Alle DLI-tall i appen
  *    hviler på denne; standarden per variant er et ANSLAG til du faktisk
  *    måler med PAR-meter/Photone og kalibrerer i lys-arket. Riggen er lik for
@@ -111,7 +112,7 @@ export function settStrompris(v: unknown): boolean {
 
 // Modul-lokal speiling av aktiv variant — MÅ oppdateres FØR ppfdMaks settes
 // ved variantbytte, ellers persisteres den nye verdien under feil nøkkel.
-let aktivVariant: LysVariant = lesLagret(VARIANT_KEY, gyldigVariant, 'strip12');
+let aktivVariant: LysVariant = lesLagret(VARIANT_KEY, gyldigVariant, 'bar24');
 
 /** Hvilken lys-maskinvare som er montert nå. */
 export const lysVariant = writable<LysVariant>(aktivVariant);

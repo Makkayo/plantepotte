@@ -257,9 +257,10 @@
   </div>
 </div>
 
-<!-- Lysvariant: hvilken maskinvare som henger over potta akkurat nå. Riggen
-     bygges først med 12V-stripa og byttes til 24V-barene når de kommer —
-     watt (strømoverslag) og PPFD-kalibrering følger valget automatisk. -->
+<!-- Lysvariant: hvilken maskinvare som henger over potta akkurat nå. Potte 1
+     bygges med 24V-barene fra start (avgjort 25. juli 2026) — 12V-stripa er
+     beholdt som valg fordi den eies og kan bli lys i en senere kasse.
+     Watt (strømoverslag) og PPFD-kalibrering følger valget automatisk. -->
 <div class="mt-3.5 flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 font-mono text-[10.5px] text-text-dim">
   <span>💡 Montert lys:</span>
   {#each Object.keys(LYS_VARIANTER) as id (id)}

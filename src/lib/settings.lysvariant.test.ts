@@ -17,13 +17,15 @@ import {
 } from './settings';
 
 describe('lysVariant — bytte mellom 12V-strip og 24V-barer', () => {
-  it('starter på 12V-stripa (det som er montert) med variantens anslag', () => {
-    expect(get(lysVariant)).toBe('strip12');
-    expect(get(ppfdMaks)).toBe(LYS_VARIANTER.strip12.standardPpfd);
-    expect(get(lysWatt)).toBe(LYS_VARIANTER.strip12.watt);
+  it('starter på 24V-barene (det potte 1 bygges med) med variantens anslag', () => {
+    expect(get(lysVariant)).toBe('bar24');
+    expect(get(ppfdMaks)).toBe(LYS_VARIANTER.bar24.standardPpfd);
+    expect(get(lysWatt)).toBe(LYS_VARIANTER.bar24.watt);
   });
 
   it('husker PPFD-kalibrering per variant gjennom et rundtur-bytte', () => {
+    settLysVariant('strip12'); // stripa er fortsatt en gyldig variant (senere kasse)
+    expect(get(lysWatt)).toBe(LYS_VARIANTER.strip12.watt);
     settPpfdMaks(35); // Photone-måling av stripa
     settLysVariant('bar24');
     // Ingen måling av barene ennå → variantens anslag, og watt/standard følger.

@@ -148,4 +148,4 @@ Verifisert mot ordrehistorikken på AliExpress: **standoffs ble aldri bestilt.**
 | 24V/12V→5V buck 5A | ×2 | ~30. juli | Ny 5V-kilde (én per potte) |
 | FR120N MOSFET-modul 100V | ×4 | ~13. aug | Erstatter LR7843 på 24V |
 
-Når disse kommer: 12V-utstyret (12V-adaptere, fast-5V-buck, LR7843 ×3, phyto-stripa) flyttes til reserve/lek.
+**Potte 1 bygges som 24V fra start** (avgjort 25. juli) → 12V-utstyret (12V-adaptere, fast-5V-buck, LR7843 ×3, phyto-stripa 5 m) er allerede reserve. Det brukes fortsatt som **bench-strøm** til sensortesting inntil den nye bucken kommer, og kan senere bli lys i en ny kasse hvis Markus vil prøve 12V-varianten i praksis.

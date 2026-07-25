@@ -108,7 +108,9 @@ Vekstlys-byttet: magenta 12V-strip → hvite 24V Samsung LM281B-barer (~10× lys
 
 **Mottaksstatus 25. juli: 4 av 7 kommet.** Delene er lagt rett på lager uten inspeksjon (Markus' valg — antatt OK); det som må sjekkes står per rad som *«verifiseres ved bruk»* og hører til byggesteget, ikke mottaket. Barene er litt bak skjema, men **underveis per sporing 25. juli**.
 
-> ⚡ **Til byggedagen:** 24V-adapteren har samme 5,5×2,1mm-plugg som 12V-adapterne. Gammel buck (12V-inn), LR7843 (30V) og phyto-stripa dør av 24V — så 24V-adapteren skal ikke i bruk før barer + ny buck + FR120N er samlet. Riggen som bygges nå kjører 12V.
+> 💡 **Avgjort 25. juli: potte 1 bygges som 24V fra start** — 12V-mellomsteget er droppet. Lys-kjeden kan derfor først kobles når buck (~30. juli) + FR120N (~13. aug) er inne; sensorene kan ferdigtestes på det gamle 12V-adapter+buck-paret i mellomtiden.
+>
+> ⚡ **Til byggedagen:** 24V-adapteren har samme 5,5×2,1mm-plugg som 12V-adapterne. Gammel buck (12V-inn), LR7843 (30V) og phyto-stripa dør av 24V — hold 24V unna bench-oppsettet.
 
 | Status | Del | Antall | Notat |
 |:------:|-----|:------:|-------|
