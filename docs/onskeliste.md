@@ -5,7 +5,7 @@ Når noe bestilles → flyttes til `mottaksliste.md`. Når det ankommer → inn 
 
 **Prioritet:** 🔴 trengs snart · 🟡 fint å ha · 🟢 nice-to-have / framtid
 
-*Sist oppdatert: 2026-07-05*
+*Sist oppdatert: 2026-07-25 — 30-pin-ønsket er nå fysisk oppfylt (kortet ankom 25. juli → `lager.md`). Ingen nye ønsker.*
 
 ---
 
@@ -21,7 +21,7 @@ Når noe bestilles → flyttes til `mottaksliste.md`. Når det ankommer → inn 
 
 | Pri | Del | Hvorfor | Ca. pris |
 |:---:|-----|---------|---------|
-| ✅ | ~~**ESP32 DevKit — 30-pin, Type-C** (samme type som eksisterende)~~ **BESTILT i B7 (5. juli)** | **LUKKET:** BodyWell «ESP-WROOM-32 one set» (65,35 kr) — verifisert 30-pin (15 pinner/side, ingen D2/D3/CMD), Type-C, PCB-antenne + skrueklemme-breakout → gyldig potte 2-hjerne. (KIT A-en i samme ordre er 38-pin = kun lek.) **Til fremtidige kjøp, husk fella:** riktig = ingen antenneledning i bildet, 15 pinner/side, ingen ekstra D2/D3/CMD nederst; «ESP32-S»/«DevKitC»-listinger er OFTE 38-pin micro-USB | — |
+| ✅ | ~~**ESP32 DevKit — 30-pin, Type-C** (samme type som eksisterende)~~ **ANKOMMET 25. juli (B7)** | **LUKKET & PÅ LAGER:** BodyWell «ESP-WROOM-32 one set» (65,35 kr) — verifisert 30-pin (15 pinner/side, ingen D2/D3/CMD), Type-C, PCB-antenne + skrueklemme-breakout → gyldig potte 2-hjerne. (KIT A-en i samme ordre er 38-pin = kun lek.) **Til fremtidige kjøp, husk fella:** riktig = ingen antenneledning i bildet, 15 pinner/side, ingen ekstra D2/D3/CMD nederst; «ESP32-S»/«DevKitC»-listinger er OFTE 38-pin micro-USB | — |
 
 ## 🔧 Verktøy
 

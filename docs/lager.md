@@ -7,7 +7,7 @@
 
 **Status-koder:** ✅ på lager · 📦 ankommet (ikke testet) · ⬜ bestilt, ikke ankommet · 🔧 i bruk · 🔋 reserve
 
-*Sist oppdatert: 2026-07-05 — RETTELSE: standoffs var «spøkelses-vare» (aldri bestilt, verifisert mot ordrehistorikk) → bestilt nå. B5+B6 komplett mottatt.*
+*Sist oppdatert: 2026-07-25 — B7 delvis inn: 24V 5A-adapter, M3 standoff-boks, ESP32-32D KIT A (38-pin, lek) og ESP-WROOM-32 30-pin Type-C (potte 2-hjerne) på lager, lagt inn uten inspeksjon (antatt OK — sjekkes ved bruk). Standoff-«spøkelset» er dermed reelt oppgjort. I posten ennå: barene (underveis), buck ×2, FR120N ×4.*
 
 ---
 
@@ -15,7 +15,9 @@
 
 | Del | Totalt | I bruk | Ledig | Status | Notat |
 |-----|:------:|:------:|:-----:|:------:|-------|
-| ESP32 32S DevKit (30-pin) | 2 | 0 | 2 | ✅ | Potte 1 + potte 2 (hjerne). MicroPython flashet |
+| ESP32 32S DevKit (30-pin, CP2102) | 2 | 1 | 1 | ✅ | B1. 1 i potte 1 (i drift), 1 ledig. MicroPython v1.28.0 flashet |
+| ESP-WROOM-32 30-pin Type-C «one set» | 1 | 0 | 1 | 📦 | **Ankommet 25. juli** (B7, BodyWell) — m/skrueklemme-breakout. **Potte 2-hjerne.** Sjekkes ved bruk (fase 5): tell pinner, evt. CH340-driver, flash MicroPython |
+| ESP32-32D Type-C KIT A (38-pin) | 1 | 0 | 1 | 📦 | **Ankommet 25. juli** (B7) — 38-pin + GPIO-breakout, CP2102. **Lek/reserve — IKKE potte-hjerne** (annen footprint) |
 | ESP32-CAM-MB (OV2640) | 2 | 1 | 1 | ✅ | **Testet 20. juni** — opplasting til Supabase verifisert. 1 til potte1, 1 reserve/potte2. Arduino IDE |
 | ESP32 (starter kit) | 1 | 1 | 0 | 🔧 | **Brukes nå til pultlyset** (lek). Micro-USB |
 
@@ -43,9 +45,10 @@
 
 | Del | Totalt | I bruk | Ledig | Status | Notat |
 |-----|:------:|:------:|:-----:|:------:|-------|
-| 12V 3A adapter | 1 | 0 | 1 | ✅ | Erstattes av 5A for 2 potter |
-| 12V 5A adapter | 1 | 0 | 1 | 📦 | **Ankommet 26. juni** (B5) — KDT-1250, 12V⎓5A. Erstatter 3A for 2 potter |
-| Buck converter 5V (fast) | 1 | 1 | 0 | 🔧 | Målt 5,26V. **I bruk: gir potte1 5V fra 12V (selvgående drift 20. juni)** — 12V splittet til buck+MOSFET med en løs 3-veis Wago |
+| **24V 5A adapter** | 1 | 0 | 1 | 📦 | **Ankommet 25. juli** (B7) — EU-plugg, 5,5×2,1mm. Blir felles skinne for barer + ny buck. ⚠️ Fysisk identisk plugg med 12V-adapterne, og 24V i gammel buck / LR7843 / phyto-stripa ødelegger dem umiddelbart → **skal ikke i bruk før barer + ny buck + FR120N er samlet**. Mål ubelastet (~24–25V) da |
+| 12V 3A adapter | 1 | 0 | 1 | ✅ | Blir reserve/lek når 24V tar over |
+| 12V 5A adapter | 1 | 0 | 1 | 📦 | **Ankommet 26. juni** (B5) — KDT-1250, 12V⎓5A. Driver 12V-riggen som bygges nå; blir reserve/lek etter 24V-byttet |
+| Buck converter 5V (fast, 12V-inn) | 1 | 1 | 0 | 🔧 | Målt 5,26V. **I bruk: gir potte1 5V fra 12V (selvgående drift 20. juni)** — 12V splittet til buck+MOSFET med en løs 3-veis Wago. ⚠️ **Tåler IKKE 24V** — byttes ut ved 24V-oppgraderingen |
 | DC inline switch | 2 | 0 | 2 | 📦 | |
 | DC barrel jack pigtail-par | 10 par | 0 | 10 | 📦 | |
 | Multimeter UT131D | 1 | — | 1 | ✅ | Lokalt kjøpt |
@@ -112,7 +115,7 @@
 | Del | Totalt | Status | Notat |
 |-----|:------:|:------:|-------|
 | Heat-set insert + skrue-sett (M2–M4) | 1050 | 📦 | **Ankommet 26. juni** (B6) — messing, hot-melt |
-| PCB standoffs (hex, messing) | bestilles | ⬜ | Den gamle «Rafford M2–M6, 14 stk»-oppføringen var **FEIL** — det var heat-set-tuppene (se Loddeutstyr). Ekte standoffs ble aldri bestilt. **Bestilt nå 5. juli 2026** (M3 250-stk assortment-boks, AliExpress — bolter/skruer/muttere/skiver) |
+| PCB standoffs M3 (hex, messing) | 250 | 📦 | **Ankommet 25. juli** (B7) — assortment-boks: bolter/skruer/muttere/skiver. Til bar-montering m/luftspalte (termisk) + perfboard-montering. Høydene i boksen finnes fram når lysbjelken designes (fase 3). (Den gamle «Rafford M2–M6, 14 stk»-oppføringen var feilføring = heat-set-tuppene; ekte standoffs er nå på lager for første gang) |
 | Perfboard 7×9cm | 5 | 📦 | **Ankommet 26. juni** (B5) — blå, dobbeltsidig. Semi-permanent bygg |
 | Perfboard 5×7cm | 10 | 📦 | **Ankommet 26. juni** (B5) — blå, dobbeltsidig. Lodde-øving |
 | M4 messinginnsatser + skruer | — | ✅ | Hadde fra før |
@@ -131,6 +134,18 @@
 
 Verifisert mot ordrehistorikken på AliExpress: **standoffs ble aldri bestilt.** Notatet sa «ventet i posten», men de finnes ikke i noen ordre.
 
-- **PCB standoffs:** aldri kjøpt. B6-oppføringen «Rafford M2–M6, 14 stk, €3» var i virkeligheten **heat-set-tuppene** (samme merke/spec/pris). Ekte standoffs **bestilt nå 5. juli** (M3 250-stk boks)
+- **PCB standoffs:** aldri kjøpt. B6-oppføringen «Rafford M2–M6, 14 stk, €3» var i virkeligheten **heat-set-tuppene** (samme merke/spec/pris). Ekte standoffs **bestilt 5. juli**, **ankommet 25. juli** (M3 250-stk boks) → saken er lukket, standoffs er reelt på lager.
 
-→ Ingenting gjenstår faktisk «i posten» fra B5/B6; begge bestillingene er komplett mottatt.
+→ Ingenting gjenstår «i posten» fra B5/B6; begge bestillingene er komplett mottatt.
+
+---
+
+## I posten nå (Bestilling 7, per 25. juli 2026)
+
+| Del | Antall | Forventet | Merknad |
+|-----|:------:|-----------|---------|
+| Samsung LM281B+ 24V-barer (2-pk) | 2 barer | **underveis** (sporing sjekket 25. juli) | Selve vekstlyset — hele 24V-byttet venter på denne. Photone-mål innen Buyer Protection ved mottak |
+| 24V/12V→5V buck 5A | ×2 | ~30. juli | Ny 5V-kilde (én per potte) |
+| FR120N MOSFET-modul 100V | ×4 | ~13. aug | Erstatter LR7843 på 24V |
+
+Når disse kommer: 12V-utstyret (12V-adaptere, fast-5V-buck, LR7843 ×3, phyto-stripa) flyttes til reserve/lek.

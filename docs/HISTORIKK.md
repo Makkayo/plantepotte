@@ -102,7 +102,7 @@ Samlet etter kveldens breadboard-testing. Alt gjennomgått del-for-del mot AliEx
 | ~~Standoffs~~ → egentlig heat-set-tupper | Rafford, M2–M6, 14 stk | ×1 | €3.00 |
 | Kabelspiral-wrap | Svart fleksibel, kabelbeskyttelse | ×1 | €3.36 |
 
-*(Bestilling 7 — lys-oppgradering 24V, bestilt & betalt 5. juli 2026, 795,72 kr — er AKTIV og står i skillen + `mottaksliste.md`.)*
+*(Bestilling 7 — lys-oppgradering 24V, bestilt & betalt 5. juli 2026, 795,72 kr — er AKTIV og står i skillen + `mottaksliste.md`. Delvis mottatt 25. juli: 4 av 7.)*
 
 ---
 
@@ -115,6 +115,8 @@ Samlet etter kveldens breadboard-testing. Alt gjennomgått del-for-del mot AliEx
 **20. juni 2026 — STOR DAG:** 3 MOSFET loddet (1 skrap — grønn 2-pin smeltet under lodding) + ESP32-PWM-dimming av 12V-stripa verifisert · VL53L0X-laser loddet + community-driver `vl53l0x.py` verifisert mot ekte sensor (`i2c.scan()` viser 0x29+0x3C, stabil mm) · ESP32-CAM flashet i Arduino IDE, full kjede verifisert (WiFi → bilde → Supabase Storage HTTP 200 → dyp søvn, stabilt inkl. 59 KB-foto) · `config.py` m/WiFi flashet + **full integrasjon live** (WiFi+NTP+Supabase, OLED + alle sensorer i appen, app styrer lyset) · breadboard-prototype komplett · **selvgående drift på buck** (lys + sensorer + app helt uten PC; 12V splittet med løs 3-veis Wago).
 
 **26. juni 2026 — B5 + B6 ankommet komplett** (5A-adapter, ekte Wago, jordfukt-10pk → 13 totalt, perfboard, pinnerader, slow-blow-sikringer, flux-penn, motstander/LED, heat-set-sett 1050, kabelspiral, heat-set-tupper ×14).
+
+**25. juli 2026 — B7 delvis mottatt (4 av 7):** 24V 5A-adapter (EU, 5,5×2,1mm), M3 standoff-boks 250 stk, ESP32-32D Type-C KIT A (38-pin, CP2102 — lek/reserve) og ESP-WROOM-32 30-pin Type-C «one set» m/skrueklemme-breakout (potte 2-hjerne). Konsekvenser: (1) **standoff-«spøkelsesvaren» er endelig reelt på lager** — luftspalte-høydene under barene kan måles inn i fase 3-designet nå; (2) **ny fysisk risiko i huset:** 24V-adapteren har samme plugg som 12V-adapterne → merkelapp «24V» + ikke koble 24V til noe før barer/ny buck/FR120N er på plass (gammel buck er 12V-inn, LR7843 er 30V); (3) **barene er underveis** (litt bak opprinnelig 12.–21. juli; sporing sjekket 25. juli, kommer snart), så Photone-målingen og hele 24V-byttet venter på dem. Gjenstår ellers: buck ×2 (~30. juli), FR120N ×4 (~13. aug). **Mottaks-praksis etablert samme dag:** Markus inspiserer ikke nye deler ved mottak — de antas OK og legges rett på lager, og sjekkene (mål buck-utgang, tell pinner) skrives inn i byggesteget der de betyr noe. Photone-målingen av barene er unntaket, siden den er bundet til Buyer Protection. Samme dag verifisert at hele test-parken er grønn (196 vitest + firmware-logikktester) og at Supabase-prosjektet står `ACTIVE_HEALTHY`.
 
 ---
 

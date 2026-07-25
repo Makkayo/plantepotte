@@ -8,7 +8,7 @@ Holder styr på hva som er **bestilt → ankommet → testet** på breadboard.
 - ✅ Testet og funker
 - ⚠️ Ankommet, men problem (se notat)
 
-*Sist oppdatert: 2026-07-05 — Bestilling 7 (lys-oppgradering 24V + 2 ESP32, 795,72 kr inkl. mva) BESTILT & BETALT (7 del-ordrer). Også: standoffs-rettelsen (aldri bestilt i B6 → inngår i B7); B5 + B6 er komplett mottatt.*
+*Sist oppdatert: 2026-07-25 — **B7 delvis mottatt (4 av 7):** 24V-adapter, M3-standoffs, ESP32-32D KIT A og ESP-WROOM-32 «one set» kom 25. juli, godkjent uten inspeksjon (Markus' valg — delene sjekkes når de skal brukes). Barene er litt bak skjema men **underveis per sporing 25. juli**. Gjenstår ellers: buck ×2 (~30. juli), FR120N ×4 (~13. aug).*
 
 ---
 
@@ -104,17 +104,21 @@ Samlet etter kveldens testing. AliExpress-søkeord i parentes.
 
 ## Bestilling 7 — lys-oppgradering 24V + reserve (BETALT 5. juli, **795,72 kr** inkl. mva+frakt)
 
-Vekstlys-byttet: magenta 12V-strip → hvite 24V Samsung LM281B-barer (~10× lys, fikser kamera-magenta). Uavhengig verifisert 5. juli (research-doc `2026-07-05-vekstlys-research-oppdrag.md`). 7 varer / 7 del-ordrer: subtotal 546,36 + frakt 90,13 + mva 159,23 = **795,72 kr**. Leveringene kommer SPREDT (12. juli–13. aug) — **barene kommer FØRST**: de kan Photone-måles direkte på 24V-adapteren (uten MOSFET, alltid-på) mens FR120N er i posten.
+Vekstlys-byttet: magenta 12V-strip → hvite 24V Samsung LM281B-barer (~10× lys, fikser kamera-magenta). Uavhengig verifisert 5. juli (research-doc `2026-07-05-vekstlys-research-oppdrag.md`). 7 varer / 7 del-ordrer: subtotal 546,36 + frakt 90,13 + mva 159,23 = **795,72 kr**. Leveringene kommer SPREDT (12. juli–13. aug).
+
+**Mottaksstatus 25. juli: 4 av 7 kommet.** Delene er lagt rett på lager uten inspeksjon (Markus' valg — antatt OK); det som må sjekkes står per rad som *«verifiseres ved bruk»* og hører til byggesteget, ikke mottaket. Barene er litt bak skjema, men **underveis per sporing 25. juli**.
+
+> ⚡ **Til byggedagen:** 24V-adapteren har samme 5,5×2,1mm-plugg som 12V-adapterne. Gammel buck (12V-inn), LR7843 (30V) og phyto-stripa dør av 24V — så 24V-adapteren skal ikke i bruk før barer + ny buck + FR120N er samlet. Riggen som bygges nå kjører 12V.
 
 | Status | Del | Antall | Notat |
 |:------:|-----|:------:|-------|
-| ⬜ | Samsung LM281B+ 24V 25W alu-bar 500×30mm, 2-pk (KQO Official Store) | ×1 (2 barer) | 141,69 kr · ordre `3074999822034751` · **levering 12.–21. juli (først!)**. Selve lyset — 50 W totalt, 3000K+5000K hvit + 660nm rød. **Ved mottak:** sjekk ledninger/kontakt + om rød-kanal har separat inngang (da skal den også til 24V). **Mål PPFD med Photone (papir-diffusor) innen Buyer Protection — skal vise ~150–250.** Kan testes rett på 24V-adapteren før FR120N kommer |
-| ⬜ | 24V 5A adapter, EU-plugg (SuperMall Store) | ×1 | 147,15 kr · ordre `3074999822114751`. Ny felles skinne (barer + buck). Plugg 5,5×2,1mm bekreftet — matcher B1-pigtails + inline-bryter (✓ 24V/5A-rated) |
+| ⬜ | Samsung LM281B+ 24V 25W alu-bar 500×30mm, 2-pk (KQO Official Store) | ×1 (2 barer) | 141,69 kr · ordre `3074999822034751` · **underveis — sporing sjekket 25. juli, kommer snart** (opprinnelig 12.–21. juli). Selve lyset — 50 W totalt, 3000K+5000K hvit + 660nm rød. **Ved mottak — den ene sjekken som må gjøres med én gang:** mål PPFD med Photone (papir-diffusor) **innen Buyer Protection — skal vise ~150–250**. Kan måles rett på 24V-adapteren (ligger klar) uten å vente på FR120N. Se samtidig om rød-kanal har egen inngang (da skal den også til 24V) |
+| 📦 | 24V 5A adapter, EU-plugg (SuperMall Store) | ×1 | 147,15 kr · ordre `3074999822114751` · **Kom 25. juli** — 24V⎓5A, EU-plugg, 5,5×2,1mm (matcher B1-pigtails + inline-bryter ✓ 24V/5A-rated). Ny felles skinne (barer + buck). *Verifiseres ved bruk:* mål ubelastet spenning (~24–25V) når 24V-kjeden kobles |
 | ⬜ | FR120N MOSFET-modul 100V 9.4A, opto-isolert (TZT teng Official) | ×4 | 4,05 kr/stk · ordre `3074999822094751` · **levering ~13. aug (sist)**. Bytter LR7843 (30V for tett på 24V). 4 stk = potte 1 + potte 2 + 2 reserve. Samme byggesett-type som B1 → skrueklemmer må loddes |
 | ⬜ | 24V/12V→5V **5A** buck 25W (WAVGAT Official) | ×2 | 16,31 kr/stk · ordre `3074999822154751` · levering ~30. juli. Ny 5V-kilde (gammel buck er 12V-inn, tåler ikke 24V). 5A ut = rikelig for ESP32+CAM. Én per potte. **Verifiser ~5V med multimeter FØR ESP32** |
-| ⬜ | M3 standoff-boks messing, 250 stk (Hundred Years Store) | ×1 | 74,20 kr · ordre `3074999822054751`. Bar-montering m/luftspalte (termisk!) + perfboard. Erstatter B6-feilføringen |
-| ⬜ | ESP32-32D Type-C **KIT A** (38-pin + GPIO-breakout) (NEVER GIVE UP Store) | ×1 | 69,15 kr · ordre `3074999822134751`. **Lek/reserve — IKKE potte-hjerne** (38-pin ≠ 30-pin footprint) |
-| ⬜ | ESP-WROOM-32 **30-pin Type-C** «one set» m/skrueklemme-breakout (BodyWell Store) | ×1 | 65,35 kr · ordre `3074999822074751`. **POTTE 2-HJERNE/RESERVE ✓** — verifisert mot produktbilde: 15 pinner/side (ingen D2/D3/CMD), Type-C, PCB-antenne = samme footprint/pinout som B1-kortene. Lukker 30-pin-ønsket fra ønskelista. NB: USB-chip trolig CH340 (B1 = CP2102) — kan trenge driver første gang, ellers identisk i bruk |
+| 📦 | M3 standoff-boks messing, 250 stk (Hundred Years Store) | ×1 | 74,20 kr · ordre `3074999822054751` · **Kom 25. juli** — assortert boks (bolter/skruer/muttere/skiver). Bar-montering m/luftspalte (termisk!) + perfboard. Erstatter B6-feilføringen. *Verifiseres ved bruk:* finn høydene i boksen når lysbjelken designes i fase 3 (de setter luftspalten under barene) |
+| 📦 | ESP32-32D Type-C **KIT A** (38-pin + GPIO-breakout) (NEVER GIVE UP Store) | ×1 | 69,15 kr · ordre `3074999822134751` · **Kom 25. juli** — produkttittel bekrefter 38-pin + **CP2102** (samme USB-chip som B1-kortene → ingen ny driver). **Lek/reserve — IKKE potte-hjerne** (38-pin ≠ 30-pin footprint) |
+| 📦 | ESP-WROOM-32 **30-pin Type-C** «one set» m/skrueklemme-breakout (BodyWell Store) | ×1 | 65,35 kr · ordre `3074999822074751` · **Kom 25. juli** — **POTTE 2-HJERNE/RESERVE ✓** (verifisert mot produktbilde før kjøp: 15 pinner/side, ingen D2/D3/CMD, Type-C, PCB-antenne = samme footprint/pinout som B1). *Verifiseres ved bruk (fase 5, potte 2):* tell pinnene (15/side) før den bygges inn · plugg i PC — ingen COM-port betyr CH340-driver (B1 = CP2102) · flash MicroPython v1.28.0 som på B1-kortene |
 
 ## Uventet / ekstra i 26. juni-leveransen
 

@@ -5,6 +5,8 @@
 - Samtidig et **snapshot** av beslutning + handlekurv + hva som allerede er verifisert, per 5. juli 2026.
 - Kilde-sannhet ellers: plantepotte-skillens «Vekstlys — ytelse, måling & oppgraderingsvei»-seksjon. Hold i synk.
 
+> ⏱️ **Snapshot fra 5. juli — leveringstidene under er utdatert.** Faktisk mottak per **25. juli**: 24V-adapter, M3-standoffs og begge ESP32-kortene er inne; barene er underveis (litt bak opprinnelig 12.–21. juli), buck ~30. juli, FR120N ~13. aug. Levende status: `docs/mottaksliste.md`.
+
 ---
 
 ## 1. Rammer (må respekteres i researchen)

@@ -27,6 +27,17 @@ får sin egen Supabase. Sammenslåing («egen fase senere» i README) er skrinla
   grensen på 2 aktive gratis-prosjekter gjelder per bruker på tvers av alle
   organisasjoner, og begge plassene er brukt (MørkeZ + Matplanlegger/Plantepotte).
 
+## Ny motforestilling (25. juli 2026): delingen holder prosjektet vått
+
+Sjekket status i dag: prosjektet er `ACTIVE_HEALTHY` selv etter **35 dager uten
+ESP32-trafikk** (siste avlesning 20. juni 16:38 UTC — ESP32-en har stått av). Det
+er **Matplanleggers daglige bruk** som holder gratis-prosjektet fra å pauses, ikke
+potta. Et utskilt Plantepotte-prosjekt mister den livlinen: står ESP32-en av i en
+uke (som nå, mellom byggetrinn), pauses prosjektet og appen møter en død backend
+til noen vekker det manuelt. Ikke en showstopper, men et reelt minus som ikke var
+med i regnestykket da retningen ble valgt — og et argument for å vente til potta
+faktisk står og poster døgnet rundt.
+
 ## Hva som flytter
 
 | Ressurs | Innhold | Merknad |
