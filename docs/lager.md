@@ -7,7 +7,7 @@
 
 **Status-koder:** ✅ på lager · 📦 ankommet (ikke testet) · ⬜ bestilt, ikke ankommet · 🔧 i bruk · 🔋 reserve
 
-*Sist oppdatert: 2026-07-25 — B7 delvis inn: 24V 5A-adapter, M3 standoff-boks, ESP32-32D KIT A (38-pin, lek) og ESP-WROOM-32 30-pin Type-C (potte 2-hjerne) på lager, lagt inn uten inspeksjon (antatt OK — sjekkes ved bruk). Standoff-«spøkelset» er dermed reelt oppgjort. I posten ennå: barene (underveis), buck ×2, FR120N ×4.*
+*Sist oppdatert: 2026-07-28 — **LM281B-barene ×2 på lager** (kom 28. juli). ⏰ Photone-måling gjenstår (frist: Buyer Protection). Fra 25. juli: 24V 5A-adapter, M3 standoff-boks, ESP32-32D KIT A (38-pin, lek) og ESP-WROOM-32 30-pin Type-C (potte 2-hjerne), lagt inn uten inspeksjon (antatt OK — sjekkes ved bruk). Standoff-«spøkelset» er reelt oppgjort. I posten ennå: buck ×2 (~30. juli), FR120N ×4 (~13. aug).*
 
 ---
 
@@ -36,7 +36,8 @@
 
 | Del | Totalt | I bruk | Ledig | Status | Notat |
 |-----|:------:|:------:|:-----:|:------:|-------|
-| LED-strip phyto 12V 5050 | 5 m | ~1,2 m (test) | ~3,8 m | ✅ | Vekstlyset. 0,36 A/40cm målt |
+| **Samsung LM281B+ 24V 25W alu-bar 500×30mm** | 2 | 0 | 2 | 📦 | **Ankommet 28. juli** (B7) — **vekstlyset for potte 1**, 50 W totalt, 3000K+5000K hvit + 660nm rød. Konstant-spenning, ingen driver. ⏰ **Photone-måling gjenstår innen Buyer Protection** (forvent ~150–250, måles rett på 24V-adapteren). Monteres på M3-standoffs m/luftspalte — blir 50–70 °C, ikke PETG mot bar-baksiden |
+| LED-strip phyto 12V 5050 | 5 m | ~1,2 m (test) | ~3,8 m | 🔋 | **Nå reserve** — pensjonert av barene (~30 PPFD, 10 % av mål). 0,36 A/40cm målt. Kan bli lys i en senere kasse (appen støtter begge varianter) |
 | WS2812B RGB-strip 5V | 1 m (30 LED) | 1 m | 0 | 🔧 | **Pultlyset** (lek, IKKE vekstlys) |
 | LR7843/FR120N MOSFET | 4 | 1 | 2 | ✅ | **3 loddet + dimming testet 20. juni.** 1 i bruk (potte1), 2 gode i reserve. **4. = skrap** (grønn 2-pin smeltet) |
 | LED clip connector 8mm | 10 | 0 | 10 | 📦 | +5 **ankommet 26. juni** (B5) → 10 totalt |
@@ -140,12 +141,13 @@ Verifisert mot ordrehistorikken på AliExpress: **standoffs ble aldri bestilt.**
 
 ---
 
-## I posten nå (Bestilling 7, per 25. juli 2026)
+## I posten nå (Bestilling 7, per 28. juli 2026)
 
 | Del | Antall | Forventet | Merknad |
 |-----|:------:|-----------|---------|
-| Samsung LM281B+ 24V-barer (2-pk) | 2 barer | **underveis** (sporing sjekket 25. juli) | Selve vekstlyset — hele 24V-byttet venter på denne. Photone-mål innen Buyer Protection ved mottak |
-| 24V/12V→5V buck 5A | ×2 | ~30. juli | Ny 5V-kilde (én per potte) |
-| FR120N MOSFET-modul 100V | ×4 | ~13. aug | Erstatter LR7843 på 24V |
+| 24V/12V→5V buck 5A | ×2 | ~30. juli | Ny 5V-kilde (én per potte). Mål ~5V FØR ESP32 |
+| FR120N MOSFET-modul 100V | ×4 | ~13. aug | Erstatter LR7843 på 24V. Siste brikke før lys-kjeden kan kobles ferdig |
+
+**Barene er inne** (28. juli) — 24V-byttet mangler nå bare buck og FR120N.
 
 **Potte 1 bygges som 24V fra start** (avgjort 25. juli) → 12V-utstyret (12V-adaptere, fast-5V-buck, LR7843 ×3, phyto-stripa 5 m) er allerede reserve. Det brukes fortsatt som **bench-strøm** til sensortesting inntil den nye bucken kommer, og kan senere bli lys i en ny kasse hvis Markus vil prøve 12V-varianten i praksis.

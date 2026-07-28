@@ -8,7 +8,7 @@ Holder styr på hva som er **bestilt → ankommet → testet** på breadboard.
 - ✅ Testet og funker
 - ⚠️ Ankommet, men problem (se notat)
 
-*Sist oppdatert: 2026-07-25 — **B7 delvis mottatt (4 av 7):** 24V-adapter, M3-standoffs, ESP32-32D KIT A og ESP-WROOM-32 «one set» kom 25. juli, godkjent uten inspeksjon (Markus' valg — delene sjekkes når de skal brukes). Barene er litt bak skjema men **underveis per sporing 25. juli**. Gjenstår ellers: buck ×2 (~30. juli), FR120N ×4 (~13. aug).*
+*Sist oppdatert: 2026-07-28 — **B7 mottatt 5 av 7: BARENE KOM 28. juli.** ⏰ Photone-målingen er nå den aktive oppgaven (innen Buyer Protection, forvent ~150–250, måles rett på 24V-adapteren). Fra før: 24V-adapter, M3-standoffs, ESP32-32D KIT A og ESP-WROOM-32 «one set» (25. juli, godkjent uten inspeksjon — delene sjekkes når de skal brukes). Gjenstår: buck ×2 (~30. juli), FR120N ×4 (~13. aug).*
 
 ---
 
@@ -106,7 +106,7 @@ Samlet etter kveldens testing. AliExpress-søkeord i parentes.
 
 Vekstlys-byttet: magenta 12V-strip → hvite 24V Samsung LM281B-barer (~10× lys, fikser kamera-magenta). Uavhengig verifisert 5. juli (research-doc `2026-07-05-vekstlys-research-oppdrag.md`). 7 varer / 7 del-ordrer: subtotal 546,36 + frakt 90,13 + mva 159,23 = **795,72 kr**. Leveringene kommer SPREDT (12. juli–13. aug).
 
-**Mottaksstatus 25. juli: 4 av 7 kommet.** Delene er lagt rett på lager uten inspeksjon (Markus' valg — antatt OK); det som må sjekkes står per rad som *«verifiseres ved bruk»* og hører til byggesteget, ikke mottaket. Barene er litt bak skjema, men **underveis per sporing 25. juli**.
+**Mottaksstatus 28. juli: 5 av 7 kommet — barene er her.** Delene legges rett på lager uten inspeksjon (Markus' valg — antatt OK); det som må sjekkes står per rad som *«verifiseres ved bruk»* og hører til byggesteget, ikke mottaket. **Unntaket er barene:** Photone-målingen har en frist (Buyer Protection) og må gjøres nå.
 
 > 💡 **Avgjort 25. juli: potte 1 bygges som 24V fra start** — 12V-mellomsteget er droppet. Lys-kjeden kan derfor først kobles når buck (~30. juli) + FR120N (~13. aug) er inne; sensorene kan ferdigtestes på det gamle 12V-adapter+buck-paret i mellomtiden.
 >
@@ -114,13 +114,58 @@ Vekstlys-byttet: magenta 12V-strip → hvite 24V Samsung LM281B-barer (~10× lys
 
 | Status | Del | Antall | Notat |
 |:------:|-----|:------:|-------|
-| ⬜ | Samsung LM281B+ 24V 25W alu-bar 500×30mm, 2-pk (KQO Official Store) | ×1 (2 barer) | 141,69 kr · ordre `3074999822034751` · **underveis — sporing sjekket 25. juli, kommer snart** (opprinnelig 12.–21. juli). Selve lyset — 50 W totalt, 3000K+5000K hvit + 660nm rød. **Ved mottak — den ene sjekken som må gjøres med én gang:** mål PPFD med Photone (papir-diffusor) **innen Buyer Protection — skal vise ~150–250**. Kan måles rett på 24V-adapteren (ligger klar) uten å vente på FR120N. Se samtidig om rød-kanal har egen inngang (da skal den også til 24V) |
+| 📦 | Samsung LM281B+ 24V 25W alu-bar 500×30mm, 2-pk (KQO Official Store) | ×1 (2 barer) | 141,69 kr · ordre `3074999822034751` · **Kom 28. juli** (en uke bak opprinnelig 12.–21. juli). Selve lyset — 50 W totalt, 3000K+5000K hvit + 660nm rød. ⏰ **AKTIV OPPGAVE — den ene sjekken med frist:** mål PPFD med Photone (papir-diffusor) **— skal vise ~150–250**. **Riktig Photone-lyskilde = «LED Full+Red»** (hvit fullspektrum + 660nm rød = akkurat denne baren). Den gamle «LED Red/Blue» Markus eide fra stripe-målingen er FEIL spektrum her. Koster ~$5,99 engangs (enkeltkilde, IKKE Pro-abonnement) — se `HISTORIKK.md` for Photone-prismodellen. **Merk: PPFD-tallet har ingen reell frist** — Buyer Protection-sjekken er at begge barer lyser på begge kanaler + at strømtrekket er ~1,0 A/bar ved 24V (måles gratis med UT131D; ~0,5 A = underspesifisert bar = reklamer). PPFD er kalibrering for appens `bar24`-variant og kan gjøres når modulen er kjøpt. Måles rett på 24V-adapteren (ligger klar), ingen grunn til å vente på FR120N. **Tilkobling avklart 28. juli (bilde + avlest merking):** 3 stk **push-in fjærklemmer** loddet på kortet — ingen lodding nødvendig, men de tar **bar strippet ledning (8–10 mm, tvinnet), IKKE Dupont-pinner** (samme felle som Wago). Merking: `W/UV/IR+` = hvit-kanalen (generisk kortmerking; produsenten bruker samme PCB til hvit/UV/IR — vår er bestykket hvit 3000K+5000K), `R+` = 660nm rød, `GND` = felles minus. **Rød har altså egen inngang, men deler retur med hvit** → begge `+` til 24V+, og **én MOSFET på GND-siden dimmer begge** = arkitekturen er uendret. Ledning: 20 AWG (B5, 2-pin rød/svart) permanent; Dupont-tråd kun til benketest (26 AWG, ~1 A/bar OK over 20–30 cm, men 2,1 A i felles retur opp stolpa krever 20 AWG). **Bonus-mulighet:** to MOSFET-er (GPIO 19/23 er ledige, 4 FR120N på vei) gir separat rød-styring — f.eks. rød av under ESP32-CAM-bilder. Ikke gjort nå |
 | 📦 | 24V 5A adapter, EU-plugg (SuperMall Store) | ×1 | 147,15 kr · ordre `3074999822114751` · **Kom 25. juli** — 24V⎓5A, EU-plugg, 5,5×2,1mm (matcher B1-pigtails + inline-bryter ✓ 24V/5A-rated). Ny felles skinne (barer + buck). *Verifiseres ved bruk:* mål ubelastet spenning (~24–25V) når 24V-kjeden kobles |
 | ⬜ | FR120N MOSFET-modul 100V 9.4A, opto-isolert (TZT teng Official) | ×4 | 4,05 kr/stk · ordre `3074999822094751` · **levering ~13. aug (sist)**. Bytter LR7843 (30V for tett på 24V). 4 stk = potte 1 + potte 2 + 2 reserve. Samme byggesett-type som B1 → skrueklemmer må loddes |
 | ⬜ | 24V/12V→5V **5A** buck 25W (WAVGAT Official) | ×2 | 16,31 kr/stk · ordre `3074999822154751` · levering ~30. juli. Ny 5V-kilde (gammel buck er 12V-inn, tåler ikke 24V). 5A ut = rikelig for ESP32+CAM. Én per potte. **Verifiser ~5V med multimeter FØR ESP32** |
 | 📦 | M3 standoff-boks messing, 250 stk (Hundred Years Store) | ×1 | 74,20 kr · ordre `3074999822054751` · **Kom 25. juli** — assortert boks (bolter/skruer/muttere/skiver). Bar-montering m/luftspalte (termisk!) + perfboard. Erstatter B6-feilføringen. *Verifiseres ved bruk:* finn høydene i boksen når lysbjelken designes i fase 3 (de setter luftspalten under barene) |
 | 📦 | ESP32-32D Type-C **KIT A** (38-pin + GPIO-breakout) (NEVER GIVE UP Store) | ×1 | 69,15 kr · ordre `3074999822134751` · **Kom 25. juli** — produkttittel bekrefter 38-pin + **CP2102** (samme USB-chip som B1-kortene → ingen ny driver). **Lek/reserve — IKKE potte-hjerne** (38-pin ≠ 30-pin footprint) |
 | 📦 | ESP-WROOM-32 **30-pin Type-C** «one set» m/skrueklemme-breakout (BodyWell Store) | ×1 | 65,35 kr · ordre `3074999822074751` · **Kom 25. juli** — **POTTE 2-HJERNE/RESERVE ✓** (verifisert mot produktbilde før kjøp: 15 pinner/side, ingen D2/D3/CMD, Type-C, PCB-antenne = samme footprint/pinout som B1). *Verifiseres ved bruk (fase 5, potte 2):* tell pinnene (15/side) før den bygges inn · plugg i PC — ingen COM-port betyr CH340-driver (B1 = CP2102) · flash MicroPython v1.28.0 som på B1-kortene |
+
+### 📏 Photone-måleserie 28. juli 2026 — LM281B-bar (GYLDIG)
+
+**✅ Målt med riktig spektralmodul «LED Full+Red»** (hvit fullspektrum + 660nm rød = akkurat denne baren). Markus kjøpte den før måleserien. Den gamle «LED Red/Blue» han eide fra stripe-målingen er feil spektrum her og ble ikke brukt. **Tallene under er gyldige — ingen ny måleserie nødvendig.**
+
+**Metode-felle som kostet tid:** Photone står som default på **24 timers fotoperiode**. DLI-avlesninger må derfor skaleres til faktisk fotoperiode, eller — bedre — regnes om til **PPFD = DLI₂₄ / 0,0864**, som er fotoperiode-uavhengig.
+
+Målt **én bar**, midt under (avstand til bar):
+
+| Avstand | Målt | → PPFD | Jevnhet (side/midt) |
+|---|---|---|---|
+| 21 cm | 7,6 mol @24t | 88 | 79 % |
+| 11 cm | 14 mol @24t | 162 | 71 % |
+| 10 cm | 13,5 mol @18t | 208 | — |
+| 5–6 cm | 28 mol @24t | 324 | 57 % |
+
+**Nøkkelfunn — lyset faller som 1/d, IKKE 1/d².** 28→14→7,6 ved 5,5→11→21 cm: hver dobling av avstanden halverer lyset. Det er linjekilde-oppførsel (500mm bar), og betyr at lyset bærer bedre utover enn en punktkilde — nabobaren bidrar mer, og jevnheten blir bedre enn punktkilde-modeller tilsier.
+
+Beregnet for **to barer** (¼ og ¾ inn på 450mm, 22,5 cm fra hverandre), snitt over flaten:
+
+| Høyde | PPFD snitt | Jevnhet | DLI @16t | DLI @18t |
+|---|---|---|---|---|
+| 5,5 cm | ~230 | 37 % ✗ | 13,2 | 14,9 |
+| 10 cm | ~213 | 76 % | **12,3** ✓ | **13,8** ✓ |
+| 15 cm | ~154 | 97 % | 8,9 ✗ | 10,0 ✗ |
+| 21 cm | ~133 | 95 % | 7,7 ✗ | 8,6 ✗ |
+
+**Konsekvenser:**
+1. **Fotoperioden må opp fra 13 t til 16–18 t** for å nå salat-/urte-målet (DLI 12–17). Appen har fotoperiode-kompensasjon i `lys.ts`. Energi ved 18 t: ~27 kWh/mnd ≈ **30–35 kr/mnd**.
+2. **Hengehøyde ~10 cm** er beste kompromiss mellom styrke og jevnhet — ikke 15 cm som først antatt.
+3. **5–6 cm er dobbelt uklokt:** jevnheten kollapser til 37 %, og 28 mol@24t ≈ 600 PPFD = metningspunktet der bladene ikke kan bruke mer lys.
+4. **⬜ ÅPENT:** jevnhetstallene antar planter over hele 450mm-bredden. Plantene står i **to oktagon-potter med vanntank imellom** — står barene rett over pottene, havner den mørke sonen over tanken og ujevnheten betyr mindre. **Trenger senteravstand mellom oktagon-pottene fra Fusion-modellen** for å regne ferdig.
+5. Baren er **ikke** en flopp: ~5–6× magenta-stripa (~30 PPFD). Ingen reklamasjonsgrunn. ⬜ Strømmåling (~1,0 A/bar @24V med UT131D) gjenstår som siste harde spec-sjekk.
+6. **Én vs to barer — avklart mot faktisk 3D-geometri 28. juli.** ⚠️ Første regnestykke antok pottene på hver SIDE av lysbjelken (~112mm ut) → ga misvisende ~92 PPFD. **Fusion-modellen viser at de to oktagon-pottene ligger PÅ LINJE under bjelken**, som spenner langs lengden mellom de 2 stolpene og går rett over sentrum av begge potter. Sidefallet skjer bare i dybderetningen, ~90mm ut til potte-kant. Korrigert:
+
+| | Én bar | To barer |
+|---|---|---|
+| PPFD snitt over potte @10 cm | ~160 | ~242 |
+| DLI @ 18 t | **~10,4** | **~15,7** |
+| Redesign av tak | 4 bein + nye base-fester | bare ny takplate (2 bein beholdes) |
+| Kostnad for potte 1 | 0 kr | **0 kr — begge barer er allerede eid** |
+
+**Konklusjon: bygg potte 1 med begge barer.** Ikke fordi én er ubrukelig (~10,4 mol + reflekterende vegger ≈ 12 mol = så vidt i mål for salat), men fordi to koster null ekstra nå, gir 50 % mer lys, krever *mindre* redesign, og kan **dimmes ned til én-bar-nivå via PWM/GPIO26** (appen har intensitet 0–100 %). Motsatt vei krever ny print. **Potte 1 blir dermed eksperimentet som avgjør potte 2:** kjør begge først, dim ned til én, se om plantene merker det → kjøp for potte 2 basert på data (sparer 125 kr/potte hvis én holder). Tegn taket for to uansett.
+7. **Designspor som er riktig, men ikke tatt:** smalere + lengre kasse presser potte-kanten nærmere bar-aksen der lyset taper seg — den ene endringen som faktisk flytter tallene for én-bar-varianten. Krever 4 bein (smal bjelke over lang spennvidde bøyer/vrir seg i PETG). Parkert 28. juli — «får se hva det blir til».
+7. **🌡️ Barene blir «veldig varme» (bekreftet ved test 28. juli)** — som ventet (50–70 °C). Alu-profilen ER kjøleribba: **oversiden må stå fritt eksponert**, ikke bygges inn tett. Standoffs (M3-boksen) gir luftspalte til PETG-taket, + ventilasjonsåpninger rett over barene. PETG mykner ~80 °C. Kjenn på PETG-en etter 1 t drift første gang.
 
 ## Uventet / ekstra i 26. juni-leveransen
 
