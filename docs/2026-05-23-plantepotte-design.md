@@ -2,11 +2,13 @@
 
 **Dato opprettet:** 2026-05-23
 **Sist oppdatert:** 2026-06-12 (totalrevisjon: utdatert main.py-skisse fjernet — `firmware/` er fasiten)
-**Status:** Backend og web-app live. Hardware B1+B2 ankommet og i stor grad breadboard-testet (LED tent 10. juni). B3–B5 i posten. Neste: main.py + WiFi + Supabase end-to-end.
+**Status (historisk, per 12. juni):** Backend og web-app live. Hardware B1+B2 ankommet og i stor grad breadboard-testet (LED tent 10. juni). B3–B5 i posten. Neste: main.py + WiFi + Supabase end-to-end.
+**Faktisk status i dag:** all hardware er mottatt (alle 7 bestillinger komplett 7. august 2026), full integrasjon verifisert 20. juni, og potte 1 bygges som 24V. Levende status: prosjekt-skillen + `docs/lager.md`.
 
 > ⚠️ **Dette er et øyeblikksbilde — gjeldende fasit er prosjekt-skillen** (`C:\Users\marku\.claude\skills\plantepotte\skill.md`). Disse delene er fortsatt historiske og er IKKE oppdatert her:
 > - **Kamera:** ESP32-CAM lagt til på potte 1 → bilder til Supabase Storage → vekst-tidslinje i appen (gjøres når kameraet er testet).
 > - **Web-app:** er skrevet om til **Svelte 5 + TypeScript + Vite** (ikke lenger vanilla én-fil `index.html` som beskrevet nederst).
+> - **Vekstlyset:** 12V magenta phyto-strip er byttet ut med **2× Samsung LM281B 24V-barer** (50 W, hvit + 660nm rød). Hele strømkjeden er 24V med FR120N-MOSFET og ny 24V→5V-buck. Den gamle 12V-riggen er reserve.
 > - **Auto-justerende lys** (stepper + lead screw) er en utforsket fremtidsidé — se skillen.
 > - **Fysisk design** nederst beskriver et eldre "3 deler"-konsept; gjeldende 3D-modell er base + 4 stolper + tak (se skillen).
 > - **Database-seksjonen:** `planteprofiler`-tabellen og `plantetype`-kolonnen ble fjernet fra databasen 3. juli 2026 (v1-rester), og RLS-policyene vist som «anon all» er strammet inn (anon: kun SELECT på `potte_commands`, kun INSERT på `potte_sensor_data`). Gjeldende skjema og eierskap: `docs/database-kart.md` + skillen.

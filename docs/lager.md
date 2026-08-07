@@ -7,7 +7,7 @@
 
 **Status-koder:** ✅ på lager · 📦 ankommet (ikke testet) · ⬜ bestilt, ikke ankommet · 🔧 i bruk · 🔋 reserve
 
-*Sist oppdatert: 2026-07-28 — **LM281B-barene ×2 på lager** (kom 28. juli). ⏰ Photone-måling gjenstår (frist: Buyer Protection). Fra 25. juli: 24V 5A-adapter, M3 standoff-boks, ESP32-32D KIT A (38-pin, lek) og ESP-WROOM-32 30-pin Type-C (potte 2-hjerne), lagt inn uten inspeksjon (antatt OK — sjekkes ved bruk). Standoff-«spøkelset» er reelt oppgjort. I posten ennå: buck ×2 (~30. juli), FR120N ×4 (~13. aug).*
+*Sist oppdatert: 2026-08-07 — **✅ B7 KOMPLETT, ingenting i posten.** Buck ×2 og FR120N ×4 kom 7. aug. Alt materiell til potte 1 er nå på lager: barer, 24V-adapter, buck, FR120N, standoffs, ESP32-er, sensorer. Photone-måleserien er gjort (28. juli, ~208 PPFD/bar @10 cm — gyldig). Gjenstående sjekker hører til byggesteget: lodde FR120N-klemmer, måle buck-utgang (~5V) før ESP32, strømmåling ~1,0 A/bar. Prosjektet er nå kun begrenset av fase 3 (Fusion-design) og byggetid.*
 
 ---
 
@@ -39,16 +39,18 @@
 | **Samsung LM281B+ 24V 25W alu-bar 500×30mm** | 2 | 0 | 2 | 📦 | **Ankommet 28. juli** (B7) — **vekstlyset for potte 1**, 50 W totalt, 3000K+5000K hvit + 660nm rød. Konstant-spenning, ingen driver. ⏰ **Photone-måling gjenstår innen Buyer Protection** (forvent ~150–250, måles rett på 24V-adapteren). Monteres på M3-standoffs m/luftspalte — blir 50–70 °C, ikke PETG mot bar-baksiden |
 | LED-strip phyto 12V 5050 | 5 m | ~1,2 m (test) | ~3,8 m | 🔋 | **Nå reserve** — pensjonert av barene (~30 PPFD, 10 % av mål). 0,36 A/40cm målt. Kan bli lys i en senere kasse (appen støtter begge varianter) |
 | WS2812B RGB-strip 5V | 1 m (30 LED) | 1 m | 0 | 🔧 | **Pultlyset** (lek, IKKE vekstlys) |
-| LR7843/FR120N MOSFET | 4 | 1 | 2 | ✅ | **3 loddet + dimming testet 20. juni.** 1 i bruk (potte1), 2 gode i reserve. **4. = skrap** (grønn 2-pin smeltet) |
+| **FR120N MOSFET-modul 100V 9.4A** | 4 | 0 | 4 | 📦 | **Ankommet 7. aug** (B7) — **dette er MOSFET-en for 24V-lyset** (LR7843 er 30V-rated = for tett på 24V). Opto-isolert, samme byggesett-type som B1: **skrueklemmene må loddes på**. 4 stk = potte 1 + potte 2 + 2 reserve. Monteres på GND-siden og dimmer hvit + rød samtidig (felles retur); SIG ← GPIO26 PWM |
+| LR7843 MOSFET (12V-reserve) | 4 | 1 | 2 | 🔋 | **3 loddet + dimming testet 20. juni.** 1 sitter i 12V-bench-riggen, 2 gode i reserve. **4. = skrap** (grønn 2-pin smeltet). **Skal IKKE brukes på 24V** — 30V-rated, for liten margin |
 | LED clip connector 8mm | 10 | 0 | 10 | 📦 | +5 **ankommet 26. juni** (B5) → 10 totalt |
 
 ## ⚡ Kraft & kabling
 
 | Del | Totalt | I bruk | Ledig | Status | Notat |
 |-----|:------:|:------:|:-----:|:------:|-------|
-| **24V 5A adapter** | 1 | 0 | 1 | 📦 | **Ankommet 25. juli** (B7) — EU-plugg, 5,5×2,1mm. Blir felles skinne for barer + ny buck. ⚠️ Fysisk identisk plugg med 12V-adapterne, og 24V i gammel buck / LR7843 / phyto-stripa ødelegger dem umiddelbart → **skal ikke i bruk før barer + ny buck + FR120N er samlet**. Mål ubelastet (~24–25V) da |
+| **24V 5A adapter** | 1 | 0 | 1 | 📦 | **Ankommet 25. juli** (B7) — EU-plugg, 5,5×2,1mm. Blir felles skinne for barer + ny buck. ⚠️ Fysisk identisk plugg med 12V-adapterne, og 24V i gammel buck / LR7843 / phyto-stripa ødelegger dem umiddelbart → alle delene er nå samlet (7. aug), så den kan tas i bruk — men **hold den unna 12V-bench-riggen** (gammel buck, LR7843, phyto-stripa dør av 24V; identisk plugg). Mål ubelastet (~24–25V) ved første bruk |
 | 12V 3A adapter | 1 | 0 | 1 | ✅ | Blir reserve/lek når 24V tar over |
 | 12V 5A adapter | 1 | 0 | 1 | 📦 | **Ankommet 26. juni** (B5) — KDT-1250, 12V⎓5A. Driver 12V-riggen som bygges nå; blir reserve/lek etter 24V-byttet |
+| **Buck 24V/12V→5V 5A (25W)** | 2 | 0 | 2 | 📦 | **Ankommet 7. aug** (B7) — **5V-kilden i 24V-kjeden**, én per potte. Skrueklemmer + to sylindre (induktor + elkondensator, normalt). *Verifiseres ved bruk:* **mål utgangen (~5V) FØR ESP32 kobles på** — har kortet trim-potmeter må spenningen stilles inn først (den gamle bucken var fast 5V) |
 | Buck converter 5V (fast, 12V-inn) | 1 | 1 | 0 | 🔧 | Målt 5,26V. **I bruk: gir potte1 5V fra 12V (selvgående drift 20. juni)** — 12V splittet til buck+MOSFET med en løs 3-veis Wago. ⚠️ **Tåler IKKE 24V** — byttes ut ved 24V-oppgraderingen |
 | DC inline switch | 2 | 0 | 2 | 📦 | |
 | DC barrel jack pigtail-par | 10 par | 0 | 10 | 📦 | |
@@ -141,13 +143,8 @@ Verifisert mot ordrehistorikken på AliExpress: **standoffs ble aldri bestilt.**
 
 ---
 
-## I posten nå (Bestilling 7, per 28. juli 2026)
+## I posten nå — **INGENTING** (per 7. august 2026)
 
-| Del | Antall | Forventet | Merknad |
-|-----|:------:|-----------|---------|
-| 24V/12V→5V buck 5A | ×2 | ~30. juli | Ny 5V-kilde (én per potte). Mål ~5V FØR ESP32 |
-| FR120N MOSFET-modul 100V | ×4 | ~13. aug | Erstatter LR7843 på 24V. Siste brikke før lys-kjeden kan kobles ferdig |
+**✅ Bestilling 7 er komplett mottatt.** Buck ×2 og FR120N ×4 kom 7. august (FR120N nesten en uke før lovet). Det finnes ingen utestående leveranser i noen bestilling — **alt materiell til potte 1 er på lager.**
 
-**Barene er inne** (28. juli) — 24V-byttet mangler nå bare buck og FR120N.
-
-**Potte 1 bygges som 24V fra start** (avgjort 25. juli) → 12V-utstyret (12V-adaptere, fast-5V-buck, LR7843 ×3, phyto-stripa 5 m) er allerede reserve. Det brukes fortsatt som **bench-strøm** til sensortesting inntil den nye bucken kommer, og kan senere bli lys i en ny kasse hvis Markus vil prøve 12V-varianten i praksis.
+**Potte 1 bygges som 24V fra start** (avgjort 25. juli) → 12V-utstyret (12V-adaptere, fast-5V-buck, LR7843 ×3, phyto-stripa 5 m) er reserve: bench-strøm under bygging, lek-prosjekter, og eventuelt lys i en senere kasse hvis Markus vil prøve 12V-varianten i praksis.

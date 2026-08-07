@@ -1401,6 +1401,9 @@
   <section>
     <div class="section-title"><span class="icon">📦</span> Alle deler</div>
     <p class="section-intro"><strong>16 hovedkomponenter</strong> + <strong>12 tilbehør</strong> fra AliExpress, <strong>2 lokalkjøp</strong>, og <strong>6 ting du har fra før</strong>.</p>
+    <div style="background:#0a1a0f; border:1px solid #14532d; border-left:3px solid var(--green); border-radius:8px; padding:0.7rem 1rem; margin:0.6rem 0 0.2rem; font-size:0.85rem; color:var(--muted); max-width:780px;">
+      ❄️ <strong style="color:var(--green);">Denne fanen er frosset (7. august 2026).</strong> Alle 7 bestillinger er komplett mottatt, så statusmerkene her oppdateres ikke lenger løpende. Kortene beskriver <em>hva delene er og hvordan de brukes</em> — for <strong>hva som faktisk eies akkurat nå</strong> er <code>docs/lager.md</code> den levende lista, og <code>docs/mottaksliste.md</code> har mottaks-/testhistorikken per del med ordrenumre.
+    </div>
 
     <div class="comp-group">
       <div class="comp-group-title">📬 Bestilling 1 — Hovedkomponenter fra AliExpress (~€90, ✅ alt ankommet 9. juni)</div>
@@ -1418,41 +1421,41 @@
       <div class="comp-card" id="komp-led-strip">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-led-strip"/></svg>
         <div class="comp-body">
-          <h4>Phyto LED-strip — vekstlyset</h4>
-          <div class="what">Røde og blå LEDs spesielt laget for planter. Rød = fotosyntese og blomstring, blå = bladvekst. 4:1 rød:blå er standard for innendørs vekstlys.</div>
-          <div class="spec">12V, 5050 SMD, 4 rød : 1 blå, IP65 (vanntett), 5m · målt 0,36 A/40cm</div>
+          <h4>Samsung LM281B-barer — vekstlyset</h4>
+          <div class="what">To stive 500mm alu-barer med hvite Samsung-dioder (3000K + 5000K) og 660nm rød. Hvitt fullspektrum gir både bladvekst og riktige farger på kamerabildene. <strong>3 push-in fjærklemmer</strong> per bar: <code>W/UV/IR+</code> (hvit), <code>R+</code> (rød), <code>GND</code> (felles) — <strong style="color:#fca5a5;">tar bar strippet ledning, ikke Dupont-pinner</strong>.<br><br>🌡️ Alu-profilen er kjøleribba — <strong>oversiden må stå fritt</strong> (blir 50–70 °C).<br><br><span style="color:var(--dim);">Den gamle 12V phyto-stripa (magenta, 4R:1B, 5m, ~30 PPFD) er pensjonert til reserve — den ga bare ~10 % av bladvekst-målet.</span></div>
+          <div class="spec">24V, 25W/bar (50W totalt), 500×30mm · <strong>målt ~208 PPFD @10 cm per bar</strong> (Photone «LED Full+Red», 28. juli)</div>
         </div>
-        <div class="comp-status"><span class="pill pill-green">✅ Tent 10. juni</span><br><small style="color:var(--green);">3×40cm parallell, 0,94 A/potte</small></div>
+        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet 28. juli</span><br><small style="color:var(--dim);">målt ✅ · strømmåling gjenstår</small></div>
       </div>
 
       <div class="comp-card" id="komp-mosfet">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-mosfet"/></svg>
         <div class="comp-body">
-          <h4>MOSFET (LR7843/FR120N) — lysbryter</h4>
-          <div class="what">Elektronisk bryter. ESP32 sender et lavt signal (PWM, GPIO26), MOSFET slår på/av 12V til LED-stripen. Opto-isolert. ⚠️ Er et <strong>byggesett</strong>: grønn 2-v (PWM/GND) + blå 3-v (+/LOAD/−) skrueklemme MÅ loddes på. Medfølgende 3-pins header passer ikke (reserve).</div>
-          <div class="spec">Opto-isolert modul, logic-level · ×4 stk · 3 loddet, 1 skrap (grønn 2-pin smeltet)</div>
+          <h4>MOSFET — lysbryter</h4>
+          <div class="what">Elektronisk bryter. ESP32 sender et lavt signal (PWM, GPIO26), MOSFET slår lyset på/av og dimmer det. Opto-isolert. ⚠️ Er et <strong>byggesett</strong>: grønn 2-v (PWM/GND) + blå 3-v (+/LOAD/−) skrueklemme MÅ loddes på. Medfølgende 3-pins header passer ikke (reserve).<br><br><strong style="color:var(--text);">I 24V-bygget brukes FR120N (100V, ×4, ankommet 7. aug).</strong> <span style="color:var(--dim);">LR7843 (30V, 3 loddet + testet 20. juni) er 12V-reserve — for liten margin mot 24V.</span></div>
+          <div class="spec">FR120N 100V 9.4A opto-isolert ×4 (ny) · LR7843 ×3 gode (reserve, 1 skrap)</div>
         </div>
-        <div class="comp-status"><span class="pill pill-green">✅ Testet 20. juni</span><br><small style="color:var(--green);">3 loddet — PWM-dimming OK</small></div>
+        <div class="comp-status"><span class="pill pill-blue">📦 FR120N 7. aug</span><br><small style="color:var(--dim);">klemmer må loddes</small></div>
       </div>
 
       <div class="comp-card" id="komp-adapter">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-adapter"/></svg>
         <div class="comp-body">
-          <h4>12V strømadapter</h4>
-          <div class="what">Hoved-strømkilden. Driver både LED på 12V og ESP32 via buck converter på 5V.</div>
-          <div class="spec">AC 110–240V → 12V DC, 3A, EU-plugg</div>
+          <h4>Strømadapter</h4>
+          <div class="what">Hoved-strømkilden. Driver både lyset og ESP32 (via buck converter på 5V).<br><br><strong style="color:var(--text);">I 24V-bygget brukes 24V 5A-adapteren (ankommet 25. juli).</strong> <span style="color:var(--dim);">12V-adapterne (3A + 5A) er reserve/lek.</span><br><br>⚠️ <strong style="color:#fcd34d;">Alle tre har identisk 5,5×2,1mm-plugg</strong> — merk 24V-en, den ødelegger gammel buck / LR7843 / phyto-stripa.</div>
+          <div class="spec">24V⎓5A EU (i bruk) · 12V⎓3A + 12V⎓5A (reserve)</div>
         </div>
-        <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span></div>
+        <div class="comp-status"><span class="pill pill-blue">📦 24V 25. juli</span></div>
       </div>
 
       <div class="comp-card" id="komp-buck">
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-buck"/></svg>
         <div class="comp-body">
           <h4>Buck converter — spenningsreduserer</h4>
-          <div class="what">Tar 12V inn, gir 5V ut. ESP32 trenger 5V. FAST 5V (ikke justerbar) — verifiser ~5V med multimeter FØR ESP32. Målt 5,26V ✅</div>
-          <div class="spec">FAST 5V USB-buck (KIS3R33S-type), 5A — barrel-jack inn (VIN) + USB/skruklemmer ut (5V/GND)</div>
+          <div class="what">Tar høyere spenning inn, gir 5V ut — ESP32 og ESP32-CAM trenger 5V.<br><br><strong style="color:var(--text);">I 24V-bygget brukes den nye 24V/12V→5V-bucken (5A/25W, ×2 — én per potte, ankommet 7. aug).</strong> Denne kan være justerbar: <strong style="color:#fcd34d;">mål utgangen og still den til ~5V FØR ESP32 kobles på.</strong><br><br><span style="color:var(--dim);">Den gamle USB-bucken er FAST 5V (målt 5,26V ✅) men <strong>12V-inn — tåler ikke 24V</strong>. Nå reserve/bench.</span></div>
+          <div class="spec">Ny: 24V/12V→5V 5A/25W ×2 · Gammel: fast 5V USB-buck (KIS3R33S), 12V-inn</div>
         </div>
-        <div class="comp-status"><span class="pill pill-green">✅ Testet 10. juni — 5,26V</span></div>
+        <div class="comp-status"><span class="pill pill-blue">📦 Ny buck 7. aug</span><br><small style="color:var(--dim);">mål ~5V før ESP32</small></div>
       </div>
 
       <div class="comp-card" id="komp-dht22">
@@ -1653,7 +1656,7 @@
         <svg class="comp-pic" viewBox="0 0 100 70"><use href="#sym-fuse"/></svg>
         <div class="comp-body">
           <h4>Slow-blow fuse 3A (treg sikring) — DENNE brukes</h4>
-          <div class="what">Beskyttelsessikring for 12V-kretsen. Slow-blow (T-type) tolererer det korte strømsuget når buck converter først lades opp. 3A gir 50% margin over normal forbruk (~2A). 💡 Den vi fikk er <strong>leaded/aksial</strong> (tråd-bein ut hver ende) — kobles inline med Wago, passer IKKE patron-holderen.</div>
+          <div class="what">Beskyttelsessikring for hovedkretsen (24V i potte 1). Slow-blow (T-type) tolererer det korte strømsuget når buck converter først lades opp. 3A gir 50% margin over normal forbruk (~2A). 💡 Den vi fikk er <strong>leaded/aksial</strong> (tråd-bein ut hver ende) — kobles inline med Wago, passer IKKE patron-holderen.</div>
           <div class="spec">Leaded/aksial T3AL250V (treg), tråd-bein · inline med Wago — IKKE 5×20mm patron</div>
         </div>
         <div class="comp-status"><span class="pill pill-blue">📦 Ankommet</span></div>
@@ -1864,21 +1867,22 @@
 
       <div class="comp-group-title" style="grid-column:1/-1;">🛒 Bestilling 7 — lys-oppgradering 24V + reserve (795,72 kr inkl. mva+frakt, betalt 5. juli)</div>
       <div style="grid-column:1/-1; background:#0a1218; border:1px solid #1d4ed8; border-radius:10px; padding:1rem 1.25rem; font-size:0.87rem;">
-        <p style="color:var(--muted); margin:0 0 0.6rem;">Vekstlys-byttet: den svake magenta 12V-stripa pensjoneres til reserve, og potta får <strong style="color:var(--text);">hvite 24V Samsung LM281B-barer</strong> (~10× lys, hvit fikser kamera-magenta). Uavhengig verifisert 5. juli. <strong style="color:var(--green);">Avgjort 25. juli: potte 1 bygges som 24V fra start — 12V-mellomsteget droppes.</strong> 7 varer / 7 del-ordrer. <strong style="color:#93c5fd;">Mottaksstatus 28. juli: 5 av 7 kommet</strong> (barene, adapter, standoffs, begge ESP32-kortene).</p>
+        <p style="color:var(--muted); margin:0 0 0.6rem;">Vekstlys-byttet: den svake magenta 12V-stripa pensjoneres til reserve, og potta får <strong style="color:var(--text);">hvite 24V Samsung LM281B-barer</strong> (~10× lys, hvit fikser kamera-magenta). Uavhengig verifisert 5. juli. <strong style="color:var(--green);">Avgjort 25. juli: potte 1 bygges som 24V fra start — 12V-mellomsteget droppes.</strong> 7 varer / 7 del-ordrer. <strong style="color:#4ade80;">✅ Mottaksstatus 7. august: KOMPLETT — 7 av 7 mottatt.</strong> Buck ×2 og FR120N ×4 kom 7. aug (MOSFET-ene nesten en uke før lovet). <strong style="color:var(--text);">Ingen leveranser blokkerer lenger byggingen.</strong></p>
         <div style="background:#2a1508; border:1px solid #b45309; border-radius:8px; padding:0.75rem 1rem; margin:0 0 0.75rem; font-size:0.85rem; color:#fcd34d; line-height:1.6;">
-          ⚡ <strong>Til byggedagen:</strong> 24V-adapteren har samme 5,5×2,1mm-plugg som 12V-adapterne. Gammel buck (12V-inn), LR7843 (30V) og phyto-stripa dør av 24V — <strong>24V-adapteren skal derfor ikke i bruk før barer + ny buck + FR120N er samlet</strong>. Riggen som bygges nå kjører 12V.<br><br>
-          📸 <strong>Den ene tidsfristen — NÅ AKTIV (barene kom 28. juli):</strong> Photone-mål barene <strong>innen Buyer Protection</strong> (forvent ~150–250). Måles rett på 24V-adapteren, som ligger klar — ingen grunn til å vente på FR120N. Sjekk samtidig om rød-kanal har egen inngang.
+          ⚡ <strong>Til byggedagen:</strong> 24V-adapteren har samme 5,5×2,1mm-plugg som 12V-adapterne. Gammel buck (12V-inn), LR7843 (30V) og phyto-stripa dør av 24V — <strong>merk 24V-pluggen, og hold den unna 12V-bench-riggen</strong>. Alle 24V-delene er nå samlet, så selve 24V-kjeden kan bygges.<br><br>
+          🔧 <strong>Byggesjekker nå som alt er inne:</strong> ① lodd skrueklemmene på FR120N · ② mål buck-utgangen (~5V) <strong>før</strong> ESP32 kobles på — har kortet trim-potmeter må den stilles inn først · ③ strømmåling ~1,0 A/bar @24V med UT131D (siste harde spec-sjekk; ~0,5 A = underspesifisert bar).<br><br>
+          📸 <strong>Photone-målingen er gjort (28. juli):</strong> ~208 PPFD @10 cm for én bar, ~213 snitt for to. Baren er ekte — ingen reklamasjonsgrunn. Merk: fotoperioden må opp til <strong>16–18 t</strong> (ikke 13) og hengehøyden ned til <strong>~10 cm</strong> for å nå DLI-målet.
         </div>
         <ul style="color:var(--muted); margin:0 0 0.6rem 1.1rem; padding:0; line-height:1.7; list-style:none;">
           <li><span class="pill pill-blue">📦 Ankommet 28. juli</span> <strong style="color:var(--text);">Samsung LM281B+ 24V 25W alu-bar 500mm ×2</strong> (50 W) — konstant-spenning, plugges rett i 24V. <strong style="color:#fcd34d;">Photone-måling gjenstår — innen Buyer Protection!</strong></li>
           <li><span class="pill pill-blue">📦 Ankommet 25. juli</span> <strong style="color:var(--text);">24V 5A-adapter</strong> (EU, 5,5×2,1mm — matcher pigtails + inline-bryter) — ny felles skinne for barer + buck. <span style="color:var(--dim);">Måles (~24–25V) når 24V-kjeden kobles</span></li>
-          <li><span class="pill pill-yellow">Bestilt</span> <strong style="color:var(--text);">FR120N MOSFET-modul 100V ×4</strong> — bytter LR7843 (30V for tett på 24V); potte 1 + 2 + reserve. Levering ~13. aug (sist)</li>
-          <li><span class="pill pill-yellow">Bestilt</span> <strong style="color:var(--text);">24V→5V buck 5A ×2</strong> — ny 5V-kilde (gammel buck er 12V-inn); én per potte. Levering ~30. juli</li>
+          <li><span class="pill pill-blue">📦 Ankommet 7. aug</span> <strong style="color:var(--text);">FR120N MOSFET-modul 100V ×4</strong> — bytter LR7843 (30V for tett på 24V); potte 1 + 2 + reserve. <span style="color:var(--dim);">Byggesett: skrueklemmene må loddes på før bruk</span></li>
+          <li><span class="pill pill-blue">📦 Ankommet 7. aug</span> <strong style="color:var(--text);">24V→5V buck 5A ×2</strong> — ny 5V-kilde (gammel buck er 12V-inn); én per potte. <span style="color:var(--dim);">Mål ~5V FØR ESP32 kobles på</span></li>
           <li><span class="pill pill-blue">📦 Ankommet 25. juli</span> <strong style="color:var(--text);">M3 standoff-boks 250 stk</strong> — bar-montering m/luftspalte (termisk) + perfboard; erstatter B6-feilføringen. <span style="color:var(--dim);">Høydene finnes fram når lysbjelken designes (fase 3)</span></li>
           <li><span class="pill pill-blue">📦 Ankommet 25. juli</span> <strong style="color:var(--text);">ESP32-32D Type-C KIT A</strong> (38-pin + breakout, CP2102) — lek/reserve, IKKE potte-hjerne (potte-kort = 30-pin)</li>
           <li><span class="pill pill-blue">📦 Ankommet 25. juli</span> <strong style="color:var(--text);">ESP-WROOM-32 30-pin Type-C «one set»</strong> (m/skrueklemme-breakout) — <strong style="color:#4ade80;">potte 2-hjerne/reserve ✓</strong>. <span style="color:var(--dim);">Pinne-telling, evt. CH340-driver og MicroPython-flash hører til potte 2-byggingen (fase 5)</span></li>
         </ul>
-        <p style="color:var(--dim); margin:0; font-size:0.83rem;">Gammelt 12V-utstyr (5A-adapter fra B5 + fast-5V-buck + LR7843) blir reserve til lek-prosjekter. Gjenstående arbeid: re-designe lysbjelken i 3D for to stive barer (fase 3) — <strong>standoffene er på lager, så høydene kan måles inn i designet nå</strong>. Ordrenumre per del-ordre står i <code>docs/mottaksliste.md</code>.</p>
+        <p style="color:var(--dim); margin:0; font-size:0.83rem;">Gammelt 12V-utstyr (5A-adapter fra B5 + fast-5V-buck + LR7843) blir reserve til lek-prosjekter. Gjenstående arbeid er nå <strong>kun bygging</strong>: re-designe lysbjelken i 3D for to stive barer (fase 3) — <strong>standoffene er på lager, så høydene kan måles inn i designet nå</strong> — og deretter print + montering (fase 4). Ordrenumre per del-ordre står i <code>docs/mottaksliste.md</code>.</p>
       </div>
     </div>
   </section>
@@ -2087,7 +2091,7 @@
   <!-- ── B: Systemdiagram ── -->
   <section>
     <div class="section-title"><span class="icon">🗺️</span> Hele systemet i ett blikk</div>
-    <p class="section-intro">Hvert fargede område er en komponent. Hvert farget segment er en ledning. Klikk en kabeltype i fargenøkkelen for å fremheve kun den typen, eller hold pekeren over en boks for mer info om komponenten. <strong style="color:var(--yellow);">NB: tegningen er laget med 12V-kjeden, men potte 1 bygges som 24V fra start (avgjort 25. juli).</strong> Tre bokser er annerledes i praksis — adapter (24V), FR120N i stedet for LR7843, og ny 24V→5V-buck. Alt annet (sensorer, GPIO, kabling, sikring, bryter) er identisk. Se «Lysvariant B» lenger ned for 24V-strømtreet.</p>
+    <p class="section-intro">Hvert fargede område er en komponent. Hvert farget segment er en ledning. Klikk en kabeltype i fargenøkkelen for å fremheve kun den typen, eller hold pekeren over en boks for mer info om komponenten. <strong style="color:var(--yellow);">NB: tegningen er laget med 12V-kjeden, men potte 1 bygges som 24V.</strong> Tre bokser er annerledes i praksis — adapter (24V), FR120N i stedet for LR7843, og ny 24V→5V-buck — pluss at «LED-strip» er de to LM281B-barene. Alt annet (sensorer, GPIO, kabling, sikring, bryter) er identisk. Se «Lysvariant B» lenger ned for 24V-strømtreet.</p>
 
     <div class="legend" id="legend">
       <span class="legend-item" data-wire="w-12v">
@@ -2147,7 +2151,7 @@
 
         <g class="comp-svg" transform="translate(60, 218)"
            data-name="Slow-blow fuse 3A (treg sikring)" data-comp="fuse"
-           data-info="Beskytter hele kretsen mot kortslutning. Slow-blow (T-type, T3A) tåler det korte strømsurget når buck converter lader seg opp. Vår sikring er leaded/aksial — kobles inline med Wago (passer ikke patron-holderen; glass-F3A er reserve).">
+           data-info="Beskytter hele kretsen mot kortslutning (24V+ i potte 1). Slow-blow (T-type, T3A) tåler det korte strømsurget når buck converter lader seg opp. Vår sikring er leaded/aksial — kobles inline med Wago (passer ikke patron-holderen; glass-F3A er reserve).">
           <rect width="180" height="50" rx="8" style="fill:#1a1208; stroke:#ca8a04; stroke-width:1.5"/>
           <text x="14" y="22" class="name" style="fill:#fbbf24;">⚡ Slow-blow fuse 3A</text>
           <text x="14" y="40" class="sub">treg T3A · inline (Wago)</text>
@@ -2605,7 +2609,7 @@
   <!-- ── D2: Lysvariant B — 24V (etter Bestilling 7) ── -->
   <section>
     <div class="section-title"><span class="icon">💡</span> Lysvariant B — 24V Samsung-barer <span style="font-size:0.75em; color:var(--green); font-weight:600;">★ DETTE BYGGES (avgjort 25. juli)</span></div>
-    <p class="section-intro"><strong>Potte 1 bygges som 24V fra første stund</strong> — 12V-mellomsteget er droppet (avgjort 25. juli 2026). Alt av sensorer, ESP32, GPIO-pinner, kabling, sikring, bryter og logikk er identisk med variant A over; det er kun de tre strøm-delene som er annerledes. Firmware trenger ingen endring — fortsatt PWM på GPIO26. Appen står nå som standard på «24V-barer» i lys-arket. <strong style="color:var(--yellow);">Per 25. juli: adapteren er på lager, barene er underveis, ny buck ~30. juli og FR120N ~13. aug — den fysiske lys-kjeden kan altså først kobles når buck + FR120N er her. Frem til da kan sensorene bench-testes på det gamle 12V-adapter+buck-paret.</strong></p>
+    <p class="section-intro"><strong>Potte 1 bygges som 24V fra første stund</strong> — 12V-mellomsteget er droppet (avgjort 25. juli 2026). Alt av sensorer, ESP32, GPIO-pinner, kabling, sikring, bryter og logikk er identisk med variant A over; det er kun de tre strøm-delene som er annerledes. Firmware trenger ingen endring — fortsatt PWM på GPIO26. Appen står nå som standard på «24V-barer» i lys-arket. <strong style="color:var(--green);">Per 7. august: ALLE delene er på lager (barer, 24V-adapter, buck ×2, FR120N ×4) — hele lys-kjeden kan bygges. Eneste forarbeid er å lodde skrueklemmene på FR120N.</strong></p>
 
     <div class="power-tree">
       <div class="tree-row">
@@ -2803,21 +2807,22 @@
     <p class="section-intro" style="margin-top:-0.3rem;">👉 <strong>Aldri gjort elektronikk før?</strong> Les <strong style="color:var(--green);">Kobling-fanen</strong> først — den forklarer alle ordene (VCC, GND, GPIO, breadboard, I2C) og viser et <strong>pinnekart over ESP32-en</strong> så du finner riktig pinne. Kom tilbake hit og bygg.</p>
 
     <div style="background:#1a1208; border:1px solid #b45309; border-radius:10px; padding:1rem 1.25rem; font-size:0.88rem; margin-bottom:0.9rem;">
-      <strong style="color:#fcd34d; display:block; margin-bottom:0.4rem;">⚡ Oppskriften under er skrevet for 12V — du bygger 24V (avgjort 25. juli)</strong>
-      <p style="color:var(--muted); margin:0 0 0.6rem;">Trinnene er verifisert på breadboard med 12V-riggen i juni, og <strong>alt om sensorer, ESP32, GPIO, I2C, breadboard-skinner, Wago og sikring gjelder uendret</strong>. Fire ting leser du om når du bygger 24V-versjonen:</p>
+      <strong style="color:#fcd34d; display:block; margin-bottom:0.4rem;">⚡ Alle deler er på lager (7. aug) — oppskriften under er oppdatert til 24V</strong>
+      <p style="color:var(--muted); margin:0 0 0.6rem;">Trinnene ble verifisert på breadboard med 12V-riggen i juni, og <strong>alt om sensorer, ESP32, GPIO, I2C, breadboard-skinner, Wago og sikring gjelder uendret</strong>. Trinn 0 og 2 er skrevet om til 24V-delene. Kortversjonen av hva som er byttet:</p>
       <ul style="color:var(--muted); margin:0 0 0.6rem 1.1rem; padding:0; line-height:1.7;">
-        <li>«12V adapter» → <strong style="color:var(--text);">24V 5A-adapter</strong> (på lager). Sikring, bryter og pigtails er de samme (24V/5A-rated).</li>
+        <li>«12V adapter» → <strong style="color:var(--text);">24V 5A-adapter</strong>. Sikring, bryter og pigtails er de samme (24V/5A-rated).</li>
         <li>«12V-skinne» → <strong style="color:var(--text);">24V-skinne</strong>. Merk breadboard-skinna, og hold den langt unna 5V/3.3V-radene.</li>
-        <li>«Buck» → <strong style="color:var(--text);">ny 24V→5V-buck</strong> (~30. juli). Den gamle faste bucken er 12V-inn og <strong>tåler ikke 24V</strong> — den brukes bare til bench-testing av sensorer på 12V i mellomtiden.</li>
-        <li>«LR7843» → <strong style="color:var(--text);">FR120N</strong> (~13. aug). Samme opto-isolerte byggesett, samme low-side-kobling, samme GPIO26 — bare høyere spenningstoleranse. Og i stedet for 3 stripe-lengder i parallell: <strong>2 stive barer</strong> på standoffs.</li>
+        <li>«Buck» → <strong style="color:var(--text);">ny 24V→5V-buck 5A</strong>. Den gamle faste bucken er 12V-inn og <strong>tåler ikke 24V</strong> — den er nå ren reserve/lek.</li>
+        <li>«LR7843» → <strong style="color:var(--text);">FR120N</strong> (100V). Samme opto-isolerte byggesett, samme low-side-kobling, samme GPIO26 — bare høyere spenningstoleranse. Og i stedet for 3 stripe-lengder i parallell: <strong>2 stive LM281B-barer</strong> på standoffs.</li>
       </ul>
-      <p style="color:var(--dim); margin:0; font-size:0.83rem;">Selve oppskriften skrives om til 24V når barene er i hånda — da vet vi hvilken kontakt de har, og om rød-kanalen har egen inngang. Til da er dette kartet + Kobling-fanens «Lysvariant B»-strømtre nok til å bygge riktig.</p>
+      <p style="color:var(--dim); margin:0; font-size:0.83rem;">⚠️ Den gamle 12V-riggen finnes fortsatt fysisk (12V-adaptere, fast-5V-buck, LR7843, phyto-stripa). <strong>Den tåler ikke 24V</strong>, og adapterpluggene er identiske — sett merkelapp «24V» på den nye adapteren før du begynner.</p>
     </div>
 
     <div style="background:#0a1a0f; border:1px solid #14532d; border-radius:10px; padding:1rem 1.25rem; font-size:0.88rem;">
-      <strong style="color:var(--green); display:block; margin-bottom:0.4rem;">📦 Når pakkene kommer:</strong>
+      <strong style="color:var(--green); display:block; margin-bottom:0.4rem;">📦 Alle pakker er kommet (7. aug) — slik starter du:</strong>
       <ol style="margin-left:1.2rem; color:var(--muted); line-height:1.7;">
-        <li>Pakk ut alt på et bord. Gå til <strong>Komponenter-fanen</strong> og sammenlign mot bildene — sjekk at alt er der.</li>
+        <li><strong style="color:var(--text);">Lodd skrueklemmene på 2 FR120N-moduler.</strong> Dette er eneste forarbeid før strøm. Ta det rolig med varmen — én av fire B1-moduler ble skrapet på dette steget.</li>
+        <li><strong style="color:var(--text);">Sett merkelapp «24V» på den nye adapteren.</strong> Den er fysisk identisk med 12V-adapterne, som fortsatt ligger i skuffen.</li>
         <li>✅ <strong style="color:var(--green);">Thonny er installert og multimeteret (UT131D) er kjøpt</strong> — hopp rett til byggetrinnene under.</li>
         <li>Følg trinnene under én etter én. Det er bare 8 trinn. Lyset må fungere i trinn 2 før du går videre.</li>
       </ol>
@@ -2829,7 +2834,7 @@
       <div class="step">
         <div class="step-num">0</div>
         <div class="step-body">
-          <h3>Klargjør 12V-strømkretsen — IKKE koble til ESP32 ennå</h3>
+          <h3>Klargjør 24V-strømkretsen — IKKE koble til ESP32 ennå</h3>
           <p>Bygg hele strømkjeden trinn for trinn. <strong>ESP32 skal ikke kobles til i dette steget.</strong></p>
 
           <div style="background:#0a1208; border:1px solid #451a03; border-radius:8px; padding:0.85rem 1rem; margin:0.4rem 0 0.6rem; font-size:0.84rem; color:var(--text);">
@@ -2837,15 +2842,15 @@
             <ol style="margin-left:1.1rem; color:var(--muted); line-height:1.9;">
               <li><strong style="color:var(--text);">Adapter → DC inline switch:</strong> Plugg adapterens DC-plugg rett inn i hun-enden av vippebryteren. Ingen ledning.</li>
               <li><strong style="color:var(--text);">DC inline switch → barrel jack-pigtail:</strong> Plugg hann-enden av switchen inn i hun-socketen på den ene barrel jack-pigtailen. Du har nå skruklemmer tilgjengelig.</li>
-              <li><strong style="color:var(--text);">Barrel jack-pigtail + → slow-blow fuse:</strong> Strip 10 mm bar ledning. Koble <code>+</code>-skruklemmen via Wago til det ene tråd-beinet på den leaded slow-blow-sikringen (T3A), og det andre beinet via en ny Wago til breadboard 12V-skinnen. <em>Ingen holder</em> — sikringen kobles direkte inline.</li>
+              <li><strong style="color:var(--text);">Barrel jack-pigtail + → slow-blow fuse:</strong> Strip 10 mm bar ledning. Koble <code>+</code>-skruklemmen via Wago til det ene tråd-beinet på den leaded slow-blow-sikringen (T3A), og det andre beinet via en ny Wago til breadboard 24V-skinnen. <em>Ingen holder</em> — sikringen kobles direkte inline. <em>(3A holder for én potte; bruk 5A hvis begge potter skal på samme adapter senere.)</em></li>
               <li><strong style="color:var(--text);">Pigtail − terminal → GND-skinne:</strong> Koble <code>−</code>-skruklemmen direkte til breadboard GND-skinne.</li>
-              <li><strong style="color:var(--text);">12V-skinne → Buck converter:</strong> Koble barrel jack-pigtail (hann-plugg) inn i buck converterens inngang. Pigtailens skruklemmer kobles til 12V-skinne (+) og GND-skinne (−).</li>
-              <li><strong style="color:var(--text);">Mål:</strong> Slå på bryteren. Bruk multimeter på buckens <code>5V</code>/<code>GND</code>-utgang (USB-siden). Vår modul er <strong>fast 5V</strong> (ingen potmeter), så du bekrefter bare at den viser ~5V — vi målte <strong>5,26V</strong> (trygt). Er den langt unna 5V, er modulen feil og skal ikke brukes. Slå av bryteren.</li>
+              <li><strong style="color:var(--text);">24V-skinne → ny buck converter:</strong> Koble barrel jack-pigtail (hann-plugg) inn i buckens inngang. Pigtailens skruklemmer kobles til 24V-skinne (+) og GND-skinne (−). <strong>Bruk den nye 24V/12V→5V-bucken (5A/25W) — ikke den gamle faste USB-bucken, som er 12V-inn og dør av 24V.</strong></li>
+              <li><strong style="color:var(--text);">Mål — dette er den viktigste sjekken i hele trinnet:</strong> Slå på bryteren og mål buckens <code>OUT+</code>/<code>OUT−</code> <strong>før noe som helst kobles på</strong>. Har kortet en liten skrue (trim-potmeter), er den justerbar — vri forsiktig til multimeteret viser <strong>5,0–5,2V</strong>. Har den ingen skrue, er den fast og skal vise ~5V av seg selv. <strong style="color:#fca5a5;">Ikke koble ESP32 til før du har sett ~5V på displayet</strong> — for høy spenning her ødelegger ESP32-en umiddelbart. Slå av bryteren.</li>
             </ol>
           </div>
 
           <div class="step-pics">
-            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-adapter"/></svg><span class="lbl">12V adapter</span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-adapter"/></svg><span class="lbl">24V 5A adapter</span></div>
             <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-switch"/></svg><span class="lbl">DC inline switch</span></div>
             <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-fuse"/></svg><span class="lbl">Slow-blow fuse</span></div>
             <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-barrel"/></svg><span class="lbl">DC barrel jack<br><em style="font-size:0.66rem;">pigtail · skruklemmer</em></span></div>
@@ -2854,9 +2859,9 @@
           </div>
 
           <div class="step-wires">
-            <span class="wire-chip c-12v">adapter → switch → pigtail</span>
-            <span class="wire-chip c-12v">pigtail + → sikring → 12V-skinne</span>
-            <span class="wire-chip c-12v">12V-skinne → buck IN</span>
+            <span class="wire-chip c-12v">24V adapter → switch → pigtail</span>
+            <span class="wire-chip c-12v">pigtail + → sikring → 24V-skinne</span>
+            <span class="wire-chip c-12v">24V-skinne → ny buck IN</span>
             <span class="wire-chip c-gnd">pigtail − → GND-skinne</span>
             <span class="wire-chip c-5v">buck OUT → multimeter (5.0V?)</span>
           </div>
@@ -2902,30 +2907,48 @@
       <div class="step">
         <div class="step-num">2</div>
         <div class="step-body">
-          <h3>LED-strip + MOSFET — kjernefunksjonen</h3>
-          <p>⚠️ MOSFET-modulen er et <strong>byggesett</strong> — lodd først på de to skrueklemmene (grønn 2-v <code>PWM</code>/<code>GND</code>, blå 3-v <code>+</code>/<code>LOAD</code>/<code>−</code>). Den medfølgende 3-pins headeren passer ikke (reserve). Trekk så ut alt strøm. Koble <strong>GPIO26 → grønn <code>PWM</code></strong> og <strong>ESP32 GND → grønn <code>GND</code></strong> (opto-isolert styreside). På blå kraftside: <strong>12V+ → <code>+</code></strong>, <strong>12V− → <code>−</code></strong>, og <strong>LED-stripa mellom <code>+</code> (pluss) og <code>LOAD</code> (minus)</strong> via clip. Sett USB-C tilbake og kjør <code>main.py</code> — test dimming fra appen. <em>(LED-strip allerede testet direkte på 12V 10. juni — lyser; gjenstår å la ESP32 styre den via MOSFET.)</em></p>
+          <h3>LM281B-barer + FR120N MOSFET — kjernefunksjonen</h3>
+          <p>⚠️ <strong>Bruk FR120N-modulen (100V), ikke LR7843</strong> — LR7843 er 30V-rated, altfor tett på 24V. FR120N er samme type <strong>byggesett</strong>: lodd først på de to skrueklemmene (grønn 2-v <code>PWM</code>/<code>GND</code>, blå 3-v <code>+</code>/<code>LOAD</code>/<code>−</code>). Ta det rolig med varmen — én av fire B1-moduler ble skrapet fordi den grønne klemmen smeltet. Trekk så ut alt strøm. Koble <strong>GPIO26 → grønn <code>PWM</code></strong> og <strong>ESP32 GND → grønn <code>GND</code></strong> (opto-isolert styreside). På blå kraftside: <strong>24V+ → <code>+</code></strong>, <strong>24V− → <code>−</code></strong>, og <strong>barenes <code>GND</code> → <code>LOAD</code></strong>. Sett USB-C tilbake og kjør <code>main.py</code> — test dimming fra appen.</p>
+
+          <div style="background:#0a1208; border:1px solid #451a03; border-radius:8px; padding:0.85rem 1rem; margin:0.4rem 0 0.6rem; font-size:0.84rem; color:var(--text);">
+            <strong style="color:var(--yellow); display:block; margin-bottom:0.5rem;">🔌 Slik kobles barene (avklart ved mottak 28. juli):</strong>
+            <p style="color:var(--muted); margin:0 0 0.5rem;">Hver bar har <strong>3 push-in fjærklemmer</strong> loddet på kortet — ingen lodding nødvendig. <strong style="color:#fca5a5;">De tar bar strippet ledning (8–10 mm, tvinnet) — IKKE Dupont-pinner</strong> (samme felle som Wago: en pinne stukket inn får ikke tak og løsner).</p>
+            <ul style="color:var(--muted); margin:0 0 0.5rem 1.1rem; padding:0; line-height:1.8;">
+              <li><code>W/UV/IR+</code> = <strong style="color:var(--text);">hvit-kanalen</strong> (3000K+5000K). Generisk kortmerking — produsenten bruker samme PCB til hvit/UV/IR-varianter.</li>
+              <li><code>R+</code> = <strong style="color:#fca5a5;">660nm rød</strong> — <strong>egen inngang, men deler retur med hvit</strong>.</li>
+              <li><code>GND</code> = felles minus for begge kanaler.</li>
+            </ul>
+            <p style="color:var(--muted); margin:0;">Derfor: <strong>begge <code>+</code> til 24V+</strong>, og <strong>én MOSFET på GND-siden dimmer begge kanaler samtidig</strong> — arkitekturen er uendret fra 12V-planen. Bruk <strong>20 AWG silikonledning</strong> permanent; 26 AWG Dupont er kun greit til kort benketest (2,1 A i felles retur opp stolpa krever 20 AWG).</p>
+          </div>
+
+          <div class="check-tip">🌡️ <strong>Barene blir varme — 50–70 °C.</strong> Alu-profilen ER kjøleribba, så oversiden må stå fritt eksponert. Ved benketest: legg dem på noe som tåler varme, ikke rett på bordet eller på plast. PETG mykner ved ~80 °C.</div>
+
+          <div class="check-tip">🔎 <strong>Siste spec-sjekk på barene:</strong> mål strømtrekket i serie med multimeteret — forvent <strong>~1,0 A per bar ved 24V</strong>. Får du ~0,5 A er baren underspesifisert (halvparten av lovet effekt).</div>
 
           <div class="step-pics">
             <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-mosfet"/></svg><span class="lbl">MOSFET</span></div>
-            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-led-strip"/></svg><span class="lbl">LED-strip</span></div>
-            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-ledclip"/></svg><span class="lbl">LED clip</span></div>
-            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-wire-silicone"/></svg><span class="lbl">Silikonledning<br><em style="font-size:0.66rem;">22 AWG rød+svart</em></span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-led-strip"/></svg><span class="lbl">LM281B-barer ×2<br><em style="font-size:0.66rem;">500mm, push-in klemmer</em></span></div>
+            <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-wire-silicone"/></svg><span class="lbl">Silikonledning<br><em style="font-size:0.66rem;">20 AWG rød+svart</em></span></div>
             <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-wago"/></svg><span class="lbl">Wago 221<br><em style="font-size:0.66rem;">tilbehør</em></span></div>
           </div>
 
           <div class="step-wires">
-            <span class="wire-chip c-12v">12V+ → blå <code>+</code></span>
-            <span class="wire-chip c-12v">LED− → blå <code>LOAD</code> (via clip)</span>
+            <span class="wire-chip c-12v">24V+ → blå <code>+</code> · bar <code>W+</code> og <code>R+</code></span>
+            <span class="wire-chip c-12v">bar <code>GND</code> → blå <code>LOAD</code></span>
             <span class="wire-chip c-sig">ESP32 GPIO26 → grønn <code>PWM</code></span>
             <span class="wire-chip c-gnd">felles GND (+ grønn <code>GND</code>)</span>
           </div>
 
           <div class="check-tip">⚠ Grønn <code>PWM</code> må aldri stå løs — koble den til GPIO26 selv om du ikke kjører kode ennå. Flytende gate-signal får MOSFET til å bli halv-åpen og overoppheter.</div>
 
-          <div class="check-tip">⚠ <strong>Modulen bryter på minus-siden (low-side).</strong> Faktiske merkelapper på din modul: blå 3-v <code>+</code>/<code>LOAD</code>/<code>−</code>. Standard kobling: <strong>12V+ og LED+ → <code>+</code></strong>, <strong>12V− → <code>−</code></strong>, <strong>LED− → <code>LOAD</code></strong> (den brytes mot <code>−</code> av MOSFETen). Kobler du LED− rett til GND-skinnen utenom modulen, lyser stripa alltid (lar seg ikke dimme). ✅ Verifiser den eksakte +/LOAD/−-koblingen med multimeter før LED kobles til (gjøres sammen ved oppkobling).</div>
+          <div class="check-tip">⚠ <strong>Modulen bryter på minus-siden (low-side).</strong> Faktiske merkelapper på modulen: blå 3-v <code>+</code>/<code>LOAD</code>/<code>−</code>. Kobling: <strong>24V+ og barenes <code>W+</code>/<code>R+</code> → <code>+</code></strong>, <strong>24V− → <code>−</code></strong>, <strong>barenes <code>GND</code> → <code>LOAD</code></strong> (den brytes mot <code>−</code> av MOSFETen). Kobler du bar-GND rett til GND-skinnen utenom modulen, lyser barene alltid (lar seg ikke dimme). ✅ Verifiser den eksakte +/LOAD/−-koblingen med multimeter før barene kobles til.</div>
 
           <div style="background:#0a1a2a; border-left:3px solid var(--blue); padding:0.55rem 0.8rem; margin-top:0.6rem; border-radius:0 6px 6px 0; font-size:0.82rem; color:var(--muted);">
-            💡 <strong style="color:var(--blue);">Når dette skal inn i 3D-utskriften:</strong> de <strong>3 takstripene (3×40cm) kobles i parallell</strong> — alle pluss + alle minus samles med en <strong>Wago 221-415 (5-veis)</strong> til ett ledningspar (målt 0,94 A/potte). Silikonledning (20 AWG) går gjennom stolpene ned til MOSFET i basen. Bruk <strong>Wago 221</strong> i bunn og topp av stolpa — da kan du koble fra hele topp-konstruksjonen for vedlikehold. Strip 10mm bar ledning, sett i Wago, vipp ned hendelen.
+            💡 <strong style="color:var(--blue);">Når dette skal inn i 3D-utskriften:</strong> de <strong>2 barene kobles i parallell</strong> — begge pluss-par og begge GND samles med <strong>Wago 221</strong> til ett ledningspar (2,1 A totalt). <strong>20 AWG silikonledning</strong> går gjennom stolpene ned til MOSFET i basen. Bruk <strong>Wago 221</strong> i bunn og topp av stolpa — da kan du koble fra hele topp-konstruksjonen for vedlikehold. Strip 10mm bar ledning, sett i Wago, vipp ned hendelen. Barene monteres på <strong>M3-standoffs med luftspalte</strong> inn i heat-set-inserts, med ventilasjonsåpninger rett over (varm luft stiger).
+          </div>
+
+          <div style="background:#0a1a2a; border-left:3px solid var(--blue); padding:0.55rem 0.8rem; margin-top:0.5rem; border-radius:0 6px 6px 0; font-size:0.82rem; color:var(--muted);">
+            🎛️ <strong style="color:var(--blue);">Valgfri oppgradering (ikke gjort):</strong> siden rød har egen <code>+</code>-inngang, kan du bruke <strong>to MOSFET-er</strong> og styre rød separat — GPIO 19 og 23 er ledige, og du har 4 FR120N. Nyttig f.eks. for å slå av rød under ESP32-CAM-bilder. Krever firmware-endring.
           </div>
         </div>
       </div>
@@ -2935,7 +2958,7 @@
         <div class="step-num">3</div>
         <div class="step-body">
           <h3>Bytt USB-strøm med buck converter</h3>
-          <p>Når LED-trinnet fungerer: koble buck converter OUT (5V) til ESP32 VIN-pinnen. Trekk ut USB-C — alt skal fortsatt virke fra 12V-adapteren.</p>
+          <p>Når lys-trinnet fungerer: koble buck converter OUT (5V) til ESP32 VIN-pinnen. Trekk ut USB-C — alt skal fortsatt virke fra 24V-adapteren. <strong>Forutsetter at du allerede har målt ~5V på buck-utgangen i trinn 0.</strong></p>
 
           <div class="step-pics">
             <div class="step-pic"><svg viewBox="0 0 100 70"><use href="#sym-buck"/></svg><span class="lbl">Buck (5V ut)</span></div>
@@ -3125,8 +3148,8 @@
       <div class="check done">
         <div class="check-box">✓</div>
         <div class="check-content">
-          <h4>Hardware ankommet (bestilling 1–6 komplett, B7 delvis)</h4>
-          <p>Bestilling 1 + 2 ankommet 6.–9. juni. Bestilling 3 (laser + kamera) og 4 (loddeutstyr + lek) ankommet 17.–19. juni. Bestilling 5 (påfyll + semi-permanent) og 6 (montering) ankommet 26. juni — begge komplett. <strong>Bestilling 7 (lys-oppgradering 24V, betalt 5. juli, 795,72 kr): 4 av 7 kom 25. juli</strong> — 24V 5A-adapter, M3 standoff-boks (250 stk) og begge ESP32-kortene (KIT A 38-pin til lek + ESP-WROOM-32 30-pin til potte 2). <strong style="color:var(--yellow);">Gjenstår: barene (underveis per sporing), buck ×2 (~30. juli), FR120N ×4 (~13. aug).</strong> Status per del + ordrenumre: <code>docs/mottaksliste.md</code>.</p>
+          <h4>Hardware ankommet — alle 7 bestillinger komplett ✅</h4>
+          <p>Bestilling 1 + 2 ankommet 6.–9. juni. Bestilling 3 (laser + kamera) og 4 (loddeutstyr + lek) ankommet 17.–19. juni. Bestilling 5 (påfyll + semi-permanent) og 6 (montering) ankommet 26. juni — begge komplett. <strong>Bestilling 7 (lys-oppgradering 24V, betalt 5. juli, 795,72 kr): ✅ komplett 7. august</strong> — 24V 5A-adapter, M3 standoff-boks (250 stk) og begge ESP32-kortene kom 25. juli; Samsung-barene 28. juli; buck ×2 og FR120N ×4 den 7. august. <strong style="color:var(--green);">Ingen bestilling har utestående leveranser — alt materiell til potte 1 er på lager.</strong> Status per del + ordrenumre: <code>docs/mottaksliste.md</code>.</p>
         </div>
       </div>
       <div class="check done">
@@ -3184,7 +3207,7 @@
         <div class="phase-circle">4</div>
         <div class="phase-body">
           <h4>Fase 4 — 3D-printet innkapsling</h4>
-          <p>Designe og printe en fin kappe rundt IKEA-tanken, søyler med kabler inni, toppanel med LED-strip, elektronikkboks.</p>
+          <p>Designe og printe en fin kappe rundt IKEA-tanken, søyler med kabler inni, elektronikkboks, lokk-på-tank, berolings-brønn + flottør — og <strong>lysbjelke for de to stive 500mm-barene</strong> på M3-standoffs med luftspalte og ventilasjon over (barene blir 50–70 °C).</p>
         </div>
       </div>
       <div class="phase-item future">
@@ -3197,8 +3220,8 @@
       <div class="phase-item future">
         <div class="phase-circle">∞</div>
         <div class="phase-body">
-          <h4>Fremtid — Slå sammen med Matplanlegger</h4>
-          <p>Begge bruker allerede samme database. Slå sammen til én app med én innlogging — mat og planter på samme sted.</p>
+          <h4>Fremtid — multi-user + eget Supabase-prosjekt</h4>
+          <p>Familie-deling via <code>owner_id</code>-RLS (feltene er allerede forberedt), og på sikt utskilling til et eget Supabase-prosjekt. <strong>Utskillingen er parkert</strong> — gratis-grensen er 2 aktive prosjekter per bruker, og begge plassene er brukt. <em>(Sammenslåing med Matplanlegger er skrinlagt — de deler database, men forblir separate apper.)</em></p>
         </div>
       </div>
     </div>
@@ -3219,7 +3242,7 @@
       <div class="warn-box danger">
         <div class="warn-icon">🏷️</div>
         <h4>NYTT 25. juli: 12V- og 24V-adapterne har identisk plugg</h4>
-        <p>Begge ligger nå i samme skuff med <strong>samme 5,5×2,1mm plugg</strong>. Setter du 24V i den gamle bucken (12V-inn), i LR7843-modulen (30V-grense) eller rett i phyto-stripa, dør delen momentant. <strong>La 24V-adapteren ligge urørt til barer + ny buck + FR120N er samlet</strong> — riggen som bygges nå kjører 12V. En merkelapp på pluggen er den enkleste forsikringen.</p>
+        <p>Begge ligger nå i samme skuff med <strong>samme 5,5×2,1mm plugg</strong>. Setter du 24V i den gamle bucken (12V-inn), i LR7843-modulen (30V-grense) eller rett i phyto-stripa, dør delen momentant. Alle 24V-delene er samlet (7. aug), så adapteren skal nå i bruk — men <strong>sett merkelapp «24V» på pluggen</strong>, og hold den unna den gamle 12V-riggen (fast-5V-buck, LR7843, phyto-stripa) som fortsatt ligger i skuffen som reserve. En merkelapp er den enkleste forsikringen.</p>
       </div>
       <div class="warn-box danger">
         <div class="warn-icon">⚡</div>

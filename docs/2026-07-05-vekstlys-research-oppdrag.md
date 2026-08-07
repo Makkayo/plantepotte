@@ -5,7 +5,7 @@
 - Samtidig et **snapshot** av beslutning + handlekurv + hva som allerede er verifisert, per 5. juli 2026.
 - Kilde-sannhet ellers: plantepotte-skillens «Vekstlys — ytelse, måling & oppgraderingsvei»-seksjon. Hold i synk.
 
-> ⏱️ **Snapshot fra 5. juli — leveringstidene under er utdatert.** Faktisk mottak per **25. juli**: 24V-adapter, M3-standoffs og begge ESP32-kortene er inne; barene er underveis (litt bak opprinnelig 12.–21. juli), buck ~30. juli, FR120N ~13. aug. Levende status: `docs/mottaksliste.md`.
+> ⏱️ **Snapshot fra 5. juli — leveringstidene under er utdatert og historiske.** **Alt er mottatt: B7 var komplett 7. august 2026** (adapter/standoffs/ESP32-kort 25. juli, barene 28. juli, buck + FR120N 7. august). Barene er dessuten Photone-målt: ~208 PPFD @10 cm/bar — se måleserien i `docs/mottaksliste.md`. Merk at målingen korrigerte to antagelser i dette dokumentet: fotoperioden må til 16–18 t (ikke 13), og lyset faller som 1/d, ikke 1/d². Levende status: `docs/mottaksliste.md` + `docs/lager.md`.
 
 ---
 

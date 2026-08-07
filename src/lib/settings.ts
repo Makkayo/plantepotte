@@ -47,8 +47,11 @@ export const LYS_VARIANTER: Record<LysVariant, LysVariantInfo> = {
     navn: '24V Samsung LM281B-barer (hvit)',
     // 2× 25 W-barer per kasse.
     watt: 50,
-    // Produsent-spec 250–350 PPFD — midtpunkt-konservativt til Photone-måling.
-    standardPpfd: 250,
+    // Photone-måling 28. juli 2026 («LED Full+Red» + papir-diffusor) @10 cm:
+    // ~208 PPFD under én bar, ~213 snitt over flaten med begge barer. Erstatter
+    // produsent-specen (250–350), som viste seg ~17 % for optimistisk.
+    // NB: krever fotoperiode 16–18 t for DLI 12–17, ikke 13 t.
+    standardPpfd: 213,
   },
 };
 
